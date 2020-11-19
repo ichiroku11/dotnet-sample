@@ -1,0 +1,73 @@
+# 参考
+# https://editorconfig.org/
+# https://docs.microsoft.com/ja-jp/visualstudio/ide/create-portable-custom-editor-options?view=vs-2017
+# https://github.com/aspnet/AspNetCore/blob/master/.editorconfig
+
+root = true
+
+[*]
+charset = utf-8
+indent_style = tab
+insert_final_newline = true
+tab_width = 4
+trim_trailing_whitespace = true
+
+[*.{cs,cshtml}]
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+
+[*.cs]
+# 命名スタイル
+
+# 名前付けルール
+# interfaceは"I"で始まる
+dotnet_naming_rule.rule_interface.severity = suggestion
+dotnet_naming_rule.rule_interface.symbols = symbols_interface
+dotnet_naming_rule.rule_interface.style = style_prefix_i_pascal_case
+# 型はパスカルケース
+dotnet_naming_rule.rule_type.severity = suggestion
+dotnet_naming_rule.rule_type.symbols = symbols_type
+dotnet_naming_rule.rule_type.style = style_pascal_case
+# プライベートフィールドは"_"で始まる
+dotnet_naming_rule.rule_private_field.severity = suggestion
+dotnet_naming_rule.rule_private_field.symbols = symbols_private_field
+dotnet_naming_rule.rule_private_field.style = style_prefix_underscore_camel_case
+# メンバはパスカルケース
+dotnet_naming_rule.rurle_member.severity = suggestion
+dotnet_naming_rule.rurle_member.symbols = symbols_member
+dotnet_naming_rule.rurle_member.style = style_pascal_case
+
+# 記号の仕様
+dotnet_naming_symbols.symbols_interface.applicable_kinds = interface
+dotnet_naming_symbols.symbols_interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.symbols_interface.required_modifiers =
+
+dotnet_naming_symbols.symbols_private_field.applicable_kinds = field
+dotnet_naming_symbols.symbols_private_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.symbols_private_field.required_modifiers =
+
+dotnet_naming_symbols.symbols_type.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.symbols_type.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.symbols_type.required_modifiers =
+
+dotnet_naming_symbols.symbols_member.applicable_kinds = property, event, method
+dotnet_naming_symbols.symbols_member.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.symbols_member.required_modifiers =
+
+# 命名スタイル
+dotnet_naming_style.style_pascal_case.required_prefix =
+dotnet_naming_style.style_pascal_case.required_suffix =
+dotnet_naming_style.style_pascal_case.word_separator =
+dotnet_naming_style.style_pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.style_prefix_i_pascal_case.required_prefix = I
+dotnet_naming_style.style_prefix_i_pascal_case.required_suffix =
+dotnet_naming_style.style_prefix_i_pascal_case.word_separator =
+dotnet_naming_style.style_prefix_i_pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.style_prefix_underscore_camel_case.required_prefix = _
+dotnet_naming_style.style_prefix_underscore_camel_case.required_suffix =
+dotnet_naming_style.style_prefix_underscore_camel_case.word_separator =
+dotnet_naming_style.style_prefix_underscore_camel_case.capitalization = camel_case
