@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest {
+	// 参考
+	// https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/csharp-9#record-types
 	public class RecordTest {
 		// レコード型
 		// コンストラクタの引数の名前は大文字で始める必要あり？
@@ -38,6 +40,25 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, vector.X);
 			Assert.Equal(2, vector.Y);
+		}
+
+		[Fact]
+		public void Equals_参照の比較ではなく値の比較になる() {
+			// Arrange
+			// Act
+			var vector1 = new Vector2 {
+				X = 1,
+				Y = 2,
+			};
+			var vector2 = new Vector2 {
+				X = 1,
+				Y = 2,
+			};
+
+			// Assert
+			Assert.True(vector1.Equals(vector2));
+			Assert.True(vector1 == vector2);
+			Assert.False(object.ReferenceEquals(vector1, vector2));
 		}
 	}
 }
