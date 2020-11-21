@@ -43,6 +43,20 @@ namespace SampleTest {
 		}
 
 		[Fact]
+		public void Deconstruct_プロパティを分解できる() {
+			// Arrange
+			// Act
+			var (x, y) = new Vector2 {
+				X = 1,
+				Y = 2,
+			};
+
+			// Assert
+			Assert.Equal(1, x);
+			Assert.Equal(2, y);
+		}
+
+		[Fact]
 		public void Equals_参照の比較ではなく値の比較になる() {
 			// Arrange
 			// Act
