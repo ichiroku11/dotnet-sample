@@ -74,5 +74,18 @@ namespace SampleTest {
 			Assert.True(vector1 == vector2);
 			Assert.False(object.ReferenceEquals(vector1, vector2));
 		}
+
+		[Fact]
+		public void ToString_出力される文字列を確認する() {
+			// Arrange
+			var vector = new Vector2 {
+				X = 1,
+				Y = 2,
+			};
+
+			// Act
+			// Assert
+			Assert.Equal("Vector2 { X = 1, Y = 2 }", vector.ToString());
+		}
 	}
 }
