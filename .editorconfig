@@ -1,7 +1,7 @@
 # 参考
 # https://editorconfig.org/
-# https://docs.microsoft.com/ja-jp/visualstudio/ide/create-portable-custom-editor-options?view=vs-2017
-# https://github.com/aspnet/AspNetCore/blob/master/.editorconfig
+# https://docs.microsoft.com/ja-jp/visualstudio/ide/create-portable-custom-editor-options?view=vs-2019
+# https://github.com/dotnet/aspnetcore/blob/master/.editorconfig
 
 root = true
 
@@ -13,10 +13,14 @@ tab_width = 4
 trim_trailing_whitespace = true
 
 [*.{cs,cshtml}]
-csharp_new_line_before_open_brace = none
-csharp_new_line_before_else = false
+# https://docs.microsoft.com/ja-jp/dotnet/fundamentals/code-analysis/style-rules/formatting-rules?view=vs-2019#new-line-options
 csharp_new_line_before_catch = false
+csharp_new_line_before_else = false
 csharp_new_line_before_finally = false
+csharp_new_line_before_members_in_anonymous_types = false
+csharp_new_line_before_members_in_object_initializers = false
+csharp_new_line_before_open_brace = none
+csharp_new_line_between_query_expression_clauses = false
 
 [*.cs]
 # 命名スタイル
