@@ -87,5 +87,23 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal("Vector2 { X = 1, Y = 2 }", vector.ToString());
 		}
+
+		[Fact]
+		public void With_with式でコピーできる() {
+			// Arrange
+			var vector1 = new Vector2 {
+				X = 1,
+				Y = 2,
+			};
+
+			// Act
+			var vector2 = vector1 with {
+				X = 3,
+			};
+
+			// Assert
+			Assert.Equal(1, vector1.X);
+			Assert.Equal(3, vector2.X);
+		}
 	}
 }
