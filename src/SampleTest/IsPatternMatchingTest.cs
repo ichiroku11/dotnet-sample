@@ -27,5 +27,18 @@ namespace SampleTest {
 				Assert.Equal(0, value2);
 			}
 		}
+
+		// C# 9.0
+		// https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/csharp-9#pattern-matching-enhancements
+		[Fact]
+		public void Is_notnullのチェックができる() {
+			int? value = null;
+			if (value is not null) {
+				AssertHelper.Fail();
+				return;
+			}
+
+			Assert.Null(value);
+		}
 	}
 }
