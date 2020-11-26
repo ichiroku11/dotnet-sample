@@ -19,12 +19,15 @@ namespace SampleTest.Net {
 		[Theory]
 		[InlineData("127.0.0.1")]
 		[InlineData("0.0.0.0")]
+		[InlineData("192.168.0.0")]
 		[InlineData("255.255.255.255")]
-		public void AddressFamily_IPv4かどうかを判定する(string address) {
+		public void AddressFamily_IPv4かどうかを判定する(string addressText) {
 			// Arrange
+			var address = IPAddress.Parse(addressText);
+
 			// Act
 			// Assert
-			Assert.Equal(AddressFamily.InterNetwork, IPAddress.Parse(address).AddressFamily);
+			Assert.Equal(AddressFamily.InterNetwork, address.AddressFamily);
 		}
 
 		[Theory]
