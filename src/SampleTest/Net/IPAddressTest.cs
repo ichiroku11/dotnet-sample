@@ -24,8 +24,9 @@ namespace SampleTest.Net {
 		}
 
 		public static IEnumerable<object[]> GetTestDataForGetBytes() {
-			yield return new object[] { IPAddress.Parse("0.0.0.0"), new byte[] { 0, 0, 0, 0} };
+			yield return new object[] { IPAddress.Parse("0.0.0.0"), new byte[] { 0, 0, 0, 0 } };
 			yield return new object[] { IPAddress.Parse("192.168.1.2"), new byte[] { 192, 168, 1, 2 } };
+			yield return new object[] { new IPAddress(new byte[] { 192, 168, 1, 2 }), new byte[] { 192, 168, 1, 2 } };
 		}
 
 		[Theory]
