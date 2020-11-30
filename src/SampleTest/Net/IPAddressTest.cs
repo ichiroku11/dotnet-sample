@@ -29,6 +29,18 @@ namespace SampleTest.Net {
 			yield return new object[] { new IPAddress(new byte[] { 192, 168, 1, 2 }), new byte[] { 192, 168, 1, 2 } };
 		}
 
+		[Fact]
+		public void Equals_値を比較する() {
+			// Arrange
+			var address1 = new IPAddress(new byte[] { 192, 168, 0, 1 });
+			var address2 = new IPAddress(new byte[] { 192, 168, 0, 1 });
+
+			// Act
+			// Assert
+			Assert.False(ReferenceEquals(address1, address2));
+			Assert.True(address1.Equals(address2));
+		}
+
 		[Theory]
 		[MemberData(nameof(GetTestDataForGetBytes))]
 		public void GetBytes_長さが4のIPアドレスを表すバイト配列を取得できる(IPAddress address, byte[] expected) {
@@ -45,6 +57,17 @@ namespace SampleTest.Net {
 			yield return new object[] { IPAddress.Broadcast, "255.255.255.255" };
 			yield return new object[] { IPAddress.Loopback, "127.0.0.1" };
 			yield return new object[] { IPAddress.None, "255.255.255.255" };
+		}
+
+		[Fact]
+		public void OperatorEqual_値を比較しない() {
+			// Arrange
+			var address1 = new IPAddress(new byte[] { 192, 168, 0, 1 });
+			var address2 = new IPAddress(new byte[] { 192, 168, 0, 1 });
+
+			// Act
+			// Assert
+			Assert.False(address1 == address2);
 		}
 
 		[Theory]
