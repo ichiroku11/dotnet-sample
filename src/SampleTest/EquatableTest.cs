@@ -45,7 +45,7 @@ namespace SampleTest {
 		}
 
 		[Fact]
-		public void operatorEqual_正しく比較できる() {
+		public void OperatorEqual_正しく比較できる() {
 			// Arrange
 			// Act
 			// Assert
