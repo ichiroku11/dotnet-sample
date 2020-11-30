@@ -7,7 +7,12 @@ using System.Text;
 
 namespace SampleTest.Expressions {
 	public static class MapHelper {
-		// AutoMapperのようなマッピングメソッドを生成する
+		/// <summary>
+		/// AutoMapperのようなマッピングメソッド
+		/// </summary>
+		/// <typeparam name="TSource"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <returns></returns>
 		public static Func<TSource, TResult> CreateMapper<TSource, TResult>() {
 			// 関数パラメータの宣言
 			var source = Expression.Parameter(typeof(TSource), "source");

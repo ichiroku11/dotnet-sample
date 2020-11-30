@@ -6,7 +6,12 @@ using System.Text;
 
 namespace SampleTest.Expressions {
 	public static class ExpressionHelper {
-		// "@object => @object.property"の式からプロパティ名を取得
+		/// <summary>
+		/// "@object => @object.property"の式からプロパティ名を取得
+		/// </summary>
+		/// <typeparam name="TSource"></typeparam>
+		/// <param name="expression"></param>
+		/// <returns></returns>
 		public static string GetMemberName<TSource>(Expression<Func<TSource, object>> expression) {
 			if (expression.Body is MemberExpression member) {
 				return member.Member.Name;
@@ -23,7 +28,12 @@ namespace SampleTest.Expressions {
 			return null;
 		}
 
-		// "@object => new { @object.property1, @object.property2 }"の式からプロパティ名を取得
+		/// <summary>
+		/// "@object => new { @object.property1, @object.property2 }"の式からプロパティ名を取得
+		/// </summary>
+		/// <typeparam name="TSource"></typeparam>
+		/// <param name="expression"></param>
+		/// <returns></returns>
 		public static IEnumerable<string> GetMemberNames<TSource>(Expression<Func<TSource, object>> expression) {
 			if (expression.Body is NewExpression @new) {
 				return @new.Members.Select(member => member.Name);

@@ -4,15 +4,28 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace SampleTest {
-	// EqualityComparerの実装
+	/// <summary>
+	/// EqualityComparerの実装
+	/// </summary>
+	/// <typeparam name="TElement"></typeparam>
+	/// <typeparam name="TKey"></typeparam>
 	public class EqualityComparer<TElement, TKey> : EqualityComparer<TElement> {
 		private readonly Func<TElement, TKey> _keySelector;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="keySelector"></param>
 		public EqualityComparer(Func<TElement, TKey> keySelector) {
 			_keySelector = keySelector;
 		}
 
-		// 指定したオブジェクトが等しいかどうか
+		/// <summary>
+		/// 指定したオブジェクトが等しいかどうか
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
 		public override bool Equals([AllowNull]TElement x, [AllowNull]TElement y) {
 			// 2つが同じインスタンスなら等しい
 			if (ReferenceEquals(x, y)) {
@@ -27,7 +40,11 @@ namespace SampleTest {
 			return _keySelector(x).Equals(_keySelector(y));
 		}
 
-		// 指定したオブジェクトのハッシュコードを取得
+		/// <summary>
+		/// 指定したオブジェクトのハッシュコードを取得
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
 		public override int GetHashCode([DisallowNull]TElement obj) {
 			if (obj == null) {
 				return 0;
