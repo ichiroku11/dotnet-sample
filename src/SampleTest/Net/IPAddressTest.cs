@@ -23,12 +23,6 @@ namespace SampleTest.Net {
 			Assert.Equal(AddressFamily.InterNetwork, address.AddressFamily);
 		}
 
-		public static IEnumerable<object[]> GetTestDataForGetBytes() {
-			yield return new object[] { IPAddress.Parse("0.0.0.0"), new byte[] { 0, 0, 0, 0 } };
-			yield return new object[] { IPAddress.Parse("192.168.1.2"), new byte[] { 192, 168, 1, 2 } };
-			yield return new object[] { new IPAddress(new byte[] { 192, 168, 1, 2 }), new byte[] { 192, 168, 1, 2 } };
-		}
-
 		[Fact]
 		public void Equals_値を比較する() {
 			// Arrange
@@ -41,9 +35,25 @@ namespace SampleTest.Net {
 			Assert.True(address1.Equals(address2));
 		}
 
+		public static IEnumerable<object[]> GetTestDataForGetBytes() {
+			yield return new object[] {
+				IPAddress.Parse("0.0.0.0"),
+				new byte[] { 0, 0, 0, 0 }
+			};
+			yield return new object[] {
+				// 10進数の並び順のバイト配列を取得できる
+				IPAddress.Parse("192.168.1.2"),
+				new byte[] { 192, 168, 1, 2 }
+			};
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 1, 2 }),
+				new byte[] { 192, 168, 1, 2 }
+			};
+		}
+
 		[Theory]
 		[MemberData(nameof(GetTestDataForGetBytes))]
-		public void GetBytes_長さが4のIPアドレスを表すバイト配列を取得できる(IPAddress address, byte[] expected) {
+		public void GetBytes_IPアドレスを表すバイト配列を取得できる(IPAddress address, byte[] expected) {
 			// Arrange
 			// Act
 			var actual = address.GetAddressBytes();
