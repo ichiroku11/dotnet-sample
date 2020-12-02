@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Json {
+namespace SampleTest.Text.Json {
 	public class NumberBooleanConverterTest {
 		private readonly ITestOutputHelper _output;
 

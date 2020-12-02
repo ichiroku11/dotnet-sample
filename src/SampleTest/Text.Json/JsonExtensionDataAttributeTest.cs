@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit;
 
-namespace SampleTest.Json {
+namespace SampleTest.Text.Json {
 	public class JsonExtensionDataAttributeTest {
 		private class ExtensionDataSample {
 			public int Number { get; set; }

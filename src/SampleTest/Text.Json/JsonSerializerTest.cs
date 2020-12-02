@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Json {
+namespace SampleTest.Text.Json {
 	// https://docs.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json-how-to?view=netcore-3.0
 	public class JsonSerializerTest {
 		private readonly ITestOutputHelper _output;
