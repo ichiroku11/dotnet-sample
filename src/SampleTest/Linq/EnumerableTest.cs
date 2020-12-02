@@ -192,5 +192,15 @@ namespace SampleTest.Linq {
 			Assert.False(any);
 			Assert.Equal(new List<int> { 0, 1, 2, 3, 4 }, values);
 		}
+
+		[Fact]
+		public void Zip_2つのシーケンスからタプルを生成する() {
+			// Arrange
+			// Act
+			var values = new[] { 1, 2, 3 }.Zip(new[] { 6, 5, 4 });
+
+			// Assert
+			Assert.Equal(new (int, int)[] { (1, 6), (2, 5), (3, 4) }, values);
+		}
 	}
 }
