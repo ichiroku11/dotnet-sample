@@ -31,7 +31,7 @@ namespace SampleTest.Net {
 		}
 		*/
 
-		private static readonly (byte[] start, byte[] end)[] _privateIpAddressRangeBytes
+		private static readonly (byte[] start, byte[] end)[] _ipv4PrivateByteRanges
 			= new[] {
 				// 参考
 				// https://www.nic.ad.jp/ja/translation/rfc/1918.html
@@ -55,7 +55,7 @@ namespace SampleTest.Net {
 			}
 
 			var target = address.GetAddressBytes();
-			foreach (var (start, end) in _privateIpAddressRangeBytes) {
+			foreach (var (start, end) in _ipv4PrivateByteRanges) {
 				if (Enumerable.Range(0, 4).All(index => target[index] >= start[index] && target[index] <= end[index])) {
 					return true;
 				}
