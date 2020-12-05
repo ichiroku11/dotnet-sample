@@ -34,6 +34,10 @@ namespace SampleTest.Collections {
 				new [] { true, false, false, false, false, false, false, false }
 			};
 			yield return new object[] {
+				new byte[] { 128 },
+				new [] { false, false, false, false, false, false, false, true, }
+			};
+			yield return new object[] {
 				new byte[] { 1, 0 },
 				new [] {
 					true, false, false, false, false, false, false, false,
