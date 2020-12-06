@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SampleTest.Net {
 	public class IPAddressHelper {
-		// オクテットごとの値 => マスクのバイトに変換
+		// オクテットの値 => マスクのバイト
 		private static readonly Dictionary<int, byte> _octetPrefixToByte = new() {
 			[0] = 0b0000_0000, // 0
 			[1] = 0b1000_0000, // 128
@@ -48,8 +48,9 @@ namespace SampleTest.Net {
 				prefixes[index / 8] += 1;
 			}
 
-			// オクテットごとにサブネットバイトを取得する
+			// オクテットごとにサブネットマスクのバイトに変換
 			var bytes = prefixes.Select(value => _octetPrefixToByte[value]).ToArray();
+
 			return new IPAddress(bytes);
 		}
 	}
