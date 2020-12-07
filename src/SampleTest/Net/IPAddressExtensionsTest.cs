@@ -8,6 +8,31 @@ using Xunit;
 
 namespace SampleTest.Net {
 	public class IPAddressExtensionsTest {
+		public static IEnumerable<object[]> GetTestDataForIPv4LogicalAnd() {
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 1, 1 }),
+				new IPAddress(new byte[] { 255, 255, 0, 0 }),
+				new IPAddress(new byte[] { 192, 168, 0, 0 }),
+			};
+
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 224, 1 }),
+				new IPAddress(new byte[] { 255, 255, 192, 0 }),
+				new IPAddress(new byte[] { 192, 168, 192, 0 }),
+			};
+		}
+
+		[Theory]
+		[MemberData(nameof(GetTestDataForIPv4LogicalAnd))]
+		public void IPv4LogicalAnd_正しくAND演算できる(IPAddress address, IPAddress mask, IPAddress expected) {
+			// Arrange
+			// Act
+			var actual = address.IPv4LogicalAnd(mask);
+
+			// Assert
+			Assert.True(actual.Equals(expected));
+		}
+
 		public static IEnumerable<object[]> GetTestDataForIsIPv4Private() {
 			// それぞれの範囲の境界値（含む）
 			yield return new object[] { IPAddress.Parse("10.0.0.0"), true };

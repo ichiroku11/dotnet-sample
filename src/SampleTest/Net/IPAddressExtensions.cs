@@ -8,25 +8,44 @@ using System.Threading.Tasks;
 
 namespace SampleTest.Net {
 	public static class IPAddressExtensions {
-		// todo:
+		/// <summary>
+		/// 論理AND演算
+		/// </summary>
+		/// <param name="address"></param>
+		/// <param name="mask"></param>
+		/// <returns></returns>
+		public static IPAddress IPv4LogicalAnd(this IPAddress address, IPAddress mask) {
+			// IPv4のみ
+			if (address.AddressFamily != AddressFamily.InterNetwork) {
+				throw new ArgumentException(nameof(address));
+			}
+			if (mask.AddressFamily != AddressFamily.InterNetwork) {
+				throw new ArgumentException(nameof(mask));
+			}
+
+			var addressBytes = address.GetAddressBytes();
+			var maskBytes = mask.GetAddressBytes();
+			var resultBytes = addressBytes.Zip(maskBytes, (addressByte, maskByte) => (byte)(addressByte & maskByte)).ToArray();
+			return new IPAddress(resultBytes);
+		}
+
 		/*
-		public static IPAddress GetBroadcastAddress(this IPAddress address, int prefix) {
+		// todo:
+		public static IPAddress GetIPv4NetworkAddress(this IPAddress address, int prefix) {
 			return IPAddress.None;
 		}
 
-		public static IPAddress GetBroadcastAddress(this IPAddress address, IPAddress mask) {
+		public static IPAddress GetIPv4NetworkAddress(this IPAddress address, IPAddress mask) {
 			return IPAddress.None;
 		}
+		*/
 
-		public static IPAddress GetNetworkAddress(this IPAddress address, int prefix) {
-			return IPAddress.None;
+		/*
+		public static bool IsIPv4InSubnet(this IPAddress address, IPAddress subnet, int prefix) {
+			return false;
 		}
 
-		public static IPAddress GetNetworkAddress(this IPAddress address, IPAddress mask) {
-			return IPAddress.None;
-		}
-
-		public static bool IsInSubnet(this IPAddress address, IPAddress subnet) {
+		public static bool IsIPv4InSubnet(this IPAddress address, IPAddress subnet, IPAddress mask) {
 			return false;
 		}
 		*/
