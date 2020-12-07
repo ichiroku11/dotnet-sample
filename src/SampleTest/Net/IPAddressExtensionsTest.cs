@@ -35,12 +35,21 @@ namespace SampleTest.Net {
 
 
 		public static IEnumerable<object[]> GetTestDataForIsIPv4InSameSubnet() {
+			// 同じサブネットに属する
 			yield return new object[] {
 				new IPAddress(new byte[] { 192, 168, 1, 1 }),
 				new IPAddress(new byte[] { 192, 168, 0, 0 }),
 				new IPAddress(new byte[] { 255, 255, 0, 0 }),
 				true,
 			};
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 224, 1 }),
+				new IPAddress(new byte[] { 192, 168, 192, 0 }),
+				new IPAddress(new byte[] { 255, 255, 192, 0 }),
+				true,
+			};
+
+			// 同じサブネットに属さない
 			yield return new object[] {
 				new IPAddress(new byte[] { 192, 168, 1, 1 }),
 				new IPAddress(new byte[] { 192, 169, 0, 0 }),
@@ -49,9 +58,9 @@ namespace SampleTest.Net {
 			};
 			yield return new object[] {
 				new IPAddress(new byte[] { 192, 168, 224, 1 }),
-				new IPAddress(new byte[] { 192, 168, 192, 0 }),
+				new IPAddress(new byte[] { 192, 168, 128, 0 }),
 				new IPAddress(new byte[] { 255, 255, 192, 0 }),
-				true,
+				false,
 			};
 		}
 
