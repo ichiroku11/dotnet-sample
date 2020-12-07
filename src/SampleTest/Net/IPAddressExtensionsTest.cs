@@ -33,6 +33,40 @@ namespace SampleTest.Net {
 			Assert.True(actual.Equals(expected));
 		}
 
+
+		public static IEnumerable<object[]> GetTestDataForIsIPv4InSameSubnet() {
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 1, 1 }),
+				new IPAddress(new byte[] { 192, 168, 0, 0 }),
+				new IPAddress(new byte[] { 255, 255, 0, 0 }),
+				true,
+			};
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 1, 1 }),
+				new IPAddress(new byte[] { 192, 169, 0, 0 }),
+				new IPAddress(new byte[] { 255, 255, 0, 0 }),
+				false,
+			};
+			yield return new object[] {
+				new IPAddress(new byte[] { 192, 168, 224, 1 }),
+				new IPAddress(new byte[] { 192, 168, 192, 0 }),
+				new IPAddress(new byte[] { 255, 255, 192, 0 }),
+				true,
+			};
+		}
+
+		[Theory]
+		[MemberData(nameof(GetTestDataForIsIPv4InSameSubnet))]
+		public void IsIPv4InSameSubnet_正しく判定できる(IPAddress address, IPAddress subnet, IPAddress mask, bool expected) {
+			// Arrange
+			// Act
+			var actual = address.IsIPv4InSameSubnet(subnet, mask);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+
 		public static IEnumerable<object[]> GetTestDataForIsIPv4Private() {
 			// それぞれの範囲の境界値（含む）
 			yield return new object[] { IPAddress.Parse("10.0.0.0"), true };

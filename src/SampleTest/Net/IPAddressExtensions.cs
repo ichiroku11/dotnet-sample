@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SampleTest.Net {
 	public static class IPAddressExtensions {
 		/// <summary>
-		/// 論理AND演算
+		/// IPv4の論理AND演算
 		/// </summary>
 		/// <param name="address"></param>
 		/// <param name="mask"></param>
@@ -29,26 +29,30 @@ namespace SampleTest.Net {
 			return new IPAddress(resultBytes);
 		}
 
-		/*
-		// todo:
-		public static IPAddress GetIPv4NetworkAddress(this IPAddress address, int prefix) {
-			return IPAddress.None;
+		/// <summary>
+		/// IPv4の同じサブネットに属するか
+		/// </summary>
+		/// <param name="address"></param>
+		/// <param name="subnet"></param>
+		/// <param name="prefix"></param>
+		/// <returns></returns>
+		public static bool IsIPv4InSameSubnet(this IPAddress address, IPAddress subnet, int prefix)
+			=> IsIPv4InSameSubnet(address, subnet, IPAddressHelper.GetSubnetMask(prefix));
+
+		/// <summary>
+		/// IPv4の同じサブネットに属するか
+		/// </summary>
+		/// <param name="address"></param>
+		/// <param name="subnet"></param>
+		/// <param name="mask"></param>
+		/// <returns></returns>
+		public static bool IsIPv4InSameSubnet(this IPAddress address, IPAddress subnet, IPAddress mask) {
+			var network1 = address.IPv4LogicalAnd(mask);
+			var network2 = subnet.IPv4LogicalAnd(mask);
+
+			return network1.Equals(network2);
 		}
 
-		public static IPAddress GetIPv4NetworkAddress(this IPAddress address, IPAddress mask) {
-			return IPAddress.None;
-		}
-		*/
-
-		/*
-		public static bool IsIPv4InSubnet(this IPAddress address, IPAddress subnet, int prefix) {
-			return false;
-		}
-
-		public static bool IsIPv4InSubnet(this IPAddress address, IPAddress subnet, IPAddress mask) {
-			return false;
-		}
-		*/
 
 		private static readonly (byte[] start, byte[] end)[] _ipv4PrivateByteRanges
 			= new[] {
