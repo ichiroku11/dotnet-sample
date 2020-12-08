@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApi", "src\MiscWebApi\MiscWebApi.csproj", "{E233E3A1-45A0-4F4E-8A50-D143D2A3197A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApi.Test", "src\MiscWebApi.Test\MiscWebApi.Test.csproj", "{A3993478-16C9-4163-B0FC-740D4DCC687B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{2E6B1D40-1E31-4E2B-BB21-D52549DB414D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E6B1D40-1E31-4E2B-BB21-D52549DB414D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E6B1D40-1E31-4E2B-BB21-D52549DB414D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E233E3A1-45A0-4F4E-8A50-D143D2A3197A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E233E3A1-45A0-4F4E-8A50-D143D2A3197A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E233E3A1-45A0-4F4E-8A50-D143D2A3197A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E233E3A1-45A0-4F4E-8A50-D143D2A3197A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
