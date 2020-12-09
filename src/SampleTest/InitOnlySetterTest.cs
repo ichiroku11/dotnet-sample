@@ -22,7 +22,7 @@ namespace SampleTest {
 
 			// オブジェクト初期化子で値を設定できる
 			var sample = new Sample {
-				Value = "X",
+				Value = "x",
 			};
 
 			// エラー CS8852
