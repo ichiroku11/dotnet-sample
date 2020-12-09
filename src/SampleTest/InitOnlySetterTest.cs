@@ -30,7 +30,7 @@ namespace SampleTest {
 
 			// Assert
 			// 特に意味はない
-			Assert.True("x", sample.Value);
+			Assert.Equal("x", sample.Value);
 		}
 	}
 }
