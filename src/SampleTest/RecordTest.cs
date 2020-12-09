@@ -8,6 +8,7 @@ using Xunit;
 namespace SampleTest {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/csharp-9#record-types
+	// https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 	public class RecordTest {
 		// レコード型
 		// コンストラクタの引数の名前は大文字で始める必要あり？
