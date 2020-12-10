@@ -11,6 +11,12 @@ namespace SampleTest {
 	// https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 	public class InitOnlySetterTest {
 		public class Sample {
+			public Sample(string value = null) {
+				// コンストラクタで値を設定できる
+				Value = value;
+			}
+
+			// オブジェクト初期化子で値を設定できる
 			public string Value { get; init; }
 		}
 
@@ -18,19 +24,18 @@ namespace SampleTest {
 		public void InitOnlySetter_使ってみる() {
 			// Arrange
 			// Act
-			// Assert
+			var sample1 = new Sample("x");
+			// エラー CS8852
+			// sample1.Value = "y";
 
-			// オブジェクト初期化子で値を設定できる
-			var sample = new Sample {
+			var sample2 = new Sample {
 				Value = "x",
 			};
 
-			// エラー CS8852
-			// sample.Value = "y";
-
 			// Assert
-			// 特に意味はない
-			Assert.Equal("x", sample.Value);
+			// 特に意味はないアサーション
+			Assert.Equal("x", sample1.Value);
+			Assert.Equal("x", sample2.Value);
 		}
 	}
 }
