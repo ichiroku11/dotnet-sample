@@ -23,6 +23,10 @@ namespace MiscWebApi {
 
 			// Swagger
 			services.AddOpenApiDocument(settings => {
+				settings.PostProcess = document => {
+					document.Info.Title = "Misc API";
+					document.Info.Description = "ASP.NET Core Web API";
+				};
 			});
 		}
 
