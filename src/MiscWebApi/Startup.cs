@@ -41,7 +41,9 @@ namespace MiscWebApi {
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints => {
-				endpoints.MapControllers();
+				endpoints.MapControllerRoute(
+					"default",
+					"{controller=Default}/{action=Index}/{id?}");
 			});
 		}
 	}
