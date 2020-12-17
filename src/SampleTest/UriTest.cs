@@ -78,5 +78,18 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(fragment, uri.Fragment);
 		}
+
+		[Theory]
+		[InlineData("https://example.jp?a=1&b=2", "?a=1&b=2")]
+		[InlineData("https://example.jp", "")]
+		[InlineData("https://example.jp?", "?")]
+		public void Query_クエリ文字列を取得できる(string url, string query) {
+			// Arrange
+			var uri = new Uri(url);
+
+			// Act
+			// Assert
+			Assert.Equal(query, uri.Query);
+		}
 	}
 }
