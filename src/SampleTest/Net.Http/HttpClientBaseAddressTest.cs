@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Http {
+namespace SampleTest.Net.Http {
 	public class HttpClientBaseAddressTest {
 		private class Startup {
 			public void ConfigureServices(IServiceCollection services) {

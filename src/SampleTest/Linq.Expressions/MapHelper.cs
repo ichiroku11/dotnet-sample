@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace SampleTest.Expressions {
+namespace SampleTest.Linq.Expressions {
 	public static class MapHelper {
 		/// <summary>
 		/// AutoMapperのようなマッピングメソッド

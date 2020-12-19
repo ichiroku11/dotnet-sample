@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace SampleTest.Expressions {
+namespace SampleTest.Linq.Expressions {
 	public static class ExpressionHelper {
 		/// <summary>
 		/// "@object => @object.property"の式からプロパティ名を取得

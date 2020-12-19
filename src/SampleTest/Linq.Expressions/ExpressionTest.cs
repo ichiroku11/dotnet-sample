@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using Xunit;
 
-namespace SampleTest.Expressions {
+namespace SampleTest.Linq.Expressions {
 	public class ExpressionTest {
 		// 参考
 		// https://www.slideshare.net/Fujiwo/20141026-c-c-expression-tree

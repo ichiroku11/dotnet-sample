@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Http {
+namespace SampleTest.Net.Http {
 	public class HttpClientCookieTest : IDisposable {
 		private class Startup {
 			public void ConfigureServices(IServiceCollection services) {

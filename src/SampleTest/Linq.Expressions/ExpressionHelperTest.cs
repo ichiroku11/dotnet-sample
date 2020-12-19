@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace SampleTest.Expressions {
+namespace SampleTest.Linq.Expressions {
 	public class ExpressionHelperTest {
 		// テスト用
 		public class Item {
