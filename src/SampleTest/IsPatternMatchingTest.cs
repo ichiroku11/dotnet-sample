@@ -40,5 +40,12 @@ namespace SampleTest {
 
 			Assert.Null(value);
 		}
+
+		[Fact]
+		public void Is_andとlessthanorequalとgreaterthanorequalを使ってみる() {
+			Assert.All(
+				"0123456789".ToCharArray(),
+				digit => Assert.True(digit is >= '0' and <= '9'));
+		}
 	}
 }
