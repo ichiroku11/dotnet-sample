@@ -5,6 +5,8 @@ using Xunit;
 
 namespace SampleTest.Collections {
 	public class ArrayTest {
+		// 参考
+		// https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/csharp-8#indices-and-ranges
 		[Fact]
 		public void Index_試してみる() {
 			var numbers = "0123456789".ToCharArray();
@@ -32,11 +34,15 @@ namespace SampleTest.Collections {
 			// すべて
 			Assert.Equal("0123456789", numbers[..]);
 
-			// 1番目から_numbers.Length-1番目
+			// 1番目からnumbers.Length-1番目
 			Assert.Equal("12345678", numbers[1..^1]);
 
 			// 最後の2つ
 			Assert.Equal("89", numbers[^2..]);
+
+			// 変数で範囲を宣言する
+			var range = 2..4;
+			Assert.Equal("23", numbers[range]);
 		}
 	}
 }
