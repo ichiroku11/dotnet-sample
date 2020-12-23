@@ -3,11 +3,11 @@
 
 <section>
 	@foreach (var group in Provider.ApiDescriptionGroups.Items) {
-	<h3>@group.GroupName</h3>
-	<ul>
+		<h3>@group.GroupName</h3>
 		@foreach (var item in group.Items) {
-			<li>@item.HttpMethod&nbsp;@item.RelativePath</li>
+			<details>
+				<summary>@item.HttpMethod&nbsp;@item.RelativePath</summary>
+			</details>
 		}
-	</ul>
 	}
 </section>

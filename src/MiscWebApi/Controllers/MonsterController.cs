@@ -17,6 +17,7 @@ namespace MiscWebApi.Controllers {
 
 	[Route("api/[controller]")]
 	[ApiController]
+	[ApiExplorerSettings(GroupName = "Monster")]
 	public class MonsterController : ControllerBase {
 		private static readonly Dictionary<int, Monster> _monsters
 			= new[] {
