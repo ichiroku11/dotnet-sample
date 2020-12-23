@@ -4,9 +4,27 @@
 <section>
 	@foreach (var group in Provider.ApiDescriptionGroups.Items) {
 		<h3>@group.GroupName</h3>
-		@foreach (var item in group.Items) {
+		@foreach (var api in group.Items) {
 			<details>
-				<summary>@item.HttpMethod&nbsp;@item.RelativePath</summary>
+				<summary>@api.HttpMethod&nbsp;@api.RelativePath</summary>
+				<p>@nameof(api.ParameterDescriptions)</p>
+				<ul>
+					@foreach (var param in api.ParameterDescriptions) {
+					<li>@param.Name</li>
+					}
+				</ul>
+				<p>@nameof(api.SupportedRequestFormats)</p>
+				<ul>
+					@foreach (var request in api.SupportedRequestFormats) {
+						<li>@request.MediaType</li>
+					}
+				</ul>
+				<p>@nameof(api.SupportedResponseTypes)</p>
+				<ul>
+					@foreach (var response in api.SupportedResponseTypes) {
+						<li>@response.StatusCode</li>
+					}
+				</ul>
 			</details>
 		}
 	}
