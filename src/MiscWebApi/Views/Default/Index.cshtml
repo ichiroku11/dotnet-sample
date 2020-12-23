@@ -1,0 +1,13 @@
+@using Microsoft.AspNetCore.Mvc.ApiExplorer
+@inject IApiDescriptionGroupCollectionProvider Provider
+
+<section>
+	@foreach (var group in Provider.ApiDescriptionGroups.Items) {
+	<h3>@group.GroupName</h3>
+	<ul>
+		@foreach (var item in group.Items) {
+			<li>@item.HttpMethod&nbsp;@item.RelativePath</li>
+		}
+	</ul>
+	}
+</section>
