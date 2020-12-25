@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApi", "src\MiscWebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApi.Test", "src\MiscWebApi.Test\MiscWebApi.Test.csproj", "{A3993478-16C9-4163-B0FC-740D4DCC687B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiWebApi", "src\OpenApiWebApi\OpenApiWebApi.csproj", "{5551F546-AFD2-448B-8313-062712B02CC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3993478-16C9-4163-B0FC-740D4DCC687B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5551F546-AFD2-448B-8313-062712B02CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5551F546-AFD2-448B-8313-062712B02CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5551F546-AFD2-448B-8313-062712B02CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5551F546-AFD2-448B-8313-062712B02CC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
