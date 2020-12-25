@@ -5,10 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MiscWebApi.Controllers {
-	// OpenAPIには含まれない
+	// ApiExplorerでは取得できない
 	public class DefaultController : Controller {
 		public IActionResult Index() => View();
-
 		public IActionResult Test() => Json(new { x = 1 });
 	}
 }

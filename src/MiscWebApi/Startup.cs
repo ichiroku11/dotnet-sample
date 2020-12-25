@@ -20,14 +20,6 @@ namespace MiscWebApi {
 				options.LowercaseQueryStrings = true;
 				options.LowercaseUrls = true;
 			});
-
-			// Swagger
-			services.AddOpenApiDocument(settings => {
-				settings.PostProcess = document => {
-					document.Info.Title = "Misc API";
-					document.Info.Description = "ASP.NET Core Web API";
-				};
-			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,12 +27,6 @@ namespace MiscWebApi {
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 			}
-
-			// Swagger
-			app.UseOpenApi(settings => {
-			});
-			app.UseSwaggerUi3(settings => {
-			});
 
 			app.UseRouting();
 
