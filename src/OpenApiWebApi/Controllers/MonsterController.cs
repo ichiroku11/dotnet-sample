@@ -14,15 +14,9 @@ namespace OpenApiWebApi.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class MonsterController : ControllerBase {
-		// アクションメソッドのsummaryがOpenAPIに出力される
-		// GET: api/monster
-		/// <summary>
-		/// <see cref="Monster"/>一覧を取得
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		public IEnumerable<Monster> Get() {
-			return new [] {
+
+		private static readonly Dictionary<int, Monster> _monsters
+			= new[] {
 				new Monster {
 					Id = 1,
 					Name = "スライム"
@@ -31,7 +25,17 @@ namespace OpenApiWebApi.Controllers {
 					Id = 2,
 					Name = "ドラキー"
 				}
-			};
+			}.ToDictionary(monster => monster.Id);
+
+		// アクションメソッドのsummaryがOpenAPIに出力される
+		// GET: api/monster
+		/// <summary>
+		/// <see cref="Monster"/>一覧を取得
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		public IEnumerable<Monster> Get() {
+			return _monsters.OrderBy(entry => entry.Key).Select(entry => entry.Value);
 		}
 
 		// todo:
@@ -39,7 +43,6 @@ namespace OpenApiWebApi.Controllers {
 		// GET api/<MonsterController>/5
 		[HttpGet("{id}")]
 		public string Get(int id) {
-			return "value";
 		}
 
 		// POST api/<MonsterController>
