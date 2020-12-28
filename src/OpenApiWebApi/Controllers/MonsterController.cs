@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenApiWebApi.Models;
 using System;
@@ -43,6 +44,8 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <returns></returns>
 		[HttpGet("{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult<Monster> Get(int id) {
 			if (!_monsters.TryGetValue(id, out var monster)) {
 				return NotFound();
