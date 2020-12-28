@@ -28,7 +28,6 @@ namespace OpenApiWebApi.Controllers {
 			}.ToDictionary(monster => monster.Id);
 
 		// アクションメソッドのsummaryがOpenAPIに出力される
-		// GET: api/monster
 		/// <summary>
 		/// <see cref="Monster"/>一覧を取得
 		/// </summary>
@@ -38,13 +37,22 @@ namespace OpenApiWebApi.Controllers {
 			return _monsters.OrderBy(entry => entry.Key).Select(entry => entry.Value);
 		}
 
-		// todo:
-		/*
-		// GET api/<MonsterController>/5
+		/// <summary>
+		/// モンスターIDで<see cref="Monster"/>を取得
+		/// </summary>
+		/// <param name="id">モンスターID</param>
+		/// <returns></returns>
 		[HttpGet("{id}")]
-		public string Get(int id) {
+		public ActionResult<Monster> Get(int id) {
+			if (!_monsters.TryGetValue(id, out var monster)) {
+				return NotFound();
+			}
+
+			return monster;
 		}
 
+		// todo:
+		/*
 		// POST api/<MonsterController>
 		[HttpPost]
 		public void Post([FromBody] string value) {
