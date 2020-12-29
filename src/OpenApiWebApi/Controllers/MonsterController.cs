@@ -48,6 +48,7 @@ namespace OpenApiWebApi.Controllers {
 		/// <returns></returns>
 		[HttpGet("{id}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult<Monster> Get(int id) {
 			if (!_monsters.TryGetValue(id, out var monster)) {
