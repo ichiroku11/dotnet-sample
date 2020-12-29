@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using OpenApiWebApi.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,18 +19,18 @@ namespace OpenApiWebApi.Controllers {
 	// OpenApiTags属性もあって紛らわしい
 	[OpenApiTag(nameof(Monster), Description = "モンスター")]
 	public class MonsterController : ControllerBase {
-
-		private static readonly Dictionary<int, Monster> _monsters
-			= new[] {
-				new Monster {
-					Id = 1,
-					Name = "スライム"
-				},
-				new Monster {
-					Id = 2,
-					Name = "ドラキー"
-				}
-			}.ToDictionary(monster => monster.Id);
+		private static readonly ConcurrentDictionary<int, Monster> _monsters
+			= new ConcurrentDictionary<int, Monster>(
+				new[] {
+					new Monster {
+						Id = 1,
+						Name = "スライム"
+					},
+					new Monster {
+						Id = 2,
+						Name = "ドラキー"
+					}
+				}.ToDictionary(monster => monster.Id));
 
 		// アクションメソッドのsummaryがOpenAPIに出力される
 		/// <summary>

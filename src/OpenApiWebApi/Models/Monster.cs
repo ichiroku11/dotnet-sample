@@ -12,10 +12,10 @@ namespace OpenApiWebApi.Models {
 		/// <summary>
 		/// ID
 		/// </summary>
-		public int Id { get; set; }
+		public int Id { get; init; }
 		/// <summary>
 		/// 名前
 		/// </summary>
-		public string Name { get; set; }
+		public string Name { get; init; }
 	}
 }
