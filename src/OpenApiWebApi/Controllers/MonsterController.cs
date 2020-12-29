@@ -50,6 +50,9 @@ namespace OpenApiWebApi.Controllers {
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		// Typeを指定しなくても戻り値の型を特定してくれる様子
+		//[ProducesResponseType(typeof(Monster), StatusCodes.Status200OK)]
+		//[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
 		public ActionResult<Monster> Get(int id) {
 			if (!_monsters.TryGetValue(id, out var monster)) {
 				return NotFound();
