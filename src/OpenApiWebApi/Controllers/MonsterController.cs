@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using OpenApiWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace OpenApiWebApi.Controllers {
 	/// </summary>
 	[Route("api/[controller]")]
 	[ApiController]
+	// OpenApiTags属性もあって紛らわしい
+	[OpenApiTag(nameof(Monster), Description = "モンスター")]
 	public class MonsterController : ControllerBase {
 
 		private static readonly Dictionary<int, Monster> _monsters
