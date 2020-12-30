@@ -35,7 +35,6 @@ namespace OpenApiWebApi.Controllers {
 		// 最大ID
 		private static int _maxId = 2;
 
-
 		// アクションメソッドのsummaryがOpenAPIに出力される
 		/// <summary>
 		/// モンスター一覧を取得
@@ -81,8 +80,8 @@ namespace OpenApiWebApi.Controllers {
 				Name = request.Name,
 			};
 
-			// todo:
 			if (!_monsters.TryAdd(id, monster)) {
+				// 追加に失敗することはありえないはず
 				throw new InvalidOperationException();
 			}
 
@@ -125,8 +124,8 @@ namespace OpenApiWebApi.Controllers {
 				return NotFound();
 			}
 
-			// todo:
 			if (!_monsters.TryRemove(id, out _)) {
+				// 2つのリクエストから同時に削除された場合に失敗するはずだが、エラーとするかは仕様次第か
 				throw new InvalidOperationException();
 			}
 
