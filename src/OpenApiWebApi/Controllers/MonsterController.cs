@@ -81,6 +81,7 @@ namespace OpenApiWebApi.Controllers {
 				Name = request.Name,
 			};
 
+			// todo:
 			if (!_monsters.TryAdd(id, monster)) {
 				throw new InvalidOperationException();
 			}
@@ -96,9 +97,10 @@ namespace OpenApiWebApi.Controllers {
 		[HttpPut("{id}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public IActionResult Put(int id, [FromBody] MonsterUpdateRequest request) {
 			if (!_monsters.ContainsKey(id)) {
-				return BadRequest();
+				return NotFound();
 			}
 
 			_monsters[id] = new Monster {
@@ -109,12 +111,26 @@ namespace OpenApiWebApi.Controllers {
 			return NoContent();
 		}
 
-		// todo:
-		/*
-		// DELETE api/<MonsterController>/5
+		/// <summary>
+		/// モンスターを削除
+		/// </summary>
+		/// <param name="id">モンスターID</param>
+		/// <returns></returns>
 		[HttpDelete("{id}")]
-		public void Delete(int id) {
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public IActionResult Delete(int id) {
+			if (!_monsters.ContainsKey(id)) {
+				return NotFound();
+			}
+
+			// todo:
+			if (!_monsters.TryRemove(id, out _)) {
+				throw new InvalidOperationException();
+			}
+
+			return NoContent();
 		}
-		*/
 	}
 }
