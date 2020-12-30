@@ -12,6 +12,12 @@ using System.Threading.Tasks;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace OpenApiWebApi.Controllers {
+	// コントローラにApiConventionType属性を指定し、
+	// 各メソッドでProducesResponseType属性が存在しない場合に、
+	// typeof(DefaultApiConventions)の型で指定された規約が適用される様子
+	// https://docs.microsoft.com/ja-jp/aspnet/core/web-api/advanced/conventions?view=aspnetcore-5.0
+	//[ApiConventionType(typeof(DefaultApiConventions))]
+
 	/// <summary>
 	/// 
 	/// </summary>
