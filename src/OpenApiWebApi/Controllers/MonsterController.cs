@@ -88,14 +88,19 @@ namespace OpenApiWebApi.Controllers {
 			return CreatedAtAction(nameof(Get), new { id }, monster);
 		}
 
-		// todo:
-		/*
-		// PUT api/<MonsterController>/5
+		/// <summary>
+		/// モンスターを更新
+		/// </summary>
+		/// <param name="id">モンスターID</param>
+		/// <param name="request">更新モンスター更新リクエスト</param>
 		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value) {
+		public void Put(int id, [FromBody] MonsterUpdateRequest request) {
+			// todo:
+			throw new NotImplementedException();
 		}
 
-
+		// todo:
+		/*
 		// DELETE api/<MonsterController>/5
 		[HttpDelete("{id}")]
 		public void Delete(int id) {
