@@ -47,6 +47,8 @@ namespace OpenApiWebApi.Controllers {
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
+		[ProducesDefaultResponseType]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		public IEnumerable<Monster> Get() {
 			return _monsters.OrderBy(entry => entry.Key).Select(entry => entry.Value);
 		}
@@ -57,6 +59,7 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <returns></returns>
 		[HttpGet("{id}")]
+		[ProducesDefaultResponseType]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -77,6 +80,7 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="request">モンスター追加リクエスト</param>
 		/// <returns></returns>
 		[HttpPost]
+		[ProducesDefaultResponseType]
 		[ProducesResponseType(StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public ActionResult<Monster> Post([FromBody] MonsterAddRequest request) {
@@ -100,6 +104,7 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <param name="request">モンスター更新リクエスト</param>
 		[HttpPut("{id}")]
+		[ProducesDefaultResponseType]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -122,6 +127,7 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <returns></returns>
 		[HttpDelete("{id}")]
+		[ProducesDefaultResponseType]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
