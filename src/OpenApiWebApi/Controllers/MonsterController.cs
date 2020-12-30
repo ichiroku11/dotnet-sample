@@ -92,11 +92,21 @@ namespace OpenApiWebApi.Controllers {
 		/// モンスターを更新
 		/// </summary>
 		/// <param name="id">モンスターID</param>
-		/// <param name="request">更新モンスター更新リクエスト</param>
+		/// <param name="request">モンスター更新リクエスト</param>
 		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] MonsterUpdateRequest request) {
-			// todo:
-			throw new NotImplementedException();
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public IActionResult Put(int id, [FromBody] MonsterUpdateRequest request) {
+			if (!_monsters.ContainsKey(id)) {
+				return BadRequest();
+			}
+
+			_monsters[id] = new Monster {
+				Id = id,
+				Name = request.Name,
+			};
+
+			return NoContent();
 		}
 
 		// todo:
