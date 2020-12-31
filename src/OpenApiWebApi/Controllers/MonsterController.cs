@@ -23,6 +23,7 @@ namespace OpenApiWebApi.Controllers {
 	/// </summary>
 	[Route("api/[controller]")]
 	[ApiController]
+	[ApiConventionType(typeof(ApiConventions))]
 	// OpenApiTags属性もあって紛らわしい
 	[OpenApiTag(nameof(Monster), Description = "モンスター")]
 	public class MonsterController : ControllerBase {
@@ -47,8 +48,6 @@ namespace OpenApiWebApi.Controllers {
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
-		[ProducesDefaultResponseType]
-		[ProducesResponseType(StatusCodes.Status200OK)]
 		public IEnumerable<Monster> Get() {
 			return _monsters.OrderBy(entry => entry.Key).Select(entry => entry.Value);
 		}
@@ -59,13 +58,6 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <returns></returns>
 		[HttpGet("{id}")]
-		[ProducesDefaultResponseType]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		// Typeを指定しなくても戻り値の型を特定してくれる様子
-		//[ProducesResponseType(typeof(Monster), StatusCodes.Status200OK)]
-		//[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
 		public ActionResult<Monster> Get(int id) {
 			if (!_monsters.TryGetValue(id, out var monster)) {
 				return NotFound();
@@ -80,9 +72,6 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="request">モンスター追加リクエスト</param>
 		/// <returns></returns>
 		[HttpPost]
-		[ProducesDefaultResponseType]
-		[ProducesResponseType(StatusCodes.Status201Created)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public ActionResult<Monster> Post([FromBody] MonsterAddRequest request) {
 			var id = Interlocked.Increment(ref _maxId);
 			var monster = new Monster {
@@ -104,10 +93,6 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <param name="request">モンスター更新リクエスト</param>
 		[HttpPut("{id}")]
-		[ProducesDefaultResponseType]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public IActionResult Put(int id, [FromBody] MonsterUpdateRequest request) {
 			if (!_monsters.ContainsKey(id)) {
 				return NotFound();
@@ -127,10 +112,6 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="id">モンスターID</param>
 		/// <returns></returns>
 		[HttpDelete("{id}")]
-		[ProducesDefaultResponseType]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public IActionResult Delete(int id) {
 			if (!_monsters.ContainsKey(id)) {
 				return NotFound();
