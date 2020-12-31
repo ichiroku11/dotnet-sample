@@ -46,10 +46,22 @@ namespace OpenApiWebApi.Controllers {
 		/// <summary>
 		/// モンスター一覧を取得
 		/// </summary>
+		/// <param name="request">モンスター問い合わせリクエスト</param>
 		/// <returns></returns>
 		[HttpGet]
-		public IEnumerable<Monster> Get() {
-			return _monsters.OrderBy(entry => entry.Key).Select(entry => entry.Value);
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesDefaultResponseType]
+		public IEnumerable<Monster> Get([FromQuery] MonsterQueryRequest request) {
+			var monsters = _monsters
+				.OrderBy(entry => entry.Key)
+				.Select(entry => entry.Value);
+
+			monsters = string.IsNullOrEmpty(request.Name)
+				? monsters
+				: monsters.Where(monster => monster.Name.Contains(request.Name));
+
+			return monsters;
 		}
 
 		/// <summary>

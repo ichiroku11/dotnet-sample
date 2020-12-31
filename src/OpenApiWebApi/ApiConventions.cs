@@ -16,15 +16,6 @@ namespace OpenApiWebApi {
 		/// <summary>
 		/// Get
 		/// </summary>
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesDefaultResponseType]
-		[ApiConventionNameMatch(ApiConventionNameMatchBehavior.Prefix)]
-		public static void Get() {
-		}
-
-		/// <summary>
-		/// Get
-		/// </summary>
 		/// <param name="id"></param>
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
