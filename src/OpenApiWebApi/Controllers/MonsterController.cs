@@ -9,8 +9,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace OpenApiWebApi.Controllers {
 	// コントローラにApiConventionType属性を指定し、
 	// 各メソッドでProducesResponseType属性が存在しない場合に、
@@ -49,6 +47,7 @@ namespace OpenApiWebApi.Controllers {
 		/// <param name="request">モンスター問い合わせリクエスト</param>
 		/// <returns></returns>
 		[HttpGet]
+		// ApiConventionType属性による規約が適用されないのでProducesResponseType属性を指定する
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesDefaultResponseType]
