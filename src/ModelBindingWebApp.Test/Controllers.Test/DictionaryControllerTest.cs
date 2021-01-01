@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using ModelBindingWebApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -78,10 +79,10 @@ namespace ModelBindingWebApp.Controllers.Test {
 		public static IEnumerable<object[]> GetComplexValues() {
 			yield return new object[] {
 				new Dictionary<string, string>() {
-					{ "values[0].Id", "1" },
-					{ "values[0].Name", "a" },
-					{ "values[1].Id", "2" },
-					{ "values[1].Name", "b" },
+					{ "values[1].Id", "1" },
+					{ "values[1].Name", "a" },
+					{ "values[2].Id", "2" },
+					{ "values[2].Name", "b" },
 				},
 			};
 
@@ -97,7 +98,7 @@ namespace ModelBindingWebApp.Controllers.Test {
 			};
 		}
 
-		[Theory(DisplayName = "IDictionary<int, Sample>型のvaluesにバインドできず、NotSupportedExceptionがスローされる様子")]
+		[Theory(DisplayName = "IDictionary<int, Sample>型のvaluesにバインドできる")]
 		[MemberData(nameof(GetComplexValues))]
 		public async Task PostAsync_BindToComplexModelDictionary(IEnumerable<KeyValuePair<string, string>> formValues) {
 			// Arrange
@@ -107,10 +108,15 @@ namespace ModelBindingWebApp.Controllers.Test {
 
 			// Act
 			using var response = await SendAsync(request);
+			var json = await response.Content.ReadAsStringAsync();
+			var values = JsonSerializer.Deserialize<IDictionary<string, Sample>>(json, _jsonSerializerOptions);
 
 			// Assert
-			// バインドできない
-			Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+			Assert.Equal(2, values.Count);
+			Assert.Equal(1, values["1"].Id);
+			Assert.Equal("a", values["1"].Name);
+			Assert.Equal(2, values["2"].Id);
+			Assert.Equal("b", values["2"].Name);
 		}
 	}
 }
