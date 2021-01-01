@@ -1,0 +1,17 @@
+@model UserUpdateCommand
+@{
+	ViewBag.Title = "Index";
+}
+<div asp-validation-summary="All"></div>
+<form asp-action="Index" method="post">
+	@* 表示名だけ入力してPOSTすると、バリデーションエラー *@
+	<div>
+		<label asp-for="MailAddress"></label>
+		<input asp-for="MailAddress" />
+	</div>
+	<div>
+		<label asp-for="DisplayName"></label>
+		<input asp-for="DisplayName" />
+	</div>
+	<button>Save</button>
+</form>

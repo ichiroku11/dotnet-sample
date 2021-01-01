@@ -1,0 +1,18 @@
+@model MonsterViewModel
+@{
+	ViewBag.Title = "Index";
+}
+
+<div asp-validation-summary="All"></div>
+<form asp-action="Save">
+	<div>
+		<input asp-for="Form.Id" />
+	</div>
+	<div>
+		<select asp-for="Form.Category" asp-items="Model.CategorySelectListItems"></select>
+	</div>
+	<div>
+		<input asp-for="Form.Name" />
+	</div>
+	<button>保存</button>
+</form>
