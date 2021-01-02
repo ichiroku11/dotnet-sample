@@ -76,6 +76,8 @@ namespace ModelBindingWebApp.Controllers.Test {
 			Assert.Equal(2, values["b"]);
 		}
 
+		// 参照
+		// https://docs.microsoft.com/ja-jp/aspnet/core/mvc/models/model-binding?view=aspnetcore-5.0#dictionaries
 		public static IEnumerable<object[]> GetComplexValues() {
 			yield return new object[] {
 				new Dictionary<string, string>() {
