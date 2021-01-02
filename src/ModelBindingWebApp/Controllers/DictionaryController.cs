@@ -25,10 +25,10 @@ namespace ModelBindingWebApp.Controllers {
 			return values;
 		}
 
-		// 3.xではバインドできない様子だった
-		// NotSupportedExceptionがスローされる
+		// 5.0 => バインドできる
+		// 3.x => バインドできない様子だった
+		// NotSupportedExceptionがスローされた
 		// The collection type 'System.Collections.Generic.Dictionary`2[System.Int32,MiscWebApi.Models.Sample]' is not supported.
-		// 5.0ではバインドできる
 		// ~/api/dictionary/complex
 		[HttpPost("complex")]
 		public async Task<IDictionary<int, Sample>> PostAsync(
