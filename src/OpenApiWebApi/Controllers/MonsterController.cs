@@ -16,8 +16,9 @@ namespace OpenApiWebApi.Controllers {
 	// https://docs.microsoft.com/ja-jp/aspnet/core/web-api/advanced/conventions?view=aspnetcore-5.0
 	//[ApiConventionType(typeof(DefaultApiConventions))]
 
+	// クラスののsummaryがOpenAPIに出力されない？
 	/// <summary>
-	/// 
+	/// モンスターコントローラ
 	/// </summary>
 	[Route("api/[controller]")]
 	[ApiController]
