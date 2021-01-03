@@ -24,7 +24,9 @@ namespace OpenApiWebApi.Controllers {
 	[ApiController]
 	[ApiConventionType(typeof(ApiConventions))]
 	// OpenApiTags属性もあって紛らわしい
-	[OpenApiTag(nameof(Monster), Description = "モンスター")]
+	// https://github.com/RicoSuter/NSwag/issues/2242
+	// OpenApiTag属性を指定しない場合、コントローラ名が使われる様子
+	[OpenApiTag("Monster", Description = "モンスター")]
 	public class MonsterController : ControllerBase {
 		private static readonly ConcurrentDictionary<int, Monster> _monsters
 			= new ConcurrentDictionary<int, Monster>(
