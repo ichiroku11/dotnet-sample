@@ -10,4 +10,8 @@
     <PackageReference Include="NSwag.AspNetCore" Version="13.9.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SampleLib\SampleLib.csproj" />
+  </ItemGroup>
+
 </Project>
