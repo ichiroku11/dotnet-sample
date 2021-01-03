@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SampleTest.Linq {
+namespace SampleLib.Linq {
 	public static class EnumerableExtensions {
 		/// <summary>
 		/// 一意の要素を取得

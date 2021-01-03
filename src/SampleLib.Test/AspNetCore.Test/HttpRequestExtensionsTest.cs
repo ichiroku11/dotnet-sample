@@ -7,7 +7,7 @@ using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.AspNetCore {
+namespace SampleLib.AspNetCore.Test {
 	public class HttpRequestExtensionsTest {
 		private static HttpRequest CreateRequest(string scheme, string host, string pathBase) {
 			var context = new DefaultHttpContext();

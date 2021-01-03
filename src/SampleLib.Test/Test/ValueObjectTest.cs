@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace SampleTest {
+namespace SampleLib.Test {
 	public class ValueObjectTest {
 		private class SampleObject : ValueObject {
 			public SampleObject(string text, int nuber) {

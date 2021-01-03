@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace SampleTest.Linq {
+namespace SampleLib.Linq.Test {
 	public class EnumerableExtensionsTest {
 		public class Sample {
 			public int Number { get; set; }

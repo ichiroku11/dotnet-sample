@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTest.Net {
+namespace SampleLib.Net {
 	public class IPAddressHelper {
 		// オクテットの値 => マスクのバイト
 		private static readonly Dictionary<int, byte> _octetPrefixToByte = new() {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SampleTest {
+namespace SampleLib {
 	/// <summary>
 	/// Enum値のAttributeのキャッシュ
 	/// </summary>

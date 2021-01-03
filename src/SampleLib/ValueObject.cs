@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SampleTest {
+namespace SampleLib {
 	// https://github.com/dotnet-architecture/eShopOnContainers/blob/dev/src/Services/Ordering/Ordering.Domain/SeedWork/ValueObject.cs
 	public abstract class ValueObject {
 		protected static bool EqualOperator(ValueObject left, ValueObject right) {

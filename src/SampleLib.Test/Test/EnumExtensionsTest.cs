@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Xunit;
 
-namespace SampleTest {
+namespace SampleLib.Test {
 	public class EnumExtensionsTest {
 		private enum Fruit {
 			None = 0,

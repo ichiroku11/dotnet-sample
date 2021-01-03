@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Threading {
+namespace SampleLib.Threading.Test {
 	public class TaskExtensionsTest {
 		[Fact]
 		public async void FireAndForget_試してみる() {

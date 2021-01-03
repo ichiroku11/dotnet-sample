@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTest.Threading {
+namespace SampleLib.Threading {
 	public static class TaskExtensions {
 		// More Effective　C# 6.0/7.0 p.133
 		/// <summary>

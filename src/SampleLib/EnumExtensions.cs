@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace SampleTest {
+namespace SampleLib {
 	public static class EnumExtensions {
 		/// <summary>
 		/// 表示名を取得

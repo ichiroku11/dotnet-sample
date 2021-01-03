@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace SampleTest {
+namespace SampleLib.Test {
 	public class EnumHelperTest {
 		private enum Fruit {
 			None = 0,

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace SampleTest {
+namespace SampleLib {
 	public static class EnumHelper {
 		/// <summary>
 		/// TEnum=>TAttributeのDictionaryを取得

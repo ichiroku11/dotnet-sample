@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleTest.Net {
+namespace SampleLib.Net {
 	public static class IPAddressExtensions {
 		/// <summary>
 		/// IPv4の論理AND演算

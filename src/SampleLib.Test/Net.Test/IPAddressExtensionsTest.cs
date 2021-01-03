@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Net {
+namespace SampleLib.Net.Test {
 	public class IPAddressExtensionsTest {
 		public static IEnumerable<object[]> GetTestDataForIPv4LogicalAnd() {
 			yield return new object[] {
