@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace SampleTest.Text.Json {
 	public class JsonStringEnumConverterTest {
@@ -16,8 +17,14 @@ namespace SampleTest.Text.Json {
 			NotFound,
 		}
 
-		private class Sample {
+		private class SampleData {
 			public SampleCode Code { get; set; }
+		}
+
+		private readonly ITestOutputHelper _output;
+
+		public JsonStringEnumConverterTest(ITestOutputHelper output) {
+			_output = output;
 		}
 
 		[Fact]
@@ -27,7 +34,7 @@ namespace SampleTest.Text.Json {
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 			};
 
-			var data = new Sample {
+			var data = new SampleData {
 				Code = SampleCode.Ok,
 			};
 
@@ -50,7 +57,7 @@ namespace SampleTest.Text.Json {
 			};
 			options.Converters.Add(new JsonStringEnumConverter(camelCase ? JsonNamingPolicy.CamelCase : null));
 
-			var data = new Sample {
+			var data = new SampleData {
 				Code = SampleCode.NotFound,
 			};
 
@@ -59,6 +66,37 @@ namespace SampleTest.Text.Json {
 
 			// Assert
 			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
+		public void デフォルトでは数値をenumにデシリアライズする() {
+			// Arrange
+			var json = @"{""code"":1}";
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// Act
+			var data = JsonSerializer.Deserialize<SampleData>(json, options);
+
+			// Assert
+			Assert.Equal(SampleCode.Ok, data.Code);
+		}
+
+		[Fact]
+		public void デフォルトでは文字列をenumにデシリアライズできず例外が発生する() {
+			// Arrange
+			var json = @"{""code"":""Ok""}";
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// Act
+			// Assert
+			var exception = Assert.Throws<JsonException>(() => {
+				JsonSerializer.Deserialize<SampleData>(json, options);
+			});
+			_output.WriteLine(exception.ToString());
 		}
 	}
 }
