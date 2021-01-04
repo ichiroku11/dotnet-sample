@@ -106,8 +106,15 @@ namespace SampleTest.Text.Json {
 
 		[Fact]
 		public void Deserialize_ValueTupleに変換できない() {
-			var (number, text) = JsonSerializer.Deserialize<(int number, string text)>(@"{""number"":1,""text"":""Abc""}");
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
 
+			// Act
+			var (number, text) = JsonSerializer.Deserialize<(int number, string text)>(@"{""number"":1,""text"":""Abc""}", options);
+
+			// Assert
 			Assert.Equal(0, number);
 			Assert.Null(text);
 		}
