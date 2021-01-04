@@ -98,5 +98,27 @@ namespace SampleTest.Text.Json {
 			});
 			_output.WriteLine(exception.ToString());
 		}
+
+		[Theory]
+		[InlineData(@"{""code"":2}")]
+		[InlineData(@"{""code"":""2""}")]
+		[InlineData(@"{""code"":""NotFound""}")]
+		[InlineData(@"{""code"":""notFound""}")]
+		[InlineData(@"{""code"":""notfound""}")]
+		public void Deerialize_JsonStringEnumConverterを使って文字列をenumにデシリアライズする(string json) {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+			options.Converters.Add(new JsonStringEnumConverter());
+
+			// Act
+			var data = JsonSerializer.Deserialize<SampleData>(json, options);
+
+			// Assert
+			Assert.Equal(SampleCode.NotFound, data.Code);
+
+		}
+
 	}
 }
