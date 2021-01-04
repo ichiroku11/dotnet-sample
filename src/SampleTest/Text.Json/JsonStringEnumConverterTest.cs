@@ -100,11 +100,14 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Theory]
-		[InlineData(@"{""code"":2}")]
-		[InlineData(@"{""code"":""2""}")]
 		[InlineData(@"{""code"":""NotFound""}")]
+		// キャメルケース、すべて大文字・小文字でもデイシリアライズできる
 		[InlineData(@"{""code"":""notFound""}")]
 		[InlineData(@"{""code"":""notfound""}")]
+		[InlineData(@"{""code"":""NOTFOUND""}")]
+		// 数字、数字の文字列でもデイシリアライズできる
+		[InlineData(@"{""code"":2}")]
+		[InlineData(@"{""code"":""2""}")]
 		public void Deerialize_JsonStringEnumConverterを使って文字列をenumにデシリアライズする(string json) {
 			// Arrange
 			var options = new JsonSerializerOptions {
