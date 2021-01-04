@@ -38,7 +38,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void デフォルトではDateTimeにデシリアライズできない独自の形式の日付文字列がある() {
+		public void Deserialize_デフォルトではDateTimeにデシリアライズできない独自の形式の日付文字列がある() {
 			// Arrange
 			var json = @"{""value"":""2020/06/01 12:34:56""}";
 			var options = new JsonSerializerOptions {
@@ -54,7 +54,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void 独自の形式の日付文字列をDateTimeにデシリアライズする() {
+		public void Deserialize_独自の形式の日付文字列をDateTimeにデシリアライズする() {
 			// Arrange
 			var json = @"{""value"":""2020/06/01 12:34:56""}";
 			var options = new JsonSerializerOptions {

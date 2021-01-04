@@ -32,7 +32,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void JsonConverter属性を使ってboolを数値にシリアライズする() {
+		public void Serialize_JsonConverter属性を使ってboolを数値にシリアライズする() {
 			// Arrange
 			var data = new ConverterSample {
 				Enable = true,
@@ -49,7 +49,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void JsonConverter属性を使って数値をboolにデシリアライズする() {
+		public void Deserialize_JsonConverter属性を使って数値をboolにデシリアライズする() {
 			// Arrange
 			var json = @"{""enable"":1}";
 			var options = new JsonSerializerOptions {

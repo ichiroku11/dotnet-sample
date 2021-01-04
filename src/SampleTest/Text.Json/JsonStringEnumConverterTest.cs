@@ -28,7 +28,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void デフォルトではenumは数値にシリアライズされる() {
+		public void Serialize_デフォルトではenumは数値にシリアライズされる() {
 			// Arrange
 			var options = new JsonSerializerOptions {
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -50,7 +50,7 @@ namespace SampleTest.Text.Json {
 		[InlineData(false, @"{""code"":""NotFound""}")]
 		// JsonStringEnumConverterにJsonNamingPolicy.CamelCaseを指定すると、enum値をキャメルケースでシリアライズできる
 		[InlineData(true, @"{""code"":""notFound""}")]
-		public void JsonStringEnumConverterを使ってenumを文字列としてシリアライズする(bool camelCase, string expected) {
+		public void Serialize_JsonStringEnumConverterを使ってenumを文字列としてシリアライズする(bool camelCase, string expected) {
 			// Arrange
 			var options = new JsonSerializerOptions {
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -69,7 +69,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void デフォルトでは数値をenumにデシリアライズする() {
+		public void Deserialize_デフォルトでは数値をenumにデシリアライズできる() {
 			// Arrange
 			var json = @"{""code"":1}";
 			var options = new JsonSerializerOptions {
@@ -84,7 +84,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void デフォルトでは文字列をenumにデシリアライズできず例外が発生する() {
+		public void Deerialize_デフォルトでは文字列をenumにデシリアライズできず例外が発生する() {
 			// Arrange
 			var json = @"{""code"":""Ok""}";
 			var options = new JsonSerializerOptions {
