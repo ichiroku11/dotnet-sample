@@ -9,17 +9,7 @@ using Xunit.Abstractions;
 
 namespace SampleTest.Text.Json {
 	public class DateTimeConverterTest {
-		private readonly ITestOutputHelper _output;
-
-		public DateTimeConverterTest(ITestOutputHelper output) {
-			_output = output;
-		}
-
-		private class ConverterSample {
-			public DateTime Value { get; set; }
-		}
-
-		// 独自フォーマットの日付文字列とDateTimeを変換するコンバータ
+		// 独自フォーマットの日付文字列とDateTimeを変換するJsonConverter
 		private class DateTimeConverter : JsonConverter<DateTime> {
 			private static readonly string _format = "yyyy/MM/dd HH:mm:ss";
 
@@ -34,6 +24,17 @@ namespace SampleTest.Text.Json {
 				DateTime value,
 				JsonSerializerOptions options)
 				=> writer.WriteStringValue(value.ToString(_format, CultureInfo.InvariantCulture));
+		}
+
+		// JSONに変換するデータ
+		private class ConverterSample {
+			public DateTime Value { get; set; }
+		}
+
+		private readonly ITestOutputHelper _output;
+
+		public DateTimeConverterTest(ITestOutputHelper output) {
+			_output = output;
 		}
 
 		[Fact]

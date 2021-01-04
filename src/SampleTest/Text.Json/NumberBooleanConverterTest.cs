@@ -8,13 +8,7 @@ using Xunit.Abstractions;
 
 namespace SampleTest.Text.Json {
 	public class NumberBooleanConverterTest {
-		private readonly ITestOutputHelper _output;
-
-		public NumberBooleanConverterTest(ITestOutputHelper output) {
-			_output = output;
-		}
-
-		// 数値とboolを変換するコンバータ
+		// 数値とboolを変換するJsonConverter
 		private class NumberBooleanConverter : JsonConverter<bool> {
 			public override bool Read(
 				ref Utf8JsonReader reader,
@@ -31,6 +25,7 @@ namespace SampleTest.Text.Json {
 				=> writer.WriteNumberValue(value ? 1 : 0);
 		}
 
+		// JSONに変換するデータ
 		private class ConverterSample {
 			[JsonConverter(typeof(NumberBooleanConverter))]
 			public bool Enable { get; set; }
