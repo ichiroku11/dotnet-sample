@@ -83,10 +83,12 @@ namespace SampleTest.Text.Json {
 			Assert.Equal(SampleCode.Ok, data.Code);
 		}
 
-		[Fact]
-		public void Deerialize_デフォルトでは文字列をenumにデシリアライズできず例外が発生する() {
+		[Theory]
+		[InlineData(@"{""code"":""Ok""}")]
+		[InlineData(@"{""code"":""ok""}")]
+		[InlineData(@"{""code"":""1""}")]
+		public void Deerialize_デフォルトでは文字列をenumにデシリアライズできず例外が発生する(string json) {
 			// Arrange
-			var json = @"{""code"":""Ok""}";
 			var options = new JsonSerializerOptions {
 				PropertyNameCaseInsensitive = true,
 			};
