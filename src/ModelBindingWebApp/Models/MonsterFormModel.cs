@@ -10,14 +10,14 @@ namespace ModelBindingWebApp.Models {
 	public class MonsterFormModel : IValidatableObject {
 		[Display(Name = "ID")]
 		[Required(ErrorMessage = "{0}を入力してください")]
-		public int Id { get; set; }
+		public int Id { get; init; }
 
 		[Display(Name = "名前")]
 		[Required(ErrorMessage = "{0}を入力してください")]
-		public string Name { get; set; }
+		public string Name { get; init; }
 
 		[Display(Name = "カテゴリ")]
-		public MonsterCategory Category { get; set; }
+		public MonsterCategory Category { get; init; }
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
 			// ValidationContextはIServiceProviderを実装している

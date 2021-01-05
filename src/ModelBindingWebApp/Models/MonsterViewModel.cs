@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ModelBindingWebApp.Models {
 	public class MonsterViewModel {
-		public IEnumerable<SelectListItem> CategorySelectListItems { get; set; }
+		public IEnumerable<SelectListItem> CategorySelectListItems { get; init; }
 		// POSTする部分を別モデルとする
-		public MonsterFormModel Form { get; set; }
+		public MonsterFormModel Form { get; init; }
 	}
 }
