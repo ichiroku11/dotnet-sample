@@ -8,9 +8,9 @@ namespace ModelBindingWebApp.Models {
 	public class UserUpdateCommand {
 		[Display(Name = "メールアドレス")]
 		[Required]
-		public string MailAddress { get; set; }
+		public string MailAddress { get; init; }
 
 		[Display(Name = "表示名")]
-		public string DisplayName { get; set; }
+		public string DisplayName { get; init; }
 	}
 }
