@@ -159,5 +159,25 @@ namespace SampleTest.Text.Json {
 			Assert.NotNull(samples);
 			Assert.Empty(samples);
 		}
+
+		private class SampleWithInitOnlySetter {
+			public int Number { get; init; }
+			public string Text { get; init; }
+		}
+
+		[Fact]
+		public void Deserialize_init専用初期化子のプロパティに対してデイシリアライズできる() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// Act
+			var sample = JsonSerializer.Deserialize<SampleWithInitOnlySetter>(@"{""number"":1,""text"":""Abc""}", options);
+
+			// Assert
+			Assert.Equal(1, sample.Number);
+			Assert.Equal("Abc", sample.Text);
+		}
 	}
 }
