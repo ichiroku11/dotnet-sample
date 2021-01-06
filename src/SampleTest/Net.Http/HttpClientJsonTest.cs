@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,11 +18,7 @@ using Xunit.Abstractions;
 namespace SampleTest.Net.Http {
 	public class HttpClientJsonTest : IDisposable {
 		private class Sample {
-			private int Value { get; set; }
-		}
-
-		private static class ContentTypes {
-			public const string ApplicationJson = "application/json";
+			public int Value { get; init; }
 		}
 
 		private class Startup {
@@ -35,11 +32,8 @@ namespace SampleTest.Net.Http {
 						return;
 					}
 
-					// todo:
-					var json = "";
-
-					context.Response.ContentType = ContentTypes.ApplicationJson;
-					await context.Response.WriteAsync(json);
+					context.Response.ContentType = "application/json";
+					await context.Response.WriteAsJsonAsync(new Sample { Value = 1 });
 				});
 			}
 
@@ -50,11 +44,10 @@ namespace SampleTest.Net.Http {
 						return;
 					}
 
-					// todo:
-					var json = "";
+					var sample = await context.Request.ReadFromJsonAsync<Sample>();
 
-					context.Response.ContentType = ContentTypes.ApplicationJson;
-					await context.Response.WriteAsync(json);
+					context.Response.ContentType = "application/json";
+					await context.Response.WriteAsJsonAsync(sample);
 				});
 			}
 
@@ -84,15 +77,26 @@ namespace SampleTest.Net.Http {
 			_server.Dispose();
 		}
 
-		[Fact(Skip = "作成中")]
+		[Fact]
 		public async Task GetFromJsonAsync_使ってみる() {
 			// Arrange
-
 			// Act
 			var sample = await _client.GetFromJsonAsync<Sample>("/get");
 
 			// Assert
-			// todo:
+			Assert.Equal(1, sample.Value);
 		}
+
+		[Fact]
+		public async Task PostAsJsonAsync_使ってみる() {
+			// Arrange
+			// Act
+			var response = await _client.PostAsJsonAsync("/post", new Sample { Value = 2 });
+			var sample = await response.Content.ReadFromJsonAsync<Sample>();
+
+			// Assert
+			Assert.Equal(2, sample.Value);
+		}
+
 	}
 }
