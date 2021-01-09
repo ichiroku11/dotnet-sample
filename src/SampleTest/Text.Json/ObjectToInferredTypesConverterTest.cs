@@ -43,16 +43,6 @@ namespace SampleTest.Text.Json {
 			return options;
 		}
 
-		private class SampleData1 {
-			public object Value { get; init; }
-		}
-
-		private class SampleData2 {
-			// プロパティに定義されていないデータを扱う
-			[JsonExtensionData]
-			public Dictionary<string, object> Exts { get; init; }
-		}
-
 		public static IEnumerable<object[]> GetTestDataForDeserialize() {
 			yield return new object[] {
 				@"{""value"":true}",
@@ -72,6 +62,10 @@ namespace SampleTest.Text.Json {
 			};
 		}
 
+		private class SampleData1 {
+			public object Value { get; init; }
+		}
+
 		[Theory]
 		[MemberData(nameof(GetTestDataForDeserialize))]
 		public void Deserialize_推論された型をobjectのプロパティにデシリアライズする(string json, object expected) {
@@ -83,6 +77,12 @@ namespace SampleTest.Text.Json {
 			// Assert
 			Assert.IsType(expected.GetType(), data.Value);
 			Assert.Equal(expected, data.Value);
+		}
+
+		private class SampleData2 {
+			// プロパティに定義されていないデータを扱う
+			[JsonExtensionData]
+			public Dictionary<string, object> Exts { get; init; }
 		}
 
 		[Theory]
