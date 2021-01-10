@@ -18,7 +18,7 @@ namespace SampleTest.Text.Json {
 					// bool
 					JsonTokenType.True => true,
 					JsonTokenType.False => false,
-					// int
+					// long
 					JsonTokenType.Number when reader.TryGetInt64(out var value) => value,
 					// double
 					JsonTokenType.Number => reader.GetDouble(),
@@ -26,6 +26,7 @@ namespace SampleTest.Text.Json {
 					JsonTokenType.String when reader.TryGetDateTime(out DateTime datetime) => datetime,
 					// string
 					JsonTokenType.String => reader.GetString(),
+					// 上記以外（たぶんオブジェクトとか配列とか）
 					_ => JsonDocument.ParseValue(ref reader).RootElement.Clone()
 				};
 
@@ -44,18 +45,25 @@ namespace SampleTest.Text.Json {
 		}
 
 		public static IEnumerable<object[]> GetTestDataForDeserialize() {
+			// bool
 			yield return new object[] {
 				@"{""value"":true}",
 				true
 			};
+
+			// long
 			yield return new object[] {
 				@"{""value"":1}",
 				1L
 			};
+
+			// string
 			yield return new object[] {
 				@"{""value"":""abc""}",
 				"abc"
 			};
+
+			// DateTime
 			yield return new object[] {
 				@"{""value"":""2021-01-09""}",
 				new DateTime(2021, 1, 9),
