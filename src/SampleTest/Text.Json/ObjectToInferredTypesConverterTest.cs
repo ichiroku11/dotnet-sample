@@ -46,28 +46,16 @@ namespace SampleTest.Text.Json {
 
 		public static IEnumerable<object[]> GetTestDataForDeserialize() {
 			// bool
-			yield return new object[] {
-				@"{""value"":true}",
-				true
-			};
+			yield return new object[] { @"{""value"":true}", true };
 
 			// long
-			yield return new object[] {
-				@"{""value"":1}",
-				1L
-			};
+			yield return new object[] { @"{""value"":1}", 1L };
 
 			// string
-			yield return new object[] {
-				@"{""value"":""abc""}",
-				"abc"
-			};
+			yield return new object[] { @"{""value"":""abc""}", "abc" };
 
 			// DateTime
-			yield return new object[] {
-				@"{""value"":""2021-01-09""}",
-				new DateTime(2021, 1, 9),
-			};
+			yield return new object[] { @"{""value"":""2021-01-09""}", new DateTime(2021, 1, 9), };
 		}
 
 		private class SampleData1 {
