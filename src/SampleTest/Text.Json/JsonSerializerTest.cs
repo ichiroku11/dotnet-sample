@@ -185,6 +185,21 @@ namespace SampleTest.Text.Json {
 		private record SampleRecord(int Number, string Text);
 
 		[Fact]
+		public void Serialize_recordをシリアライズできる() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			};
+
+			// Act
+			var sample = new SampleRecord(1, "Abc");
+			var json = JsonSerializer.Serialize(sample, options);
+
+			// Assert
+			Assert.Equal(@"{""number"":1,""text"":""Abc""}", json);
+		}
+
+		[Fact]
 		public void Deserialize_recordに対してデイシリアライズできる() {
 			// Arrange
 			var options = new JsonSerializerOptions {
