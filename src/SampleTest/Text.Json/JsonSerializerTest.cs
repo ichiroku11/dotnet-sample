@@ -160,13 +160,14 @@ namespace SampleTest.Text.Json {
 			Assert.Empty(samples);
 		}
 
+		// init専用セッターのサンプル
 		private class SampleWithInitOnlySetter {
 			public int Number { get; init; }
 			public string Text { get; init; }
 		}
 
 		[Fact]
-		public void Deserialize_init専用初期化子のプロパティに対してデイシリアライズできる() {
+		public void Deserialize_init専用セッターのプロパティに対してデイシリアライズできる() {
 			// Arrange
 			var options = new JsonSerializerOptions {
 				PropertyNameCaseInsensitive = true,
@@ -174,6 +175,24 @@ namespace SampleTest.Text.Json {
 
 			// Act
 			var sample = JsonSerializer.Deserialize<SampleWithInitOnlySetter>(@"{""number"":1,""text"":""Abc""}", options);
+
+			// Assert
+			Assert.Equal(1, sample.Number);
+			Assert.Equal("Abc", sample.Text);
+		}
+
+		// レコード型のサンプル
+		private record SampleRecord(int Number, string Text);
+
+		[Fact]
+		public void Deserialize_recordに対してデイシリアライズできる() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// Act
+			var sample = JsonSerializer.Deserialize<SampleRecord>(@"{""number"":1,""text"":""Abc""}", options);
 
 			// Assert
 			Assert.Equal(1, sample.Number);
