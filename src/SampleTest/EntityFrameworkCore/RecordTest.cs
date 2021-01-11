@@ -8,7 +8,7 @@ using Xunit;
 
 namespace SampleTest.EntityFrameworkCore {
 	[Collection("dbo.Sample")]
-	public class RecordTest {
+	public class RecordTest : IDisposable {
 		private record Sample(int Id, string Name);
 
 		private class SampleDbContext : AppDbContext {
@@ -55,6 +55,17 @@ values
 		private void DropTable() {
 			var sql = @"drop table if exists dbo.Sample;";
 			_context.Database.ExecuteSqlRaw(sql);
+		}
+
+		[Fact]
+		public async Task FirstOrDefault_record型のモデルを取得() {
+			// Arrange
+			// Act
+			var sample = await _context.Samples.FirstOrDefaultAsync();
+
+			// Assert
+			Assert.Equal(1, sample.Id);
+			Assert.Equal("a", sample.Name);
 		}
 	}
 }
