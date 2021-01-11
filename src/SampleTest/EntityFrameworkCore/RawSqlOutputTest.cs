@@ -10,12 +10,12 @@ namespace SampleTest.EntityFrameworkCore {
 	[Collection("dbo.Sample")]
 	public class RawSqlOutputTest : IDisposable {
 		private class Sample {
-			public int Id { get; set; }
-			public string Name { get; set; }
+			public int Id { get; init; }
+			public string Name { get; init; }
 		}
 
 		private class SampleDbContext : AppDbContext {
-			public DbSet<Sample> Samples { get; set; }
+			public DbSet<Sample> Samples { get; init; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {
 				modelBuilder.Entity<Sample>().ToTable(nameof(Sample));
