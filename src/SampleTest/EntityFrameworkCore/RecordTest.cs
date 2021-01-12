@@ -58,7 +58,7 @@ values
 		}
 
 		[Fact]
-		public async Task FirstOrDefault_record型のモデルを取得() {
+		public async Task FirstOrDefault_record型のモデルを取得する() {
 			// Arrange
 			// Act
 			var sample = await _context.Samples.FirstOrDefaultAsync();
@@ -66,6 +66,21 @@ values
 			// Assert
 			Assert.Equal(1, sample.Id);
 			Assert.Equal("a", sample.Name);
+		}
+
+		[Fact]
+		public async Task Add_record型のモデルを追加する() {
+			// Arrange
+			// Act
+			_context.Samples.Add(new Sample(2, "b"));
+			await _context.SaveChangesAsync();
+
+			var samples = await _context.Samples
+				.OrderBy(sample => sample.Id)
+				.ToListAsync();
+
+			// Assert
+			Assert.Equal(new[] { new Sample(1, "a"), new Sample(2, "b") }, samples);
 		}
 	}
 }
