@@ -11,7 +11,7 @@ namespace SampleTest {
 	// https://docs.microsoft.com/ja-jp/dotnet/csharp/tutorials/exploration/records
 	// https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 	public class RecordTest {
-		// レコード型
+		// 最小のレコード型
 		// コンストラクタの引数の名前は大文字で始める必要あり？
 		private record Vector2(int X = 0, int Y = 0);
 		// 以下、実装される
@@ -112,6 +112,25 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, vector1.X);
 			Assert.Equal(3, vector2.X);
+		}
+
+		// record型にメソッドを追加できる
+		private record Sample1(int Value = 0) {
+			// 特に意味のないメソッド
+			public int GetValue() => Value;
+		}
+
+		[Fact]
+		public void Record_メソッドを追加できる() {
+			// Arrange
+			// Act
+			var sample = new Sample1 {
+				Value = 1
+			};
+
+			// Assert
+			Assert.Equal(1, sample.Value);
+			Assert.Equal(1, sample.GetValue());
 		}
 	}
 }
