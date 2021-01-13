@@ -8,11 +8,18 @@ using Xunit;
 namespace SampleTest {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/csharp-9#record-types
+	// https://docs.microsoft.com/ja-jp/dotnet/csharp/tutorials/exploration/records
 	// https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 	public class RecordTest {
 		// レコード型
 		// コンストラクタの引数の名前は大文字で始める必要あり？
 		record Vector2(int X = 0, int Y = 0);
+		// 以下、実装される
+		// Equals
+		// GetHashCode
+		// operator ==
+		// operator !=
+		// IEquatable<T>
 
 		[Fact]
 		public void Record_とりあえず使ってみる() {
