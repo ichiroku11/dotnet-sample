@@ -13,7 +13,7 @@ namespace SampleTest {
 	public class RecordTest {
 		// レコード型
 		// コンストラクタの引数の名前は大文字で始める必要あり？
-		record Vector2(int X = 0, int Y = 0);
+		private record Vector2(int X = 0, int Y = 0);
 		// 以下、実装される
 		// Equals
 		// GetHashCode
