@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
@@ -71,6 +71,20 @@ namespace SampleTest {
 			// Act
 			// Assert
 			Assert.Throws<FormatException>(() => Convert.ToInt32(text, 16));
+		}
+
+		[Theory]
+		[InlineData(0b00000000, "0")]
+		[InlineData(0b00000001, "1")]
+		[InlineData(0b00000010, "10")]
+		[InlineData(0b11110000, "11110000")]
+		public void ToString_数値を2進数文字列に変換できる(int value, string expected) {
+			// Arrange
+			// Act
+			var actual = Convert.ToString(value, 2);
+
+			// Assert
+			Assert.Equal(expected, actual);
 		}
 	}
 }
