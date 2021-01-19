@@ -15,5 +15,17 @@ namespace SampleTest {
 
 			Assert.True(string.Equals(null, null, StringComparison.OrdinalIgnoreCase));
 		}
+
+		[Theory]
+		[InlineData("1", 8, '0', "00000001")]
+		[InlineData("11111111", 8, '0', "11111111")]
+		public void PadLeft_左に文字を埋め込んだ文字列を取得できる(string src, int totalWidth, char paddingChar, string expected) {
+			// Arrange
+			// Act
+			var actual = src.PadLeft(totalWidth, paddingChar);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
