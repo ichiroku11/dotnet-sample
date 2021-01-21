@@ -14,7 +14,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace MiscWebApp {
 	public class Startup {
-		private static readonly JsonSerializerOptions _jsonSerializerOptions
+		public class Sample {
+			public int Value { get; set; }
+		}
+
+		public static readonly JsonSerializerOptions JsonSerializerOptions
 			= new JsonSerializerOptions {
 				DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -48,7 +52,7 @@ namespace MiscWebApp {
 						},
 					};
 
-					var json = JsonSerializer.Serialize(connection, _jsonSerializerOptions);
+					var json = JsonSerializer.Serialize(connection, JsonSerializerOptions);
 					await context.Response.WriteAsync(json);
 				});
 
@@ -72,6 +76,18 @@ namespace MiscWebApp {
 					await context.Response.WriteAsync("Header");
 				});
 
+				// jsonを扱うEndpoint
+				endpoints.MapPost("/json", async context => {
+					// ReadFromJsonAsync/WriteAsJsonAsync - .NET 5からの機能
+					// https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httprequestjsonextensions?view=aspnetcore-5.0
+					// https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httpresponsejsonextensions?view=aspnetcore-5.0
+					// リクエストからJSONを読み込む
+					var sample = await context.Request.ReadFromJsonAsync<Sample>(JsonSerializerOptions);
+
+					// レスポンスにJSONを書き込む
+					await context.Response.WriteAsJsonAsync(sample, JsonSerializerOptions);
+				});
+
 				// リクエストを確認するEndpoint
 				endpoints.MapGet("/request/{**path}", async context => {
 					var request = new {
@@ -82,7 +98,7 @@ namespace MiscWebApp {
 						Path = context.Request.Path.Value,
 						QueryString = context.Request.QueryString.Value,
 					};
-					var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
+					var json = JsonSerializer.Serialize(request, JsonSerializerOptions);
 					await context.Response.WriteAsync(json);
 				});
 
