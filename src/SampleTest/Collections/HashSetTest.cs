@@ -49,7 +49,7 @@ namespace SampleTest.Collections {
 		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, true)]
 		public void IsSubsetOf_otherの部分集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 			// Arrange
-			var set = new HashSet<int> { 0, 1, 2, 3, 4, };
+			var set = new HashSet<int> { 0, 1, 2, 3, 4 };
 
 			// Act
 			// 部分集合（＝サブセット）かどうか
@@ -67,7 +67,7 @@ namespace SampleTest.Collections {
 		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, true)]
 		public void IsProperSubsetOf_otherの真部分集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 			// Arrange
-			var set = new HashSet<int> { 0, 1, 2, 3, 4, };
+			var set = new HashSet<int> { 0, 1, 2, 3, 4 };
 
 			// Act
 			// 真部分集合かどうか
@@ -83,11 +83,27 @@ namespace SampleTest.Collections {
 		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
 		public void IsSupersetOf_otherの上位集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 			// Arrange
-			var set = new HashSet<int> { 0, 1, 2, 3, 4, };
+			var set = new HashSet<int> { 0, 1, 2, 3, 4 };
 
 			// Act
 			// 上位集合（＝スーパーセット）かどうか
 			var actual = set.IsSupersetOf(other);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[InlineData(new[] { 0, 1, 2, 3, 4 }, false)]
+		[InlineData(new[] { 0, 1, 2, 3 }, true)]
+		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
+		public void IsProperSupersetOf_otherの真上位集合かどうかを判定する(IEnumerable<int> other, bool expected) {
+			// Arrange
+			var set = new HashSet<int> { 0, 1, 2, 3, 4 };
+
+			// Act
+			// 真上位集合かどうか
+			var actual = set.IsProperSupersetOf(other);
 
 			// Assert
 			Assert.Equal(expected, actual);
