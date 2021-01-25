@@ -47,13 +47,31 @@ namespace SampleTest.Collections {
 		[InlineData(new[] { 0, 1, 2, 3, 4 }, true)]
 		[InlineData(new[] { 0, 1, 2, 3 }, false)]
 		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, true)]
-		public void IsSubsetOf_otherのサブセットかどうかを判定する(IEnumerable<int> other, bool expected) {
+		public void IsSubsetOf_otherの部分集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 			// Arrange
 			var set = new HashSet<int> { 0, 1, 2, 3, 4, };
 
 			// Act
-			// サブセット = 部分（下位）集合かどうか
+			// 部分集合（＝サブセット）かどうか
 			var actual = set.IsSubsetOf(other);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		// 真部分集合ではない
+		[InlineData(new[] { 0, 1, 2, 3, 4 }, false)]
+		[InlineData(new[] { 0, 1, 2, 3 }, false)]
+		// 真部分集合である
+		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, true)]
+		public void IsProperSubset_otherの真部分集合かどうかを判定する(IEnumerable<int> other, bool expected) {
+			// Arrange
+			var set = new HashSet<int> { 0, 1, 2, 3, 4, };
+
+			// Act
+			// 真部分集合かどうか
+			var actual = set.IsProperSubsetOf(other);
 
 			// Assert
 			Assert.Equal(expected, actual);
