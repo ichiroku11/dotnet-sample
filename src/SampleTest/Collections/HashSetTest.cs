@@ -42,5 +42,20 @@ namespace SampleTest.Collections {
 			// Assert
 			Assert.False(contains);
 		}
+
+		[Theory]
+		[InlineData(new[] { 0, 1, 2, 3, 4 }, true)]
+		[InlineData(new[] { 0, 1, 2, 3 }, false)]
+		[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
+		public void SetEquals_otherが同じ要素を含んでいるかどうかを判定する(IEnumerable<int> other, bool expected) {
+			// Arrange
+			var set = new HashSet<int> { 0, 1, 2, 3, 4, };
+
+			// Act
+			var actual = set.SetEquals(other);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
