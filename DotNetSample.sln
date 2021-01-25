@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApp", "src\MiscWebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApp.Test", "src\MiscWebApp.Test\MiscWebApp.Test.csproj", "{587D0410-C40D-499D-B416-83427D057A21}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamedPipeConsoleApp", "src\NamedPipeConsoleApp\NamedPipeConsoleApp.csproj", "{D75D32D2-763E-4A91-9E1F-4AEDA6654C48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{587D0410-C40D-499D-B416-83427D057A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{587D0410-C40D-499D-B416-83427D057A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{587D0410-C40D-499D-B416-83427D057A21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D75D32D2-763E-4A91-9E1F-4AEDA6654C48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D75D32D2-763E-4A91-9E1F-4AEDA6654C48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D75D32D2-763E-4A91-9E1F-4AEDA6654C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D75D32D2-763E-4A91-9E1F-4AEDA6654C48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
