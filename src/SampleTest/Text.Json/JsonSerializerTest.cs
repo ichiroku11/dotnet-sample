@@ -104,6 +104,25 @@ namespace SampleTest.Text.Json {
 			}
 		}
 
+		[Theory]
+		[InlineData(1, "1")]
+		[InlineData(true, "true")]
+		[InlineData("Abc", "\"Abc\"")]
+		public void Serialize_プリミティブ型のシリアライズ(object value, string expected) {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			};
+
+			// Act
+			_output.WriteLine(value.GetType().ToString());
+			var actual = JsonSerializer.Serialize(value, options);
+			_output.WriteLine(actual);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
 		[Fact]
 		public void Deserialize_ValueTupleに変換できない() {
 			// Arrange
@@ -167,7 +186,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void Deserialize_init専用セッターのプロパティに対してデイシリアライズできる() {
+		public void Deserialize_init専用セッターのプロパティに対してデシリアライズできる() {
 			// Arrange
 			var options = new JsonSerializerOptions {
 				PropertyNameCaseInsensitive = true,
@@ -200,7 +219,7 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
-		public void Deserialize_recordに対してデイシリアライズできる() {
+		public void Deserialize_recordに対してデシリアライズできる() {
 			// Arrange
 			var options = new JsonSerializerOptions {
 				PropertyNameCaseInsensitive = true,
