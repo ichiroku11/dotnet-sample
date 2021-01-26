@@ -123,6 +123,24 @@ namespace SampleTest.Text.Json {
 			Assert.Equal(expected, actual);
 		}
 
+		[Theory]
+		[InlineData("1", 1)]
+		[InlineData("true", true)]
+		[InlineData("\"Abc\"", "Abc")]
+		public void Deerialize_プリミティブ型のデシリアライズ(string json, object expected) {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			};
+
+			// Act
+			var actual = JsonSerializer.Deserialize(json, expected.GetType(), options);
+
+			// Assert
+			Assert.IsType(expected.GetType(), actual);
+			Assert.Equal(expected, actual);
+		}
+
 		[Fact]
 		public void Deserialize_ValueTupleに変換できない() {
 			// Arrange
