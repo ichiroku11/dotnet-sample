@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace NamedPipeConsoleApp {
-	// メッセージ
-	[Serializable]
+	/// <summary>
+	/// メッセージ
+	/// </summary>
 	public class Message {
 		public int Id { get; set; }
 		public string Content { get; set; }

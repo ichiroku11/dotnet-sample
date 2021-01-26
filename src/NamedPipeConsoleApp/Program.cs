@@ -7,61 +7,50 @@ using System.Threading.Tasks;
 
 namespace NamedPipeConsoleApp {
 	class Program {
+		// パイプの名前
 		private static readonly string _pipeName = "testpipe";
-		private static readonly Encoding _encoding = Encoding.UTF8;
 
 		// クライアント
 		private static async Task<Message> Client(int clientId, Message request) {
-			using (var stream = new NamedPipeClientStream(_pipeName)) {
-				// サーバに接続
-				Console.WriteLine($"Client#{clientId} connecting");
-				await stream.ConnectAsync();
-				Console.WriteLine($"Client#{clientId} connected");
+			using var stream = new NamedPipeClientStream(_pipeName);
 
-				// サーバにリクエストを送信する
-				Console.WriteLine($"Client#{clientId} {nameof(request)}: {request}");
-				using (var writer = new BinaryWriter(stream, _encoding, true)) {
-					writer.WriteObject(request);
-				}
+			// サーバに接続
+			Console.WriteLine($"Client#{clientId} connecting");
+			await stream.ConnectAsync();
+			Console.WriteLine($"Client#{clientId} connected");
 
-				// サーバからレスポンスを受信する
-				var response = default(Message);
-				using (var reader = new BinaryReader(stream, _encoding, true)) {
-					response = reader.ReadObject<Message>();
-				}
-				Console.WriteLine($"Client#{clientId} {nameof(response)}: {response}");
+			// サーバにリクエストを送信する
+			Console.WriteLine($"Client#{clientId} {nameof(request)}: {request}");
+			await stream.WriteAsJsonAsync(request);
 
-				return response;
-			}
+			// サーバからレスポンスを受信する
+			var response = await stream.ReadFromJsonAsync<Message>();
+			Console.WriteLine($"Client#{clientId} {nameof(response)}: {response}");
+
+			return response;
 		}
 
 		// サーバ
 		private static async Task Server(int serverId, Func<Message, Message> processor) {
 			while (true) {
-				//using (var stream = new NamedPipeServerStream(_pipeName)) {
+				//using var stream = new NamedPipeServerStream(_pipeName);
 				// サーバインスタンスを2に
-				using (var stream = new NamedPipeServerStream(_pipeName, PipeDirection.InOut, 2)) {
-					// クライアントからの接続を待つ
-					Console.WriteLine($"Server#{serverId} waiting");
-					await stream.WaitForConnectionAsync();
-					Console.WriteLine($"Server#{serverId} connected");
+				using var stream = new NamedPipeServerStream(_pipeName, PipeDirection.InOut, 2);
+				// クライアントからの接続を待つ
+				Console.WriteLine($"Server#{serverId} waiting");
+				await stream.WaitForConnectionAsync();
+				Console.WriteLine($"Server#{serverId} connected");
 
-					// クライアントからリクエストを受信する
-					var request = default(Message);
-					using (var reader = new BinaryReader(stream, _encoding, true)) {
-						request = reader.ReadObject<Message>();
-					}
-					Console.WriteLine($"Server#{serverId} {nameof(request)}: {request}");
+				// クライアントからリクエストを受信する
+				var request = await stream.ReadFromJsonAsync<Message>();
+				Console.WriteLine($"Server#{serverId} {nameof(request)}: {request}");
 
-					// リクエストを処理してレスポンスを作る
-					var response = processor(request);
+				// リクエストを処理してレスポンスを作る
+				var response = processor(request);
 
-					// クライアントにレスポンスを送信する
-					Console.WriteLine($"Server#{serverId} {nameof(response)}: {response}");
-					using (var writer = new BinaryWriter(stream, _encoding, true)) {
-						writer.WriteObject(response);
-					}
-				}
+				// クライアントにレスポンスを送信する
+				Console.WriteLine($"Server#{serverId} {nameof(response)}: {response}");
+				await stream.WriteAsJsonAsync(response);
 			}
 		}
 
