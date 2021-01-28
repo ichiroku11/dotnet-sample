@@ -32,7 +32,7 @@ namespace UdpConsoleApp {
 			// 1. リクエストを送信
 			// （送信先のエンドポイントを指定して）
 			Console.WriteLine($"Client send {nameof(request)}: {request}");
-			var requestBytes = new ObjectConverter<TRequest>().ToByteArray(request);
+			var requestBytes = MessageHelper.ToByteArray(request);
 			await client.SendAsync(requestBytes, requestBytes.Length, _endpoint);
 
 			// 2. レスポンスを受信
@@ -41,7 +41,7 @@ namespace UdpConsoleApp {
 			// ここで受信した結果のリモートエンドポイントが送信先かをチェックした方がいい気がする
 
 			var responseBytes = result.Buffer;
-			var response = new ObjectConverter<TResponse>().FromByteArray(responseBytes);
+			var response = MessageHelper.FromByteArray<TResponse>(responseBytes);
 			Console.WriteLine($"Client receive {nameof(response)}: {response}");
 
 			return response;

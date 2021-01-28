@@ -32,7 +32,7 @@ namespace UdpConsoleApp {
 				// 1. リクエストを受信
 				var result = await client.ReceiveAsync();
 				var requestBytes = result.Buffer;
-				var request = new ObjectConverter<TRequest>().FromByteArray(requestBytes);
+				var request = MessageHelper.FromByteArray<TRequest>(requestBytes);
 				Console.WriteLine($"Server receive {nameof(request)}: {request}");
 
 				var sender = Task.Run(async () => {
@@ -41,7 +41,7 @@ namespace UdpConsoleApp {
 
 					// 3. リクエストの送信元にレスポンスを送信
 					Console.WriteLine($"Server send {nameof(response)}: {response}");
-					var responseBytes = new ObjectConverter<TResponse>().ToByteArray(response);
+					var responseBytes = MessageHelper.ToByteArray(response);
 					await client.SendAsync(responseBytes, responseBytes.Length, result.RemoteEndPoint);
 				});
 
