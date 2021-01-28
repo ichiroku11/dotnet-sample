@@ -28,9 +28,10 @@ namespace TcpConsoleApp {
 		}
 
 		// クライアントからリクエストを受信してレスポンスを送信する
-		private async Task Receive(TcpClient client) {
-			using (client)
-			using (var stream = client.GetStream()) {
+		private async Task ReceiveAsync(TcpClient client) {
+			using (client) {
+				using var stream = client.GetStream();
+
 				// 3. クライアントからリクエストを受信する
 				var request = await stream.ReadFromJsonAsync<TRequest>();
 
@@ -56,8 +57,7 @@ namespace TcpConsoleApp {
 				var client = await _listener.AcceptTcpClientAsync();
 				Console.WriteLine($"Server accepted:");
 
-				// todo:
-				var task = Task.Run(() => Receive(client));
+				var task = ReceiveAsync(client);
 
 				// Taskの管理やエラー処理は省略
 			}

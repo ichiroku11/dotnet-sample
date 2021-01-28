@@ -21,7 +21,7 @@ namespace TcpConsoleApp {
 					Content = new string(request.Content.Reverse().ToArray()),
 				});
 			// 接続を待機
-			var task = Task.Run(() => server.RunAsync());
+			var task = server.RunAsync();
 
 			// クライアント
 			Task.WaitAll(

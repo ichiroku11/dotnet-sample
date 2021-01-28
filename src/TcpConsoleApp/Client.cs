@@ -25,23 +25,21 @@ namespace TcpConsoleApp {
 		/// <param name="request"></param>
 		/// <returns></returns>
 		public async Task<TResponse> SendAsync(TRequest request) {
-			using (var client = new TcpClient()) {
-				// 1. サーバに接続
-				await client.ConnectAsync(_endpoint.Address, _endpoint.Port);
-				Console.WriteLine($"Client connected:");
+			using var client = new TcpClient();
+			// 1. サーバに接続
+			await client.ConnectAsync(_endpoint.Address, _endpoint.Port);
+			Console.WriteLine($"Client connected:");
 
-				using (var stream = client.GetStream()) {
-					// 2. サーバにリクエストを送信する
-					Console.WriteLine($"Client sent: {request}");
-					await stream.WriteAsJsonAsync(request);
+			using var stream = client.GetStream();
+			// 2. サーバにリクエストを送信する
+			Console.WriteLine($"Client sent: {request}");
+			await stream.WriteAsJsonAsync(request);
 
-					// 3. サーバからレスポンスを受信する
-					var response = await stream.ReadFromJsonAsync<TResponse>();
-					Console.WriteLine($"Client received: {response}");
+			// 3. サーバからレスポンスを受信する
+			var response = await stream.ReadFromJsonAsync<TResponse>();
+			Console.WriteLine($"Client received: {response}");
 
-					return response;
-				}
-			}
+			return response;
 		}
 	}
 }
