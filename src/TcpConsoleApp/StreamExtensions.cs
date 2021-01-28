@@ -1,32 +1,46 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace TcpConsoleApp {
 	public static class StreamExtensions {
-		// オブジェクトの読み込み
-		public static TObject ReadObject<TObject>(this Stream stream) {
-			using (var reader = new BinaryReader(stream, Encoding.UTF8, true)) {
-				// 長さを読み込んでから、バイト配列を読み込む
-				var length = reader.ReadInt32();
-				var bytes = reader.ReadBytes(length);
+		private static readonly Encoding _encoding = Encoding.UTF8;
 
-				var converter = new ObjectConverter<TObject>();
-				return converter.FromByteArray(bytes);
-			}
+		private static readonly JsonSerializerOptions _options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			PropertyNameCaseInsensitive = true,
+		};
+
+		/// <summary>
+		/// オブジェクトをJSON文字列として<see cref="Stream"/>に書き込む
+		/// </summary>
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="stream"></param>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static async Task WriteAsJsonAsync<TObject>(this Stream stream, TObject obj) {
+			var json = JsonSerializer.Serialize(obj, _options);
+
+			using var writer = new StreamWriter(stream, _encoding, leaveOpen: true);
+			// 1行で書き込む
+			await writer.WriteLineAsync(json);
 		}
 
-		// オブジェクトの書き込み
-		public static void WriteObject<TObject>(this Stream stream, TObject obj) {
-			using (var writer = new BinaryWriter(stream, Encoding.UTF8, true)) {
-				var converter = new ObjectConverter<TObject>();
-				var bytes = converter.ToByteArray(obj);
+		/// <summary>
+		/// <see cref="Stream"/>からJSON文字列をオブジェクトとして読み込む
+		/// </summary>
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="stream"></param>
+		/// <returns></returns>
+		public static async Task<TObject> ReadFromJsonAsync<TObject>(this Stream stream) {
+			using var reader = new StreamReader(stream, _encoding, leaveOpen: true);
+			// 1行を読み込む
+			var json = await reader.ReadLineAsync();
 
-				// 長さを書き込んでからバイト配列を書き込む
-				writer.Write(bytes.Length);
-				writer.Write(bytes);
-			}
+			return JsonSerializer.Deserialize<TObject>(json, _options);
 		}
 	}
 }

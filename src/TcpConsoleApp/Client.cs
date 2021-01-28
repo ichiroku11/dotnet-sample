@@ -6,7 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TcpConsoleApp {
-	// クライアント
+	/// <summary>
+	/// クライアント
+	/// </summary>
+	/// <typeparam name="TRequest"></typeparam>
+	/// <typeparam name="TResponse"></typeparam>
 	public class Client<TRequest, TResponse> {
 		// 接続先のエンドポイント
 		private readonly IPEndPoint _endpoint;
@@ -15,7 +19,11 @@ namespace TcpConsoleApp {
 			_endpoint = endpoint;
 		}
 
-		// サーバにリクエストを送信してレスポンスを受信する
+		/// <summary>
+		/// サーバにリクエストを送信してレスポンスを受信する
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
 		public async Task<TResponse> SendAsync(TRequest request) {
 			using (var client = new TcpClient()) {
 				// 1. サーバに接続
@@ -25,10 +33,10 @@ namespace TcpConsoleApp {
 				using (var stream = client.GetStream()) {
 					// 2. サーバにリクエストを送信する
 					Console.WriteLine($"Client sent: {request}");
-					stream.WriteObject(request);
+					await stream.WriteAsJsonAsync(request);
 
 					// 3. サーバからレスポンスを受信する
-					var response = stream.ReadObject<TResponse>();
+					var response = await stream.ReadFromJsonAsync<TResponse>();
 					Console.WriteLine($"Client received: {response}");
 
 					return response;
