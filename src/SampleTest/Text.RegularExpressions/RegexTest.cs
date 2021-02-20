@@ -127,5 +127,25 @@ xabc";
 			// Assert
 			Assert.Equal(expected, actual);
 		}
+
+		[Theory]
+		[InlineData("a", true)]
+		[InlineData("abcdefghijklmnopqrstuvwxyz", true)]
+		[InlineData("ABCDEFGHIJKLMNOPQRSTUVWXYZ", true)]
+		[InlineData("", false)]
+		[InlineData("0a", false)]
+		// 全角の英字
+		[InlineData("ａ", false)]
+		public void 文字列が半角英字だけで構成されているかどうかを判定する正規表現(string input, bool expected) {
+			// Arrange
+			var regex = new Regex(@"^[a-zA-Z]+$");
+
+			// Act
+			var actual = regex.IsMatch(input);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
 	}
 }
