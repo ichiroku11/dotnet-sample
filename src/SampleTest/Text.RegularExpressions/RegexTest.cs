@@ -92,5 +92,40 @@ xabc";
 xabc";
 			Assert.Equal(expected, actual);
 		}
+
+		[Theory]
+		[InlineData("0", true)]
+		[InlineData("0123456789", true)]
+		[InlineData("", false)]
+		[InlineData("0a", false)]
+		// \dは全角の数字も数字と判定する
+		[InlineData("０１２３４５６７８９", true)]
+		public void 文字列が数字だけで構成されているかどうかを判定する正規表現(string input, bool expected) {
+			// Arrange
+			var regex = new Regex(@"^\d+$");
+
+			// Act
+			var actual = regex.IsMatch(input);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[InlineData("0", true)]
+		[InlineData("0123456789", true)]
+		[InlineData("", false)]
+		[InlineData("0a", false)]
+		[InlineData("０１２３４５６７８９", false)]
+		public void 文字列が半角数字だけで構成されているかどうかを判定する正規表現(string input, bool expected) {
+			// Arrange
+			var regex = new Regex(@"^[0-9]+$");
+
+			// Act
+			var actual = regex.IsMatch(input);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
