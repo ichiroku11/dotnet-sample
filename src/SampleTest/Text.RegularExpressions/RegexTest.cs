@@ -119,7 +119,7 @@ xabc";
 		[InlineData("０１２３４５６７８９", false)]
 		public void 文字列が半角数字だけで構成されているかどうかを判定する正規表現(string input, bool expected) {
 			// Arrange
-			var regex = new Regex(@"^[0-9]+$");
+			var regex = new Regex("^[0-9]+$");
 
 			// Act
 			var actual = regex.IsMatch(input);
@@ -138,7 +138,7 @@ xabc";
 		[InlineData("ａ", false)]
 		public void 文字列が半角英字だけで構成されているかどうかを判定する正規表現(string input, bool expected) {
 			// Arrange
-			var regex = new Regex(@"^[a-zA-Z]+$");
+			var regex = new Regex("^[a-zA-Z]+$");
 
 			// Act
 			var actual = regex.IsMatch(input);
