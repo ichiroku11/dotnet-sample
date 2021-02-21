@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace SampleLib {
+	public static class StringExtensions {
+		// 半角英数字が1文字以上
+		private static readonly Regex _regex = new("^[0-9a-zA-Z]+$");
+
+		// enumの定義をケバブケースにするイメージ
+		/// <summary>
+		/// キャメルケースをケバブケースに変換する
+		/// </summary>
+		/// <param name="original"></param>
+		/// <returns></returns>
+		public static string ToKebabCase(this string original) {
+			if (original == null) {
+				throw new ArgumentNullException(nameof(original));
+			}
+
+			if (!_regex.IsMatch(original)) {
+				throw new ArgumentException("", nameof(original));
+			}
+
+			var values = new List<char>() {
+				char.ToLower(original[0])
+			};
+
+			// 2文字目以降の大文字 => "-" + 小文字
+			foreach (var ch in original.Skip(1)) {
+				if (char.IsUpper(ch)) {
+					values.Add('-');
+					values.Add(char.ToLower(ch));
+				} else {
+					values.Add(ch);
+				}
+			}
+
+			return string.Concat(values);
+		}
+	}
+}
