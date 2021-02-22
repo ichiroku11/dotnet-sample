@@ -11,6 +11,7 @@ namespace SampleLib.Test {
 		[InlineData("Border", "border")]
 		[InlineData("BorderBlack", "border-black")]
 		[InlineData("BorderGray50", "border-gray50")]
+		[InlineData("borderBlack", "border-black")]
 		public void ToKebabCase_ケバブケースに変換できる(string original, string expected) {
 			// Arrange
 			// Act

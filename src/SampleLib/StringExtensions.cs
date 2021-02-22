@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace SampleLib {
 	public static class StringExtensions {
+		// ケバブケースに変換できる文字列の正規表現
 		// 半角英数字が1文字以上
-		private static readonly Regex _regex = new("^[0-9a-zA-Z]+$");
+		private static readonly Regex _regexToKebab = new("^[0-9a-zA-Z]+$");
 
 		// enumの定義をケバブケースにするイメージ
 		/// <summary>
-		/// キャメルケースをケバブケースに変換する
+		/// パスカルケース・キャメルケースをケバブケースに変換する
 		/// </summary>
 		/// <param name="original"></param>
 		/// <returns></returns>
@@ -21,7 +22,7 @@ namespace SampleLib {
 				throw new ArgumentNullException(nameof(original));
 			}
 
-			if (!_regex.IsMatch(original)) {
+			if (!_regexToKebab.IsMatch(original)) {
 				throw new ArgumentException("", nameof(original));
 			}
 
