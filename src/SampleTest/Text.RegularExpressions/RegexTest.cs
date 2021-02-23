@@ -147,5 +147,19 @@ xabc";
 			Assert.Equal(expected, actual);
 		}
 
+		[Theory]
+		[InlineData("-", true)]
+		[InlineData("-aA", true)]
+		public void 文字列がハイフンを含めた半角英字で構成されているかどうかを判定する正規表現(string input, bool expected) {
+			// Arrange
+			// "-"自体を含めたい場合は、"[]"内の先頭か末尾に"-"を指定する
+			var regex = new Regex("^[a-zA-Z-]+$");
+
+			// Act
+			var actual = regex.IsMatch(input);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
