@@ -31,6 +31,16 @@ namespace SampleTest.Extensions.FileProviders {
 		}
 
 		[Fact]
+		public void Constructor_存在しないフォルダパスを引数に指定すると例外がスローされる() {
+			// Arrange
+			// Act
+			// Assert
+			Assert.Throws<DirectoryNotFoundException>(() => {
+				new PhysicalFileProvider(Path.Combine(_tempFolder, "notfound"));
+			});
+		}
+
+		[Fact]
 		public async Task GetFileInfo_ファイルを取得できる() {
 			// Arrange
 			var fileProvider = new PhysicalFileProvider(_tempFolder);
