@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace SampleTest.DependencyInjection {
+namespace SampleTest.Extensions.DependencyInjection {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
 	// https://qiita.com/TsuyoshiUshio@github/items/20412b36fe63f05671c9

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,10 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.FileProviders;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.AspNetCore {
+namespace SampleTest.Extensions.FileProviders {
 	public class PhysicalFileProviderTest : IDisposable {
 		private static readonly string _tempFolder = Path.Combine(Directory.GetCurrentDirectory(), $"${nameof(PhysicalFileProviderTest)}");
 

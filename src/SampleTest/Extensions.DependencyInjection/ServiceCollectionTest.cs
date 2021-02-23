@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.DependencyInjection {
+namespace SampleTest.Extensions.DependencyInjection {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
 	public class ServiceCollectionTest {
