@@ -64,6 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllerWebApp", "src\Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributedCacheWebApp", "src\DistributedCacheWebApp\DistributedCacheWebApp.csproj", "{1A567275-2580-4779-BA44-47DBA8DD8559}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndpointWebApp", "src\EndpointWebApp\EndpointWebApp.csproj", "{5B46D582-FC21-4A36-B8D0-310602BB75BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,10 @@ Global
 		{1A567275-2580-4779-BA44-47DBA8DD8559}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A567275-2580-4779-BA44-47DBA8DD8559}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A567275-2580-4779-BA44-47DBA8DD8559}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B46D582-FC21-4A36-B8D0-310602BB75BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B46D582-FC21-4A36-B8D0-310602BB75BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B46D582-FC21-4A36-B8D0-310602BB75BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B46D582-FC21-4A36-B8D0-310602BB75BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -202,6 +208,7 @@ Global
 		{DE492D87-1FE4-4417-B025-87E39C7A7697} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{2646AE7A-7F80-4644-9E61-84340314DE8C} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{1A567275-2580-4779-BA44-47DBA8DD8559} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
+		{5B46D582-FC21-4A36-B8D0-310602BB75BC} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}
