@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.EntityFrameworkCore {
-	[Collection("dbo.Sample")]
+	[Collection(CollectionNames.EfCoreSample)]
 	public class RawSqlOutputTest : IDisposable {
 		private class Sample {
 			public int Id { get; init; }

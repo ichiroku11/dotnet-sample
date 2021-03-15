@@ -11,7 +11,7 @@ namespace SampleTest.EntityFrameworkCore {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/ef/core/querying/related-data
 	// https://docs.microsoft.com/ja-jp/ef/core/saving/related-data
-	[Collection("dbo.Monster")]
+	[Collection(CollectionNames.EfCoreMonster)]
 	public class RelatedDataTest : IDisposable {
 		private static class EqualityComparerFactory<TElement> {
 			public static EqualityComparer<TElement> Create<TKey>(Func<TElement, TKey> keySelector) {
