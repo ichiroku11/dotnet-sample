@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace SampleTest.EntityFrameworkCore {
 	// 主キーや外部キーをenumのプロパティにマッピングするサンプル
-	[Collection("dbo.Monster")]
+	[Collection(CollectionNames.EfCoreMonster)]
 	public class EnumPrimaryKeyForeignKeyTest {
 		private enum MonsterCategoryType {
 			None = 0,

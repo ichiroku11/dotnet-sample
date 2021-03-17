@@ -9,7 +9,7 @@ namespace SampleTest.EntityFrameworkCore {
 	// enumを文字列にマッピングするサンプル
 	// 参考
 	// https://docs.microsoft.com/ja-jp/ef/core/modeling/value-conversions
-	[Collection("dbo.Monster")]
+	[Collection(CollectionNames.EfCoreMonster)]
 	public class EnumValueConversionTest {
 		private enum MonsterCategory : byte {
 			None = 0,
