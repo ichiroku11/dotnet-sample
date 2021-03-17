@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.EntityFrameworkCore {
-	public class DatabaseFacadeTest : IDisposable{
- 		private AppDbContext _context;
+	public class DatabaseFacadeTest : IDisposable {
+		private AppDbContext _context;
 
 		public DatabaseFacadeTest() {
 			_context = new AppDbContext();
