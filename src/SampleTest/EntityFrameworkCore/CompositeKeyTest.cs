@@ -15,21 +15,11 @@ namespace SampleTest.EntityFrameworkCore {
 		private class Sample {
 			public int Id1 { get; init; }
 			public int Id2 { get; init; }
-
 			public string Value { get; init; }
-
 			public List<SampleDetail> Details { get; init; }
 		}
 
-		private class SampleDetail {
-			public int SampleId1 { get; init; }
-
-			public int SampleId2 { get; init; }
-
-			public int DetailNo { get; init; }
-
-			public string Value { get; init; }
-		}
+		private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
 
 		private class SampleDbContext : AppDbContext {
 			public DbSet<Sample> Samples { get; init; }
@@ -98,12 +88,13 @@ drop table if exists dbo.SampleDetail;
 drop table if exists dbo.Sample;";
 			_context.Database.ExecuteSqlRaw(sql);
 		}
-			
+
 		[Fact]
-		public async Task FirstOrDefault_モデルを単体で取得する() {
+		public async Task FirstOrDefault_関連データなしで取得する() {
 			// Arrange
 			// Act
-			var sample = await _context.Samples.FirstOrDefaultAsync();
+			var sample = await _context.Samples
+				.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
 			// Assert
 			Assert.Equal(1, sample.Id1);
@@ -113,20 +104,50 @@ drop table if exists dbo.Sample;";
 		}
 
 		[Fact]
-		public async Task FirstOrDefault_モデルを関連データとともに取得する() {
+		public async Task FirstOrDefault_関連データとともに取得する() {
 			// Arrange
 			// Act
 			var sample = await _context.Samples
 				.Include(sample => sample.Details)
-				.FirstOrDefaultAsync();
+				.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
 			// Assert
 			Assert.Equal(1, sample.Id1);
 			Assert.Equal(2, sample.Id2);
 			Assert.Equal("a", sample.Value);
 			Assert.Equal(2, sample.Details.Count);
-			Assert.Single(sample.Details, detail => detail.SampleId1 == 1 && detail.SampleId2 == 2 && detail.DetailNo == 1 && detail.Value == "a-1");
-			Assert.Single(sample.Details, detail => detail.SampleId1 == 1 && detail.SampleId2 == 2 && detail.DetailNo == 2 && detail.Value == "a-2");
+			Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample.Details);
+			Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample.Details);
+		}
+
+		[Fact]
+		public async Task Add_関連データとともに追加する() {
+			// Arrange
+			var expected = new Sample {
+				Id1 = 1,
+				Id2 = 3,
+				Value = "b",
+				Details = new List<SampleDetail> {
+					new SampleDetail(1, 3, 1, "b-1"),
+					new SampleDetail(1, 3, 2, "b-2"),
+				},
+			};
+
+			// Act
+			_context.Samples.Add(expected);
+			var rows = await _context.SaveChangesAsync();
+
+			var actual = await _context.Samples
+				.Include(sample => sample.Details)
+				.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 3);
+
+			// Assert
+			Assert.Equal(3, rows);
+
+			Assert.Equal(expected.Id1, actual.Id1);
+			Assert.Equal(expected.Id2, actual.Id2);
+			Assert.Equal(expected.Value, actual.Value);
+			Assert.Equal(expected.Details.OrderBy(detail => detail.DetailNo), actual.Details.OrderBy(detail => detail.DetailNo));
 		}
 	}
 }
