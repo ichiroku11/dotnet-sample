@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.EntityFrameworkCore {
+	// 所有型を試してみる
 	// 参考
 	// https://docs.microsoft.com/ja-jp/ef/core/modeling/owned-entities
 	public class OwnedEntityTest : IDisposable {
@@ -27,12 +28,14 @@ namespace SampleTest.EntityFrameworkCore {
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {
 				modelBuilder.Entity<Mail>().ToTable(nameof(Mail))
 					.OwnsOne(mail => mail.From, ownedBuilder => {
+						// カラム名を指定
 						ownedBuilder.Property(address => address.Address)
 							.HasColumnName($"{nameof(Mail.From)}{nameof(MailAddress.Address)}");
 						ownedBuilder.Property(address => address.Name)
 							.HasColumnName($"{nameof(Mail.From)}{nameof(MailAddress.Name)}");
 					})
 					.OwnsOne(mail => mail.To, ownedBuilder => {
+						// カラム名を指定
 						ownedBuilder.Property(address => address.Address)
 							.HasColumnName($"{nameof(Mail.To)}{nameof(MailAddress.Address)}");
 						ownedBuilder.Property(address => address.Name)
