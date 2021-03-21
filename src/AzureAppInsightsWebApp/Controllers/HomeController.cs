@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AzureAppInsightsWebApp.Controllers {
 	public class HomeController : Controller {
 		public IActionResult Index() {
-			return Content("Home");
+			return View();
 		}
 	}
 }

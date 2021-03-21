@@ -13,7 +13,7 @@ namespace AzureAppInsightsWebApp {
 		public void ConfigureServices(IServiceCollection services) {
 			services
 				.AddApplicationInsightsTelemetry()
-				.AddControllers();
+				.AddControllersWithViews();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
