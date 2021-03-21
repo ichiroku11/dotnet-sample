@@ -12,6 +12,14 @@ namespace AzureAppInsightsWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
 			services
+				// Application Insights
+				// サーバ側のテレメトリを有効にする
+				// https://docs.microsoft.com/ja-jp/azure/azure-monitor/app/asp-net-core#enable-application-insights-server-side-telemetry-no-visual-studio
+				// おそらく以下を収集するようになる
+				// - dependencies
+				// - exceptions
+				// - requests
+				// - traces
 				.AddApplicationInsightsTelemetry()
 				.AddControllersWithViews();
 		}
