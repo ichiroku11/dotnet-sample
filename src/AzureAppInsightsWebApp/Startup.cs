@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 namespace AzureAppInsightsWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
-			services.AddControllers();
+			services
+				.AddApplicationInsightsTelemetry()
+				.AddControllers();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
