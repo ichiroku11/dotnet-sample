@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace AzureAppInsightsWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
+			services.AddControllers();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -21,9 +22,7 @@ namespace AzureAppInsightsWebApp {
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints => {
-				endpoints.MapGet("/", async context => {
-					await context.Response.WriteAsync("Hello World!");
-				});
+				endpoints.MapDefaultControllerRoute();
 			});
 		}
 	}
