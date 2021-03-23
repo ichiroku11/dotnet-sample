@@ -1,3 +1,5 @@
+using AzureAppInsightsWebApp.Models;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +24,15 @@ namespace AzureAppInsightsWebApp {
 				// - traces
 				.AddApplicationInsightsTelemetry()
 				.AddControllersWithViews();
+
+			services.AddDbContext<AppDbContext>();
+
+			// SQLクエリを収集する
+			// dependencies.data
+			// https://docs.microsoft.com/ja-jp/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
+			services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, _) => {
+				module.EnableSqlCommandTextInstrumentation = true;
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
