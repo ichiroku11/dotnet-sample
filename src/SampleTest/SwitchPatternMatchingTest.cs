@@ -60,5 +60,30 @@ namespace SampleTest {
 					break;
 			}
 		}
+
+		[Theory]
+		[InlineData(null, null, 1)]
+		[InlineData(1, null, 2)]
+		[InlineData(null, 2, 3)]
+		[InlineData(1, 2, 4)]
+		public void Switch_タプルと組み合わせて使うサンプル(int? value1, int? value2, int expected) {
+			// switch式
+			var actual = (value1, value2) switch {
+				(null, null) => 1,
+				(_, null) => 2,
+				(null, _) => 3,
+				_ => 4,
+			};
+			Assert.Equal(expected, actual);
+
+			// switch文で書くと
+			switch (value1, value2) {
+				case (null, null): actual = 1; break;
+				case (_, null): actual = 2; break;
+				case (null, _): actual = 3; break;
+				default: actual = 4; break;
+			}
+			Assert.Equal(expected, actual);
+		}
 	}
 }
