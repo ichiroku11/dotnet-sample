@@ -14,7 +14,7 @@ namespace SampleTest {
 				case null:
 					Assert.Null(value);
 					break;
-				case int value2:
+				case int:
 					AssertHelper.Fail();
 					break;
 			}
