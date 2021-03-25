@@ -87,7 +87,7 @@ namespace SampleTest {
 		}
 
 		// タプルとswitch式を使ったうるう年の判定
-		public static bool IsLeapYear(int year)
+		private static bool IsLeapYear(int year)
 			=> (year % 400, year % 100, year % 4) switch {
 				(0, _, _) => true,  // 400の倍数 => うるう年
 				(_, 0, _) => false, // ↑以外で100の倍数 => 平年
@@ -110,6 +110,55 @@ namespace SampleTest {
 
 			// Assert
 			Assert.Equal(expected, actual);
+		}
+
+
+		public class Point {
+			public Point(int x = 0, int y = 0) => (X, Y) = (x, y);
+			public int X { get; }
+			public int Y { get; }
+			public void Deconstruct(out int x, out int y) => (x, y) = (X, Y);
+		}
+
+		public enum Quadrant {
+			Unknown = -1,
+			Origin = 0,
+			One,
+			Two,
+			Three,
+			Four,
+			OnBorder,
+		}
+
+		public static IEnumerable<object[]> GetTestData() {
+			yield return new object[] { new Point(0, 0), Quadrant.Origin };
+			yield return new object[] { new Point(1, 1), Quadrant.One };
+			yield return new object[] { new Point(-1, 1), Quadrant.Two };
+			yield return new object[] { new Point(-1, -1), Quadrant.Three };
+			yield return new object[] { new Point(1, -1), Quadrant.Four };
+			yield return new object[] { new Point(0, 1), Quadrant.OnBorder };
+			yield return new object[] { new Point(1, 0), Quadrant.OnBorder };
+		}
+
+		[Theory]
+		[MemberData(nameof(GetTestData))]
+		public void Switch_Deconstructを利用したサンプル(Point point, Quadrant expected) {
+			// Arrange
+			// Act
+			var actual = point switch {
+				(0, 0) => Quadrant.Origin,
+				(_, 0) => Quadrant.OnBorder,
+				(0, _) => Quadrant.OnBorder,
+				(var x, var y) when x > 0 && y > 0 => Quadrant.One,
+				(var x, var y) when x < 0 && y > 0 => Quadrant.Two,
+				(var x, var y) when x < 0 && y < 0 => Quadrant.Three,
+				(var x, var y) when x > 0 && y < 0 => Quadrant.Four,
+				(_, _) => throw new InvalidOperationException(),
+			};
+
+			// Assert
+			Assert.Equal(expected, actual);
+
 		}
 	}
 }
