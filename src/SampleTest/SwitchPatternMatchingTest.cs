@@ -153,12 +153,11 @@ namespace SampleTest {
 				(var x, var y) when x < 0 && y > 0 => Quadrant.Two,
 				(var x, var y) when x < 0 && y < 0 => Quadrant.Three,
 				(var x, var y) when x > 0 && y < 0 => Quadrant.Four,
-				(_, _) => throw new InvalidOperationException(),
+				_ => throw new InvalidOperationException(),
 			};
 
 			// Assert
 			Assert.Equal(expected, actual);
-
 		}
 	}
 }
