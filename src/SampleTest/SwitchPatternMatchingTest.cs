@@ -85,5 +85,31 @@ namespace SampleTest {
 			}
 			Assert.Equal(expected, actual);
 		}
+
+		// タプルとswitch式を使ったうるう年の判定
+		public static bool IsLeapYear(int year)
+			=> (year % 400, year % 100, year % 4) switch {
+				(0, _, _) => true,  // 400の倍数 => うるう年
+				(_, 0, _) => false, // ↑以外で100の倍数 => 平年
+				(_, _, 0) => true,  // ↑以外で4の倍数 => うるう年
+				_ => false,
+			};
+
+		[Theory]
+		[InlineData(2000, true)]
+		[InlineData(2020, true)]
+		[InlineData(2021, false)]
+		[InlineData(2022, false)]
+		[InlineData(2023, false)]
+		[InlineData(2024, true)]
+		[InlineData(2100, false)]
+		public void IsLeapYear_正しく判定できる(int year, bool expected) {
+			// Arrange
+			// Act
+			var actual = IsLeapYear(year);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
