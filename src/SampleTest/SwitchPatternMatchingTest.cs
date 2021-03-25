@@ -149,10 +149,10 @@ namespace SampleTest {
 				(0, 0) => Quadrant.Origin,
 				(_, 0) => Quadrant.OnBorder,
 				(0, _) => Quadrant.OnBorder,
-				(var x, var y) when x > 0 && y > 0 => Quadrant.One,
-				(var x, var y) when x < 0 && y > 0 => Quadrant.Two,
-				(var x, var y) when x < 0 && y < 0 => Quadrant.Three,
-				(var x, var y) when x > 0 && y < 0 => Quadrant.Four,
+				var (x, y) when x > 0 && y > 0 => Quadrant.One,
+				var (x, y) when x < 0 && y > 0 => Quadrant.Two,
+				var (x, y) when x < 0 && y < 0 => Quadrant.Three,
+				var (x, y) when x > 0 && y < 0 => Quadrant.Four,
 				_ => throw new InvalidOperationException(),
 			};
 
