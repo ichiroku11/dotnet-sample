@@ -159,5 +159,25 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(expected, actual);
 		}
+
+		[Theory]
+		[MemberData(nameof(GetTestData))]
+		public void Switch_プロパティを利用したサンプル(Point point, Quadrant expected) {
+			// Arrange
+			// Act
+			var actual = point switch {
+				{ X: 0, Y: 0 } => Quadrant.Origin,
+				{ X: _, Y: 0 } => Quadrant.OnBorder,
+				{ X: 0, Y: _ } => Quadrant.OnBorder,
+				{ X: var x, Y: var y } when x > 0 && y > 0 => Quadrant.One,
+				{ X: var x, Y: var y } when x < 0 && y > 0 => Quadrant.Two,
+				{ X: var x, Y: var y } when x < 0 && y < 0 => Quadrant.Three,
+				{ X: var x, Y: var y } when x > 0 && y < 0 => Quadrant.Four,
+				_ => throw new InvalidOperationException(),
+			};
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
