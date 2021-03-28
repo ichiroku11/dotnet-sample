@@ -1,0 +1,22 @@
+@*
+	// クライアント側のテレメトリを有効にする
+	// 参考
+	// https://docs.microsoft.com/ja-jp/azure/azure-monitor/app/asp-net-core#enable-client-side-telemetry-for-web-applications
+	// おそらく以下が収集されるようになる
+	// - browserTimings ?
+	// - pageViews
+*@
+@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title</title>
+	@Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body>
+	<div>
+		@RenderBody()
+	</div>
+</body>
+</html>
