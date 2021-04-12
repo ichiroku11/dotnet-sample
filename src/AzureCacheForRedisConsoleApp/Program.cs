@@ -15,14 +15,15 @@ namespace AzureCacheForRedisConsoleApp {
 
 			var connectionString = config.GetConnectionString("Redis");
 
-			var multiplexer = await ConnectionMultiplexer.ConnectAsync(connectionString);
+			var options = ConfigurationOptions.Parse(connectionString);
+			var multiplexer = await ConnectionMultiplexer.ConnectAsync(options);
 
 			var database = multiplexer.GetDatabase();
 
+			// "PING"コマンドを実行
 			var command = "PING";
 			Console.WriteLine(command);
 			var result = await database.ExecuteAsync(command);
-
 			// PONG
 			Console.WriteLine(result);
 		}
