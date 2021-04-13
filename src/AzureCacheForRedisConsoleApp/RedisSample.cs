@@ -23,6 +23,8 @@ namespace AzureCacheForRedisConsoleApp {
 
 			// https://docs.microsoft.com/ja-jp/azure/azure-cache-for-redis/cache-dotnet-core-quickstart
 			var options = ConfigurationOptions.Parse(_connectionString);
+
+			// ConnectionMultiplexerはアプリケーション全体で共有する
 			var multiplexer = await ConnectionMultiplexer.ConnectAsync(options);
 
 			var database = multiplexer.GetDatabase();
