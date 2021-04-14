@@ -18,6 +18,16 @@ namespace AzureCacheForRedisConsoleApp {
 
 		}
 
+		private async Task PingAsync(IDatabase database) {
+			// "PING"コマンドを実行
+			var command = "PING";
+			_logger.LogInformation(command);
+			var result = await database.ExecuteAsync(command);
+
+			// PONG
+			_logger.LogInformation((string)result);
+		}
+
 		public async Task RunAsync() {
 			_logger.LogInformation(nameof(RunAsync));
 
@@ -29,13 +39,7 @@ namespace AzureCacheForRedisConsoleApp {
 
 			var database = multiplexer.GetDatabase();
 
-			// "PING"コマンドを実行
-			var command = "PING";
-			_logger.LogInformation(command);
-			var result = await database.ExecuteAsync(command);
-
-			// PONG
-			_logger.LogInformation((string)result);
+			await PingAsync(database);
 		}
 	}
 }
