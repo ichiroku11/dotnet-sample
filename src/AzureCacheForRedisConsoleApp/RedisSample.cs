@@ -15,17 +15,6 @@ namespace AzureCacheForRedisConsoleApp {
 		public RedisSample(IConfiguration config, ILogger<RedisSample> logger) {
 			_connectionString = config.GetConnectionString("Redis");
 			_logger = logger;
-
-		}
-
-		private async Task PingAsync(IDatabase database) {
-			// "PING"コマンドを実行
-			var command = "PING";
-			_logger.LogInformation(command);
-			var result = await database.ExecuteAsync(command);
-
-			// PONG
-			_logger.LogInformation((string)result);
 		}
 
 		public async Task RunAsync() {
@@ -39,7 +28,9 @@ namespace AzureCacheForRedisConsoleApp {
 
 			var database = multiplexer.GetDatabase();
 
-			await PingAsync(database);
+			var result = await database.ExecutePingAsync();
+			// PONG
+			_logger.LogInformation(result);
 		}
 	}
 }
