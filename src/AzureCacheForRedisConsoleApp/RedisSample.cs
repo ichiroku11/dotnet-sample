@@ -34,17 +34,19 @@ namespace AzureCacheForRedisConsoleApp {
 
 			var database = multiplexer.GetDatabase();
 
+			// PINGコマンドを実行
 			_logger.LogInformation("Ping:");
 			var result = await database.ExecutePingAsync();
-			// PONG
 			_logger.LogInformation(result);
 
+			// エンドポイント一覧
 			_logger.LogInformation("EndPoints:");
 			var endpoints = multiplexer.GetEndPoints();
 			foreach (var endpoint in endpoints.Cast<DnsEndPoint>()) {
 				_logger.LogInformation($"{endpoint.Host}:{endpoint.Port}");
 			}
 
+			// クライアント一覧
 			var server = multiplexer.GetServer(endpoints.First());
 			_logger.LogInformation("Clients:");
 			var clients = await server.ClientListAsync();
@@ -52,7 +54,7 @@ namespace AzureCacheForRedisConsoleApp {
 				_logger.LogInformation(client.Raw);
 			}
 
-			// SetAsync/GetAsync
+			// オブジェクトを設定・取得
 			await database.SetAsync("test", new Message("Hello Redis!"));
 			var message = await database.GettAsync<Message>("test");
 			_logger.LogInformation($"{nameof(DatabaseExtensions.GettAsync)}: {message.Content}");
