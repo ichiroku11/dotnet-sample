@@ -12,6 +12,8 @@ namespace AzureCacheForRedisConsoleApp {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/azure/azure-cache-for-redis/cache-dotnet-core-quickstart
 	public class RedisSample {
+		private record Message(string Content);
+
 		private readonly string _connectionString;
 		private readonly ILogger _logger;
 
@@ -49,6 +51,11 @@ namespace AzureCacheForRedisConsoleApp {
 			foreach (var client in clients) {
 				_logger.LogInformation(client.Raw);
 			}
+
+			// SetAsync/GetAsync
+			await database.SetAsync("test", new Message("Hello Redis!"));
+			var message = await database.GettAsync<Message>("test");
+			_logger.LogInformation($"{nameof(DatabaseExtensions.GettAsync)}: {message.Content}");
 		}
 	}
 }
