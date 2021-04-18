@@ -70,7 +70,7 @@ create table dbo.Mail(
 	FromName nvarchar(10) not null,
 	ToAddress nvarchar(20) not null,
 	ToName nvarchar(10) not null,
-	constraint PK_Sample primary key(Id)
+	constraint PK_Mail primary key(Id)
 );
 
 insert into dbo.Mail(Id, FromAddress, FromName, ToAddress, ToName)
