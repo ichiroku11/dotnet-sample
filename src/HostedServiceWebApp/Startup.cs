@@ -1,3 +1,4 @@
+using HostedServiceWebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 namespace HostedServiceWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
+			services.AddHostedService<TimerHostedService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
