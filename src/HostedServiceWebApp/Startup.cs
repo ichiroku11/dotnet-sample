@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HostedServiceWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
-			services.AddHostedService<PeriodicHostedService>();
+			services.AddHostedService<RoutineHostedService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
