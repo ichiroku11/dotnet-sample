@@ -19,6 +19,7 @@ namespace HostedServiceWebApp.Services {
 			_logger = logger;
 		}
 
+		// 何か定期的に実行する処理
 		private void Action(object state) {
 			var count = Interlocked.Increment(ref _count);
 
