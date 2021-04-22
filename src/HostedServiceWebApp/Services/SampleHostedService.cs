@@ -10,12 +10,12 @@ namespace HostedServiceWebApp.Services {
 	// IHostedServiceを直接実装し、Timerで定期的な処理を実行するホステッドサービス
 	// 参考
 	// https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/host/hosted-services
-	public class RoutineHostedService : IHostedService, IDisposable {
+	public class SampleHostedService : IHostedService, IDisposable {
 		private readonly ILogger _logger;
 		private Timer _timer;
 		private int _count;
 
-		public RoutineHostedService(ILogger<RoutineHostedService> logger) {
+		public SampleHostedService(ILogger<SampleHostedService> logger) {
 			_logger = logger;
 		}
 

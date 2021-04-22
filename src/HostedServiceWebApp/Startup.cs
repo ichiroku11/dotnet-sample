@@ -13,8 +13,8 @@ namespace HostedServiceWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
 			services
-				.AddHostedService<RoutineBackgroundService>()
-				.AddHostedService<RoutineHostedService>();
+				.AddHostedService<SampleBackgroundService>()
+				.AddHostedService<SampleHostedService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {

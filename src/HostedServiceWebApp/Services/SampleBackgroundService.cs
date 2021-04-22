@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace HostedServiceWebApp.Services {
 	// BackgroundServiceを継承し、定期的な処理を実行するホステッドサービス
-	public class RoutineBackgroundService : BackgroundService {
+	public class SampleBackgroundService : BackgroundService {
 		private readonly ILogger _logger;
 		private int _count;
 
-		public RoutineBackgroundService(ILogger<RoutineBackgroundService> logger) {
+		public SampleBackgroundService(ILogger<SampleBackgroundService> logger) {
 			_logger = logger;
 		}
 
