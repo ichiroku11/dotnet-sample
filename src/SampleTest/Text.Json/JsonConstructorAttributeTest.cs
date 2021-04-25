@@ -33,19 +33,18 @@ namespace SampleTest.Text.Json {
 
 		// コンストラクタが1つの場合
 		private class Sample2 {
-			public int Value1 { get; }
-			public int Value2 { get; }
+			public int Value { get; }
 
-			public Sample2(int value1) {
-				Value1 = value1;
+			public Sample2(int value) {
+				Value = value;
 			}
 		}
 
 		[Theory]
-		[InlineData(@"{}", 0, 0)]
-		[InlineData(@"{""value1"":1, ""value2"":1}", 1, 0)]
+		[InlineData(@"{}", 0)]
+		[InlineData(@"{""value"":1}", 1)]
 	
-		public void Deserialize_コンストラクタが呼び出される(string json, int expectedValue1, int expectedValue2) {
+		public void Deserialize_コンストラクタが呼び出される(string json, int expectedValue) {
 			// Arrange
 			var options = new JsonSerializerOptions {
 				PropertyNameCaseInsensitive = true,
@@ -55,8 +54,7 @@ namespace SampleTest.Text.Json {
 			var sample = JsonSerializer.Deserialize<Sample2>(json, options);
 
 			// Assert
-			Assert.Equal(expectedValue1, sample.Value1);
-			Assert.Equal(expectedValue2, sample.Value2);
+			Assert.Equal(expectedValue, sample.Value);
 		}
 
 		// コンストラクタが複数ある場合
