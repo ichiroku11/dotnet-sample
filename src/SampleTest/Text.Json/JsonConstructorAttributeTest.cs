@@ -87,5 +87,34 @@ namespace SampleTest.Text.Json {
 			Assert.Equal(expectedValue1, sample.Value1);
 			Assert.Equal(expectedValue2, sample.Value2);
 		}
+
+		// コンストラクタが複数ある場合
+		private class Sample4 {
+			public int Value { get; }
+
+			public Sample4() {
+			}
+
+			public Sample4(int value) {
+				Value = value;
+			}
+		}
+
+		[Theory]
+		[InlineData(@"{}", 0)]
+		[InlineData(@"{""value"":1}", 0)]
+
+		public void Deserialize_パラメータなしのコンストラクタが呼び出される(string json, int expectedValue) {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// Act
+			var sample = JsonSerializer.Deserialize<Sample4>(json, options);
+
+			// Assert
+			Assert.Equal(expectedValue, sample.Value);
+		}
 	}
 }
