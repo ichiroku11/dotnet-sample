@@ -36,13 +36,13 @@ namespace SampleTest.Text.Json {
 			public int Value1 { get; }
 			public int Value2 { get; }
 
-			public Sample2(int value1 = -1) {
+			public Sample2(int value1) {
 				Value1 = value1;
 			}
 		}
 
 		[Theory]
-		[InlineData(@"{}", -1, 0)]
+		[InlineData(@"{}", 0, 0)]
 		[InlineData(@"{""value1"":1, ""value2"":1}", 1, 0)]
 	
 		public void Deserialize_コンストラクタが呼び出される(string json, int expectedValue1, int expectedValue2) {
@@ -59,43 +59,14 @@ namespace SampleTest.Text.Json {
 			Assert.Equal(expectedValue2, sample.Value2);
 		}
 
-		// 引数があるコンストラクタがある場合
-		private class Sample3 {
-			public int Value1 { get; }
-			public int Value2 { get; }
-
-			public Sample3(int value1, int value2) {
-				Value1 = value1;
-				Value2 = value2;
-			}
-		}
-
-		[Theory]
-		[InlineData(@"{}", 0, 0)]
-		[InlineData(@"{""value1"":1, ""value2"":2}", 1, 2)]
-
-		public void Deserialize_引数があるコンストラクタを呼び出せる(string json, int expectedValue1, int expectedValue2) {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
-
-			// Act
-			var sample = JsonSerializer.Deserialize<Sample3>(json, options);
-
-			// Assert
-			Assert.Equal(expectedValue1, sample.Value1);
-			Assert.Equal(expectedValue2, sample.Value2);
-		}
-
 		// コンストラクタが複数ある場合
-		private class Sample4 {
+		private class Sample3 {
 			public int Value { get; }
 
-			public Sample4() {
+			public Sample3() {
 			}
 
-			public Sample4(int value) {
+			public Sample3(int value) {
 				Value = value;
 			}
 		}
@@ -111,7 +82,7 @@ namespace SampleTest.Text.Json {
 			};
 
 			// Act
-			var sample = JsonSerializer.Deserialize<Sample4>(json, options);
+			var sample = JsonSerializer.Deserialize<Sample3>(json, options);
 
 			// Assert
 			Assert.Equal(expectedValue, sample.Value);
