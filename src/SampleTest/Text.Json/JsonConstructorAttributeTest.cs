@@ -85,5 +85,35 @@ namespace SampleTest.Text.Json {
 			// Assert
 			Assert.Equal(expectedValue, sample.Value);
 		}
+
+		// JsonConstructorAttributeを使ってコンストラクタを指定する
+		private class Sample4 {
+			public int Value { get; }
+
+			public Sample4() {
+			}
+
+			[JsonConstructor]
+			public Sample4(int value) {
+				Value = value;
+			}
+		}
+
+		[Theory]
+		[InlineData(@"{}", 0)]
+		[InlineData(@"{""value"":1}", 1)]
+
+		public void Deserialize_JsonConstructorAttributeで呼び出すコンストラクタを指定する(string json, int expectedValue) {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// Act
+			var sample = JsonSerializer.Deserialize<Sample4>(json, options);
+
+			// Assert
+			Assert.Equal(expectedValue, sample.Value);
+		}
 	}
 }
