@@ -21,6 +21,19 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
+		public void Deserialize_文字列を数値にデシリアライズしようとするJsonExceptionが発生する() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+			var json = @"{""value1"":""1""}";
+
+			// Act
+			// Assert
+			Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<Sample>(json, options));
+		}
+
+		[Fact]
 		public void Serialize_数値を文字列としてシリアライズする() {
 			// Arrange
 			var options = new JsonSerializerOptions {
@@ -31,6 +44,7 @@ namespace SampleTest.Text.Json {
 			var json = JsonSerializer.Serialize(new Sample { Value1 = 1, Value2 = 1 }, options);
 
 			// Assert
+			// value2の値は文字列
 			Assert.Equal(@"{""value1"":1,""value2"":""1""}", json);
 		}
 	}
