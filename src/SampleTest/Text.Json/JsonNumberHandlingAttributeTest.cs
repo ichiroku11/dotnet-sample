@@ -59,11 +59,11 @@ namespace SampleTest.Text.Json {
 			};
 
 			// Act
-			var json = JsonSerializer.Serialize(new Sample { Value1 = 1, Value2 = 1 }, options);
+			var json = JsonSerializer.Serialize(new Sample { Value1 = 1, Value2 = 2 }, options);
 
 			// Assert
 			// value2の値は文字列
-			Assert.Equal(@"{""value1"":1,""value2"":""1""}", json);
+			Assert.Equal(@"{""value1"":1,""value2"":""2""}", json);
 		}
 	}
 }
