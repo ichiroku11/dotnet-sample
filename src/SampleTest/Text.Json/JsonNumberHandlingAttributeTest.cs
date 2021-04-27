@@ -34,6 +34,24 @@ namespace SampleTest.Text.Json {
 		}
 
 		[Fact]
+		public void Deserialize_数値文字列をデシリアライズする() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+			// value2の値は数値文字列
+			var json = @"{""value1"":1,""value2"":""2""}";
+
+			// Act
+			var sample = JsonSerializer.Deserialize<Sample>(json, options);
+
+			// Assert
+			Assert.Equal(1, sample.Value1);
+			Assert.Equal(2, sample.Value2);
+		}
+
+		[Fact]
 		public void Serialize_数値を文字列としてシリアライズする() {
 			// Arrange
 			var options = new JsonSerializerOptions {
