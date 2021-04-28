@@ -26,10 +26,34 @@ namespace SampleTest.Text.Json {
 			};
 
 			// Act
-			var actual = JsonSerializer.Serialize(new Sample1 { Value1 = 1, Value2 = 2 }, options);
+			var sample = JsonSerializer.Serialize(new Sample1 { Value1 = 1, Value2 = 2 }, options);
 
 			// Assert
-			Assert.Equal(@"{""value2"":2}", actual);
+			Assert.Equal(@"{""value2"":2}", sample);
+		}
+
+		// private setterはデシリアライズされない
+		// private setterにJsonIncludeAttributeを指定するのデシリアライズされる
+		private class Sample2 {
+			public int Value1 { get; private set; }
+
+			[JsonInclude]
+			public int Value2 { get; private set; }
+		}
+
+		[Fact]
+		public void Deserialize_JsonIncludeAttributeを使ってprivateなsetterをデシリアライズする() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			};
+
+			// Act
+			var sample = JsonSerializer.Deserialize<Sample2>(@"{""value1"":1, ""value2"":2}", options);
+
+			// Assert
+			Assert.Equal(0, sample.Value1);
+			Assert.Equal(2, sample.Value2);
 		}
 	}
 }
