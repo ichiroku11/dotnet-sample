@@ -149,5 +149,16 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, d.Value);
 		}
+
+		[Fact]
+		public void Record_同じ値を持っていても型は異なる() {
+			// Arrange
+			// Act
+			var b = new Base(1);
+			var d = new Derived(1);
+
+			// Assert
+			Assert.False(b == d);
+		}
 	}
 }
