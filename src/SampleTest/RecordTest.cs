@@ -12,9 +12,10 @@ namespace SampleTest {
 	// https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 	public class RecordTest {
 		// 最小のレコード型
+		// 型名の直後()で引数を並べる書き方をプライマリコンストラクタと言う
 		// コンストラクタの引数の名前は大文字で始める必要あり？
 		private record Vector2(int X = 0, int Y = 0);
-		// 以下、実装される
+		// 以下のメソッドが実装される
 		// Equals
 		// GetHashCode
 		// operator ==
@@ -131,6 +132,22 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, sample.Value);
 			Assert.Equal(1, sample.GetValue());
+		}
+
+		// レコード型の継承を試す
+		private record Base(int Value);
+		// ベースの型のプライマリコンストラクタを呼び出す必要がある
+		// 同じプロパティ名を指定できる
+		private record Derived(int Value) : Base(Value);
+
+		[Fact]
+		public void Record_継承を試す() {
+			// Arrange
+			// Act
+			var d = new Derived(1);
+
+			// Assert
+			Assert.Equal(1, d.Value);
 		}
 	}
 }
