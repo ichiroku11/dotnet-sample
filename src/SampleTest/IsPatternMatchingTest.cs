@@ -9,6 +9,10 @@ namespace SampleTest {
 	public class IsPatternMatchingTest {
 		[Fact]
 		public void Is_nullのチェックができる() {
+			// Arrange
+
+			// Act
+			// Assert
 			int? value = null;
 			if (value is null) {
 				Assert.Null(value);
@@ -19,6 +23,10 @@ namespace SampleTest {
 
 		[Fact]
 		public void Is_非nullableに変換できる() {
+			// Arrange
+
+			// Act
+			// Assert
 			int? value = 0;
 			if (value is null) {
 				AssertHelper.Fail();
@@ -32,6 +40,10 @@ namespace SampleTest {
 		// https://docs.microsoft.com/ja-jp/dotnet/csharp/whats-new/csharp-9#pattern-matching-enhancements
 		[Fact]
 		public void Is_notnullのチェックができる() {
+			// Arrange
+
+			// Act
+			// Assert
 			int? value = null;
 			if (value is not null) {
 				AssertHelper.Fail();
@@ -43,6 +55,10 @@ namespace SampleTest {
 
 		[Fact]
 		public void Is_andとlessthanorequalとgreaterthanorequalを使ってみる() {
+			// Arrange
+
+			// Act
+			// Assert
 			Assert.All(
 				"0123456789".ToCharArray(),
 				digit => Assert.True(digit is >= '0' and <= '9'));
