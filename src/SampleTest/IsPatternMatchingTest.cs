@@ -63,5 +63,22 @@ namespace SampleTest {
 				"0123456789".ToCharArray(),
 				digit => Assert.True(digit is >= '0' and <= '9'));
 		}
+
+		// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/patterns#parenthesized-pattern
+		[Theory]
+		[InlineData(0, true)]
+		[InlineData(1, false)]
+		[InlineData(2, false)]
+		[InlineData(3, true)]
+		public void Is_notと括弧を使ってみる(int value, bool expected) {
+			// Arrange
+
+			// Act
+			// valueは1、2以外
+			var actual = value is not (1 or 2);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
