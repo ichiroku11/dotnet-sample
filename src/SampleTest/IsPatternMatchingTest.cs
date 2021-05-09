@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -76,6 +77,28 @@ namespace SampleTest {
 			// Act
 			// valueは1、2以外
 			var actual = value is not (1 or 2);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/patterns#var-pattern
+		[Theory]
+		[InlineData(0, false)]
+		[InlineData(1, true)]
+		[InlineData(3, true)]
+		[InlineData(4, false)]
+		public void Is_varと使ってみる(int value, bool expected) {
+			// Arrange
+			static bool isInRange(Func<IEnumerable<int>> provider, int value)
+				// providerは重たい処理をイメージして、
+				// varでローカル変数に一度代入する
+				=> provider() is var values
+					&& value >= values.Min()
+					&& value <= values.Max();
+
+			// Act
+			var actual = isInRange(() => Enumerable.Range(1, 3), value);
 
 			// Assert
 			Assert.Equal(expected, actual);
