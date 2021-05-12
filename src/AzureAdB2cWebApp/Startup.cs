@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace AzureAdB2cWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
+			services.AddControllersWithViews();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -21,9 +22,7 @@ namespace AzureAdB2cWebApp {
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints => {
-				endpoints.MapGet("/", async context => {
-					await context.Response.WriteAsync("Hello World!");
-				});
+				endpoints.MapDefaultControllerRoute();
 			});
 		}
 	}
