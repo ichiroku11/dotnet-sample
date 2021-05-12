@@ -9,5 +9,9 @@ namespace AzureAdB2cWebApp.Controllers {
 		public IActionResult Index() {
 			return View();
 		}
+
+		public IActionResult Claim() {
+			return View();
+		}
 	}
 }
