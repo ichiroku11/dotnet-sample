@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,14 @@ namespace AzureAdB2cWebApp.Controllers {
 			return View();
 		}
 
-		public IActionResult Claim() {
+		public async Task<IActionResult> ClaimAsync() {
+			// todo:
+			//var result = await HttpContext.AuthenticateAsync();
+			//ViewBag.Properties = result.Properties;
+			ViewBag.Properties = new AuthenticationProperties();
+
+			await Task.CompletedTask;
+
 			return View();
 		}
 	}
