@@ -5,8 +5,17 @@
 	<title>@ViewBag.Title</title>
 </head>
 <body>
-	<div>
+	<header>
+		<nav>
+			<ul>
+				<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+				<li><a asp-controller="Home" asp-action="Claim">Claim</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
 		@RenderBody()
-	</div>
+	</main>
+	<footer></footer>
 </body>
 </html>
