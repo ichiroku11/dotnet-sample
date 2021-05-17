@@ -9,8 +9,8 @@ namespace AzureAdB2cWebApp.Controllers {
 	[Authorize]
 	public class AccountController : Controller {
 		[AllowAnonymous]
-		public IActionResult Login() {
-			return Content($"{nameof(Login)}");
+		public IActionResult Login(string returnUrl) {
+			return Content($"{nameof(Login)}:{returnUrl}");
 		}
 	}
 }
