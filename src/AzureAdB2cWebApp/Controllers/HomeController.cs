@@ -10,9 +10,10 @@ namespace AzureAdB2cWebApp.Controllers {
 	[Authorize]
 	public class HomeController : Controller {
 		[AllowAnonymous]
-		public IActionResult Index() {
-			return View();
-		}
+		public IActionResult Index() => View();
+
+		[AllowAnonymous]
+		public IActionResult Option() => View();
 
 		public async Task<IActionResult> ClaimAsync() {
 			// todo:
