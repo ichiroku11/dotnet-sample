@@ -45,6 +45,14 @@ namespace SampleTest {
 			Assert.Equal(scheme, uri.Scheme);
 		}
 
+		[Fact]
+		public void SchemeDelimiter_確認する() {
+			// Arrange
+			// Act
+			// Assert
+			Assert.Equal("://", Uri.SchemeDelimiter);
+		}
+
 		[Theory]
 		[InlineData("xyz")]
 		public void TryCreate_絶対URLの作成に失敗する(string url) {
