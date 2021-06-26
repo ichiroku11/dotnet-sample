@@ -1,0 +1,22 @@
+@using Microsoft.AspNetCore.Routing
+@using Microsoft.Extensions.Options
+@using Microsoft.Identity.Web
+@inject IOptions<MicrosoftIdentityOptions> Options
+@{
+	ViewBag.Title = "Option";
+}
+<p>@ViewBag.Title</p>
+
+<h3>@nameof(MicrosoftIdentityOptions)</h3>
+<table>
+	<tr>
+		<th>Type</th>
+		<th>Value</th>
+	</tr>
+	@foreach (var (key, value) in new RouteValueDictionary(Options.Value).OrderBy(entry => entry.Key)) {
+		<tr>
+			<td>@key</td>
+			<td>@value</td>
+		</tr>
+	}
+</table>
