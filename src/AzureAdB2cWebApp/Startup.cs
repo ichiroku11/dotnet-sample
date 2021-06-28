@@ -36,11 +36,7 @@ namespace AzureAdB2cWebApp {
 				// Microsoft.Identity.Web.UIを使わず動きを確認したいため、
 				// デフォルトの動きを上書きする
 				// https://github.com/AzureAD/microsoft-identity-web/blob/master/src/Microsoft.Identity.Web/AzureADB2COpenIDConnectEventHandlers.cs
-				var hanlder = options.Events.OnRemoteFailure;
-				options.Events.OnRemoteFailure = async context => {
-					await handlers.OnRemoteFailure(context);
-					await hanlder(context);
-				};
+				options.Events.OnRemoteFailure = handlers.OnRemoteFailure;
 			});
 
 			services.Configure<RouteOptions>(options => {
