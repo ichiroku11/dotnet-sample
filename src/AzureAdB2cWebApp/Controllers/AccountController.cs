@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +17,14 @@ namespace AzureAdB2cWebApp.Controllers {
 		private const string _policy = "policy";
 
 		private readonly IConfiguration _config;
+		private readonly MicrosoftIdentityOptions _options;
 
-		public AccountController(IConfiguration config) {
+		public AccountController(IConfiguration config, IOptions<MicrosoftIdentityOptions> options) {
 			_config = config;
+			_options = options.Value;
 		}
 
+		// SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
 		[AllowAnonymous]
 		public IActionResult SignIn() {
 			var properties = new AuthenticationProperties {
@@ -40,17 +45,27 @@ namespace AzureAdB2cWebApp.Controllers {
 			return Challenge(properties, _scheme);
 		}
 
-		// todo:
-		/*
-		public IActionResult SignOut() {
-			return new EmptyResult();
-		}
-
 		public IActionResult ResetPassword() {
-			return new EmptyResult();
+			var properties = new AuthenticationProperties {
+				RedirectUri = Url.Action("Claim", "Home"),
+			};
+			properties.Items[_policy] = _options.ResetPasswordPolicyId;
+
+			return Challenge(properties, _scheme);
 		}
 
 		public IActionResult EditProfile() {
+			var properties = new AuthenticationProperties {
+				RedirectUri = Url.Action("Claim", "Home"),
+			};
+			properties.Items[_policy] = _options.EditProfilePolicyId;
+
+			return Challenge(properties, _scheme);
+		}
+
+		// todo:
+		/*
+		public IActionResult SignOut() {
 			return new EmptyResult();
 		}
 		*/
