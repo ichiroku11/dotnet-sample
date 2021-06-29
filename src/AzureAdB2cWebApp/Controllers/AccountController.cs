@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,11 +64,28 @@ namespace AzureAdB2cWebApp.Controllers {
 			return Challenge(properties, _scheme);
 		}
 
-		// todo:
-		/*
-		public IActionResult SignOut() {
-			return new EmptyResult();
+		// 親クラスでSignOutメソッドが定義されているため
+		// しかたなくAsyncメソッドに
+		public Task<IActionResult> SignOutAsync() {
+			var properties = new AuthenticationProperties {
+				RedirectUri = Url.Action("SignedOut"),
+			};
+			var result = SignOut(
+				properties,
+				CookieAuthenticationDefaults.AuthenticationScheme,
+				OpenIdConnectDefaults.AuthenticationScheme);
+
+			return Task.FromResult<IActionResult>(result);
 		}
-		*/
+
+		[AllowAnonymous]
+		public IActionResult SignedOut() {
+			return View("Message", "Signed out");
+		}
+
+		[AllowAnonymous]
+		public IActionResult Error() {
+			return View("Message", "Error");
+		}
 	}
 }
