@@ -35,6 +35,7 @@
 			</ul>
 			<ul>
 				@if (User.Identity.IsAuthenticated) {
+					<li><a asp-controller="Account" asp-action="EditProfile">Edit profile</a></li>
 					<li><a asp-controller="Account" asp-action="SignOut">Sign out</a></li>
 				} else {
 					<li><a asp-controller="Account" asp-action="SignUp">Sign up</a></li>
