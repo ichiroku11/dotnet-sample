@@ -46,6 +46,7 @@ namespace AzureAdB2cWebApp.Controllers {
 			return Challenge(properties, _scheme);
 		}
 
+		[AllowAnonymous]
 		public IActionResult ResetPassword() {
 			var properties = new AuthenticationProperties {
 				RedirectUri = Url.Action("Claim", "Home"),
