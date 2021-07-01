@@ -81,7 +81,7 @@ namespace AzureAdB2cWebApp.Controllers {
 
 		[AllowAnonymous]
 		public IActionResult SignedOut() {
-			return View("Message", "Signed out");
+			return View();
 		}
 
 		[AllowAnonymous]
