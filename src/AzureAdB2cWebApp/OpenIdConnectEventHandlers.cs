@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
@@ -25,8 +26,8 @@ namespace AzureAdB2cWebApp {
 				redirectUrl = $"{context.Request.PathBase}/";
 
 			} else {
-				// todo:
-				//_loginErrorAccessor.SetMessage(context.HttpContext, message);
+				var loginErrorAccessor = context.HttpContext.RequestServices.GetService<ILoginErrorAccessor>();
+				loginErrorAccessor?.SetMessage(context.HttpContext, message);
 			}
 
 			context.Response.Redirect(redirectUrl);

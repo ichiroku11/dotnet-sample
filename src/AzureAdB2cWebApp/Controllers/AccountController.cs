@@ -86,7 +86,7 @@ namespace AzureAdB2cWebApp.Controllers {
 
 		[AllowAnonymous]
 		public IActionResult Error() {
-			return View("Message", "Error");
+			return View();
 		}
 	}
 }

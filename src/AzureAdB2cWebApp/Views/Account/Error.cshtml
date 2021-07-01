@@ -1,0 +1,9 @@
+@using Microsoft.Extensions.DependencyInjection
+@using Microsoft.Identity.Web
+@{
+	ViewBag.Title = "Error";
+
+	var loginErrorAccessor = ViewContext.HttpContext.RequestServices.GetService<ILoginErrorAccessor>();
+}
+<p>@ViewBag.Title</p>
+<p>@loginErrorAccessor?.GetMessage(ViewContext.HttpContext)</p>
