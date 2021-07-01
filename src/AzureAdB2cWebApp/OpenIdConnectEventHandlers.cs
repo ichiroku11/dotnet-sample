@@ -20,11 +20,7 @@ namespace AzureAdB2cWebApp {
 			var message = context.Failure?.Message ?? "";
 			// 参考）エラーコード
 			// https://docs.microsoft.com/ja-jp/azure/active-directory-b2c/error-codes
-			if (isOidcProtocolException && message.Contains("AADB2C90118", StringComparison.OrdinalIgnoreCase)) {
-				// 「パスワードを忘れた場合」をクリックした場合
-				redirectUrl = $"{context.Request.PathBase}/account/resetpassword";
-
-			} else if (isOidcProtocolException && message.Contains("access_denied", StringComparison.OrdinalIgnoreCase)) {
+			if (isOidcProtocolException && message.Contains("access_denied", StringComparison.OrdinalIgnoreCase)) {
 				// 「キャンセル」をクリックした場合
 				redirectUrl = $"{context.Request.PathBase}/";
 
