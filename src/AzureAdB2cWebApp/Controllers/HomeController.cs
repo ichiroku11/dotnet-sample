@@ -16,12 +16,8 @@ namespace AzureAdB2cWebApp.Controllers {
 		public IActionResult Option() => View();
 
 		public async Task<IActionResult> ClaimAsync() {
-			// todo:
-			//var result = await HttpContext.AuthenticateAsync();
-			//ViewBag.Properties = result.Properties;
-			ViewBag.Properties = new AuthenticationProperties();
-
-			await Task.CompletedTask;
+			var result = await HttpContext.AuthenticateAsync();
+			ViewBag.Properties = result.Properties;
 
 			return View();
 		}

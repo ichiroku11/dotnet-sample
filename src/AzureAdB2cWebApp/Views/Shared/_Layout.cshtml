@@ -3,6 +3,27 @@
 <head>
 	<meta name="viewport" content="width=device-width" />
 	<title>@ViewBag.Title</title>
+	<style>
+		header nav {
+			display: flex;
+			justify-content: space-between;
+			padding: 0 20px;
+		}
+
+		header ul {
+			display: flex;
+			padding: 0;
+		}
+
+		header li {
+			list-style: none;
+			padding: 0 5px;
+		}
+
+		header a {
+			text-decoration: none;
+		}
+	</style>
 </head>
 <body>
 	<header>
@@ -11,6 +32,15 @@
 				<li><a asp-controller="Home" asp-action="Index">Home</a></li>
 				<li><a asp-controller="Home" asp-action="Option">Option</a></li>
 				<li><a asp-controller="Home" asp-action="Claim">Claim</a></li>
+			</ul>
+			<ul>
+				@if (User.Identity.IsAuthenticated) {
+					<li><a asp-controller="Account" asp-action="EditProfile">Edit profile</a></li>
+					<li><a asp-controller="Account" asp-action="SignOut">Sign out</a></li>
+				} else {
+					<li><a asp-controller="Account" asp-action="SignUp">Sign up</a></li>
+					<li><a asp-controller="Account" asp-action="SignIn">Sign in</a></li>
+				}
 			</ul>
 		</nav>
 	</header>

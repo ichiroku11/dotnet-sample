@@ -31,6 +31,14 @@ namespace AzureAdB2cWebApp {
 				// OpenIdConnectEventsのデバッグログの出力
 				subscribeToOpenIdConnectMiddlewareDiagnosticsEvents: true);
 
+			var handlers  = new OpenIdConnectEventHandlers();
+			services.PostConfigure<MicrosoftIdentityOptions>(options => {
+				// Microsoft.Identity.Web.UIを使わず動きを確認したいため、
+				// デフォルトの動きを上書きする
+				// https://github.com/AzureAD/microsoft-identity-web/blob/master/src/Microsoft.Identity.Web/AzureADB2COpenIDConnectEventHandlers.cs
+				options.Events.OnRemoteFailure = handlers.OnRemoteFailure;
+			});
+
 			services.Configure<RouteOptions>(options => {
 				options.LowercaseUrls = true;
 				options.LowercaseQueryStrings = true;
