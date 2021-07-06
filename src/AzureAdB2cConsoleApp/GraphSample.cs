@@ -14,13 +14,17 @@ namespace AzureAdB2cConsoleApp {
 		}
 
 		public async Task RunAsync() {
+			// Graph APIを呼び出すアプリ（資格情報などを管理する）
 			var confidentialClientApp = ConfidentialClientApplicationBuilder
 				.Create(_config["ClientId"])
 				.WithTenantId(_config["TenantId"])
 				.WithClientSecret(_config["ClientSecret"])
 				.Build();
+
+			// MSAL.NETによる認証プロバイダー
 			var clientCredentialProvider = new ClientCredentialProvider(confidentialClientApp);
 
+			// Graph APIを呼び出すクライアント
 			var client = new GraphServiceClient(clientCredentialProvider);
 
 			// ユーザ一覧を取得
@@ -28,7 +32,6 @@ namespace AzureAdB2cConsoleApp {
 				.Request()
 				.Select(user => new {
 					user.Id,
-					user.DisplayName,
 					user.Surname,
 					user.GivenName,
 					user.Mail,
