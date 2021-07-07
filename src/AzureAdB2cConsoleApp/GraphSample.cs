@@ -3,10 +3,21 @@ using Microsoft.Graph;
 using Microsoft.Graph.Auth;
 using Microsoft.Identity.Client;
 using System;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace AzureAdB2cConsoleApp {
 	public class GraphSample {
+		private static readonly JsonSerializerOptions _jsonSerializerOptions
+			= new() {
+				Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+				IgnoreNullValues = true,
+				//PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				WriteIndented = true,
+			};
+
 		private readonly IConfiguration _config;
 
 		public GraphSample(IConfiguration config) {
@@ -21,7 +32,8 @@ namespace AzureAdB2cConsoleApp {
 				.WithClientSecret(_config["ClientSecret"])
 				.Build();
 
-			// MSAL.NETによる認証プロバイダー
+			// 認証プロバイダー
+			// https://docs.microsoft.com/ja-jp/graph/sdks/choose-authentication-providers?tabs=CS#client-credentials-provider
 			var clientCredentialProvider = new ClientCredentialProvider(confidentialClientApp);
 
 			// Graph APIを呼び出すクライアント
@@ -35,19 +47,11 @@ namespace AzureAdB2cConsoleApp {
 					user.Surname,
 					user.GivenName,
 					user.Mail,
-					// todo:
-					//user.Extensions
 				})
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
-				Console.WriteLine($"{user.Id}, {user.Surname} {user.GivenName} {user.Mail}");
-				// todo: Extensions
-				/*
-				foreach (var extension in user.Extensions) {
-				Console.WriteLine(extension);
-				}
-				*/
+				Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 			}
 		}
 	}
