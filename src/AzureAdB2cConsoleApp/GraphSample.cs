@@ -40,6 +40,11 @@ namespace AzureAdB2cConsoleApp {
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
+				Console.WriteLine($"{nameof(user.Id)}: {user.Id}");
+				Console.WriteLine($"{nameof(user.Surname)}: {user.Surname}");
+				Console.WriteLine($"{nameof(user.GivenName)}: {user.GivenName}");
+				Console.WriteLine($"{nameof(user.Mail)}: {user.Mail}");
+				Console.WriteLine($"Json:");
 				Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 			}
 		}
@@ -50,14 +55,14 @@ namespace AzureAdB2cConsoleApp {
 			var helper = new CustomAttributeHelper(extensionAppClientId);
 
 			// カスタム属性名
-			var attributeName = "TestNumber";
+			var attributeName = helper.GetFullName("TestNumber");
 
 			var select = string.Join(',', new[] {
 				"id",
 				"surname",
 				"givenName",
 				"mail",
-				helper.GetFullName(attributeName)
+				attributeName
 			});
 
 			// ユーザ一覧を取得
@@ -67,6 +72,16 @@ namespace AzureAdB2cConsoleApp {
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
+				Console.WriteLine($"{nameof(user.Id)}: {user.Id}");
+				Console.WriteLine($"{nameof(user.Surname)}: {user.Surname}");
+				Console.WriteLine($"{nameof(user.GivenName)}: {user.GivenName}");
+				Console.WriteLine($"{nameof(user.Mail)}: {user.Mail}");
+				// カスタム属性は存在しない場合がある
+				var attributeValue = user.AdditionalData.ContainsKey(attributeName)
+					? user.AdditionalData[attributeName]
+					: null;
+				Console.WriteLine($"{nameof(user.AdditionalData)}[{attributeName}]: {attributeValue}");
+				Console.WriteLine($"Json:");
 				Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 			}
 		}
