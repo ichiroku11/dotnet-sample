@@ -24,6 +24,23 @@ namespace AzureAdB2cConsoleApp {
 			_config = config;
 		}
 
+		private static async Task ShowUsers(IGraphServiceClient client) {
+			// ユーザ一覧を取得
+			var result = await client.Users
+				.Request()
+				.Select(user => new {
+					user.Id,
+					user.Surname,
+					user.GivenName,
+					user.Mail,
+				})
+				.GetAsync();
+
+			foreach (var user in result.CurrentPage) {
+				Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
+			}
+		}
+
 		public async Task RunAsync() {
 			// Graph APIを呼び出すアプリ（資格情報などを管理する）
 			var confidentialClientApp = ConfidentialClientApplicationBuilder
@@ -39,20 +56,7 @@ namespace AzureAdB2cConsoleApp {
 			// Graph APIを呼び出すクライアント
 			var client = new GraphServiceClient(clientCredentialProvider);
 
-			// ユーザ一覧を取得
-			var result = await client.Users
-				.Request()
-				.Select(user => new {
-					user.Id,
-					user.Surname,
-					user.GivenName,
-					user.Mail,
-				})
-				.GetAsync();
-
-			foreach (var user in result.CurrentPage) {
-				Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
-			}
+			await ShowUsers(client);
 		}
 	}
 }
