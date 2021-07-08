@@ -28,7 +28,7 @@ namespace AzureAdB2cConsoleApp {
 
 		// ユーザ一覧を取得
 		// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http
-		private async Task ShowUsersAsync(IGraphServiceClient client) {
+		private async Task GetUsersAsync(IGraphServiceClient client) {
 			var result = await client.Users
 				.Request()
 				.Select(user => new {
@@ -49,9 +49,9 @@ namespace AzureAdB2cConsoleApp {
 			}
 		}
 
-		// ユーザ一覧をカスタム属性付きで取得する
+		// ユーザ一覧をカスタム属性付きで取得
 		// https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management/blob/master/src/Services/UserService.cs
-		private async Task ShowUsersWithCustomAttributeAsync(IGraphServiceClient client, string extensionAppClientId) {
+		private async Task GetUsersAsync(IGraphServiceClient client, string extensionAppClientId) {
 			var helper = new CustomAttributeHelper(extensionAppClientId);
 
 			// カスタム属性名
@@ -86,6 +86,41 @@ namespace AzureAdB2cConsoleApp {
 			}
 		}
 
+		// ユーザをカスタム属性付きでID指定で取得
+		private async Task GetUserByIdAsync(IGraphServiceClient client, string extensionAppClientId) {
+			var helper = new CustomAttributeHelper(extensionAppClientId);
+
+			// カスタム属性名
+			var attributeName = helper.GetFullName("TestNumber");
+
+			var select = string.Join(',', new[] {
+				"id",
+				"surname",
+				"givenName",
+				"mail",
+				attributeName
+			});
+
+			// ユーザを取得
+			var id = "ca25b697-af90-4f5b-ae81-8eebc84acc24";
+			var user = await client.Users[id]
+				.Request()
+				.Select(select)
+				.GetAsync();
+
+			Console.WriteLine($"{nameof(user.Id)}: {user.Id}");
+			Console.WriteLine($"{nameof(user.Surname)}: {user.Surname}");
+			Console.WriteLine($"{nameof(user.GivenName)}: {user.GivenName}");
+			Console.WriteLine($"{nameof(user.Mail)}: {user.Mail}");
+			// カスタム属性は存在しない場合がある
+			var attributeValue = user.AdditionalData.ContainsKey(attributeName)
+				? user.AdditionalData[attributeName]
+				: null;
+			Console.WriteLine($"{nameof(user.AdditionalData)}[{attributeName}]: {attributeValue}");
+			Console.WriteLine($"Json:");
+			Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
+		}
+
 		public async Task RunAsync() {
 			// Graph APIを呼び出すアプリ（資格情報などを管理する）
 			var confidentialClientApp = ConfidentialClientApplicationBuilder
@@ -101,8 +136,12 @@ namespace AzureAdB2cConsoleApp {
 			// Graph APIを呼び出すクライアント
 			var client = new GraphServiceClient(clientCredentialProvider);
 
-			await ShowUsersAsync(client);
-			await ShowUsersWithCustomAttributeAsync(client, _config["ExtensionAppClientId"]);
+			// ユーザ一覧を取得
+			//await GetUsersAsync(client);
+			await GetUsersAsync(client, _config["ExtensionAppClientId"]);
+
+			// ユーザーをID指定で取得
+			await GetUserByIdAsync(client, _config["ExtensionAppClientId"]);
 		}
 	}
 }
