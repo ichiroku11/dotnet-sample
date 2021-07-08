@@ -73,7 +73,7 @@ namespace AzureAdB2cConsoleApp {
 				.Request()
 				.Select(select)
 				/*
-				// 取得するデータを表す式でも表現できるが、カスタム属性は取得できないのかも
+				// 取得するデータを式でも表現できるが、カスタム属性は取得できないのかも
 				.Select(user => new {
 					user.Id,
 					user.Surname,
