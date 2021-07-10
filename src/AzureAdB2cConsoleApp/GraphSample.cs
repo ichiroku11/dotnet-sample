@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Auth;
 using Microsoft.Identity.Client;
@@ -16,19 +17,21 @@ namespace AzureAdB2cConsoleApp {
 			= new() {
 				Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
 				IgnoreNullValues = true,
-				//PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 				WriteIndented = true,
 			};
 
 		private readonly IConfiguration _config;
+		private readonly ILogger _logger;
 
 		// Graph APIを呼び出すアプリ（資格情報などを管理する）
 		private readonly IConfidentialClientApplication _confidentialClientApp;
 		// カスタム属性の名前のヘルパー
 		private readonly CustomAttributeHelper _customAttributeHelper;
 
-		public GraphSample(IConfiguration config) {
+		public GraphSample(IConfiguration config, ILogger<GraphSample> logger) {
 			_config = config;
+			_logger = logger;
+
 			_confidentialClientApp = ConfidentialClientApplicationBuilder
 				.Create(_config["ClientId"])
 				.WithTenantId(_config["TenantId"])
@@ -115,8 +118,11 @@ namespace AzureAdB2cConsoleApp {
 			// https://docs.microsoft.com/ja-jp/graph/sdks/choose-authentication-providers?tabs=CS#client-credentials-provider
 			var clientCredentialProvider = new ClientCredentialProvider(_confidentialClientApp);
 
+			// HTTPプロバイダー
+			using var httpProvider = new LoggingHttpProvider(new HttpProvider(), _logger);
+
 			// Graph APIを呼び出すクライアント
-			var client = new GraphServiceClient(clientCredentialProvider);
+			var client = new GraphServiceClient(clientCredentialProvider, httpProvider);
 
 			// ユーザ一覧を取得
 			await GetUsersAsync(client);
