@@ -93,6 +93,8 @@ namespace AzureAdB2cConsoleApp {
 
 		// ユーザをカスタム属性付きでID指定で取得
 		private async Task GetUserByIdAsync(IGraphServiceClient client) {
+			var id = "ca25b697-af90-4f5b-ae81-8eebc84acc24";
+
 			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
 
 			var select = string.Join(',', new[] {
@@ -104,13 +106,37 @@ namespace AzureAdB2cConsoleApp {
 			});
 
 			// ユーザをID指定で取得
-			var id = "ca25b697-af90-4f5b-ae81-8eebc84acc24";
 			var user = await client.Users[id]
 				.Request()
 				.Select(select)
 				.GetAsync();
 
 			ShowUser(user);
+		}
+
+		// ユーザのカスタム属性を更新
+		private async Task UpdateUserByIdAsync(IGraphServiceClient client) {
+			var id = "ca25b697-af90-4f5b-ae81-8eebc84acc24";
+
+			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
+			var attributeValue = new Random().Next(1, 10);
+
+			// 更新
+			var userToUpdate = new User {
+				AdditionalData = new Dictionary<string, object> {
+					[attributeName] = attributeValue,
+				},
+			};
+			await client.Users[id]
+				.Request()
+				.UpdateAsync(userToUpdate);
+
+			// 取得して確認
+			var userUpdated = await client.Users[id]
+				.Request()
+				.Select(attributeName)
+				.GetAsync();
+			ShowUser(userUpdated);
 		}
 
 		public async Task RunAsync() {
@@ -129,6 +155,9 @@ namespace AzureAdB2cConsoleApp {
 
 			// ユーザーをID指定で取得
 			await GetUserByIdAsync(client);
+
+			// ユーザーを更新
+			await UpdateUserByIdAsync(client);
 		}
 	}
 }
