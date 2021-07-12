@@ -41,26 +41,7 @@ namespace AzureAdB2cConsoleApp {
 		}
 
 		// ユーザー情報をの表示
-		private void ShowUser(User user) {
-			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
-
-			Console.WriteLine($"{nameof(user.Id)}: {user.Id}");
-			Console.WriteLine($"{nameof(user.Surname)}: {user.Surname}");
-			Console.WriteLine($"{nameof(user.GivenName)}: {user.GivenName}");
-			// カスタム属性は存在しない場合がある
-			if (user.AdditionalData != null) {
-				var attributeValue = user.AdditionalData.ContainsKey(attributeName)
-					? user.AdditionalData[attributeName]
-					: null;
-				Console.WriteLine($"{nameof(user.AdditionalData)}[{attributeName}]: {attributeValue}");
-			}
-			Console.WriteLine($"{nameof(user.Identities)}:");
-			foreach (var identity in user.Identities) {
-				Console.WriteLine(identity.IssuerAssignedId);
-			}
-			Console.WriteLine($"Json:");
-			Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
-		}
+		private void ShowUser(User user) => Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 
 		// ユーザ一覧をカスタム属性付きで取得
 		// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http
@@ -159,7 +140,7 @@ namespace AzureAdB2cConsoleApp {
 			await GetUsersAsync(client);
 
 			// ユーザーをID指定で取得
-			await GetUserByIdAsync(client);
+			//await GetUserByIdAsync(client);
 
 			// ユーザーを更新
 			//await UpdateUserByIdAsync(client);
