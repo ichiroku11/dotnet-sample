@@ -47,12 +47,17 @@ namespace AzureAdB2cConsoleApp {
 			Console.WriteLine($"{nameof(user.Id)}: {user.Id}");
 			Console.WriteLine($"{nameof(user.Surname)}: {user.Surname}");
 			Console.WriteLine($"{nameof(user.GivenName)}: {user.GivenName}");
-			Console.WriteLine($"{nameof(user.Mail)}: {user.Mail}");
 			// カスタム属性は存在しない場合がある
-			var attributeValue = user.AdditionalData.ContainsKey(attributeName)
-				? user.AdditionalData[attributeName]
-				: null;
-			Console.WriteLine($"{nameof(user.AdditionalData)}[{attributeName}]: {attributeValue}");
+			if (user.AdditionalData != null) {
+				var attributeValue = user.AdditionalData.ContainsKey(attributeName)
+					? user.AdditionalData[attributeName]
+					: null;
+				Console.WriteLine($"{nameof(user.AdditionalData)}[{attributeName}]: {attributeValue}");
+			}
+			Console.WriteLine($"{nameof(user.Identities)}:");
+			foreach (var identity in user.Identities) {
+				Console.WriteLine(identity.IssuerAssignedId);
+			}
 			Console.WriteLine($"Json:");
 			Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 		}
@@ -67,7 +72,7 @@ namespace AzureAdB2cConsoleApp {
 				"id",
 				"surname",
 				"givenName",
-				"mail",
+				"identities",
 				attributeName
 			});
 
@@ -81,7 +86,7 @@ namespace AzureAdB2cConsoleApp {
 					user.Id,
 					user.Surname,
 					user.GivenName,
-					user.Mail,
+					user.Identities,
 				})
 				*/
 				.GetAsync();
@@ -101,7 +106,7 @@ namespace AzureAdB2cConsoleApp {
 				"id",
 				"surname",
 				"givenName",
-				"mail",
+				"identities",
 				attributeName
 			});
 
@@ -157,7 +162,7 @@ namespace AzureAdB2cConsoleApp {
 			await GetUserByIdAsync(client);
 
 			// ユーザーを更新
-			await UpdateUserByIdAsync(client);
+			//await UpdateUserByIdAsync(client);
 		}
 	}
 }
