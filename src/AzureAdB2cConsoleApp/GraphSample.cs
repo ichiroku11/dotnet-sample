@@ -70,7 +70,7 @@ namespace AzureAdB2cConsoleApp {
 					user.Identities,
 				})
 				*/
-				// idが指定した値かどうか
+				// idが指定した値のどれか
 				//.Filter("id in ('{id1}', '{id2}')")
 				.GetAsync();
 
