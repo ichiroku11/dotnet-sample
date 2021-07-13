@@ -70,6 +70,8 @@ namespace AzureAdB2cConsoleApp {
 					user.Identities,
 				})
 				*/
+				// idが指定した値かどうか
+				//.Filter("id in ('{id1}', '{id2}')")
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
@@ -79,7 +81,7 @@ namespace AzureAdB2cConsoleApp {
 
 		// ユーザをカスタム属性付きでID指定で取得
 		private async Task GetUserByIdAsync(IGraphServiceClient client) {
-			var id = "ca25b697-af90-4f5b-ae81-8eebc84acc24";
+			var id = "{id}";
 
 			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
 
@@ -102,7 +104,7 @@ namespace AzureAdB2cConsoleApp {
 
 		// ユーザのカスタム属性を更新
 		private async Task UpdateUserByIdAsync(IGraphServiceClient client) {
-			var id = "ca25b697-af90-4f5b-ae81-8eebc84acc24";
+			var id = "{id}";
 
 			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
 			var attributeValue = new Random().Next(1, 10);
