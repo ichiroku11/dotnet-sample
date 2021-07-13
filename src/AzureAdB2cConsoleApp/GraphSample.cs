@@ -88,7 +88,11 @@ namespace AzureAdB2cConsoleApp {
 				// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http#example-2-get-a-user-account-using-a-sign-in-name
 				//.Filter("identities/any(c:c/issuerAssignedId eq '{signInName}' and c/issuer eq '{tenant}')")
 				// issuerとissuerAssignedIdどちらも指定する必要があるため、以下はエラー
-				//.Filter("identities/any(c:c/IssuerAssignedId eq '{signInName}')")
+				//.Filter("identities/any(c:c/issuerAssignedId eq '{signInName}')")
+
+				// エラーになる
+				//.Filter("identities/any(c:startsWith(c/issuerAssignedId, '{signInName}') and c/issuer eq '{tenant}')")
+
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
