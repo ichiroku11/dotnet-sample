@@ -43,6 +43,10 @@ namespace AzureAdB2cConsoleApp {
 		// ユーザー情報をの表示
 		private void ShowUser(User user) => Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 
+		// 関連リソース
+		// https://docs.microsoft.com/ja-jp/graph/api/resources/user?view=graph-rest-1.0
+		// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity?view=graph-rest-1.0
+
 		// ユーザ一覧をカスタム属性付きで取得
 		// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http
 		// https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management/blob/master/src/Services/UserService.cs
@@ -70,12 +74,21 @@ namespace AzureAdB2cConsoleApp {
 					user.Identities,
 				})
 				*/
+				// 以下フィルタのサンプル
 				// idが指定した値のどれか
 				//.Filter("id in ('{id1}', '{id2}')")
+
 				// surNameが指定した値ではじまる
 				//.Filter("startsWith(surName, '{keyword}')")
+
 				// surNameのcontainsどうもサポートしていない？
 				//.Filter("contains(surName, '{keyword}')")
+
+				// 指定したサインイン名でフィルタ
+				// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http#example-2-get-a-user-account-using-a-sign-in-name
+				//.Filter("identities/any(c:c/issuerAssignedId eq '{signInName}' and c/issuer eq '{tenant}')")
+				// issuerとissuerAssignedIdどちらも指定する必要があるため、以下はエラー
+				//.Filter("identities/any(c:c/IssuerAssignedId eq '{signInName}')")
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
