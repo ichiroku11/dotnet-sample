@@ -74,6 +74,8 @@ namespace AzureAdB2cConsoleApp {
 				//.Filter("id in ('{id1}', '{id2}')")
 				// surNameが指定した値ではじまる
 				//.Filter("startsWith(surName, '{keyword}')")
+				// surNameのcontainsどうもサポートしていない？
+				//.Filter("contains(surName, '{keyword}')")
 				.GetAsync();
 
 			foreach (var user in result.CurrentPage) {
