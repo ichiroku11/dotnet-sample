@@ -12,14 +12,14 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="row">
+		<div class="row mt-1">
 			<div class="col">
 				<h4>@nameof(IfTagHelper)</h4>
 				<span if="true">true</span>
 				<span if="false">false</span>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row mt-4">
 			<div class="col">
 				<h4>@nameof(PrePostTagHelper)</h4>
 				<pre-post>
@@ -27,7 +27,7 @@
 				</pre-post>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row mt-4">
 			<div class="col">
 				<h4>@nameof(ModalPartialTagHelper)</h4>
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sample-modal">Launch modal</button>
@@ -45,6 +45,12 @@
 					};
 					<partial name="_Modal" model="model" />
 				}
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col">
+				<h4>@nameof(ParagraphTagHelper)</h4>
+				<p first second>Content</p>
 			</div>
 		</div>
 	</div>
