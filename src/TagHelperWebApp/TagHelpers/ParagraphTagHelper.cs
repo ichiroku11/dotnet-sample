@@ -13,6 +13,8 @@ namespace TagHelperWebApp.TagHelpers {
 		}
 
 		public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
+			// todo: コンテンツが消えてしまう
+			// todo: 属性も追加
 			output.Content.Append($":{_content}");
 
 			return Task.CompletedTask;
