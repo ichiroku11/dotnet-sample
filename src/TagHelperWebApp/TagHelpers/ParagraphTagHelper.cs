@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace TagHelperWebApp.TagHelpers {
+	// 参考
+	// https://docs.microsoft.com/ja-jp/aspnet/core/mvc/views/tag-helpers/authoring?view=aspnetcore-5.0#avoid-tag-helper-conflicts
 	public abstract class ParagraphTagHelper : TagHelper {
 		private readonly string _content;
 
@@ -12,12 +14,15 @@ namespace TagHelperWebApp.TagHelpers {
 			_content = content;
 		}
 
-		public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
-			// todo: コンテンツが消えてしまう
+		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
 			// todo: 属性も追加
-			output.Content.Append($":{_content}");
 
-			return Task.CompletedTask;
+			if (!output.Content.IsModified) {
+				var content = await output.GetChildContentAsync();
+				output.Content.AppendHtml(content.GetContent());
+			}
+
+			output.Content.AppendHtml($":{_content}");
 		}
 	}
 
