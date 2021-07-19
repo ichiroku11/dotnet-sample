@@ -17,12 +17,13 @@ namespace TagHelperWebApp.TagHelpers {
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
 			// todo: 属性も追加
 
+			// コンテンツを追加
 			if (!output.Content.IsModified) {
+				// 元々のコンテンツを追加
 				var content = await output.GetChildContentAsync();
 				output.Content.AppendHtml(content.GetContent());
 			}
-
-			output.Content.AppendHtml($":{_content}");
+			output.Content.AppendHtml($@"<span>:{_content}</span>");
 		}
 	}
 
