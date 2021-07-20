@@ -15,7 +15,14 @@ namespace TagHelperWebApp.TagHelpers {
 		}
 
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
-			// todo: 属性も追加
+			// class属性を追加
+			// 以下だと変更されない
+			//output.Attributes.Add(new TagHelperAttribute("class", _content.ToLower()));
+			var value = _content.ToLower();
+			if (output.Attributes.TryGetAttribute("class", out var attribute)) {
+				value = $"{attribute.Value} {_content.ToLower()}";
+			}
+			output.Attributes.SetAttribute("class", value);
 
 			// コンテンツを追加
 			if (!output.Content.IsModified) {
