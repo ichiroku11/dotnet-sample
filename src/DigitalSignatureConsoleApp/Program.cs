@@ -8,14 +8,15 @@ namespace DigitalSignatureConsoleApp {
 			// https://docs.microsoft.com/ja-jp/dotnet/standard/security/cryptographic-signatures
 
 			using var rsa = RSA.Create();
-			// RSAパラメーター
+			// 署名の作成と検証に使用するRSAパラメーター
+			// （署名用の秘密鍵と検証用の公開鍵かな）
 			var paramIncludePrivate = rsa.ExportParameters(true);
 			var paramExcludePrivate = rsa.ExportParameters(false);
 
 			// 署名対象の文字列
 			var message = "あいうえお";
 
-			// 署名を作成する
+			// 署名を作成する（署名する）
 			var creator = new SignatureCreator(paramIncludePrivate);
 			var signature = creator.CreateSignature(message);
 
