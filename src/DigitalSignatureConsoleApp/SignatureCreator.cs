@@ -16,7 +16,7 @@ namespace DigitalSignatureConsoleApp {
 			_parameters = parameters;
 		}
 
-		// （メッセージの署名を生成する）
+		// メッセージの署名を生成する（メッセージに署名する）
 		public byte[] CreateSignature(string message) {
 			var messageHash = _hasher.Hash(message);
 
