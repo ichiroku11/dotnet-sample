@@ -11,6 +11,7 @@ namespace DigitalSignatureConsoleApp {
 			// 署名の作成と検証に使用するRSAパラメーター
 			// （署名用の秘密鍵と検証用の公開鍵かな）
 			var paramIncludePrivate = rsa.ExportParameters(true);
+			// 秘密鍵を含んでいないパラメータを通信相手に渡すイメージかなと
 			var paramExcludePrivate = rsa.ExportParameters(false);
 
 			// 署名対象の文字列
