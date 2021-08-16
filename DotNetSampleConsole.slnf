@@ -1,0 +1,20 @@
+{
+  "solution": {
+    "path": "DotNetSample.sln",
+    "projects": [
+      "src\\AzureAdB2cConsoleApp\\AzureAdB2cConsoleApp.csproj",
+      "src\\AzureCacheForRedisConsoleApp\\AzureCacheForRedisConsoleApp.csproj",
+      "src\\AzureStorageConsoleApp\\AzureStorageConsoleApp.csproj",
+      "src\\DigitalSignatureConsoleApp\\DigitalSignatureConsoleApp.csproj",
+      "src\\GenericHostConsoleApp\\GenericHostConsoleApp.csproj",
+      "src\\GenericHostOnceConsoleApp\\GenericHostOnceConsoleApp.csproj",
+      "src\\HybridCryptoConsoleApp\\HybridCryptoConsoleApp.csproj",
+      "src\\NamedPipeConsoleApp\\NamedPipeConsoleApp.csproj",
+      "src\\SampleLib.Test\\SampleLib.Test.csproj",
+      "src\\SampleLib\\SampleLib.csproj",
+      "src\\SampleTest\\SampleTest.csproj",
+      "src\\TcpConsoleApp\\TcpConsoleApp.csproj",
+      "src\\UdpConsoleApp\\UdpConsoleApp.csproj"
+    ]
+  }
+}
