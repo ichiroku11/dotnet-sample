@@ -39,7 +39,7 @@ namespace SampleTest.Security.Cryptography {
 
 			// 復号
 			string decrypt(byte[] cipher) {
-				using var memoryStream = new MemoryStream(cipher, false);
+				using var memoryStream = new MemoryStream(cipher);
 				using var cryptoStream = new CryptoStream(
 					stream: memoryStream,
 					transform: aes.CreateDecryptor(),
