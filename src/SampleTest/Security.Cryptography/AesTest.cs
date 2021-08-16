@@ -21,6 +21,7 @@ namespace SampleTest.Security.Cryptography {
 			// Arrange
 			var aes = Aes.Create();
 
+			// 暗号化
 			byte[] encrypt(string plain) {
 				using var memoryStream = new MemoryStream();
 				using var cryptoStream = new CryptoStream(
@@ -36,6 +37,7 @@ namespace SampleTest.Security.Cryptography {
 				return memoryStream.ToArray();
 			}
 
+			// 復号
 			string decrypt(byte[] cipher) {
 				using var memoryStream = new MemoryStream(cipher, false);
 				using var cryptoStream = new CryptoStream(
