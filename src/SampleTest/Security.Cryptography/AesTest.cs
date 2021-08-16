@@ -10,6 +10,35 @@ using Xunit.Abstractions;
 
 namespace SampleTest.Security.Cryptography {
 	public class AesTest {
+		// 暗号化
+		private static byte[] Encrypt(Aes aes, string plain) {
+			using var memoryStream = new MemoryStream();
+			using var cryptoStream = new CryptoStream(
+				stream: memoryStream,
+				transform: aes.CreateEncryptor(),
+				mode: CryptoStreamMode.Write,
+				leaveOpen: false);
+
+			using var writer = new StreamWriter(cryptoStream);
+			writer.Write(plain);
+			writer.Close();
+
+			return memoryStream.ToArray();
+		}
+
+		// 復号
+		private static string Decrypt(Aes aes, byte[] cipher) {
+			using var memoryStream = new MemoryStream(cipher);
+			using var cryptoStream = new CryptoStream(
+				stream: memoryStream,
+				transform: aes.CreateDecryptor(),
+				mode: CryptoStreamMode.Read,
+				leaveOpen: false);
+
+			using var reader = new StreamReader(cryptoStream);
+			return reader.ReadToEnd();
+		}
+
 		private readonly ITestOutputHelper _output;
 
 		public AesTest(ITestOutputHelper output) {
@@ -21,39 +50,10 @@ namespace SampleTest.Security.Cryptography {
 			// Arrange
 			var aes = Aes.Create();
 
-			// 暗号化
-			byte[] encrypt(string plain) {
-				using var memoryStream = new MemoryStream();
-				using var cryptoStream = new CryptoStream(
-					stream: memoryStream,
-					transform: aes.CreateEncryptor(),
-					mode: CryptoStreamMode.Write,
-					leaveOpen: false);
-
-				using var writer = new StreamWriter(cryptoStream);
-				writer.Write(plain);
-				writer.Close();
-
-				return memoryStream.ToArray();
-			}
-
-			// 復号
-			string decrypt(byte[] cipher) {
-				using var memoryStream = new MemoryStream(cipher);
-				using var cryptoStream = new CryptoStream(
-					stream: memoryStream,
-					transform: aes.CreateDecryptor(),
-					mode: CryptoStreamMode.Read,
-					leaveOpen: false);
-
-				using var reader = new StreamReader(cryptoStream);
-				return reader.ReadToEnd();
-			}
-
 			// Act
-			var cipher = encrypt("あいうえお");
+			var cipher = Encrypt(aes, "あいうえお");
 			_output.WriteLine(BitConverter.ToString(cipher).ToLower().Replace("-", ""));
-			var actual = decrypt(cipher);
+			var actual = Decrypt(aes, cipher);
 
 			// Assert
 			Assert.Equal("あいうえお", actual);
