@@ -1,22 +1,11 @@
 using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace HybridCryptoConsoleApp {
-
-	public static class AesExtensions {
-		public static byte[] Encrypt(this Aes aes, string plain) {
-			throw new NotImplementedException();
-		}
-
-		public static string Decrypt(this Aes aes, byte[] cipher) {
-			throw new NotImplementedException();
-		}
-	}
-
 	// RSA、AESによる暗号化を行う
 	public class Encryptor {
-
 		public byte[] Encrypt(string plain) {
 			// todo:
 			throw new NotImplementedException();
