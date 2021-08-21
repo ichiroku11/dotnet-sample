@@ -1,0 +1,35 @@
+{
+  "solution": {
+    "path": "DotNetSample.sln",
+    "projects": [
+      "src\\AntiForgeryWebApp\\AntiForgeryWebApp.csproj",
+      "src\\AsyncSuffixTrimmedWebApp\\AsyncSuffixTrimmedWebApp.csproj",
+      "src\\AzureAdB2cWebApp\\AzureAdB2cWebApp.csproj",
+      "src\\AzureAppInsightsWebApp\\AzureAppInsightsWebApp.csproj",
+      "src\\BasicAuthnWebApp.Test\\BasicAuthnWebApp.Test.csproj",
+      "src\\BasicAuthnWebApp\\BasicAuthnWebApp.csproj",
+      "src\\ControllerWebApp\\ControllerWebApp.csproj",
+      "src\\CookieAuthnWebApp.Test\\CookieAuthnWebApp.Test.csproj",
+      "src\\CookieAuthnWebApp\\CookieAuthnWebApp.csproj",
+      "src\\DistributedCacheWebApp\\DistributedCacheWebApp.csproj",
+      "src\\EndpointWebApp\\EndpointWebApp.csproj",
+      "src\\FallbackRouteWebApp\\FallbackRouteWebApp.csproj",
+      "src\\HostedServiceWebApp\\HostedServiceWebApp.csproj",
+      "src\\MiddlewareWebApp\\MiddlewareWebApp.csproj",
+      "src\\MiscWebApi.Test\\MiscWebApi.Test.csproj",
+      "src\\MiscWebApi\\MiscWebApi.csproj",
+      "src\\MiscWebApp.Test\\MiscWebApp.Test.csproj",
+      "src\\MiscWebApp\\MiscWebApp.csproj",
+      "src\\ModelBindingWebApp.Test\\ModelBindingWebApp.Test.csproj",
+      "src\\ModelBindingWebApp\\ModelBindingWebApp.csproj",
+      "src\\OpenApiWebApi\\OpenApiWebApi.csproj",
+      "src\\OptionPatternWebApp\\OptionPatternWebApp.csproj",
+      "src\\PolicyAuthzWebApp\\PolicyAuthzWebApp.csproj",
+      "src\\SampleLib.Test\\SampleLib.Test.csproj",
+      "src\\SampleLib\\SampleLib.csproj",
+      "src\\SampleTest\\SampleTest.csproj",
+      "src\\SessionWebApp\\SessionWebApp.csproj",
+      "src\\TagHelperWebApp\\TagHelperWebApp.csproj"
+    ]
+  }
+}
