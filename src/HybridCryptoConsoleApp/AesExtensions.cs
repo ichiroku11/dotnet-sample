@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HybridCryptoConsoleApp {
 	public static class AesExtensions {
-		// 暗号化する
+		// AESで暗号化する
 		public static byte[] Encrypt(this Aes aes, string plain) {
 			using var memoryStream = new MemoryStream();
 			using var cryptoStream = new CryptoStream(
@@ -25,7 +25,7 @@ namespace HybridCryptoConsoleApp {
 			return memoryStream.ToArray();
 		}
 
-		// 復号する
+		// AESで復号する
 		public static string Decrypt(this Aes aes, byte[] cipher) {
 			using var memoryStream = new MemoryStream(cipher);
 			using var cryptoStream = new CryptoStream(
