@@ -88,6 +88,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalSignatureConsoleApp"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridCryptoConsoleApp", "src\HybridCryptoConsoleApp\HybridCryptoConsoleApp.csproj", "{23E4E46B-86BB-486E-8EBC-831451729938}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewWebApp", "src\ViewWebApp\ViewWebApp.csproj", "{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,6 +248,10 @@ Global
 		{23E4E46B-86BB-486E-8EBC-831451729938}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23E4E46B-86BB-486E-8EBC-831451729938}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23E4E46B-86BB-486E-8EBC-831451729938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -286,6 +292,7 @@ Global
 		{5CE7B4D4-6FBA-462E-8A1B-68F9A17037A0} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
 		{44F219D2-5F99-44A3-9481-58FBE8AA6388} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
 		{23E4E46B-86BB-486E-8EBC-831451729938} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
+		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}

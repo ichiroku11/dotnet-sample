@@ -29,7 +29,8 @@
       "src\\SampleLib\\SampleLib.csproj",
       "src\\SampleTest\\SampleTest.csproj",
       "src\\SessionWebApp\\SessionWebApp.csproj",
-      "src\\TagHelperWebApp\\TagHelperWebApp.csproj"
+      "src\\TagHelperWebApp\\TagHelperWebApp.csproj",
+      "src\\ViewWebApp\\ViewWebApp.csproj"
     ]
   }
 }
