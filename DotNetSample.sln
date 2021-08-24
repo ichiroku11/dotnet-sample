@@ -88,7 +88,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalSignatureConsoleApp"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridCryptoConsoleApp", "src\HybridCryptoConsoleApp\HybridCryptoConsoleApp.csproj", "{23E4E46B-86BB-486E-8EBC-831451729938}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewWebApp", "src\ViewWebApp\ViewWebApp.csproj", "{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewWebApp", "src\ViewWebApp\ViewWebApp.csproj", "{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

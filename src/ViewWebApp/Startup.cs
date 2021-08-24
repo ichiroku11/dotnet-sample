@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 namespace ViewWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
+			services.AddRazorPages();
+
 			services.AddControllersWithViews();
 		}
 
@@ -21,6 +23,8 @@ namespace ViewWebApp {
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints => {
+				endpoints.MapRazorPages();
+
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Default}/{action=Index}/{id?}");
