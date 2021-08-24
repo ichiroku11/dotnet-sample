@@ -1,0 +1,11 @@
+@page
+@model IndexModel
+@{
+	ViewBag.Title = "Index";
+}
+
+@* このビューのパスを表示する *@
+<dl>
+	<dt>@nameof(ViewContext.View.Path)</dt>
+	<dd>@ViewContext.View.Path</dd>
+</dl>
