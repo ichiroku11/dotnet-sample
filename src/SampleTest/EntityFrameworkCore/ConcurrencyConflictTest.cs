@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace SampleTest.EntityFrameworkCore {
 	// 参考
@@ -13,11 +15,12 @@ namespace SampleTest.EntityFrameworkCore {
 	[Collection(CollectionNames.EfCoreSample)]
 	public class ConcurrencyConflictTest : IDisposable {
 		private class Sample {
-			public int Id { get; init; }
-			public string Value { get; init; }
+			public int Id { get; set; }
 
-			// todo:
-			public byte[] Version { get; init; }
+			public string Value { get; set; }
+
+			[Timestamp]
+			public byte[] Version { get; set; }
 		}
 
 		private class SampleDbContext : AppDbContext {
@@ -28,9 +31,11 @@ namespace SampleTest.EntityFrameworkCore {
 			}
 		}
 
+		private readonly ITestOutputHelper _output;
 		private SampleDbContext _context;
 
-		public ConcurrencyConflictTest() {
+		public ConcurrencyConflictTest(ITestOutputHelper output) {
+			_output = output;
 			_context = new SampleDbContext();
 
 			DropTable();
@@ -47,19 +52,67 @@ namespace SampleTest.EntityFrameworkCore {
 		}
 
 		private void InitTable() {
-			// todo:
-			/*
-			var sql = @"";
+			var sql = @"
+create table dbo.Sample(
+	Id int not null,
+	Value nvarchar(10) not null,
+	Version rowversion not null,
+	constraint PK_Sample primary key(Id)
+);
+
+insert into dbo.Sample(Id, Value)
+output inserted.*
+values
+	(1, N'a'),
+	(2, N'b');";
 			_context.Database.ExecuteSqlRaw(sql);
-			*/
 		}
 
 		private void DropTable() {
-			// todo:
-			/*
-			var sql = @"";
+			var sql = @"drop table if exists dbo.Sample;";
 			_context.Database.ExecuteSqlRaw(sql);
+		}
+
+		[Fact]
+		public async Task EntityStateModified_成功する動きを確認する() {
+			// Arrange
+			// Act
+			// Assert
+			var sample1 = await _context.Samples.FindAsync(1);
+			/*
+			SELECT TOP(1) [s].[Id], [s].[Value], [s].[Version]
+			FROM [Sample] AS [s]
+			WHERE [s].[Id] = @__p_0
 			*/
+			_output.WriteLine(BitConverter.ToString(sample1.Version).ToLower().Replace("-", ""));
+			Assert.Equal("a", sample1.Value);
+
+			// 値を変更して更新する
+			sample1.Value = "b";
+			_context.Entry(sample1).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+			/*
+			SET NOCOUNT ON;
+			UPDATE [Sample] SET [Value] = @p0
+			WHERE [Id] = @p1 AND [Version] = @p2;
+			SELECT [Version]
+			FROM [Sample]
+			WHERE @@ROWCOUNT = 1 AND [Id] = @p1;
+			*/
+			_output.WriteLine(BitConverter.ToString(sample1.Version).ToLower().Replace("-", ""));
+
+			// SQLを実行させるため
+			_context.Entry(sample1).State = EntityState.Detached;
+
+			// 値が更新されていることを確認する
+			var sample2 = await _context.Samples.FindAsync(1);
+			/*
+			SELECT TOP(1) [s].[Id], [s].[Value], [s].[Version]
+			FROM [Sample] AS [s]
+			WHERE [s].[Id] = @__p_0
+			*/
+			_output.WriteLine(BitConverter.ToString(sample2.Version).ToLower().Replace("-", ""));
+			Assert.Equal("b", sample2.Value);
 		}
 	}
 }

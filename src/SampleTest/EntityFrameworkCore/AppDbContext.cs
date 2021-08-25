@@ -15,6 +15,8 @@ namespace SampleTest.EntityFrameworkCore {
 		});
 
 		public AppDbContext() {
+			// エンティティーの変更を追跡しない
+			// 追跡したい場合はAsTrackingメソッドを使う
 			ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 		}
 
