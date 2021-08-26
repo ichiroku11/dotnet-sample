@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SampleLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -84,7 +85,7 @@ values
 			FROM [Sample] AS [s]
 			WHERE [s].[Id] = @__p_0
 			*/
-			_output.WriteLine(BitConverter.ToString(sample1.Version).ToLower().Replace("-", ""));
+			_output.WriteLine(sample1.Version.ToHexString());
 			Assert.Equal("a", sample1.Value);
 
 			// 値を変更して更新する
@@ -99,7 +100,7 @@ values
 			FROM [Sample]
 			WHERE @@ROWCOUNT = 1 AND [Id] = @p1;
 			*/
-			_output.WriteLine(BitConverter.ToString(sample1.Version).ToLower().Replace("-", ""));
+			_output.WriteLine(sample1.Version.ToHexString());
 
 			// SQLを実行させるため
 			_context.Entry(sample1).State = EntityState.Detached;
@@ -111,7 +112,7 @@ values
 			FROM [Sample] AS [s]
 			WHERE [s].[Id] = @__p_0
 			*/
-			_output.WriteLine(BitConverter.ToString(sample2.Version).ToLower().Replace("-", ""));
+			_output.WriteLine(sample1.Version.ToHexString());
 			Assert.Equal("b", sample2.Value);
 		}
 	}
