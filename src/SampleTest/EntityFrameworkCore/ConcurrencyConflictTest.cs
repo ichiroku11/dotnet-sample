@@ -64,8 +64,7 @@ create table dbo.Sample(
 insert into dbo.Sample(Id, Value)
 output inserted.*
 values
-	(1, N'a'),
-	(2, N'b');";
+	(1, N'a');";
 			_context.Database.ExecuteSqlRaw(sql);
 		}
 
@@ -75,16 +74,11 @@ values
 		}
 
 		[Fact]
-		public async Task EntityStateModified_成功する動きを確認する() {
+		public async Task SaveChangesAsync_更新が成功する動きを確認する() {
 			// Arrange
 			// Act
 			// Assert
 			var sample1 = await _context.Samples.FindAsync(1);
-			/*
-			SELECT TOP(1) [s].[Id], [s].[Value], [s].[Version]
-			FROM [Sample] AS [s]
-			WHERE [s].[Id] = @__p_0
-			*/
 			_output.WriteLine(sample1.Version.ToHexString());
 			Assert.Equal("a", sample1.Value);
 
@@ -107,13 +101,42 @@ values
 
 			// 値が更新されていることを確認する
 			var sample2 = await _context.Samples.FindAsync(1);
-			/*
-			SELECT TOP(1) [s].[Id], [s].[Value], [s].[Version]
-			FROM [Sample] AS [s]
-			WHERE [s].[Id] = @__p_0
-			*/
 			_output.WriteLine(sample1.Version.ToHexString());
 			Assert.Equal("b", sample2.Value);
+		}
+
+		[Fact]
+		public async Task SaveChangesAsync_DbUpdateConcurrencyExceptionがスローされることを確認する() {
+			// Arrange
+			// Act
+			// Assert
+			var sample1 = await _context.Samples.FindAsync(1);
+			Assert.Equal("a", sample1.Value);
+			var sample2 = new Sample {
+				Id = sample1.Id,
+				Value = sample1.Value,
+				Version = sample1.Version.ToArray(),
+			};
+			_output.WriteLine(sample1.Version.ToHexString());
+			_output.WriteLine(sample2.Version.ToHexString());
+
+			// sample1.Valueを変更して更新する
+			sample1.Value = "b";
+			_context.Entry(sample1).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+			_output.WriteLine(sample1.Version.ToHexString());
+			_output.WriteLine(sample2.Version.ToHexString());
+
+			// sample1の追跡を解除する
+			_context.Entry(sample1).State = EntityState.Detached;
+
+			// sample2.Valueを変更して更新する
+			sample2.Value = "c";
+			_context.Entry(sample2).State = EntityState.Modified;
+			var exception = await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () => {
+				await _context.SaveChangesAsync();
+			});
+			_output.WriteLine(exception.Message);
 		}
 	}
 }
