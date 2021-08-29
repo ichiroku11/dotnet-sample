@@ -50,7 +50,7 @@ namespace AzureAdB2cConsoleApp {
 		// ユーザ一覧をカスタム属性付きで取得
 		// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http
 		// https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management/blob/master/src/Services/UserService.cs
-		private async Task GetUsersAsync(IGraphServiceClient client) {
+		private async Task GetUsersAsync(GraphServiceClient client) {
 			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
 
 			var select = string.Join(',', new[] {
@@ -101,7 +101,7 @@ namespace AzureAdB2cConsoleApp {
 		}
 
 		// ユーザをカスタム属性付きでID指定で取得
-		private async Task GetUserByIdAsync(IGraphServiceClient client) {
+		private async Task GetUserByIdAsync(GraphServiceClient client) {
 			var id = "{id}";
 
 			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
@@ -124,7 +124,7 @@ namespace AzureAdB2cConsoleApp {
 		}
 
 		// ユーザのカスタム属性を更新
-		private async Task UpdateUserByIdAsync(IGraphServiceClient client) {
+		private async Task UpdateUserByIdAsync(GraphServiceClient client) {
 			var id = "{id}";
 
 			var attributeName = _customAttributeHelper.GetFullName("TestNumber");
