@@ -19,7 +19,7 @@ namespace SampleTest.EntityFrameworkCore {
 				=> $"{nameof(Id)} = {Id}, {nameof(Name)} = {Name}, {nameof(Category)} = {Category}, {nameof(Price)} = {Price}";
 		}
 
-		private class SampleDbContext : AppDbContext {
+		private class SampleDbContext : SqlServerDbContext {
 			public DbSet<MenuItem> MenuItems { get; set; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {

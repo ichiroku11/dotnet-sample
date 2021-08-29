@@ -89,7 +89,7 @@ namespace SampleTest.EntityFrameworkCore {
 				new MonsterItem { MonsterId = 2, ItemId = 3, },
 			};
 
-		private class MonsterDbContext : AppDbContext {
+		private class MonsterDbContext : SqlServerDbContext {
 			public DbSet<MonsterCategory> MonsterCategories { get; set; }
 			public DbSet<Monster> Monsters { get; set; }
 			public DbSet<Item> Items { get; set; }

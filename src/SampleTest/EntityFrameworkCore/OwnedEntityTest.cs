@@ -22,7 +22,7 @@ namespace SampleTest.EntityFrameworkCore {
 		// このrecord型は無理っぽい（なぜ）
 		// private record Mail(int Id, MailAddress From, MailAddress To);
 
-		private class MailDbContext : AppDbContext {
+		private class MailDbContext : SqlServerDbContext {
 			public DbSet<Mail> Mails { get; init; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {

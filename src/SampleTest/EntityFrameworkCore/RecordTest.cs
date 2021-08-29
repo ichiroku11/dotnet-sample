@@ -11,7 +11,7 @@ namespace SampleTest.EntityFrameworkCore {
 	public class RecordTest : IDisposable {
 		private record Sample(int Id, string Name);
 
-		private class SampleDbContext : AppDbContext {
+		private class SampleDbContext : SqlServerDbContext {
 			public DbSet<Sample> Samples { get; init; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {

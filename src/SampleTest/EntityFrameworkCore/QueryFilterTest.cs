@@ -13,7 +13,7 @@ namespace SampleTest.EntityFrameworkCore {
 			public string Name { get; init; }
 		}
 
-		private class SampleDbContext : AppDbContext {
+		private class SampleDbContext : SqlServerDbContext {
 			public DbSet<Sample> Samples { get; init; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {

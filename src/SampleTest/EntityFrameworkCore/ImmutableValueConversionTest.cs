@@ -29,7 +29,7 @@ namespace SampleTest.EntityFrameworkCore {
 			public UserName Name { get; set; }
 		}
 
-		private class UserDbContext : AppDbContext {
+		private class UserDbContext : SqlServerDbContext {
 			public DbSet<User> Users { get; set; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {
