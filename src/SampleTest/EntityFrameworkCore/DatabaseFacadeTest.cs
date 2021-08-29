@@ -12,7 +12,7 @@ namespace SampleTest.EntityFrameworkCore {
 		private AppDbContext _context;
 
 		public DatabaseFacadeTest() {
-			_context = new AppDbContext();
+			_context = new SqlServerDbContext();
 		}
 
 		public void Dispose() {

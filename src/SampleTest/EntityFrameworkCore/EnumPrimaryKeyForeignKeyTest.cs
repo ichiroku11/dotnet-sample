@@ -38,7 +38,7 @@ namespace SampleTest.EntityFrameworkCore {
 			public MonsterCategory Category { get; set; }
 		}
 
-		private class MonsterDbContext : AppDbContext {
+		private class MonsterDbContext : SqlServerDbContext {
 			public DbSet<MonsterCategory> MonsterCategories { get; set; }
 			public DbSet<Monster> Monsters { get; set; }
 

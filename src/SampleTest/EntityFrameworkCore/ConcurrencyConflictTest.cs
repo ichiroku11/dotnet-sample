@@ -24,7 +24,7 @@ namespace SampleTest.EntityFrameworkCore {
 			public byte[] Version { get; set; }
 		}
 
-		private class SampleDbContext : AppDbContext {
+		private class SampleDbContext : SqlServerDbContext {
 			public DbSet<Sample> Samples { get; init; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {

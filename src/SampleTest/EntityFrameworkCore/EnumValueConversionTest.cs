@@ -49,7 +49,7 @@ namespace SampleTest.EntityFrameworkCore {
 			Char2,
 		}
 
-		private class MonsterDbContext : AppDbContext {
+		private class MonsterDbContext : SqlServerDbContext {
 			public DbSet<Monster> Monsters { get; set; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {

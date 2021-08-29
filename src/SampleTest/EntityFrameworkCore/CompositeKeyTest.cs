@@ -21,7 +21,7 @@ namespace SampleTest.EntityFrameworkCore {
 
 		private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
 
-		private class SampleDbContext : AppDbContext {
+		private class SampleDbContext : SqlServerDbContext {
 			public DbSet<Sample> Samples { get; init; }
 
 			protected override void OnModelCreating(ModelBuilder modelBuilder) {
