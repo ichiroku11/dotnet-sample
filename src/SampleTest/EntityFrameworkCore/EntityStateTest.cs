@@ -44,7 +44,6 @@ namespace SampleTest.EntityFrameworkCore {
 			}
 		}
 
-
 		[Fact]
 		public void DbContextAdd_StateはAddedになる() {
 			// Arrange
@@ -64,6 +63,18 @@ namespace SampleTest.EntityFrameworkCore {
 
 			// Act
 			_context.Samples.Add(entity);
+
+			// Assert
+			Assert.Equal(EntityState.Added, _context.Entry(entity).State);
+		}
+
+		[Fact]
+		public void EntryStateSetter_StateはAddedになる() {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			_context.Entry(entity).State = EntityState.Added;
 
 			// Assert
 			Assert.Equal(EntityState.Added, _context.Entry(entity).State);
