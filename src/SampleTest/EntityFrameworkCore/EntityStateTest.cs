@@ -79,5 +79,41 @@ namespace SampleTest.EntityFrameworkCore {
 			// Assert
 			Assert.Equal(EntityState.Added, _context.Entry(entity).State);
 		}
+
+		[Fact]
+		public void DbContextUpdate_StateはModifiedになる() {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			_context.Update(entity);
+
+			// Assert
+			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
+		}
+
+		[Fact]
+		public void DbSetUpdate_StateはModifiedになる() {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			_context.Samples.Update(entity);
+
+			// Assert
+			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
+		}
+
+		[Fact]
+		public void EntryStateSetter_StateはModifiedになる() {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			_context.Entry(entity).State = EntityState.Modified;
+
+			// Assert
+			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
+		}
 	}
 }
