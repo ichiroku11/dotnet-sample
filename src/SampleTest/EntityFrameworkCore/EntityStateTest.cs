@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SampleLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,73 +45,51 @@ namespace SampleTest.EntityFrameworkCore {
 			}
 		}
 
-		[Fact]
-		public void DbContextAdd_StateはAddedになる() {
+		// テストパターン
+		public enum TestPattern {
+			// DbContextのメソッド
+			DbContext,
+			// DbSetのメソッド
+			DbSet,
+			// Entryメソッドで取得できるStateプロパティ
+			EntryState,
+		}
+
+		public static readonly IEnumerable<object[]> TestPatterns = EnumHelper.GetValues<TestPattern>().Select(pattern => new object[] { pattern });
+
+		[Theory]
+		[MemberData(nameof(TestPatterns))]
+		public void EntityStateがAddedになる(TestPattern pattern) {
 			// Arrange
 			var entity = new Sample { Id = 1, Name = "a" };
 
 			// Act
-			_context.Add(entity);
+			if (pattern == TestPattern.DbContext) {
+				_context.Add(entity);
+			} else if (pattern == TestPattern.DbSet) {
+				_context.Samples.Add(entity);
+			} else if (pattern == TestPattern.EntryState) {
+				_context.Entry(entity).State = EntityState.Added;
+			}
 
 			// Assert
 			Assert.Equal(EntityState.Added, _context.Entry(entity).State);
 		}
 
-		[Fact]
-		public void DbSetAdd_StateはAddedになる() {
+		[Theory]
+		[MemberData(nameof(TestPatterns))]
+		public void EntityStateがModifiedになる(TestPattern pattern) {
 			// Arrange
 			var entity = new Sample { Id = 1, Name = "a" };
 
 			// Act
-			_context.Samples.Add(entity);
-
-			// Assert
-			Assert.Equal(EntityState.Added, _context.Entry(entity).State);
-		}
-
-		[Fact]
-		public void EntryStateSetter_StateはAddedになる() {
-			// Arrange
-			var entity = new Sample { Id = 1, Name = "a" };
-
-			// Act
-			_context.Entry(entity).State = EntityState.Added;
-
-			// Assert
-			Assert.Equal(EntityState.Added, _context.Entry(entity).State);
-		}
-
-		[Fact]
-		public void DbContextUpdate_StateはModifiedになる() {
-			// Arrange
-			var entity = new Sample { Id = 1, Name = "a" };
-
-			// Act
-			_context.Update(entity);
-
-			// Assert
-			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
-		}
-
-		[Fact]
-		public void DbSetUpdate_StateはModifiedになる() {
-			// Arrange
-			var entity = new Sample { Id = 1, Name = "a" };
-
-			// Act
-			_context.Samples.Update(entity);
-
-			// Assert
-			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
-		}
-
-		[Fact]
-		public void EntryStateSetter_StateはModifiedになる() {
-			// Arrange
-			var entity = new Sample { Id = 1, Name = "a" };
-
-			// Act
-			_context.Entry(entity).State = EntityState.Modified;
+			if (pattern == TestPattern.DbContext) {
+				_context.Update(entity);
+			} else if (pattern == TestPattern.DbSet) {
+				_context.Samples.Update(entity);
+			} else if (pattern == TestPattern.EntryState) {
+				_context.Entry(entity).State = EntityState.Modified;
+			}
 
 			// Assert
 			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
