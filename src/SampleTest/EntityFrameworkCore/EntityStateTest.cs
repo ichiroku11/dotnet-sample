@@ -94,5 +94,25 @@ namespace SampleTest.EntityFrameworkCore {
 			// Assert
 			Assert.Equal(EntityState.Modified, _context.Entry(entity).State);
 		}
+
+		[Theory]
+		[MemberData(nameof(TestPatterns))]
+		public void EntityStateがDeletedになる(TestPattern pattern) {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			if (pattern == TestPattern.DbContext) {
+				_context.Remove(entity);
+			} else if (pattern == TestPattern.DbSet) {
+				_context.Samples.Remove(entity);
+			} else if (pattern == TestPattern.EntryState) {
+				_context.Entry(entity).State = EntityState.Deleted;
+			}
+
+			// Assert
+			Assert.Equal(EntityState.Deleted, _context.Entry(entity).State);
+		}
+
 	}
 }
