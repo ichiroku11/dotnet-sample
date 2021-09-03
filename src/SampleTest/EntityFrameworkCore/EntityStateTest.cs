@@ -114,5 +114,23 @@ namespace SampleTest.EntityFrameworkCore {
 			Assert.Equal(EntityState.Deleted, _context.Entry(entity).State);
 		}
 
+		[Theory]
+		[MemberData(nameof(TestPatterns))]
+		public void EntityStateがUnchangedになる(TestPattern pattern) {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			if (pattern == TestPattern.DbContext) {
+				_context.Attach(entity);
+			} else if (pattern == TestPattern.DbSet) {
+				_context.Samples.Attach(entity);
+			} else if (pattern == TestPattern.EntryState) {
+				_context.Entry(entity).State = EntityState.Unchanged;
+			}
+
+			// Assert
+			Assert.Equal(EntityState.Unchanged, _context.Entry(entity).State);
+		}
 	}
 }
