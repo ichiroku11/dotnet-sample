@@ -27,6 +27,7 @@ namespace SampleTest.Linq {
 			};
 
 			// Act
+			// keySelectorによるキーと該当する要素のコレクションに変換する
 			var lookup = monsters.ToLookup(monster => monster.Category);
 
 			// Assert
@@ -38,6 +39,22 @@ namespace SampleTest.Linq {
 			Assert.True(lookup.Contains(MonsterCategory.Slime));
 			Assert.True(lookup.Contains(MonsterCategory.Animal));
 			Assert.True(lookup.Contains(MonsterCategory.Fly));
+
+			// インデクサ：含まれないキーでアクセスした場合、nullではなく空のコレクションを取得できる
+			Assert.NotNull(lookup[MonsterCategory.None]);
+			Assert.Empty(lookup[MonsterCategory.None]);
+
+			// インデクサ：含まれるキーでアクセスした場合、要素のコレクションを取得できる
+			var slimes = lookup[MonsterCategory.Slime];
+			Assert.Equal(2, slimes.Count());
+			Assert.Contains(slimes, slime => slime.Name == "スライム");
+			Assert.Contains(slimes, slime => slime.Name == "ホイミスライム");
+
+			Assert.Single(lookup[MonsterCategory.Animal]);
+			Assert.Contains(lookup[MonsterCategory.Animal], animal => animal.Name == "ももんじゃ");
+
+			Assert.Single(lookup[MonsterCategory.Fly]);
+			Assert.Contains(lookup[MonsterCategory.Fly], animal => animal.Name == "ドラキー");
 		}
 	}
 }
