@@ -16,30 +16,69 @@ namespace SampleTest.Linq {
 
 		private record Monster(string Name, MonsterCategory Category);
 
+		private static readonly IEnumerable<Monster> _monsters = new[] {
+			new Monster("スライム", MonsterCategory.Slime),
+			new Monster("ドラキー", MonsterCategory.Fly),
+			new Monster("ホイミスライム", MonsterCategory.Slime),
+			new Monster("ももんじゃ", MonsterCategory.Animal),
+		};
+
 		[Fact]
-		public void ToLookup_使ってみる() {
+		public void ToLookup_Lookupを列挙する() {
 			// Arrange
-			var monsters = new[] {
-				new Monster("スライム", MonsterCategory.Slime),
-				new Monster("ドラキー", MonsterCategory.Fly),
-				new Monster("ホイミスライム", MonsterCategory.Slime),
-				new Monster("ももんじゃ", MonsterCategory.Animal),
-			};
 
 			// Act
 			// keySelectorによるキーと該当する要素のコレクションに変換する
-			var lookup = monsters.ToLookup(monster => monster.Category);
+			var lookup = _monsters.ToLookup(monster => monster.Category);
 
 			// Assert
+			Assert.Collection(
+				lookup.OrderBy(entry => entry.Key),
+				entry => {
+					Assert.Equal(MonsterCategory.Slime, entry.Key);
+					Assert.Equal(2, entry.Count());
+					Assert.Contains(entry, item => item.Name.Equals("スライム", StringComparison.OrdinalIgnoreCase));
+					Assert.Contains(entry, item => item.Name.Equals("ホイミスライム", StringComparison.OrdinalIgnoreCase));
+				},
+				entry => Assert.Equal(MonsterCategory.Animal, entry.Key),
+				entry => Assert.Equal(MonsterCategory.Fly, entry.Key));
+		}
+
+
+		[Fact]
+		public void ToLookup_LookupのCountプロパティを試す() {
+			// Arrange
+
+			// Act
+			var lookup = _monsters.ToLookup(monster => monster.Category);
+
+			// Assert
+
 			// Countプロパティ：グルーピングされたグループの個数を取得できる
 			Assert.Equal(3, lookup.Count);
+		}
 
+		[Fact]
+		public void ToLookup_LookupのContainsメソッドを試す() {
+			// Arrange
+			// Act
+			var lookup = _monsters.ToLookup(monster => monster.Category);
+
+			// Assert
 			// Containsメソッド：キーを含んでいる判断できる
 			Assert.False(lookup.Contains(MonsterCategory.None));
 			Assert.True(lookup.Contains(MonsterCategory.Slime));
 			Assert.True(lookup.Contains(MonsterCategory.Animal));
 			Assert.True(lookup.Contains(MonsterCategory.Fly));
+		}
 
+		[Fact]
+		public void ToLookup_Lookupのインデクサを試す() {
+			// Arrange
+			// Act
+			var lookup = _monsters.ToLookup(monster => monster.Category);
+
+			// Assert
 			// インデクサ：含まれないキーでアクセスした場合、nullではなく空のコレクションを取得できる
 			Assert.NotNull(lookup[MonsterCategory.None]);
 			Assert.Empty(lookup[MonsterCategory.None]);
@@ -47,14 +86,14 @@ namespace SampleTest.Linq {
 			// インデクサ：含まれるキーでアクセスした場合、要素のコレクションを取得できる
 			var slimes = lookup[MonsterCategory.Slime];
 			Assert.Equal(2, slimes.Count());
-			Assert.Contains(slimes, slime => slime.Name == "スライム");
-			Assert.Contains(slimes, slime => slime.Name == "ホイミスライム");
+			Assert.Contains(slimes, slime => slime.Name.Equals("スライム", StringComparison.OrdinalIgnoreCase));
+			Assert.Contains(slimes, slime => slime.Name.Equals("ホイミスライム", StringComparison.OrdinalIgnoreCase));
 
 			Assert.Single(lookup[MonsterCategory.Animal]);
-			Assert.Contains(lookup[MonsterCategory.Animal], animal => animal.Name == "ももんじゃ");
+			Assert.Contains(lookup[MonsterCategory.Animal], animal => animal.Name.Equals("ももんじゃ", StringComparison.OrdinalIgnoreCase));
 
 			Assert.Single(lookup[MonsterCategory.Fly]);
-			Assert.Contains(lookup[MonsterCategory.Fly], animal => animal.Name == "ドラキー");
+			Assert.Contains(lookup[MonsterCategory.Fly], animal => animal.Name.Equals("ドラキー", StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }
