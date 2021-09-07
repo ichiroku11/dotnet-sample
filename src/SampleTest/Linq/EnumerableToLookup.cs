@@ -34,7 +34,7 @@ namespace SampleTest.Linq {
 		*/
 
 		[Fact]
-		public void ToLookup_Lookupを列挙する() {
+		public void ToLookup_Lookupの要素を列挙する() {
 			// Arrange
 
 			// Act
@@ -61,7 +61,6 @@ namespace SampleTest.Linq {
 					Assert.Contains(entry, item => item.Name.Equals("ドラキー", StringComparison.OrdinalIgnoreCase));
 				});
 		}
-
 
 		[Fact]
 		public void ToLookup_LookupのCountプロパティを試す() {
