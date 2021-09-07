@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.Linq {
-	public class EnumerableZip {
+	public class EnumerableZipTest {
 		public static IEnumerable<object[]> GetTestDataForZip() {
 			yield return new object[] {
 				// first

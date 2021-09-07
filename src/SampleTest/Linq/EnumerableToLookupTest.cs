@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.Linq {
-	public class EnumerableToLookup {
+	public class EnumerableToLookupTest {
 		private enum MonsterCategory {
 			None = 0,
 			Slime,

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.Linq {
-	public class EnumerableGroupBy {
+	public class EnumerableGroupByTest {
 		private enum MonsterCategory {
 			None = 0,
 			Slime,
