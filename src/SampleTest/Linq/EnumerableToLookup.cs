@@ -23,6 +23,16 @@ namespace SampleTest.Linq {
 			new Monster("ももんじゃ", MonsterCategory.Animal),
 		};
 
+		// ToLookupメソッドで取得できるILookupは、
+		// IGroupingのコレクションにインデクサやContainsメソッドなどを追加したインターフェイス
+		/*
+		public interface ILookup<TKey, TElement> : IEnumerable<IGrouping<TKey, TElement>>, IEnumerable {
+			IEnumerable<TElement> this[TKey key] { get; }
+			int Count { get; }
+			bool Contains(TKey key);
+		}
+		*/
+
 		[Fact]
 		public void ToLookup_Lookupを列挙する() {
 			// Arrange
@@ -40,8 +50,16 @@ namespace SampleTest.Linq {
 					Assert.Contains(entry, item => item.Name.Equals("スライム", StringComparison.OrdinalIgnoreCase));
 					Assert.Contains(entry, item => item.Name.Equals("ホイミスライム", StringComparison.OrdinalIgnoreCase));
 				},
-				entry => Assert.Equal(MonsterCategory.Animal, entry.Key),
-				entry => Assert.Equal(MonsterCategory.Fly, entry.Key));
+				entry => {
+					Assert.Equal(MonsterCategory.Animal, entry.Key);
+					Assert.Single(entry);
+					Assert.Contains(entry, item => item.Name.Equals("ももんじゃ", StringComparison.OrdinalIgnoreCase));
+				},
+				entry => {
+					Assert.Equal(MonsterCategory.Fly, entry.Key);
+					Assert.Single(entry);
+					Assert.Contains(entry, item => item.Name.Equals("ドラキー", StringComparison.OrdinalIgnoreCase));
+				});
 		}
 
 
