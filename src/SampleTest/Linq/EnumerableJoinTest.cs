@@ -7,9 +7,8 @@ using Xunit;
 
 namespace SampleTest.Linq {
 	public class EnumerableJoinTest {
-
 		[Fact]
-		public void Join() {
+		public void Join_動きを確認する() {
 			// Arrange
 			var outers = new[] {
 				new { Id = 1, Value1 = "a" },
@@ -21,6 +20,7 @@ namespace SampleTest.Linq {
 			};
 
 			// Act
+			// outers、innersそれぞれのIDで結合して結果を取得する
 			var results = outers.Join(inners,
 				outer => outer.Id,
 				inner => inner.Id,
