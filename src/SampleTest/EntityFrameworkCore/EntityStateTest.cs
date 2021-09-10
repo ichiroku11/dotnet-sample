@@ -132,5 +132,24 @@ namespace SampleTest.EntityFrameworkCore {
 			// Assert
 			Assert.Equal(EntityState.Unchanged, _context.Entry(entity).State);
 		}
+
+		[Fact]
+		public void EntityStateがDetachedになる() {
+			// Arrange
+			var entity = new Sample { Id = 1, Name = "a" };
+
+			// Act
+			// Assert
+			// DBコンテキストに関連付いていないのでDetached
+			Assert.Equal(EntityState.Detached, _context.Entry(entity).State);
+
+			// DBコンテキストに関連付けるとUnchanged
+			_context.Attach(entity);
+			Assert.Equal(EntityState.Unchanged, _context.Entry(entity).State);
+
+			// DBコンテキストに関連付けを解除してDetachedになる
+			_context.Entry(entity).State = EntityState.Detached;
+			Assert.Equal(EntityState.Detached, _context.Entry(entity).State);
+		}
 	}
 }
