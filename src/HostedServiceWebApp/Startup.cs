@@ -12,8 +12,15 @@ using System.Threading.Tasks;
 namespace HostedServiceWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
+			// AddScopedで追加されたサービスをIHostedServiceから呼び出すサンプル
 			services
+				.AddScoped<SampleScopedService>()
+				.AddHostedService<SampleBackgroundServiceWithScopedService>();
+
+			services
+				// BackgroundService継承したサンプル
 				.AddHostedService<SampleBackgroundService>()
+				// IHostedServiceを実装したサンプル
 				.AddHostedService<SampleHostedService>();
 		}
 
