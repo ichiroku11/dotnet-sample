@@ -178,9 +178,34 @@ namespace SampleTest.Text.Json {
 			// Arrange
 			// Act
 			// Assert
-			Assert.Throws<JsonException>(() => {
+			var exception = Assert.Throws<JsonException>(() => {
 				JsonSerializer.Deserialize("", type);
 			});
+			_output.WriteLine(exception.Message);
+		}
+
+		[Theory]
+		[InlineData(typeof(Sample))]
+		[InlineData(typeof(Sample[]))]
+		public void Deserialize_HTML文字列をパースするとJsonException(Type type) {
+			// Arrange
+			var text = @"<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=""UTF-8"">
+	<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+	<title></title>
+</head>
+<body>
+</body>
+</html>";
+
+			// Act
+			// Assert
+			var exception = Assert.Throws<JsonException>(() => {
+				JsonSerializer.Deserialize(text, type);
+			});
+			_output.WriteLine(exception.Message);
 		}
 
 		[Theory]
