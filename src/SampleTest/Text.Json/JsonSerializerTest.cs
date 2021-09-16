@@ -178,9 +178,34 @@ namespace SampleTest.Text.Json {
 			// Arrange
 			// Act
 			// Assert
-			Assert.Throws<JsonException>(() => {
+			var exception = Assert.Throws<JsonException>(() => {
 				JsonSerializer.Deserialize("", type);
 			});
+			_output.WriteLine(exception.Message);
+		}
+
+		[Theory]
+		[InlineData(typeof(Sample))]
+		[InlineData(typeof(Sample[]))]
+		public void Deserialize_HTML文字列をパースするとJsonException(Type type) {
+			// Arrange
+			var text = @"<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=""UTF-8"">
+	<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+	<title></title>
+</head>
+<body>
+</body>
+</html>";
+
+			// Act
+			// Assert
+			var exception = Assert.Throws<JsonException>(() => {
+				JsonSerializer.Deserialize(text, type);
+			});
+			_output.WriteLine(exception.Message);
 		}
 
 		[Theory]
@@ -195,60 +220,6 @@ namespace SampleTest.Text.Json {
 			// Assert
 			Assert.NotNull(samples);
 			Assert.Empty(samples);
-		}
-
-		// init専用セッターのサンプル
-		private class SampleWithInitOnlySetter {
-			public int Number { get; init; }
-			public string Text { get; init; }
-		}
-
-		[Fact]
-		public void Deserialize_init専用セッターのプロパティに対してデシリアライズできる() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
-
-			// Act
-			var sample = JsonSerializer.Deserialize<SampleWithInitOnlySetter>(@"{""number"":1,""text"":""Abc""}", options);
-
-			// Assert
-			Assert.Equal(1, sample.Number);
-			Assert.Equal("Abc", sample.Text);
-		}
-
-		// レコード型のサンプル
-		private record SampleRecord(int Number, string Text);
-
-		[Fact]
-		public void Serialize_recordをシリアライズできる() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
-
-			// Act
-			var sample = new SampleRecord(1, "Abc");
-			var json = JsonSerializer.Serialize(sample, options);
-
-			// Assert
-			Assert.Equal(@"{""number"":1,""text"":""Abc""}", json);
-		}
-
-		[Fact]
-		public void Deserialize_recordに対してデシリアライズできる() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
-
-			// Act
-			var sample = JsonSerializer.Deserialize<SampleRecord>(@"{""number"":1,""text"":""Abc""}", options);
-
-			// Assert
-			Assert.Equal(1, sample.Number);
-			Assert.Equal("Abc", sample.Text);
 		}
 	}
 }
