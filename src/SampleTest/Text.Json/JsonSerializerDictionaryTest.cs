@@ -75,6 +75,30 @@ namespace SampleTest.Text.Json {
 			Assert.Equal("y", actual.Items["b"].Value);
 		}
 
-		// todo: Key/Valueペアのコレクションをデシリアライズできるか
+		[Fact]
+		public void Deserialize_KeyValueオブジェクトの配列をIDictionaryにデシリアライズできない様子() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			};
+
+			var json = @"{
+  ""items"": [
+    {
+      ""key"": ""a"",
+      ""value"": {
+        ""value"": ""x""
+      }
+    }
+  ]
+}";
+
+			// Act
+			// Assert
+			// KeyValueオブジェクトの配列はIDictionaryとしてデシリアライズできない？
+			Assert.Throws<JsonException>(() => {
+				JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
+			});
+		}
 	}
 }
