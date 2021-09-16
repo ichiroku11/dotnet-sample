@@ -46,5 +46,35 @@ namespace SampleTest.Text.Json {
 }";
 			Assert.Equal(expected, actual);
 		}
+
+		[Fact]
+		public void Deserialize_オブジェクトをIDictionaryにデシリアライズする() {
+			// Arrange
+			var options = new JsonSerializerOptions {
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			};
+
+			var json = @"{
+  ""items"": {
+    ""a"": {
+      ""value"": ""x""
+    },
+    ""b"": {
+      ""value"": ""y""
+    }
+  }
+}";
+
+			// Act
+			var actual = JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
+
+			// Assert
+			// オブジェクトをIDictionaryとしてデシリアライズできる
+			Assert.Equal(2, actual.Items.Count);
+			Assert.Equal("x", actual.Items["a"].Value);
+			Assert.Equal("y", actual.Items["b"].Value);
+		}
+
+		// todo: Key/Valueペアのコレクションをデシリアライズできるか
 	}
 }
