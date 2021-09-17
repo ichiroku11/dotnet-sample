@@ -30,6 +30,7 @@
       "src\\SampleTest\\SampleTest.csproj",
       "src\\SessionWebApp\\SessionWebApp.csproj",
       "src\\TagHelperWebApp\\TagHelperWebApp.csproj",
+      "src\\ViewComponentWebApp\\ViewComponentWebApp.csproj",
       "src\\ViewWebApp\\ViewWebApp.csproj"
     ]
   }
