@@ -90,6 +90,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridCryptoConsoleApp", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewWebApp", "src\ViewWebApp\ViewWebApp.csproj", "{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewComponentWebApp", "src\ViewComponentWebApp\ViewComponentWebApp.csproj", "{53ACC366-37E0-413A-B9E9-C4B07FF20906}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -252,6 +254,10 @@ Global
 		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53ACC366-37E0-413A-B9E9-C4B07FF20906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53ACC366-37E0-413A-B9E9-C4B07FF20906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53ACC366-37E0-413A-B9E9-C4B07FF20906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53ACC366-37E0-413A-B9E9-C4B07FF20906}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -293,6 +299,7 @@ Global
 		{44F219D2-5F99-44A3-9481-58FBE8AA6388} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
 		{23E4E46B-86BB-486E-8EBC-831451729938} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
 		{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
+		{53ACC366-37E0-413A-B9E9-C4B07FF20906} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}
