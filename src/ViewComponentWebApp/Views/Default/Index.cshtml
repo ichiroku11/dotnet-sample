@@ -1,9 +1,12 @@
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
 }
-<h1>Index</h1>
 
-@* ビューコンポーネントの呼び出し *@
-<vc:todo-list></vc:todo-list>
+@* vcプレフィックスを使ってビューコンポーネントを呼び出す *@
+@* ビューコンポーネント名はケバブケース（ハイフンつなぎ） *@
+@* html属性で引数を渡す *@
+@*  *@
+<h3>ToDo</h3>
+<vc:todo-list is-done="false"></vc:todo-list>
+
+<h3>Done</h3>
+<vc:todo-list is-done="true"></vc:todo-list>

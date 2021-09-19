@@ -7,11 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewComponentWebApp.Models;
 
 namespace ViewComponentWebApp {
 	public class Startup {
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddControllersWithViews();
+
+			services.AddScoped<TodoRepository>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
