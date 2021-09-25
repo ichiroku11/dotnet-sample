@@ -29,5 +29,17 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(expectedName, actual.Name);
 		}
+
+		[Theory]
+		[InlineData(typeof(int))]
+		[InlineData(typeof(long))]
+		public void GetUnderlyingType_引数にnull許容型ではない型を指定するとnullを返す(Type type) {
+			// Arrange
+			// Act
+			var actual = Nullable.GetUnderlyingType(type);
+
+			// Assert
+			Assert.Null(actual);
+		}
 	}
 }
