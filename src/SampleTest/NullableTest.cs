@@ -16,9 +16,11 @@ namespace SampleTest {
 			_output = output;
 		}
 
+		// Nullable.GetUnderlyingTypeを使うと、指定した型ががnullableか判定できる
 		[Theory]
 		[InlineData(typeof(int?), "Int32")]
 		[InlineData(typeof(long?), "Int64")]
+		[InlineData(typeof(DateTime?), "DateTime")]
 		public void GetUnderlyingType_引数にnull許容型の型を指定すると型引数の型を取得できる(Type type, string expectedName) {
 			// Arrange
 			// Act
@@ -33,6 +35,10 @@ namespace SampleTest {
 		[Theory]
 		[InlineData(typeof(int))]
 		[InlineData(typeof(long))]
+		[InlineData(typeof(DateTime))]
+		// 参照型もnullになる様子
+		[InlineData(typeof(string))]
+		[InlineData(typeof(object))]
 		public void GetUnderlyingType_引数にnull許容型ではない型を指定するとnullを返す(Type type) {
 			// Arrange
 			// Act
