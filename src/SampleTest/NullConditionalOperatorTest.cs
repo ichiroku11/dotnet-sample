@@ -6,16 +6,8 @@ using Xunit;
 namespace SampleTest {
 	// null条件演算子のテスト
 	public class NullConditionalOperatorTest {
-		[Fact]
-		public void Null条件演算子_何を試そう() {
-			var value = false;
-			Action action = () => value = true;
-			action?.Invoke();
-
-			Assert.True(value);
-		}
-
 		// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/builtin-types/nullable-value-types#how-to-identify-a-nullable-value-type
+
 		// 指定した値がnullableかどうか
 		private static bool IsNullable<TValue>(TValue _) {
 			var type = typeof(TValue);
