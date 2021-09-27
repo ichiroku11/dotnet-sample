@@ -29,8 +29,10 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, sample.Value);
 
+			// 通常のプロパティアクセスはnull許容型ではない
 			Assert.False(IsNullable(sample.Value));
-			// null条件演算子でのアクセスはnull許容型になる
+
+			// null条件演算子でのプロパティアクセスはnull許容型になる
 			Assert.True(IsNullable(sample?.Value));
 		}
 
@@ -57,8 +59,10 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, sample["a"]);
 
+			// 通常のインデクサアクセスはnull許容型ではない
 			Assert.False(IsNullable(sample["a"]));
-			// null条件演算子でのアクセスはnull許容型になる
+
+			// null条件演算子でのインデクサアクセスはnull許容型になる
 			Assert.True(IsNullable(sample?["a"]));
 		}
 	}
