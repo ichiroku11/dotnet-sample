@@ -47,5 +47,17 @@ namespace SampleTest {
 			// Assert
 			Assert.Null(actual);
 		}
+
+		[Fact]
+		public void GetValueOrDefault_値がnullではない場合はその値を取得できる() {
+			// Arrange
+			int? value = 1;
+
+			// Act
+			var actual = value.GetValueOrDefault();
+
+			// Assert
+			Assert.Equal(1, actual);
+		}
 	}
 }
