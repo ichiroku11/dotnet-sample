@@ -59,5 +59,29 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(1, actual);
 		}
+
+		[Fact]
+		public void GetValueOrDefault_値がnullの場合はその型のデフォルト値を取得できる() {
+			// Arrange
+			int? value = null;
+
+			// Act
+			var actual = value.GetValueOrDefault();
+
+			// Assert
+			Assert.Equal(0, actual);
+		}
+
+		[Fact]
+		public void GetValueOrDefault_値がnullの場合は指定した値を取得できる() {
+			// Arrange
+			int? value = null;
+
+			// Act
+			var actual = value.GetValueOrDefault(-1);
+
+			// Assert
+			Assert.Equal(-1, actual);
+		}
 	}
 }
