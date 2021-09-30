@@ -83,5 +83,47 @@ namespace SampleTest {
 			// Assert
 			Assert.Equal(-1, actual);
 		}
+
+		[Theory]
+		// 1つ目の引数がnullの場合
+		[InlineData(null, 1)]
+		// どちらの引数もnullではなく、1つ目の引数が小さい場合
+		[InlineData(-1, 1)]
+		public void Comapre_結果が0より小さい(int? value1, int? value2) {
+			// Arrange
+			// Act
+			var result = Nullable.Compare(value1, value2);
+
+			// Assert
+			Assert.True(result < 0);
+		}
+
+		[Theory]
+		// どちらの引数もnullの場合
+		[InlineData(null, null)]
+		// どちらの引数もnullではなく、非JK異数が等しい場合
+		[InlineData(1, 1)]
+		public void Comapre_結果が0と等しい(int? value1, int? value2) {
+			// Arrange
+			// Act
+			var result = Nullable.Compare(value1, value2);
+
+			// Assert
+			Assert.True(result == 0);
+		}
+
+		[Theory]
+		// 2つ目の引数がnullの場合
+		[InlineData(1, null)]
+		// どちらの引数もnullではなく、1つ目の引数が大きい場合
+		[InlineData(1, -1)]
+		public void Comapre_結果が0より大きい(int? value1, int? value2) {
+			// Arrange
+			// Act
+			var result = Nullable.Compare(value1, value2);
+
+			// Assert
+			Assert.True(result > 0);
+		}
 	}
 }
