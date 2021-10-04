@@ -12,6 +12,10 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 	public class JwtHeaderTest {
 		private readonly ITestOutputHelper _output;
 
+		public JwtHeaderTest(ITestOutputHelper output) {
+			_output = output;
+		}
+
 		[Fact]
 		public void Constructor_空のヘッダーを生成する() {
 			// Arrange
@@ -36,10 +40,6 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			Assert.Equal("none", header.Alg);
 
 			_output.WriteLine(header.SerializeToJson());
-		}
-
-		public JwtHeaderTest(ITestOutputHelper output) {
-			_output = output;
 		}
 
 		[Fact]
