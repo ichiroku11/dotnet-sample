@@ -35,7 +35,6 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			_output.WriteLine(payload.SerializeToJson());
 		}
 
-
 		[Fact]
 		public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 			// Arrange
