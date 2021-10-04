@@ -17,6 +17,26 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		[Fact]
+		public void Constructor_空のペイロードを生成する() {
+			// Arrange
+			var payload = new JwtPayload {
+			};
+
+			// Act
+			// Assert
+			Assert.Null(payload.Sub);
+			Assert.Null(payload.Nonce);
+			Assert.Null(payload.Nbf);
+			Assert.Null(payload.Iss);
+			Assert.Null(payload.Iat);
+			Assert.Null(payload.Exp);
+			Assert.Empty(payload.Aud);
+
+			_output.WriteLine(payload.SerializeToJson());
+		}
+
+
+		[Fact]
 		public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 			// Arrange
 			var payload = new JwtPayload {
