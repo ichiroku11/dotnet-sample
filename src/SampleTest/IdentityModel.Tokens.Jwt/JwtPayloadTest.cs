@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -36,6 +37,29 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		[Fact]
+		public void Constructor_ペイロードを生成する() {
+			// Arrange
+			var claims = new[] {
+				new Claim(JwtRegisteredClaimNames.Iss, "issuer"),
+				new Claim(JwtRegisteredClaimNames.Aud, "audience"),
+			};
+			var payload = new JwtPayload(claims);
+
+			// Act
+			// Assert
+			Assert.Null(payload.Sub);
+			Assert.Null(payload.Nonce);
+			Assert.Null(payload.Nbf);
+			Assert.Equal("issuer", payload.Iss);
+			Assert.Null(payload.Iat);
+			Assert.Null(payload.Exp);
+			var audience = Assert.Single(payload.Aud);
+			Assert.Equal("audience", audience);
+
+			_output.WriteLine(payload.SerializeToJson());
+		}
+
+		[Fact]
 		public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 			// Arrange
 			var payload = new JwtPayload {
@@ -61,6 +85,5 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			// Assert
 			Assert.Equal(Base64UrlEncoder.Encode("{}"), actual);
 		}
-
 	}
 }
