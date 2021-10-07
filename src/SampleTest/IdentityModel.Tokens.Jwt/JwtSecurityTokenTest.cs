@@ -40,5 +40,31 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			// Assert
 			Assert.Equal(expected, actual);
 		}
+
+		public static IEnumerable<object[]> GetTestDataForSignatureAlgorithm() {
+			yield return new object[] {
+				new JwtSecurityToken(),
+				"none",
+			};
+			yield return new object[] {
+				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
+				null,
+			};
+			yield return new object[] {
+				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
+				"none",
+			};
+		}
+
+		[Theory]
+		[MemberData(nameof(GetTestDataForSignatureAlgorithm))]
+		public void SignatureAlgorithm_署名アルゴリズムを確認する(JwtSecurityToken token, string expected) {
+			// Arrange
+			// Act
+			var actual = token.SignatureAlgorithm;
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
