@@ -1,3 +1,4 @@
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -53,6 +54,14 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			yield return new object[] {
 				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
 				"none",
+			};
+
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
+			var algorithm = SecurityAlgorithms.HmacSha256;
+			var credentials = new SigningCredentials(key, algorithm);
+			yield return new object[] {
+				new JwtSecurityToken(new JwtHeader(credentials), new JwtPayload()),
+				"HS256",
 			};
 		}
 
