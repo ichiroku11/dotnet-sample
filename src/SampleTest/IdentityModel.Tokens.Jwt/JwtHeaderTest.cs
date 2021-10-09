@@ -19,9 +19,9 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		[Fact]
 		public void Constructor_空のヘッダーを生成する() {
 			// Arrange
+			// Act
 			var header = new JwtHeader();
 
-			// Act
 			// Assert
 			Assert.Null(header.Typ);
 			Assert.Null(header.Alg);
@@ -32,12 +32,29 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		[Fact]
 		public void Constructor_署名なしのヘッダーを生成する() {
 			// Arrange
+			// Act
 			var header = new JwtHeader(signingCredentials: null);
 
-			// Act
 			// Assert
 			Assert.Equal("JWT", header.Typ);
 			Assert.Equal("none", header.Alg);
+
+			_output.WriteLine(header.SerializeToJson());
+		}
+
+		[Fact]
+		public void Constructor_HS256署名付きのヘッダーを生成する() {
+			// Arrange
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
+			var algorithm = SecurityAlgorithms.HmacSha256;
+			var credentials = new SigningCredentials(key, algorithm);
+
+			// Act
+			var header = new JwtHeader(credentials);
+
+			// Assert
+			Assert.Equal("JWT", header.Typ);
+			Assert.Equal("HS256", header.Alg);
 
 			_output.WriteLine(header.SerializeToJson());
 		}
