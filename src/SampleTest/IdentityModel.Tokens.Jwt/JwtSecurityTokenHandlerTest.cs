@@ -65,5 +65,30 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			// Assert
 			Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{}", token.ToString());
 		}
+
+		// todo:
+		/*
+		[Fact]
+		public void ValidateToken_HS256で署名したトークンを検証する() {
+			// Arrange
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
+			var algorithm = SecurityAlgorithms.HmacSha256;
+			var credentials = new SigningCredentials(key, algorithm);
+
+			var handler = new JwtSecurityTokenHandler();
+			var jwt = handler.CreateEncodedJwt(
+				issuer: "issuer",
+				audience: "audience",
+				subject: null,
+				notBefore: null,
+				expires: null,
+				issuedAt: null,
+				signingCredentials: credentials);
+
+			// Act
+
+			// Assert
+		}
+		*/
 	}
 }
