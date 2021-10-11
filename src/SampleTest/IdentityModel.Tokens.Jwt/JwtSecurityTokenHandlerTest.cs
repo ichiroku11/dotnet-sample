@@ -51,5 +51,19 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			// Assert
 			Assert.Equal(expected, actual);
 		}
+
+		[Fact]
+		public void CreateJwtSecurityToken_空のトークンを生成する() {
+			// Arrange
+			var handler = new JwtSecurityTokenHandler {
+				SetDefaultTimesOnTokenCreation = false,
+			};
+
+			// Act
+			var token = handler.CreateJwtSecurityToken();
+
+			// Assert
+			Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{}", token.ToString());
+		}
 	}
 }
