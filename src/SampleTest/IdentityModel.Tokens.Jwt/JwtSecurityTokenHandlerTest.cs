@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -53,7 +54,7 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		[Fact]
-		public void CreateJwtSecurityToken_空のトークンを生成する() {
+		public void CreateJwtSecurityToken_ペイロードが空の署名なしトークンを生成する() {
 			// Arrange
 			var handler = new JwtSecurityTokenHandler {
 				SetDefaultTimesOnTokenCreation = false,
@@ -66,7 +67,20 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{}", token.ToString());
 		}
 
-		// todo:
+		[Fact]
+		public void CreateJwtSecurityToken_ペイロードがissとaudだけの署名なしトークンを生成する() {
+			// Arrange
+			var handler = new JwtSecurityTokenHandler {
+				SetDefaultTimesOnTokenCreation = false,
+			};
+
+			// Act
+			var token = handler.CreateJwtSecurityToken(issuer: "i", audience: "a");
+
+			// Assert
+			Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""iss"":""i"",""aud"":""a""}", token.ToString());
+		}
+
 		/*
 		[Fact]
 		public void ValidateToken_HS256で署名したトークンを検証する() {
