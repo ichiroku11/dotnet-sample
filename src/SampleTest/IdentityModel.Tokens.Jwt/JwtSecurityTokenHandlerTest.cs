@@ -90,9 +90,32 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		[Fact]
+		public void CreateJwtSecurityToken_キーが短いとHS256で署名するときに例外が発生する() {
+			// Arrange
+			// 文字列ベースでもう1文字いる様子
+			var secret = Encoding.UTF8.GetBytes("0123456789abcde");
+			var key = new SymmetricSecurityKey(secret);
+			_output.WriteLine($"secret.Length: {secret.Length}");
+			_output.WriteLine($"key.KeySize: {key.KeySize}");
+
+			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+			var handler = new JwtSecurityTokenHandler {
+				SetDefaultTimesOnTokenCreation = false,
+			};
+
+			// Act
+			// Assert
+			var exception = Assert.Throws<ArgumentOutOfRangeException>(() => {
+				handler.CreateJwtSecurityToken(issuer: "i", audience: "a", signingCredentials: credentials);
+			});
+			_output.WriteLine(exception.Message);
+		}
+
+		[Fact]
 		public void ValidateToken_HS256で署名したトークンを検証する() {
 			// Arrange
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdefghijABCDEFGHIJ01"));
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
 			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 			var handler = new JwtSecurityTokenHandler {
