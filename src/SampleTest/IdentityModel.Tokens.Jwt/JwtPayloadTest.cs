@@ -37,24 +37,44 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		[Fact]
-		public void Constructor_ペイロードを生成する() {
+		public void Constructor_クレームからペイロードを生成する() {
 			// Arrange
 			var claims = new[] {
-				new Claim(JwtRegisteredClaimNames.Iss, "issuer"),
-				new Claim(JwtRegisteredClaimNames.Aud, "audience"),
+				new Claim(JwtRegisteredClaimNames.Iss, "i"),
+				new Claim(JwtRegisteredClaimNames.Aud, "a"),
 			};
-			var payload = new JwtPayload(claims);
 
 			// Act
+			var payload = new JwtPayload(claims);
+
 			// Assert
 			Assert.Null(payload.Sub);
 			Assert.Null(payload.Nonce);
 			Assert.Null(payload.Nbf);
-			Assert.Equal("issuer", payload.Iss);
+			Assert.Equal("i", payload.Iss);
 			Assert.Null(payload.Iat);
 			Assert.Null(payload.Exp);
 			var audience = Assert.Single(payload.Aud);
-			Assert.Equal("audience", audience);
+			Assert.Equal("a", audience);
+
+			_output.WriteLine(payload.SerializeToJson());
+		}
+
+		[Fact]
+		public void Constructor_issuerとaudienceからペイロードを生成する() {
+			// Arrange
+			// Act
+			var payload = new JwtPayload(issuer: "i", audience: "a", claims: null, notBefore: null, expires: null);
+
+			// Assert
+			Assert.Null(payload.Sub);
+			Assert.Null(payload.Nonce);
+			Assert.Null(payload.Nbf);
+			Assert.Equal("i", payload.Iss);
+			Assert.Null(payload.Iat);
+			Assert.Null(payload.Exp);
+			var audience = Assert.Single(payload.Aud);
+			Assert.Equal("a", audience);
 
 			_output.WriteLine(payload.SerializeToJson());
 		}
