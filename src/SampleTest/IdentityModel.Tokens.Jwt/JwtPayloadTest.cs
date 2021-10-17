@@ -80,6 +80,30 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		[Fact]
+		public void Constructor_issuerとaudienceとnotBeforeとexpiresを指定してペイロードを生成する() {
+			// Arrange
+			// Act
+			var payload = new JwtPayload(
+				issuer: "i",
+				audience: "a",
+				claims: null,
+				notBefore: EpochTime.UnixEpoch.AddSeconds(1),
+				expires: EpochTime.UnixEpoch.AddSeconds(2));
+
+			// Assert
+			Assert.Null(payload.Sub);
+			Assert.Null(payload.Nonce);
+			Assert.Equal(1, payload.Nbf);
+			Assert.Equal("i", payload.Iss);
+			Assert.Null(payload.Iat);
+			Assert.Equal(2, payload.Exp);
+			var audience = Assert.Single(payload.Aud);
+			Assert.Equal("a", audience);
+
+			_output.WriteLine(payload.SerializeToJson());
+		}
+
+		[Fact]
 		public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 			// Arrange
 			var payload = new JwtPayload {
