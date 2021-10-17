@@ -112,18 +112,21 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			_output.WriteLine(exception.Message);
 		}
 
+		private static readonly SymmetricSecurityKey _key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
+		private static readonly SymmetricSecurityKey _key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+
 		[Fact]
 		public void ValidateToken_HS256で署名したトークンを検証する() {
 			// Arrange
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
-			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
 			var handler = new JwtSecurityTokenHandler {
 				SetDefaultTimesOnTokenCreation = false,
 			};
 
 			// 署名付きのトークンを生成
-			var token = handler.CreateJwtSecurityToken(issuer: "i", audience: "a", signingCredentials: credentials);
+			var token = handler.CreateJwtSecurityToken(
+				issuer: "i",
+				audience: "a",
+				signingCredentials: new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256));
 			_output.WriteLine(token.ToString());
 
 			var jwt = handler.WriteToken(token);
@@ -133,7 +136,7 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			var parameters = new TokenValidationParameters {
 				// 証明したキーで検証する
 				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = key,
+				IssuerSigningKey = _key1,
 
 				ValidateLifetime = false,
 				ValidIssuer = "i",
@@ -154,6 +157,36 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 				claim =>
 					string.Equals(claim.Type, "aud", StringComparison.OrdinalIgnoreCase) &&
 					string.Equals(claim.Value, "a", StringComparison.OrdinalIgnoreCase));
+		}
+
+		[Fact]
+		public void ValidateToken_署名と検証でキーが異なると例外がスローされる() {
+			// Arrange
+			var handler = new JwtSecurityTokenHandler {
+				SetDefaultTimesOnTokenCreation = false,
+			};
+
+			var token = handler.CreateJwtSecurityToken(
+				issuer: "i",
+				audience: "a",
+				signingCredentials: new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256));
+			var jwt = handler.WriteToken(token);
+
+			// Act
+			var parameters = new TokenValidationParameters {
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = _key2,
+
+				ValidateLifetime = false,
+				ValidIssuer = "i",
+				ValidAudience = "a"
+			};
+
+			// トークンの検証に失敗する
+			var exception = Assert.Throws<SecurityTokenSignatureKeyNotFoundException>(() => {
+				handler.ValidateToken(jwt, parameters, out var _);
+			});
+			_output.WriteLine(exception.Message);
 		}
 	}
 }
