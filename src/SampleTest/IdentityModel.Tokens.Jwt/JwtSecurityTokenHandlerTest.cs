@@ -188,5 +188,33 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			});
 			_output.WriteLine(exception.Message);
 		}
+
+		[Fact]
+		public void ValidateToken_署名なしトークンを署名があるものとして検証すると例外がスローされる() {
+			// Arrange
+			var handler = new JwtSecurityTokenHandler {
+				SetDefaultTimesOnTokenCreation = false,
+			};
+
+			// 署名なしトークンを生成
+			var token = handler.CreateJwtSecurityToken(issuer: "i", audience: "a");
+			var jwt = handler.WriteToken(token);
+
+			// Act
+			var parameters = new TokenValidationParameters {
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = _key1,
+
+				ValidateLifetime = false,
+				ValidIssuer = "i",
+				ValidAudience = "a"
+			};
+
+			// トークンの検証に失敗する
+			var exception = Assert.Throws<SecurityTokenInvalidSignatureException>(() => {
+				handler.ValidateToken(jwt, parameters, out var _);
+			});
+			_output.WriteLine(exception.Message);
+		}
 	}
 }
