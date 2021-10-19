@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace SampleLib.AspNetCore {
 	// https://docs.microsoft.com/ja-jp/dotnet/core/additional-tools/self-signed-certificates-guide#create-a-self-signed-certificate
+	// dotnet dev-certs https --clean
+	// dotnet dev-certs https --trust
 	public static class X509Certificate2Helper {
 		private static X509Certificate2 GetCertificate(string subjectName, string issuerName, string friendlyName) {
 			using var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
