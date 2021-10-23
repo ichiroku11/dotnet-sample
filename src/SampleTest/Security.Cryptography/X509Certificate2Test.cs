@@ -2,6 +2,7 @@ using SampleLib.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -27,6 +28,19 @@ namespace SampleTest.Security.Cryptography {
 				certificate.PrivateKey = null;
 			});
 			_output.WriteLine(exception.Message);
+		}
+
+		[Fact]
+		public void Export_エクスポートしたバイト配列を元にインスタンスを生成するとPrivateKeyをクリアできる() {
+			// Arrange
+			var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
+
+			// Act
+			var certificate2 = new X509Certificate2(certificate1.Export(X509ContentType.Cert));
+
+			// Assert
+			Assert.True(certificate1.HasPrivateKey);
+			Assert.False(certificate2.HasPrivateKey);
 		}
 	}
 }
