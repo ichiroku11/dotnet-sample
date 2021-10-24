@@ -26,7 +26,7 @@ namespace SampleTest.IdentityModel.Tokens {
 		public void Constructor_秘密鍵を保持しないインスタンスを生成する() {
 			// Arrange
 			using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
-			using var certificate2 = new X509Certificate2(certificate1.Export(X509ContentType.Cert));
+			using var certificate2 = certificate1.RemovePrivateKey();
 
 			// Act
 			var key = new X509SecurityKey(certificate2);
