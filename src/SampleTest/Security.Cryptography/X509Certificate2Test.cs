@@ -19,7 +19,7 @@ namespace SampleTest.Security.Cryptography {
 		[Fact]
 		public void PrivateKey_値を変更しようとすると例外が発生する() {
 			// Arrange
-			var certificate = X509Certificate2Helper.GetDevelopmentCertificate();
+			using var certificate = X509Certificate2Helper.GetDevelopmentCertificate();
 
 			// Act
 			// Assert
@@ -33,10 +33,10 @@ namespace SampleTest.Security.Cryptography {
 		[Fact]
 		public void Export_エクスポートしたバイト配列を元にインスタンスを生成するとPrivateKeyをクリアできる() {
 			// Arrange
-			var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
+			using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
 
 			// Act
-			var certificate2 = new X509Certificate2(certificate1.Export(X509ContentType.Cert));
+			using var certificate2 = new X509Certificate2(certificate1.Export(X509ContentType.Cert));
 
 			// Assert
 			Assert.True(certificate1.HasPrivateKey);
