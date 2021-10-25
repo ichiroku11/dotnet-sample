@@ -1,4 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
+using SampleLib.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -56,12 +57,22 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 				"none",
 			};
 
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
-			var algorithm = SecurityAlgorithms.HmacSha256;
-			var credentials = new SigningCredentials(key, algorithm);
+			var credentials1 = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x")), SecurityAlgorithms.HmacSha256);
 			yield return new object[] {
-				new JwtSecurityToken(new JwtHeader(credentials), new JwtPayload()),
+				new JwtSecurityToken(new JwtHeader(credentials1), new JwtPayload()),
 				"HS256",
+			};
+
+			using var certificate = X509Certificate2Helper.GetDevelopmentCertificate();
+			var credentials2 = new X509SigningCredentials(certificate);
+			yield return new object[] {
+				new JwtSecurityToken(new JwtHeader(credentials2), new JwtPayload()),
+				"RS256",
+			};
+			var credentials3 = new SigningCredentials(new X509SecurityKey(certificate), SecurityAlgorithms.RsaSha256);
+			yield return new object[] {
+				new JwtSecurityToken(new JwtHeader(credentials3), new JwtPayload()),
+				"RS256",
 			};
 		}
 
