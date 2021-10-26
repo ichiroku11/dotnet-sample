@@ -1,9 +1,11 @@
 using Microsoft.IdentityModel.Tokens;
 using SampleLib.AspNetCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,6 +13,9 @@ using Xunit.Abstractions;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt {
 	public class JwtSecurityTokenHandlerTest {
+		private static readonly SymmetricSecurityKey _key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
+		private static readonly SymmetricSecurityKey _key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+
 		private readonly ITestOutputHelper _output;
 
 		public JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
@@ -112,11 +117,43 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			_output.WriteLine(exception.Message);
 		}
 
-		private static readonly SymmetricSecurityKey _key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
-		private static readonly SymmetricSecurityKey _key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+		public class TestDataForValidateToken : IEnumerable<object[]>, IDisposable {
 
-		[Fact]
-		public void ValidateToken_HS256で署名したトークンを検証する() {
+			private X509Certificate2 _certificate;
+
+			public TestDataForValidateToken() {
+				_certificate = X509Certificate2Helper.GetDevelopmentCertificate();
+			}
+
+			public void Dispose() {
+				_certificate?.Dispose();
+				_certificate = null;
+			}
+
+			public IEnumerator<object[]> GetEnumerator() {
+				// HS256
+				yield return new object[] {
+					new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256),
+					_key1,
+				};
+
+				// RS256
+				yield return new object[] {
+					new X509SigningCredentials(_certificate),
+					new X509SecurityKey(_certificate.RemovePrivateKey()),
+				};
+			}
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		}
+
+		[Theory]
+		[ClassData(typeof(TestDataForValidateToken))]
+		public void ValidateToken_署名したトークンを検証する(
+			// 署名に利用する資格情報
+			SigningCredentials signingCredentials,
+			// 検証用のキー
+			SecurityKey validationKey) {
 			// Arrange
 			var handler = new JwtSecurityTokenHandler {
 				SetDefaultTimesOnTokenCreation = false,
@@ -126,7 +163,7 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			var token = handler.CreateJwtSecurityToken(
 				issuer: "i",
 				audience: "a",
-				signingCredentials: new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256));
+				signingCredentials: signingCredentials);
 			_output.WriteLine(token.ToString());
 
 			var jwt = handler.WriteToken(token);
@@ -136,7 +173,7 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			var parameters = new TokenValidationParameters {
 				// 証明したキーで検証する
 				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = _key1,
+				IssuerSigningKey = validationKey,
 
 				ValidateLifetime = false,
 				ValidIssuer = "i",
@@ -215,56 +252,6 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 				handler.ValidateToken(jwt, parameters, out var _);
 			});
 			_output.WriteLine(exception.Message);
-		}
-
-		[Fact]
-		public void ValidateToken_RS256で署名したトークンを検証する() {
-			// 署名キー
-			using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
-
-			// 署名を検証するキー
-			using var certificate2 = certificate1.RemovePrivateKey();
-			var key2 = new X509SecurityKey(certificate2);
-
-			// Arrange
-			var handler = new JwtSecurityTokenHandler {
-				SetDefaultTimesOnTokenCreation = false,
-			};
-
-			// 署名付きのトークンを生成
-			var token = handler.CreateJwtSecurityToken(
-				issuer: "i",
-				audience: "a",
-				signingCredentials: new X509SigningCredentials(certificate1));
-			_output.WriteLine(token.ToString());
-
-			var jwt = handler.WriteToken(token);
-			_output.WriteLine(jwt);
-
-			// Act
-			var parameters = new TokenValidationParameters {
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = key2,
-
-				ValidateLifetime = false,
-				ValidIssuer = "i",
-				ValidAudience = "a"
-			};
-			// 署名付きのトークンを検証
-			var principal = handler.ValidateToken(jwt, parameters, out var _);
-
-			// Assert
-			Assert.Equal(2, principal.Claims.Count());
-			Assert.Contains(
-				principal.Claims,
-				claim =>
-					string.Equals(claim.Type, "iss", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(claim.Value, "i", StringComparison.OrdinalIgnoreCase));
-			Assert.Contains(
-				principal.Claims,
-				claim =>
-					string.Equals(claim.Type, "aud", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(claim.Value, "a", StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }
