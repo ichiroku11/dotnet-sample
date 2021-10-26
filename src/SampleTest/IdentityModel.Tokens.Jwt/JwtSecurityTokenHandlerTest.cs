@@ -1,9 +1,9 @@
 using Microsoft.IdentityModel.Tokens;
+using SampleLib.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -215,6 +215,56 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 				handler.ValidateToken(jwt, parameters, out var _);
 			});
 			_output.WriteLine(exception.Message);
+		}
+
+		[Fact]
+		public void ValidateToken_RS256で署名したトークンを検証する() {
+			// 署名キー
+			using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
+
+			// 署名を検証するキー
+			using var certificate2 = certificate1.RemovePrivateKey();
+			var key2 = new X509SecurityKey(certificate2);
+
+			// Arrange
+			var handler = new JwtSecurityTokenHandler {
+				SetDefaultTimesOnTokenCreation = false,
+			};
+
+			// 署名付きのトークンを生成
+			var token = handler.CreateJwtSecurityToken(
+				issuer: "i",
+				audience: "a",
+				signingCredentials: new X509SigningCredentials(certificate1));
+			_output.WriteLine(token.ToString());
+
+			var jwt = handler.WriteToken(token);
+			_output.WriteLine(jwt);
+
+			// Act
+			var parameters = new TokenValidationParameters {
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = key2,
+
+				ValidateLifetime = false,
+				ValidIssuer = "i",
+				ValidAudience = "a"
+			};
+			// 署名付きのトークンを検証
+			var principal = handler.ValidateToken(jwt, parameters, out var _);
+
+			// Assert
+			Assert.Equal(2, principal.Claims.Count());
+			Assert.Contains(
+				principal.Claims,
+				claim =>
+					string.Equals(claim.Type, "iss", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(claim.Value, "i", StringComparison.OrdinalIgnoreCase));
+			Assert.Contains(
+				principal.Claims,
+				claim =>
+					string.Equals(claim.Type, "aud", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(claim.Value, "a", StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }
