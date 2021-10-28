@@ -1,9 +1,11 @@
 using Microsoft.IdentityModel.Tokens;
 using SampleLib.AspNetCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -43,41 +45,60 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 			Assert.Equal(expected, actual);
 		}
 
-		public static IEnumerable<object[]> GetTestDataForSignatureAlgorithm() {
-			yield return new object[] {
-				new JwtSecurityToken(),
-				"none",
-			};
-			yield return new object[] {
-				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
-				null,
-			};
-			yield return new object[] {
-				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
-				"none",
-			};
+		public class TestDataForSignatureAlgorithm : IEnumerable<object[]>, IDisposable {
+			private X509Certificate2 _certificate;
 
-			var credentials1 = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x")), SecurityAlgorithms.HmacSha256);
-			yield return new object[] {
-				new JwtSecurityToken(new JwtHeader(credentials1), new JwtPayload()),
-				"HS256",
-			};
+			public TestDataForSignatureAlgorithm() {
+				_certificate = X509Certificate2Helper.GetDevelopmentCertificate();
+			}
 
-			using var certificate = X509Certificate2Helper.GetDevelopmentCertificate();
-			var credentials2 = new X509SigningCredentials(certificate);
-			yield return new object[] {
-				new JwtSecurityToken(new JwtHeader(credentials2), new JwtPayload()),
-				"RS256",
-			};
-			var credentials3 = new SigningCredentials(new X509SecurityKey(certificate), SecurityAlgorithms.RsaSha256);
-			yield return new object[] {
-				new JwtSecurityToken(new JwtHeader(credentials3), new JwtPayload()),
-				"RS256",
-			};
+			public void Dispose() {
+				_certificate?.Dispose();
+				_certificate = null;
+			}
+
+			public IEnumerator<object[]> GetEnumerator() {
+				// 署名アルゴリズムがnull
+				yield return new object[] {
+					new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
+					null,
+				};
+
+				// none
+				yield return new object[] {
+					new JwtSecurityToken(),
+					"none",
+				};
+				yield return new object[] {
+					new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
+					"none",
+				};
+
+				// HS256
+				var credentials1 = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x")), SecurityAlgorithms.HmacSha256);
+				yield return new object[] {
+					new JwtSecurityToken(new JwtHeader(credentials1), new JwtPayload()),
+					"HS256",
+				};
+
+				// RS256
+				var credentials2 = new X509SigningCredentials(_certificate);
+				yield return new object[] {
+					new JwtSecurityToken(new JwtHeader(credentials2), new JwtPayload()),
+					"RS256",
+				};
+				var credentials3 = new SigningCredentials(new X509SecurityKey(_certificate), SecurityAlgorithms.RsaSha256);
+				yield return new object[] {
+					new JwtSecurityToken(new JwtHeader(credentials3), new JwtPayload()),
+					"RS256",
+				};
+			}
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		}
 
 		[Theory]
-		[MemberData(nameof(GetTestDataForSignatureAlgorithm))]
+		[ClassData(typeof(TestDataForSignatureAlgorithm))]
 		public void SignatureAlgorithm_署名アルゴリズムを確認する(JwtSecurityToken token, string expected) {
 			// Arrange
 			// Act

@@ -118,7 +118,6 @@ namespace SampleTest.IdentityModel.Tokens.Jwt {
 		}
 
 		public class TestDataForValidateToken : IEnumerable<object[]>, IDisposable {
-
 			private X509Certificate2 _certificate;
 
 			public TestDataForValidateToken() {
