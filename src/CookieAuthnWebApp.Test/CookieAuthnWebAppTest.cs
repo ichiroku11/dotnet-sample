@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Net;
 using System.Text.Json;
@@ -120,8 +121,10 @@ namespace CookieAuthnWebApp {
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.True(response.Headers.Contains("Set-Cookie"));
-			// todo: クッキーの中身を確認したいところ
+			Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
+			foreach (var value in response.Headers.GetValues(HeaderNames.SetCookie)) {
+				_output.WriteLine(value);
+			}
 		}
 
 		[Fact]
@@ -134,8 +137,10 @@ namespace CookieAuthnWebApp {
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.True(response.Headers.Contains("Set-Cookie"));
-			// todo: クッキーの中身を確認したいところ
+			Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
+			foreach (var value in response.Headers.GetValues(HeaderNames.SetCookie)) {
+				_output.WriteLine(value);
+			}
 		}
 	}
 }
