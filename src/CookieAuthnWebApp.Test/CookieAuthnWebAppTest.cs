@@ -88,6 +88,29 @@ namespace CookieAuthnWebApp {
 		}
 
 		[Fact]
+		public async Task GetAuthenticate_サインインした状態で正しい結果を取得できる() {
+			// Arrange
+			var options = new WebApplicationFactoryClientOptions {
+			};
+			var client = _factory.CreateClient(options);
+
+			// Act
+			await client.GetAsync("/signin");
+
+			var response = await client.GetAsync("/authenticate");
+			var content = await response.Content.ReadAsStringAsync();
+			_output.WriteLine(content);
+
+			var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
+
+			// Assert
+			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+			Assert.True(result.Succeeded);
+			Assert.Equal("1", result.NameIdentifier);
+			Assert.Equal("Admin", result.Role);
+		}
+
+		[Fact]
 		public async Task GetSignin_レスポンスにSetCookieヘッダが含まれる() {
 			// Arrange
 			using var client = _factory.CreateClient();
@@ -113,29 +136,6 @@ namespace CookieAuthnWebApp {
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 			Assert.True(response.Headers.Contains("Set-Cookie"));
 			// todo: クッキーの中身を確認したいところ
-		}
-
-		[Fact]
-		public async Task GetAuthenticate_サインインした状態で正しい結果を取得できる() {
-			// Arrange
-			var options = new WebApplicationFactoryClientOptions {
-			};
-			var client = _factory.CreateClient(options);
-
-			// Act
-			await client.GetAsync("/signin");
-
-			var response = await client.GetAsync("/authenticate");
-			var content = await response.Content.ReadAsStringAsync();
-			_output.WriteLine(content);
-
-			var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
-
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.True(result.Succeeded);
-			Assert.Equal("1", result.NameIdentifier);
-			Assert.Equal("Admin", result.Role);
 		}
 	}
 }
