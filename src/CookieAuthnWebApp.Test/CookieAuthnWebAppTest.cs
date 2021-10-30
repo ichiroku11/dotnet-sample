@@ -4,12 +4,15 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CookieAuthnWebApp {
 	public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
+		private readonly ITestOutputHelper _output;
 		private readonly WebApplicationFactory<Startup> _factory;
 
-		public CookieAuthnWebAppTest(WebApplicationFactory<Startup> factory) {
+		public CookieAuthnWebAppTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) {
+			_output = output;
 			_factory = factory;
 		}
 
@@ -68,6 +71,8 @@ namespace CookieAuthnWebApp {
 			// Act
 			using var response = await client.GetAsync("/authenticate");
 			var content = await response.Content.ReadAsStringAsync();
+			_output.WriteLine(content);
+
 			var result = JsonSerializer.Deserialize<AuthenticateResult>(content);
 
 			// Assert
@@ -118,6 +123,8 @@ namespace CookieAuthnWebApp {
 
 			var response = await client.GetAsync("/authenticate");
 			var content = await response.Content.ReadAsStringAsync();
+			_output.WriteLine(content);
+
 			var result = JsonSerializer.Deserialize<AuthenticateResult>(content);
 
 			// Assert
