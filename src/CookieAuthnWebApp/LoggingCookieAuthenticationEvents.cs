@@ -43,7 +43,18 @@ namespace CookieAuthnWebApp {
 		}
 
 		public override Task SigningIn(CookieSigningInContext context) {
-			GetLogger(context).LogCallerMethodName();
+			var logger = GetLogger(context);
+			logger.LogCallerMethodName();
+
+			// SignInAsyncメソッドの引数に指定したAuthenticationPropertiesのItemsとParametersを取得できる
+			var properties = context.Properties;
+			foreach (var item in properties.Items) {
+				logger.LogInformation($"items: {item.Key} = {item.Value}");
+			}
+			foreach (var parameter in properties.Parameters) {
+				logger.LogInformation($"items: {parameter.Key} = {parameter.Value}");
+			}
+
 			return base.SigningIn(context);
 		}
 

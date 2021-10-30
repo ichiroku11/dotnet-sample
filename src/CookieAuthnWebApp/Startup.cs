@@ -85,9 +85,17 @@ namespace CookieAuthnWebApp {
 					identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "1"));
 					var principal = new ClaimsPrincipal(identity);
 
+					var properties = new AuthenticationProperties(
+						items: new Dictionary<string, string> {
+							["x"] = "1",
+						},
+						parameters: new Dictionary<string, object>() {
+							["y"] = 2,
+						});
+
 					// サインイン
 					// 認証クッキーをつけたレスポンスを返す
-					await context.SignInAsync(principal);
+					await context.SignInAsync(principal, properties);
 					// Set-Cookie: auth=***;
 				});
 
@@ -104,6 +112,7 @@ namespace CookieAuthnWebApp {
 
 					var result = await context.AuthenticateAsync();
 					var principal = result.Principal;
+					var properties = result.Properties;
 
 					var model = new {
 						result.Succeeded,
