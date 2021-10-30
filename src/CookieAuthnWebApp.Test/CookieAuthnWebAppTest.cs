@@ -8,6 +8,11 @@ using Xunit.Abstractions;
 
 namespace CookieAuthnWebApp {
 	public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
+		private static readonly JsonSerializerOptions _jsonSerializerOptions
+			= new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
 		private readonly ITestOutputHelper _output;
 		private readonly WebApplicationFactory<Startup> _factory;
 
@@ -73,13 +78,13 @@ namespace CookieAuthnWebApp {
 			var content = await response.Content.ReadAsStringAsync();
 			_output.WriteLine(content);
 
-			var result = JsonSerializer.Deserialize<AuthenticateResult>(content);
+			var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 			Assert.False(result.Succeeded);
-			Assert.Null(result.NameIdentifier);
-			Assert.Null(result.Role);
+			Assert.Equal("", result.NameIdentifier);
+			Assert.Equal("", result.Role);
 		}
 
 		[Fact]
@@ -110,8 +115,7 @@ namespace CookieAuthnWebApp {
 			// todo: クッキーの中身を確認したいところ
 		}
 
-		// todo:
-		[Fact(Skip = "クッキーの維持ができない？")]
+		[Fact]
 		public async Task GetAuthenticate_サインインした状態で正しい結果を取得できる() {
 			// Arrange
 			var options = new WebApplicationFactoryClientOptions {
@@ -125,7 +129,7 @@ namespace CookieAuthnWebApp {
 			var content = await response.Content.ReadAsStringAsync();
 			_output.WriteLine(content);
 
-			var result = JsonSerializer.Deserialize<AuthenticateResult>(content);
+			var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
