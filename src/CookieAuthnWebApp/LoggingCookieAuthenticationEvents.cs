@@ -52,7 +52,7 @@ namespace CookieAuthnWebApp {
 				logger.LogInformation($"items: {item.Key} = {item.Value}");
 			}
 			foreach (var parameter in properties.Parameters) {
-				logger.LogInformation($"items: {parameter.Key} = {parameter.Value}");
+				logger.LogInformation($"parameters: {parameter.Key} = {parameter.Value}");
 			}
 
 			return base.SigningIn(context);
