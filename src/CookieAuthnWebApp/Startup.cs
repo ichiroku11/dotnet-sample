@@ -87,10 +87,10 @@ namespace CookieAuthnWebApp {
 
 					var properties = new AuthenticationProperties(
 						items: new Dictionary<string, string> {
-							["x"] = "1",
+							["x"] = "2",
 						},
 						parameters: new Dictionary<string, object>() {
-							["y"] = 2,
+							["y"] = 3,
 						});
 
 					// サインイン

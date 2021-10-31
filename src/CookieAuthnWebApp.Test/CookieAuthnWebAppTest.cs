@@ -64,9 +64,11 @@ namespace CookieAuthnWebApp {
 		}
 
 		private class AuthenticateResult {
-			public bool Succeeded { get; set; }
-			public string NameIdentifier { get; set; }
-			public string Role { get; set; }
+			public bool Succeeded { get; init; }
+			public string NameIdentifier { get; init; }
+			public string Role { get; init; }
+			public string Item { get; init; }
+			public string Parameter { get; init; }
 		}
 
 		[Fact]
@@ -86,6 +88,8 @@ namespace CookieAuthnWebApp {
 			Assert.False(result.Succeeded);
 			Assert.Equal("", result.NameIdentifier);
 			Assert.Equal("", result.Role);
+			Assert.Equal("", result.Item);
+			Assert.Equal("", result.Parameter);
 		}
 
 		[Fact]
@@ -109,6 +113,8 @@ namespace CookieAuthnWebApp {
 			Assert.True(result.Succeeded);
 			Assert.Equal("1", result.NameIdentifier);
 			Assert.Equal("Admin", result.Role);
+			Assert.Equal("2", result.Item);
+			Assert.Equal("", result.Parameter);
 		}
 
 		[Fact]
