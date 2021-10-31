@@ -1,15 +1,24 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CookieAuthnWebApp {
 	public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
+		private static readonly JsonSerializerOptions _jsonSerializerOptions
+			= new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true,
+			};
+
+		private readonly ITestOutputHelper _output;
 		private readonly WebApplicationFactory<Startup> _factory;
 
-		public CookieAuthnWebAppTest(WebApplicationFactory<Startup> factory) {
+		public CookieAuthnWebAppTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) {
+			_output = output;
 			_factory = factory;
 		}
 
@@ -55,9 +64,11 @@ namespace CookieAuthnWebApp {
 		}
 
 		private class AuthenticateResult {
-			public bool Succeeded { get; set; }
-			public string NameIdentifier { get; set; }
-			public string Role { get; set; }
+			public bool Succeeded { get; init; }
+			public string NameIdentifier { get; init; }
+			public string Role { get; init; }
+			public string Item { get; init; }
+			public string Parameter { get; init; }
 		}
 
 		[Fact]
@@ -68,13 +79,42 @@ namespace CookieAuthnWebApp {
 			// Act
 			using var response = await client.GetAsync("/authenticate");
 			var content = await response.Content.ReadAsStringAsync();
-			var result = JsonSerializer.Deserialize<AuthenticateResult>(content);
+			_output.WriteLine(content);
+
+			var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 			Assert.False(result.Succeeded);
-			Assert.Null(result.NameIdentifier);
-			Assert.Null(result.Role);
+			Assert.Equal("", result.NameIdentifier);
+			Assert.Equal("", result.Role);
+			Assert.Equal("", result.Item);
+			Assert.Equal("", result.Parameter);
+		}
+
+		[Fact]
+		public async Task GetAuthenticate_サインインした状態で正しい結果を取得できる() {
+			// Arrange
+			var options = new WebApplicationFactoryClientOptions {
+			};
+			var client = _factory.CreateClient(options);
+
+			// Act
+			await client.GetAsync("/signin");
+
+			var response = await client.GetAsync("/authenticate");
+			var content = await response.Content.ReadAsStringAsync();
+			_output.WriteLine(content);
+
+			var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
+
+			// Assert
+			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+			Assert.True(result.Succeeded);
+			Assert.Equal("1", result.NameIdentifier);
+			Assert.Equal("Admin", result.Role);
+			Assert.Equal("2", result.Item);
+			Assert.Equal("", result.Parameter);
 		}
 
 		[Fact]
@@ -87,8 +127,10 @@ namespace CookieAuthnWebApp {
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.True(response.Headers.Contains("Set-Cookie"));
-			// todo: クッキーの中身を確認したいところ
+			Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
+			foreach (var value in response.Headers.GetValues(HeaderNames.SetCookie)) {
+				_output.WriteLine(value);
+			}
 		}
 
 		[Fact]
@@ -101,30 +143,10 @@ namespace CookieAuthnWebApp {
 
 			// Assert
 			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.True(response.Headers.Contains("Set-Cookie"));
-			// todo: クッキーの中身を確認したいところ
-		}
-
-		// todo:
-		[Fact(Skip = "クッキーの維持ができない？")]
-		public async Task GetAuthenticate_サインインした状態で正しい結果を取得できる() {
-			// Arrange
-			var options = new WebApplicationFactoryClientOptions {
-			};
-			var client = _factory.CreateClient(options);
-
-			// Act
-			await client.GetAsync("/signin");
-
-			var response = await client.GetAsync("/authenticate");
-			var content = await response.Content.ReadAsStringAsync();
-			var result = JsonSerializer.Deserialize<AuthenticateResult>(content);
-
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.True(result.Succeeded);
-			Assert.Equal("1", result.NameIdentifier);
-			Assert.Equal("Admin", result.Role);
+			Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
+			foreach (var value in response.Headers.GetValues(HeaderNames.SetCookie)) {
+				_output.WriteLine(value);
+			}
 		}
 	}
 }
