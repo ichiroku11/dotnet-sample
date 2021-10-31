@@ -111,14 +111,28 @@ namespace CookieAuthnWebApp {
 					// UseAuthentication/AuthenticationMiddlewareでやってくれてること
 
 					var result = await context.AuthenticateAsync();
-					var principal = result.Principal;
-					var properties = result.Properties;
-
-					var model = new {
-						result.Succeeded,
-						NameIdentifier = principal?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "",
-						Role = principal?.FindFirstValue(ClaimTypes.Role) ?? "",
-					};
+					var model = default(object);
+					if (result.Succeeded) {
+						var principal = result.Principal;
+						var properties = result.Properties;
+						model = new {
+							result.Succeeded,
+							NameIdentifier = principal.FindFirstValue(ClaimTypes.NameIdentifier),
+							Role = principal.FindFirstValue(ClaimTypes.Role),
+							// Itemsは永続化される（クッキーにシリアライズされる）
+							Item = properties.Items.TryGetValue("x", out var x) ? x : "",
+							// Parametersは永続化されない
+							Parameter = properties.Parameters.TryGetValue("y", out var y) ? y : "",
+						};
+					} else {
+						model = new {
+							result.Succeeded,
+							NameIdentifier = "",
+							Role = "",
+							Item = "",
+							Parameter = "",
+						};
+					}
 					var options = new JsonSerializerOptions {
 						PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 					};
@@ -128,10 +142,8 @@ namespace CookieAuthnWebApp {
 					// Succeeded: True
 					// NameIdentifier: 1
 					// Role: Admin
-					// 認証していないと
-					// Succeeded: False
-					// NameIdentifier:
-					// Role:
+					// Item: 1
+					// Parameter: 
 				});
 
 				endpoints.MapGet("/", async context => {
