@@ -7,6 +7,7 @@
 	<div class="col">
 		<h4>Form</h4>
 		<form>
+			@* asp-forを使ってtype="hidden"の場合、base64にエンコードされる *@
 			<h5>asp-for</h5>
 			<div class="form-group">
 				<label>type="text"</label>
@@ -17,6 +18,7 @@
 				<input id="id2" asp-for="Bytes" type="hidden" />
 			</div>
 
+			@* value属性に直接バイト配列を指定した場合、base64にエンコードされない *@
 			<h5>value</h5>
 			<div class="form-group">
 				<label>type="text"</label>
