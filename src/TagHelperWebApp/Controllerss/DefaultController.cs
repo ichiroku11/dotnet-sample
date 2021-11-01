@@ -38,5 +38,7 @@ namespace TagHelperWebApp.Controllerss {
 
 			return RedirectToAction(nameof(Form));
 		}
+
+		public IActionResult ByteArray() => View(new ByteArrayCommand { Bytes = new byte[] { 0x01, 0x02 } });
 	}
 }
