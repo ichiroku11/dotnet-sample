@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TagHelperWebApp.Models;
 
-namespace TagHelperWebApp.Controllerss {
+namespace TagHelperWebApp.Controllers {
 	public class DefaultController : Controller {
 		private readonly ILogger _logger;
 
