@@ -10,7 +10,7 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 	// https://docs.microsoft.com/ja-jp/dotnet/core/extensions/file-globbing
 	public class MatcherTest {
 		[Fact]
-		public void Match_マッチが見つかる単純動きを確認する() {
+		public void Match_マッチが1つ見つかる動きを確認する() {
 			// Arrange
 			var matcher = new Matcher();
 			// 含めるパターン指定する
@@ -27,6 +27,20 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 			var match = Assert.Single(result.Files);
 			Assert.IsType<FilePatternMatch>(match);
 			Assert.Equal("readme.md", match.Path);
+		}
+
+		[Fact]
+		public void Match_マッチが見つからない動きを確認する() {
+			// Arrange
+			var matcher = new Matcher();
+			matcher.AddInclude("*.md");
+
+			// Act
+			var result = matcher.Match("readme.txt");
+
+			// Assert
+			Assert.False(result.HasMatches);
+			Assert.Empty(result.Files);
 		}
 	}
 }
