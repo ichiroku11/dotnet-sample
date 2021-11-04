@@ -42,5 +42,23 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 			Assert.False(result.HasMatches);
 			Assert.Empty(result.Files);
 		}
+
+		[Theory]
+		[InlineData("readme.md")]
+		[InlineData("folder/readme.md")]
+		[InlineData("folder/subfolder/readme.md")]
+		public void Match_globstarで任意のディレクトリ内にあるファイルが見つかる動きを確認する(string file) {
+			// Arrange
+			var matcher = new Matcher();
+			matcher.AddInclude("**/*.md");
+
+			// Act
+			var result = matcher.Match(file);
+
+			// Assert
+			Assert.True(result.HasMatches);
+			var match = Assert.Single(result.Files);
+			Assert.Equal(file, match.Path);
+		}
 	}
 }
