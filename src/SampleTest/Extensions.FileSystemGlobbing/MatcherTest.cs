@@ -76,5 +76,26 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 			// Assert
 			Assert.Equal(expected, actual);
 		}
+
+		// FilePatternMatch.Path - パターンの開始を基準とした相対パス
+		// FilePatternMatch.Stem - パターンのワイルド―カード部分を基準とした相対パス
+		// https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/FilePatternMatch.cs
+		[Theory]
+		[InlineData("src/Project/**/*.cs", "src/Project/File.cs", "src/Project/File.cs", "File.cs")]
+		[InlineData("src/Project/**/*.cs", "src/Project/Interfaces/IFile.cs", "src/Project/Interfaces/IFile.cs", "Interfaces/IFile.cs")]
+		public void Match_FilePatternMatchのPathとStemを確認する(string pattern, string file, string expectedPath, string expectedStem) {
+			// Arrange
+			var matcher = new Matcher();
+			matcher.AddInclude(pattern);
+
+			// Act
+			var result = matcher.Match(file);
+
+			// Assert
+			Assert.True(result.HasMatches);
+			var match = Assert.Single(result.Files);
+			Assert.Equal(expectedPath, match.Path);
+			Assert.Equal(expectedStem, match.Stem);
+		}
 	}
 }
