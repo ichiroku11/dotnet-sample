@@ -62,7 +62,7 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 		}
 
 		[Fact]
-		public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとファイルを列挙できる() {
+		public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとファイルを列挙できない() {
 			// Arrange
 			var root = @"c:\temp";
 			_output.WriteLine(root);
