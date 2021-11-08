@@ -102,23 +102,31 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 			Assert.Equal(expectedStem, match.Stem);
 		}
 
-		// todo:
-		/*
 		[Fact]
-		public void Match_ルートディレクトリを指定する() {
+		public void Match_ルートディレクトリを指定した場合は相対ファイルパスはマッチしない() {
 			// Arrange
 			var matcher = new Matcher();
 			matcher.AddInclude("*.md");
 
 			// Act
-			var result = matcher.Match("readme.md");
-			// todo: 失敗する理由がわからず
-			//var result = matcher.Match(@"c:\temp", "readme.md");
+			var result = matcher.Match(@"c:\temp", @"readme.md");
+
+			Assert.False(result.HasMatches);
+		}
+
+		[Fact]
+		public void Match_ルートディレクトリを指定した場合は絶対ファイルパスはマッチする() {
+			// Arrange
+			var matcher = new Matcher();
+			matcher.AddInclude("*.md");
+
+			// Act
+			var result = matcher.Match(@"c:\temp", @"c:\temp\readme.md");
 
 			Assert.True(result.HasMatches);
 			var match = Assert.Single(result.Files);
 			Assert.Equal("readme.md", match.Path);
+			Assert.Equal("readme.md", match.Stem);
 		}
-		*/
 	}
 }
