@@ -78,5 +78,25 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 			// Assert
 			Assert.Empty(fileInfos);
 		}
+
+		[Fact]
+		public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとフルパスで指定したファイルを列挙できる() {
+			// Arrange
+			var root = @"c:\temp";
+			_output.WriteLine(root);
+
+			var files = new List<string> {
+				@"c:\temp\readme.md"
+			};
+			var dirInfo = new InMemoryDirectoryInfo(root, files);
+
+			// Act
+			var fileInfos = dirInfo.EnumerateFileSystemInfos();
+
+			// Assert
+			var fileInfo = Assert.Single(fileInfos);
+			Assert.Equal("readme.md", fileInfo.Name);
+			Assert.Equal(@"c:\temp\readme.md", fileInfo.FullName);
+		}
 	}
 }
