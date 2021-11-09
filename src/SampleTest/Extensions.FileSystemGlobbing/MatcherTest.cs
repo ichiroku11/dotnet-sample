@@ -128,5 +128,22 @@ namespace SampleTest.Extensions.FileSystemGlobbing {
 			Assert.Equal("readme.md", match.Path);
 			Assert.Equal("readme.md", match.Stem);
 		}
+
+		[Fact]
+		public void Execute_InMemoryDirectoryInfoとあわせて使ってみる() {
+			// Arrange
+			var matcher = new Matcher();
+			matcher.AddInclude("*.md");
+
+			// Act
+			// Matchメソッドの実装はこうなっている
+			var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", new[] { @"c:\temp\readme.md" });
+			var result = matcher.Execute(dirInfo);
+
+			Assert.True(result.HasMatches);
+			var match = Assert.Single(result.Files);
+			Assert.Equal("readme.md", match.Path);
+			Assert.Equal("readme.md", match.Stem);
+		}
 	}
 }
