@@ -20,5 +20,17 @@ namespace SampleTest {
 				File.Delete(path);
 			}
 		}
+
+		[Fact]
+		public void GetFullPath_ファイル名を指定するとカレントディレクトリベースのフルパスを取得する() {
+			// Arrange
+			var expected = Path.Combine(Directory.GetCurrentDirectory(), "readme.md");
+
+			// Act
+			var actual = Path.GetFullPath("readme.md");
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
 	}
 }
