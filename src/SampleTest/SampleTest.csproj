@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
