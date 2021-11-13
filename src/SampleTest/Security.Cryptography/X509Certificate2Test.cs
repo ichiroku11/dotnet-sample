@@ -16,6 +16,8 @@ namespace SampleTest.Security.Cryptography {
 			_output = output;
 		}
 
+		// PrivateKeyプロパティが非推奨になったためコメントアウト
+		/*
 		[Fact]
 		public void PrivateKey_値を変更しようとすると例外が発生する() {
 			// Arrange
@@ -29,6 +31,7 @@ namespace SampleTest.Security.Cryptography {
 			});
 			_output.WriteLine(exception.Message);
 		}
+		*/
 
 		[Fact]
 		public void Export_エクスポートしたバイト配列を元にインスタンスを生成するとPrivateKeyをクリアできる() {
