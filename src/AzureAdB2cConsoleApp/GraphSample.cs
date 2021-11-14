@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
@@ -15,8 +16,8 @@ namespace AzureAdB2cConsoleApp {
 	public class GraphSample {
 		private static readonly JsonSerializerOptions _jsonSerializerOptions
 			= new() {
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 				Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-				IgnoreNullValues = true,
 				WriteIndented = true,
 			};
 
