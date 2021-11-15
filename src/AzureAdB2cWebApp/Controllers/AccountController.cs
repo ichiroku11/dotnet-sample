@@ -11,82 +11,82 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AzureAdB2cWebApp.Controllers {
-	[Authorize]
-	public class AccountController : Controller {
-		private const string _scheme = OpenIdConnectDefaults.AuthenticationScheme;
-		private const string _policy = "policy";
+namespace AzureAdB2cWebApp.Controllers;
 
-		private readonly IConfiguration _config;
-		private readonly MicrosoftIdentityOptions _options;
+[Authorize]
+public class AccountController : Controller {
+	private const string _scheme = OpenIdConnectDefaults.AuthenticationScheme;
+	private const string _policy = "policy";
 
-		public AccountController(IConfiguration config, IOptions<MicrosoftIdentityOptions> options) {
-			_config = config;
-			_options = options.Value;
-		}
+	private readonly IConfiguration _config;
+	private readonly MicrosoftIdentityOptions _options;
 
-		// SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
-		[AllowAnonymous]
-		public IActionResult SignIn() {
-			var properties = new AuthenticationProperties {
-				RedirectUri = Url.Action("Claim", "Home"),
-			};
-			properties.Items[_policy] = _config["AzureAdB2c:SignInPolicyId"];
+	public AccountController(IConfiguration config, IOptions<MicrosoftIdentityOptions> options) {
+		_config = config;
+		_options = options.Value;
+	}
 
-			return Challenge(properties, _scheme);
-		}
+	// SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
+	[AllowAnonymous]
+	public IActionResult SignIn() {
+		var properties = new AuthenticationProperties {
+			RedirectUri = Url.Action("Claim", "Home"),
+		};
+		properties.Items[_policy] = _config["AzureAdB2c:SignInPolicyId"];
 
-		[AllowAnonymous]
-		public IActionResult SignUp() {
-			var properties = new AuthenticationProperties {
-				RedirectUri = Url.Action("Claim", "Home"),
-			};
-			properties.Items[_policy] = _config["AzureAdB2c:SignUpPolicyId"];
+		return Challenge(properties, _scheme);
+	}
 
-			return Challenge(properties, _scheme);
-		}
+	[AllowAnonymous]
+	public IActionResult SignUp() {
+		var properties = new AuthenticationProperties {
+			RedirectUri = Url.Action("Claim", "Home"),
+		};
+		properties.Items[_policy] = _config["AzureAdB2c:SignUpPolicyId"];
 
-		[AllowAnonymous]
-		public IActionResult ResetPassword() {
-			var properties = new AuthenticationProperties {
-				RedirectUri = Url.Action("Claim", "Home"),
-			};
-			properties.Items[_policy] = _options.ResetPasswordPolicyId;
+		return Challenge(properties, _scheme);
+	}
 
-			return Challenge(properties, _scheme);
-		}
+	[AllowAnonymous]
+	public IActionResult ResetPassword() {
+		var properties = new AuthenticationProperties {
+			RedirectUri = Url.Action("Claim", "Home"),
+		};
+		properties.Items[_policy] = _options.ResetPasswordPolicyId;
 
-		public IActionResult EditProfile() {
-			var properties = new AuthenticationProperties {
-				RedirectUri = Url.Action("Claim", "Home"),
-			};
-			properties.Items[_policy] = _options.EditProfilePolicyId;
+		return Challenge(properties, _scheme);
+	}
 
-			return Challenge(properties, _scheme);
-		}
+	public IActionResult EditProfile() {
+		var properties = new AuthenticationProperties {
+			RedirectUri = Url.Action("Claim", "Home"),
+		};
+		properties.Items[_policy] = _options.EditProfilePolicyId;
 
-		// 親クラスでSignOutメソッドが定義されているため
-		// しかたなくAsyncメソッドに
-		public Task<IActionResult> SignOutAsync() {
-			var properties = new AuthenticationProperties {
-				RedirectUri = Url.Action("SignedOut"),
-			};
-			var result = SignOut(
-				properties,
-				CookieAuthenticationDefaults.AuthenticationScheme,
-				OpenIdConnectDefaults.AuthenticationScheme);
+		return Challenge(properties, _scheme);
+	}
 
-			return Task.FromResult<IActionResult>(result);
-		}
+	// 親クラスでSignOutメソッドが定義されているため
+	// しかたなくAsyncメソッドに
+	public Task<IActionResult> SignOutAsync() {
+		var properties = new AuthenticationProperties {
+			RedirectUri = Url.Action("SignedOut"),
+		};
+		var result = SignOut(
+			properties,
+			CookieAuthenticationDefaults.AuthenticationScheme,
+			OpenIdConnectDefaults.AuthenticationScheme);
 
-		[AllowAnonymous]
-		public IActionResult SignedOut() {
-			return View();
-		}
+		return Task.FromResult<IActionResult>(result);
+	}
 
-		[AllowAnonymous]
-		public IActionResult Error() {
-			return View();
-		}
+	[AllowAnonymous]
+	public IActionResult SignedOut() {
+		return View();
+	}
+
+	[AllowAnonymous]
+	public IActionResult Error() {
+		return View();
 	}
 }

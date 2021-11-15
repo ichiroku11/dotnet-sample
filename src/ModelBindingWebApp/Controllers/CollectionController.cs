@@ -5,33 +5,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ModelBindingWebApp.Models;
 
-namespace ModelBindingWebApp.Controllers {
-	// コレクションへのバインドを試す
-	// https://docs.microsoft.com/ja-jp/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1
+namespace ModelBindingWebApp.Controllers;
 
-	[Route("api/[controller]")]
-	[ApiController]
-	public class CollectionController : ControllerBase {
-		// 何か時間がかかる処理
-		private Task ActionAsync() => Task.CompletedTask;
+// コレクションへのバインドを試す
+// https://docs.microsoft.com/ja-jp/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1
 
-		// ~/api/collection
-		[HttpPost]
-		public async Task<IEnumerable<int>> PostAsync(
-			// Formデータをバインドする
-			[FromForm] IEnumerable<int> values) {
-			await ActionAsync();
+[Route("api/[controller]")]
+[ApiController]
+public class CollectionController : ControllerBase {
+	// 何か時間がかかる処理
+	private Task ActionAsync() => Task.CompletedTask;
 
-			return values;
-		}
+	// ~/api/collection
+	[HttpPost]
+	public async Task<IEnumerable<int>> PostAsync(
+		// Formデータをバインドする
+		[FromForm] IEnumerable<int> values) {
+		await ActionAsync();
 
-		// ~/api/collection/complex
-		[HttpPost("complex")]
-		public async Task<IEnumerable<Sample>> PostAsync(
-			[FromForm] IEnumerable<Sample> values) {
-			await ActionAsync();
+		return values;
+	}
 
-			return values;
-		}
+	// ~/api/collection/complex
+	[HttpPost("complex")]
+	public async Task<IEnumerable<Sample>> PostAsync(
+		[FromForm] IEnumerable<Sample> values) {
+		await ActionAsync();
+
+		return values;
 	}
 }

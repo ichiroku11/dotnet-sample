@@ -5,59 +5,59 @@ using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BasicAuthnWebApp.Test {
-	public class BasicAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
-		private readonly WebApplicationFactory<Startup> _factory;
+namespace BasicAuthnWebApp.Test;
 
-		public BasicAuthnWebAppTest(WebApplicationFactory<Startup> factory) {
-			_factory = factory;
-		}
+public class BasicAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
+	private readonly WebApplicationFactory<Startup> _factory;
 
-		public void Dispose() {
-		}
+	public BasicAuthnWebAppTest(WebApplicationFactory<Startup> factory) {
+		_factory = factory;
+	}
 
-		[Fact]
-		public async Task DefaultController_AllowAnonymous_匿名アクセスできる() {
-			// Arrange
-			using var client = _factory.CreateClient();
+	public void Dispose() {
+	}
 
-			// Act
-			using var response = await client.GetAsync("/allowanonymous");
-			var content = await response.Content.ReadAsStringAsync();
+	[Fact]
+	public async Task DefaultController_AllowAnonymous_匿名アクセスできる() {
+		// Arrange
+		using var client = _factory.CreateClient();
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal("AllowAnonymous", content);
-		}
+		// Act
+		using var response = await client.GetAsync("/allowanonymous");
+		var content = await response.Content.ReadAsStringAsync();
 
-		[Fact]
-		public async Task DefaultController_RequireAuthenticated_匿名アクセスできない() {
-			// Arrange
-			using var client = _factory.CreateClient();
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("AllowAnonymous", content);
+	}
 
-			// Act
-			using var response = await client.GetAsync("/requireauthenticated");
+	[Fact]
+	public async Task DefaultController_RequireAuthenticated_匿名アクセスできない() {
+		// Arrange
+		using var client = _factory.CreateClient();
 
-			// Assert
-			Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-			Assert.False(response.Headers.Contains(HeaderNames.WWWAuthenticate));
-		}
+		// Act
+		using var response = await client.GetAsync("/requireauthenticated");
 
-		[Fact]
-		public async Task DefaultController_RequireAuthenticated_Basic認証でアクセスできる() {
-			// Arrange
-			using var client = _factory.CreateClient();
+		// Assert
+		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+		Assert.False(response.Headers.Contains(HeaderNames.WWWAuthenticate));
+	}
 
-			// Basic認証ヘッダ
-			client.DefaultRequestHeaders.SetBasicAuthorization("abc", "xyz");
+	[Fact]
+	public async Task DefaultController_RequireAuthenticated_Basic認証でアクセスできる() {
+		// Arrange
+		using var client = _factory.CreateClient();
 
-			// Act
-			using var response = await client.GetAsync("/requireauthenticated");
-			var content = await response.Content.ReadAsStringAsync();
+		// Basic認証ヘッダ
+		client.DefaultRequestHeaders.SetBasicAuthorization("abc", "xyz");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal("RequireAuthenticated", content);
-		}
+		// Act
+		using var response = await client.GetAsync("/requireauthenticated");
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("RequireAuthenticated", content);
 	}
 }

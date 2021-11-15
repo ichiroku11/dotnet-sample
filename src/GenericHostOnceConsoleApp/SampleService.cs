@@ -6,25 +6,25 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GenericHostOnceConsoleApp {
-	// バックグラウンドで実行されるサービス
-	class SampleService : IHostedService {
-		private readonly ILogger _logger;
+namespace GenericHostOnceConsoleApp;
 
-		public SampleService(ILogger<SampleService> logger) {
-			_logger = logger;
-		}
+// バックグラウンドで実行されるサービス
+class SampleService : IHostedService {
+	private readonly ILogger _logger;
 
-		public Task StartAsync(CancellationToken cancellationToken) {
-			_logger.LogInformation(nameof(StartAsync));
+	public SampleService(ILogger<SampleService> logger) {
+		_logger = logger;
+	}
 
-			return Task.CompletedTask;
-		}
+	public Task StartAsync(CancellationToken cancellationToken) {
+		_logger.LogInformation(nameof(StartAsync));
 
-		public Task StopAsync(CancellationToken cancellationToken) {
-			_logger.LogInformation(nameof(StopAsync));
+		return Task.CompletedTask;
+	}
 
-			return Task.CompletedTask;
-		}
+	public Task StopAsync(CancellationToken cancellationToken) {
+		_logger.LogInformation(nameof(StopAsync));
+
+		return Task.CompletedTask;
 	}
 }

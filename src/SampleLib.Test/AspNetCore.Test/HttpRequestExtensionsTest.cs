@@ -7,71 +7,71 @@ using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleLib.AspNetCore.Test {
-	public class HttpRequestExtensionsTest {
-		private static HttpRequest CreateRequest(string scheme, string host, string pathBase) {
-			var context = new DefaultHttpContext();
-			var request = context.Request;
+namespace SampleLib.AspNetCore.Test;
 
-			request.Scheme = scheme;
-			request.Host = new HostString(host);
-			request.PathBase = new PathString(pathBase);
+public class HttpRequestExtensionsTest {
+	private static HttpRequest CreateRequest(string scheme, string host, string pathBase) {
+		var context = new DefaultHttpContext();
+		var request = context.Request;
 
-			return request;
-		}
+		request.Scheme = scheme;
+		request.Host = new HostString(host);
+		request.PathBase = new PathString(pathBase);
 
-		private static HttpRequest CreateRequest(IHeaderDictionary headers) {
-			var context = new DefaultHttpContext();
+		return request;
+	}
 
-			context.Features.Get<IHttpRequestFeature>().Headers = headers;
+	private static HttpRequest CreateRequest(IHeaderDictionary headers) {
+		var context = new DefaultHttpContext();
 
-			return context.Request;
-		}
+		context.Features.Get<IHttpRequestFeature>().Headers = headers;
 
-		private readonly ITestOutputHelper _output;
+		return context.Request;
+	}
 
-		public HttpRequestExtensionsTest(ITestOutputHelper output) {
-			_output = output;
-		}
+	private readonly ITestOutputHelper _output;
 
-		[Theory]
-		[InlineData("https", "example.jp", null, "https://example.jp")]
-		[InlineData("https", "example.jp", "/app", "https://example.jp/app")]
-		public void GetAppUrl_取得できる(string scheme, string host, string pathBase, string expected) {
-			// Arrange
-			var request = CreateRequest(scheme, host, pathBase);
+	public HttpRequestExtensionsTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			// Act
-			var actual = request.GetAppUrl();
-			_output.WriteLine(actual);
+	[Theory]
+	[InlineData("https", "example.jp", null, "https://example.jp")]
+	[InlineData("https", "example.jp", "/app", "https://example.jp/app")]
+	public void GetAppUrl_取得できる(string scheme, string host, string pathBase, string expected) {
+		// Arrange
+		var request = CreateRequest(scheme, host, pathBase);
 
-			// Assert
-			Assert.Equal(expected, actual, StringComparer.OrdinalIgnoreCase);
-		}
+		// Act
+		var actual = request.GetAppUrl();
+		_output.WriteLine(actual);
 
-		public static IEnumerable<object[]> GetTestDataForIsAjax() {
-			yield return new object[] {
+		// Assert
+		Assert.Equal(expected, actual, StringComparer.OrdinalIgnoreCase);
+	}
+
+	public static IEnumerable<object[]> GetTestDataForIsAjax() {
+		yield return new object[] {
 				new HeaderDictionary {
 					{ "X-Requested-With", "XMLHttpRequest" },
 				},
 				true,
 			};
-			yield return new object[] {
+		yield return new object[] {
 				new HeaderDictionary(),
 				false,
 			};
-		}
+	}
 
-		[Theory]
-		[MemberData(nameof(GetTestDataForIsAjax))]
-		public void IsAjax_判定できる(IHeaderDictionary headers, bool expected) {
-			// Arrange
-			var request = CreateRequest(headers);
+	[Theory]
+	[MemberData(nameof(GetTestDataForIsAjax))]
+	public void IsAjax_判定できる(IHeaderDictionary headers, bool expected) {
+		// Arrange
+		var request = CreateRequest(headers);
 
-			// Act
-			var actual = request.IsAjax();
-			// Assert
-			Assert.Equal(expected, actual);
-		}
+		// Act
+		var actual = request.IsAjax();
+		// Assert
+		Assert.Equal(expected, actual);
 	}
 }

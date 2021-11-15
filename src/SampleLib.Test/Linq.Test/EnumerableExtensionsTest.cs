@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace SampleLib.Linq.Test {
-	public class EnumerableExtensionsTest {
-		public class Sample {
-			public int Number { get; set; }
-			public string Text { get; set; }
-		}
+namespace SampleLib.Linq.Test;
 
-		public static IEnumerable<object[]> GetTestDataForDistinctAnonymousObjectKey() {
-			yield return new object[] {
+public class EnumerableExtensionsTest {
+	public class Sample {
+		public int Number { get; set; }
+		public string Text { get; set; }
+	}
+
+	public static IEnumerable<object[]> GetTestDataForDistinctAnonymousObjectKey() {
+		yield return new object[] {
 				// source
 				new[] {
 					new Sample { Number = 1, Text = "x", },
@@ -24,7 +25,7 @@ namespace SampleLib.Linq.Test {
 				}
 			};
 
-			yield return new object[] {
+		yield return new object[] {
 				// source
 				new[] {
 					new Sample { Number = 1, Text = "x", },
@@ -37,7 +38,7 @@ namespace SampleLib.Linq.Test {
 				}
 			};
 
-			yield return new object[] {
+		yield return new object[] {
 				// source
 				new[] {
 					new Sample { Number = 1, Text = "x", },
@@ -49,22 +50,21 @@ namespace SampleLib.Linq.Test {
 					new Sample { Number = 2, Text = "x", },
 				}
 			};
-		}
+	}
 
-		private static bool Equal(Sample x, Sample y)
-			=> x.Number == y.Number && string.Equals(x.Text, x.Text, StringComparison.Ordinal);
+	private static bool Equal(Sample x, Sample y)
+		=> x.Number == y.Number && string.Equals(x.Text, x.Text, StringComparison.Ordinal);
 
-		[Theory(DisplayName = "Distinct_匿名オブジェクトのキーを使ってみる")]
-		[MemberData(nameof(GetTestDataForDistinctAnonymousObjectKey))]
-		public void DistinctAnonymousObjectKey(IEnumerable<Sample> source, IEnumerable<Sample> expected) {
-			// Arrange
-			// Act
-			var actual = source.Distinct(item => new { item.Number, item.Text });
+	[Theory(DisplayName = "Distinct_匿名オブジェクトのキーを使ってみる")]
+	[MemberData(nameof(GetTestDataForDistinctAnonymousObjectKey))]
+	public void DistinctAnonymousObjectKey(IEnumerable<Sample> source, IEnumerable<Sample> expected) {
+		// Arrange
+		// Act
+		var actual = source.Distinct(item => new { item.Number, item.Text });
 
-			// Assert
-			Assert.Equal(expected.Count(), actual.Count());
-			Assert.All(actual,
-				actualItem => Assert.Contains(expected, expectedItem => Equal(actualItem, expectedItem)));
-		}
+		// Assert
+		Assert.Equal(expected.Count(), actual.Count());
+		Assert.All(actual,
+			actualItem => Assert.Contains(expected, expectedItem => Equal(actualItem, expectedItem)));
 	}
 }

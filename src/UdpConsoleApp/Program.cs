@@ -3,29 +3,29 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace UdpConsoleApp {
-	class Program {
-		// サーバの作成
-		private static Server<string, string> Server(IPEndPoint endpoint) => new Server<string, string>(endpoint);
+namespace UdpConsoleApp;
 
-		// クライアントの作成
-		private static Client<string, string> Client(IPEndPoint endpoint) => new Client<string, string>(endpoint);
+class Program {
+	// サーバの作成
+	private static Server<string, string> Server(IPEndPoint endpoint) => new Server<string, string>(endpoint);
 
-		// 文字列を並びを反対にする
-		private static string Reverse(string original) => new string(original.Reverse().ToArray());
+	// クライアントの作成
+	private static Client<string, string> Client(IPEndPoint endpoint) => new Client<string, string>(endpoint);
 
-		static void Main(string[] args) {
-			var endpoint = new IPEndPoint(IPAddress.Loopback, 54321);
+	// 文字列を並びを反対にする
+	private static string Reverse(string original) => new string(original.Reverse().ToArray());
 
-			// サーバを実行
-			var server = Task.Run(() => Server(endpoint).RunAsync(Reverse));
+	static void Main(string[] args) {
+		var endpoint = new IPEndPoint(IPAddress.Loopback, 54321);
 
-			// クライアントを実行
-			Task.WaitAll(
-				Client(endpoint).SendAsync("あいうえお"),
-				Client(endpoint).SendAsync("かきくけこ"));
+		// サーバを実行
+		var server = Task.Run(() => Server(endpoint).RunAsync(Reverse));
 
-			// サーバのTaskをきれいに終了するにはどうしたらいいのか...
-		}
+		// クライアントを実行
+		Task.WaitAll(
+			Client(endpoint).SendAsync("あいうえお"),
+			Client(endpoint).SendAsync("かきくけこ"));
+
+		// サーバのTaskをきれいに終了するにはどうしたらいいのか...
 	}
 }

@@ -6,61 +6,61 @@ using System.Text.Json.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Text.Json {
-	public class NumberBooleanConverterTest {
-		// 数値とboolを変換するJsonConverter
-		private class NumberBooleanConverter : JsonConverter<bool> {
-			public override bool Read(
-				ref Utf8JsonReader reader,
-				Type typeToConvert,
-				JsonSerializerOptions options)
-				// 数値をboolとして取得する
-				=> reader.GetInt32() > 0;
+namespace SampleTest.Text.Json;
 
-			public override void Write(
-				Utf8JsonWriter writer,
-				bool value,
-				JsonSerializerOptions options)
-				// boolを数値として書き込む
-				=> writer.WriteNumberValue(value ? 1 : 0);
-		}
+public class NumberBooleanConverterTest {
+	// 数値とboolを変換するJsonConverter
+	private class NumberBooleanConverter : JsonConverter<bool> {
+		public override bool Read(
+			ref Utf8JsonReader reader,
+			Type typeToConvert,
+			JsonSerializerOptions options)
+			// 数値をboolとして取得する
+			=> reader.GetInt32() > 0;
 
-		// JSONに変換するデータ
-		private class ConverterSample {
-			[JsonConverter(typeof(NumberBooleanConverter))]
-			public bool Enable { get; set; }
-		}
+		public override void Write(
+			Utf8JsonWriter writer,
+			bool value,
+			JsonSerializerOptions options)
+			// boolを数値として書き込む
+			=> writer.WriteNumberValue(value ? 1 : 0);
+	}
 
-		[Fact]
-		public void Serialize_JsonConverter属性を使ってboolを数値にシリアライズする() {
-			// Arrange
-			var data = new ConverterSample {
-				Enable = true,
-			};
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
+	// JSONに変換するデータ
+	private class ConverterSample {
+		[JsonConverter(typeof(NumberBooleanConverter))]
+		public bool Enable { get; set; }
+	}
 
-			// Act
-			var json = JsonSerializer.Serialize(data, options);
+	[Fact]
+	public void Serialize_JsonConverter属性を使ってboolを数値にシリアライズする() {
+		// Arrange
+		var data = new ConverterSample {
+			Enable = true,
+		};
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
 
-			// Assert
-			Assert.Equal(@"{""enable"":1}", json);
-		}
+		// Act
+		var json = JsonSerializer.Serialize(data, options);
 
-		[Fact]
-		public void Deserialize_JsonConverter属性を使って数値をboolにデシリアライズする() {
-			// Arrange
-			var json = @"{""enable"":1}";
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
+		// Assert
+		Assert.Equal(@"{""enable"":1}", json);
+	}
 
-			// Act
-			var data = JsonSerializer.Deserialize<ConverterSample>(json, options);
+	[Fact]
+	public void Deserialize_JsonConverter属性を使って数値をboolにデシリアライズする() {
+		// Arrange
+		var json = @"{""enable"":1}";
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
 
-			// Assert
-			Assert.True(data.Enable);
-		}
+		// Act
+		var data = JsonSerializer.Deserialize<ConverterSample>(json, options);
+
+		// Assert
+		Assert.True(data.Enable);
 	}
 }

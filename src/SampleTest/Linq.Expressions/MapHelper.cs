@@ -5,55 +5,55 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace SampleTest.Linq.Expressions {
-	public static class MapHelper {
-		/// <summary>
-		/// AutoMapperのようなマッピングメソッド
-		/// </summary>
-		/// <typeparam name="TSource"></typeparam>
-		/// <typeparam name="TResult"></typeparam>
-		/// <returns></returns>
-		public static Func<TSource, TResult> CreateMapper<TSource, TResult>() {
-			// 関数パラメータの宣言
-			var source = Expression.Parameter(typeof(TSource), "source");
+namespace SampleTest.Linq.Expressions;
 
-			// コピー先変数の宣言
-			var result = Expression.Variable(typeof(TResult), "result");
+public static class MapHelper {
+	/// <summary>
+	/// AutoMapperのようなマッピングメソッド
+	/// </summary>
+	/// <typeparam name="TSource"></typeparam>
+	/// <typeparam name="TResult"></typeparam>
+	/// <returns></returns>
+	public static Func<TSource, TResult> CreateMapper<TSource, TResult>() {
+		// 関数パラメータの宣言
+		var source = Expression.Parameter(typeof(TSource), "source");
 
-			// コピー先インスタンスを変数に代入する式
-			var assignToResult = Expression.Assign(result, Expression.New(typeof(TResult)));
+		// コピー先変数の宣言
+		var result = Expression.Variable(typeof(TResult), "result");
 
-			// プロパティの代入式
-			var assignProps = typeof(TSource)
-				// コピー元：読み取りできるパブリックなインスタンスプロパティが対象
-				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-				.Where(prop => prop.CanRead)
-				// コピー先：書き込みできるパブリックなインスタンスプロパティが対象
-				.Select(prop => new {
-					From = prop,
-					To = typeof(TResult).GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance)
-				})
-				.Where(entry => entry.To != null && entry.To.CanWrite)
-				.Select(entry =>
-					// コピー先のプロパティにコピー元のプロパティの値を代入する式
-					Expression.Assign(
-						Expression.Property(result, entry.To),
-						Expression.Property(source, entry.From)));
+		// コピー先インスタンスを変数に代入する式
+		var assignToResult = Expression.Assign(result, Expression.New(typeof(TResult)));
 
-			// ブロックに格納する式の本体
-			var expressions = new List<Expression> {
+		// プロパティの代入式
+		var assignProps = typeof(TSource)
+			// コピー元：読み取りできるパブリックなインスタンスプロパティが対象
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.Where(prop => prop.CanRead)
+			// コピー先：書き込みできるパブリックなインスタンスプロパティが対象
+			.Select(prop => new {
+				From = prop,
+				To = typeof(TResult).GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance)
+			})
+			.Where(entry => entry.To != null && entry.To.CanWrite)
+			.Select(entry =>
+				// コピー先のプロパティにコピー元のプロパティの値を代入する式
+				Expression.Assign(
+					Expression.Property(result, entry.To),
+					Expression.Property(source, entry.From)));
+
+		// ブロックに格納する式の本体
+		var expressions = new List<Expression> {
 				assignToResult,
 			};
-			expressions.AddRange(assignProps);
-			// これが変数をreturnする式っぽい
-			expressions.Add(result);
+		expressions.AddRange(assignProps);
+		// これが変数をreturnする式っぽい
+		expressions.Add(result);
 
-			// 式の引数と式の本体のブロック
-			var block = Expression.Block(new[] { result }, expressions);
+		// 式の引数と式の本体のブロック
+		var block = Expression.Block(new[] { result }, expressions);
 
-			var lambda = Expression.Lambda<Func<TSource, TResult>>(block, source);
+		var lambda = Expression.Lambda<Func<TSource, TResult>>(block, source);
 
-			return lambda.Compile();
-		}
+		return lambda.Compile();
 	}
 }

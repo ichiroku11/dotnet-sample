@@ -5,42 +5,42 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace SampleLib.Test {
-	public class EnumHelperTest {
-		private enum Fruit {
-			None = 0,
+namespace SampleLib.Test;
 
-			[Display(Name = "りんご")]
-			Apple,
+public class EnumHelperTest {
+	private enum Fruit {
+		None = 0,
 
-			[Display(Name = "バナナ")]
-			Banana,
-		}
+		[Display(Name = "りんご")]
+		Apple,
 
-		[Fact]
-		public void GetAttributes_属性を取得できる() {
-			// Arrange
-			// Act
-			var attributes = EnumHelper.GetAttributes<Fruit, DisplayAttribute>();
+		[Display(Name = "バナナ")]
+		Banana,
+	}
 
-			// Assert
-			Assert.Equal(3, attributes.Count);
-			Assert.Null(attributes[Fruit.None]);
-			Assert.Equal("りんご", attributes[Fruit.Apple].Name);
-			Assert.Equal("バナナ", attributes[Fruit.Banana].Name);
-		}
+	[Fact]
+	public void GetAttributes_属性を取得できる() {
+		// Arrange
+		// Act
+		var attributes = EnumHelper.GetAttributes<Fruit, DisplayAttribute>();
 
-		[Fact]
-		public void GetValues_値を取得できる() {
-			// Arrange
-			// Act
-			var fruits = EnumHelper.GetValues<Fruit>();
+		// Assert
+		Assert.Equal(3, attributes.Count);
+		Assert.Null(attributes[Fruit.None]);
+		Assert.Equal("りんご", attributes[Fruit.Apple].Name);
+		Assert.Equal("バナナ", attributes[Fruit.Banana].Name);
+	}
 
-			// Assert
-			Assert.Equal(3, fruits.Count());
-			Assert.Contains(Fruit.None,fruits);
-			Assert.Contains(Fruit.Apple, fruits);
-			Assert.Contains(Fruit.Banana, fruits);
-		}
+	[Fact]
+	public void GetValues_値を取得できる() {
+		// Arrange
+		// Act
+		var fruits = EnumHelper.GetValues<Fruit>();
+
+		// Assert
+		Assert.Equal(3, fruits.Count());
+		Assert.Contains(Fruit.None, fruits);
+		Assert.Contains(Fruit.Apple, fruits);
+		Assert.Contains(Fruit.Banana, fruits);
 	}
 }

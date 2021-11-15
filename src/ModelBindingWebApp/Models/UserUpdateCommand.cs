@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ModelBindingWebApp.Models {
-	public class UserUpdateCommand {
-		[Display(Name = "メールアドレス")]
-		[Required]
-		public string MailAddress { get; init; }
+namespace ModelBindingWebApp.Models;
 
-		[Display(Name = "表示名")]
-		public string DisplayName { get; init; }
-	}
+public class UserUpdateCommand {
+	[Display(Name = "メールアドレス")]
+	[Required]
+	public string MailAddress { get; init; }
+
+	[Display(Name = "表示名")]
+	public string DisplayName { get; init; }
 }

@@ -11,45 +11,46 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.EntityFrameworkCore {
-	// 主キーや外部キーをenumのプロパティにマッピングするサンプル
-	[Collection(CollectionNames.EfCoreMonster)]
-	public class EnumPrimaryKeyForeignKeyTest {
-		private enum MonsterCategoryType {
-			None = 0,
-			Slime,
-			Animal,
-			Fly,
+namespace SampleTest.EntityFrameworkCore;
+
+// 主キーや外部キーをenumのプロパティにマッピングするサンプル
+[Collection(CollectionNames.EfCoreMonster)]
+public class EnumPrimaryKeyForeignKeyTest {
+	private enum MonsterCategoryType {
+		None = 0,
+		Slime,
+		Animal,
+		Fly,
+	}
+
+	private class MonsterCategory {
+		// 主キー
+		[Key, Column("Id")]
+		public MonsterCategoryType Type { get; set; }
+		public string Name { get; set; }
+	}
+
+	private class Monster {
+		public int Id { get; set; }
+		// 外部キー
+		[Column("CategoryId")]
+		public MonsterCategoryType CategoryType { get; set; }
+		public string Name { get; set; }
+		public MonsterCategory Category { get; set; }
+	}
+
+	private class MonsterDbContext : SqlServerDbContext {
+		public DbSet<MonsterCategory> MonsterCategories { get; set; }
+		public DbSet<Monster> Monsters { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<MonsterCategory>().ToTable(nameof(MonsterCategory));
+			modelBuilder.Entity<Monster>().ToTable(nameof(Monster));
 		}
+	}
 
-		private class MonsterCategory {
-			// 主キー
-			[Key, Column("Id")]
-			public MonsterCategoryType Type { get; set; }
-			public string Name { get; set; }
-		}
-
-		private class Monster {
-			public int Id { get; set; }
-			// 外部キー
-			[Column("CategoryId")]
-			public MonsterCategoryType CategoryType { get; set; }
-			public string Name { get; set; }
-			public MonsterCategory Category { get; set; }
-		}
-
-		private class MonsterDbContext : SqlServerDbContext {
-			public DbSet<MonsterCategory> MonsterCategories { get; set; }
-			public DbSet<Monster> Monsters { get; set; }
-
-			protected override void OnModelCreating(ModelBuilder modelBuilder) {
-				modelBuilder.Entity<MonsterCategory>().ToTable(nameof(MonsterCategory));
-				modelBuilder.Entity<Monster>().ToTable(nameof(Monster));
-			}
-		}
-
-		private static async Task CreateTableAsync(MonsterDbContext context) {
-			var sql = @"
+	private static async Task CreateTableAsync(MonsterDbContext context) {
+		var sql = @"
 create table dbo.MonsterCategory(
 	Id int,
 	Name nvarchar(20),
@@ -63,18 +64,18 @@ create table dbo.Monster(
 	constraint FK_Monster_MonsterCategory foreign key(CategoryId)
 		references dbo.MonsterCategory(Id)
 );";
-			await context.Database.ExecuteSqlRawAsync(sql);
-		}
+		await context.Database.ExecuteSqlRawAsync(sql);
+	}
 
-		private static async Task DropTableAsync(MonsterDbContext context) {
-			var sql = @"
+	private static async Task DropTableAsync(MonsterDbContext context) {
+		var sql = @"
 drop table if exists dbo.Monster;
 drop table if exists dbo.MonsterCategory;";
-			await context.Database.ExecuteSqlRawAsync(sql);
-		}
+		await context.Database.ExecuteSqlRawAsync(sql);
+	}
 
-		private static async Task InitTableAsync(MonsterDbContext context) {
-			var monsterCategories = new[] {
+	private static async Task InitTableAsync(MonsterDbContext context) {
+		var monsterCategories = new[] {
 				new MonsterCategory {
 					Type = MonsterCategoryType.Slime,
 					Name = "スライム系",
@@ -89,7 +90,7 @@ drop table if exists dbo.MonsterCategory;";
 				},
 			};
 
-			var monsters = new[] {
+		var monsters = new[] {
 				new Monster {
 					Id = 1,
 					Name = "スライム",
@@ -102,71 +103,70 @@ drop table if exists dbo.MonsterCategory;";
 				},
 			};
 
-			context.MonsterCategories.AddRange(monsterCategories);
-			context.Monsters.AddRange(monsters);
+		context.MonsterCategories.AddRange(monsterCategories);
+		context.Monsters.AddRange(monsters);
 
-			await context.SaveChangesAsync();
+		await context.SaveChangesAsync();
+	}
+
+	private readonly ITestOutputHelper _output;
+
+	public EnumPrimaryKeyForeignKeyTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
+	[Fact]
+	public async Task 主キーや外部キーのID列をEnumにバインドできる() {
+		using var context = new MonsterDbContext();
+
+		try {
+			await DropTableAsync(context);
+			await CreateTableAsync(context);
+			await InitTableAsync(context);
+
+			var monsters = await context.Monsters
+				.Where(monster => monster.CategoryType == MonsterCategoryType.Slime)
+				.ToListAsync();
+			Assert.Single(monsters);
+
+			var monster = monsters.First();
+			Assert.Equal(1, monster.Id);
+			Assert.Equal("スライム", monster.Name);
+			Assert.Equal(MonsterCategoryType.Slime, monster.CategoryType);
+			Assert.Null(monster.Category);
+		} catch (Exception exception) {
+			_output.WriteLine(exception.ToString());
+			AssertHelper.Fail();
+		} finally {
+			await DropTableAsync(context);
 		}
+	}
 
-		private readonly ITestOutputHelper _output;
+	[Fact]
+	public async Task 主キーや外部キーのID列をEnumにバインドできてインクルードもできる() {
+		using var context = new MonsterDbContext();
 
-		public EnumPrimaryKeyForeignKeyTest(ITestOutputHelper output) {
-			_output = output;
-		}
+		try {
+			await DropTableAsync(context);
+			await CreateTableAsync(context);
+			await InitTableAsync(context);
 
-		[Fact]
-		public async Task 主キーや外部キーのID列をEnumにバインドできる() {
-			using var context = new MonsterDbContext();
+			var monster = await context.Monsters
+				// カテゴリをインクルード
+				.Include(monster => monster.Category)
+				.FirstOrDefaultAsync(monster => monster.CategoryType == MonsterCategoryType.Fly);
 
-			try {
-				await DropTableAsync(context);
-				await CreateTableAsync(context);
-				await InitTableAsync(context);
-
-				var monsters = await context.Monsters
-					.Where(monster => monster.CategoryType == MonsterCategoryType.Slime)
-					.ToListAsync();
-				Assert.Single(monsters);
-
-				var monster = monsters.First();
-				Assert.Equal(1, monster.Id);
-				Assert.Equal("スライム", monster.Name);
-				Assert.Equal(MonsterCategoryType.Slime, monster.CategoryType);
-				Assert.Null(monster.Category);
-			} catch (Exception exception) {
-				_output.WriteLine(exception.ToString());
-				AssertHelper.Fail();
-			} finally {
-				await DropTableAsync(context);
-			}
-		}
-
-		[Fact]
-		public async Task 主キーや外部キーのID列をEnumにバインドできてインクルードもできる() {
-			using var context = new MonsterDbContext();
-
-			try {
-				await DropTableAsync(context);
-				await CreateTableAsync(context);
-				await InitTableAsync(context);
-
-				var monster = await context.Monsters
-					// カテゴリをインクルード
-					.Include(monster => monster.Category)
-					.FirstOrDefaultAsync(monster => monster.CategoryType == MonsterCategoryType.Fly);
-
-				Assert.NotNull(monster);
-				Assert.Equal(2, monster.Id);
-				Assert.Equal("ドラキー", monster.Name);
-				Assert.Equal(MonsterCategoryType.Fly, monster.CategoryType);
-				Assert.Equal(MonsterCategoryType.Fly, monster.Category.Type);
-				Assert.Equal("鳥系", monster.Category.Name);
-			} catch (Exception exception) {
-				_output.WriteLine(exception.ToString());
-				AssertHelper.Fail();
-			} finally {
-				await DropTableAsync(context);
-			}
+			Assert.NotNull(monster);
+			Assert.Equal(2, monster.Id);
+			Assert.Equal("ドラキー", monster.Name);
+			Assert.Equal(MonsterCategoryType.Fly, monster.CategoryType);
+			Assert.Equal(MonsterCategoryType.Fly, monster.Category.Type);
+			Assert.Equal("鳥系", monster.Category.Name);
+		} catch (Exception exception) {
+			_output.WriteLine(exception.ToString());
+			AssertHelper.Fail();
+		} finally {
+			await DropTableAsync(context);
 		}
 	}
 }

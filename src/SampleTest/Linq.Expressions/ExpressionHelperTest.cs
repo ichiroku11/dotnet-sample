@@ -3,35 +3,35 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace SampleTest.Linq.Expressions {
-	public class ExpressionHelperTest {
-		// テスト用
-		public class Item {
-			public int Id { get; set; }
-			public string Name { get; set; }
-		}
+namespace SampleTest.Linq.Expressions;
 
-		[Fact]
-		public void GetMemberName_参照型のプロパティにアクセスする式からプロパティ名を取得() {
-			var member = ExpressionHelper.GetMemberName<Item>(item => item.Name);
+public class ExpressionHelperTest {
+	// テスト用
+	public class Item {
+		public int Id { get; set; }
+		public string Name { get; set; }
+	}
 
-			Assert.Equal("Name", member);
-		}
+	[Fact]
+	public void GetMemberName_参照型のプロパティにアクセスする式からプロパティ名を取得() {
+		var member = ExpressionHelper.GetMemberName<Item>(item => item.Name);
 
-		[Fact]
-		public void GetMemberName_値型のプロパティにアクセスする式からプロパティ名を取得() {
-			var member = ExpressionHelper.GetMemberName<Item>(item => item.Id);
+		Assert.Equal("Name", member);
+	}
 
-			Assert.Equal("Id", member);
-		}
+	[Fact]
+	public void GetMemberName_値型のプロパティにアクセスする式からプロパティ名を取得() {
+		var member = ExpressionHelper.GetMemberName<Item>(item => item.Id);
 
-		[Fact]
-		public void GetMemberNames_匿名オブジェクトを生成する式からメンバー名一覧を取得() {
-			var members = ExpressionHelper.GetMemberNames<Item>(item => new { item.Id, item.Name });
+		Assert.Equal("Id", member);
+	}
 
-			Assert.Collection(members,
-				member => Assert.Equal("Id", member),
-				member => Assert.Equal("Name", member));
-		}
+	[Fact]
+	public void GetMemberNames_匿名オブジェクトを生成する式からメンバー名一覧を取得() {
+		var members = ExpressionHelper.GetMemberNames<Item>(item => new { item.Id, item.Name });
+
+		Assert.Collection(members,
+			member => Assert.Equal("Id", member),
+			member => Assert.Equal("Name", member));
 	}
 }

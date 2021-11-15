@@ -8,24 +8,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace TagHelperWebApp {
-	public class Startup {
-		public void ConfigureServices(IServiceCollection services) {
-			services.AddControllersWithViews();
+namespace TagHelperWebApp;
+
+public class Startup {
+	public void ConfigureServices(IServiceCollection services) {
+		services.AddControllersWithViews();
+	}
+
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		if (env.IsDevelopment()) {
+			app.UseDeveloperExceptionPage();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-			if (env.IsDevelopment()) {
-				app.UseDeveloperExceptionPage();
-			}
+		app.UseRouting();
 
-			app.UseRouting();
-
-			app.UseEndpoints(endpoints => {
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Default}/{action=Index}/{id?}");
-			});
-		}
+		app.UseEndpoints(endpoints => {
+			endpoints.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Default}/{action=Index}/{id?}");
+		});
 	}
 }

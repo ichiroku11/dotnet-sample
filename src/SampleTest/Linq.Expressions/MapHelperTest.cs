@@ -6,29 +6,29 @@ using System.Reflection;
 using System.Text;
 using Xunit;
 
-namespace SampleTest.Linq.Expressions {
-	public class MapHelperTest {
-		// テスト用：コピー元
-		private class From {
-			public int Id { get; set; }
-			public string Name { get; set; }
-		}
+namespace SampleTest.Linq.Expressions;
 
-		// テスト用：コピー先
-		private class To {
-			public int Id { get; set; }
-			public string Name { get; set; }
-		}
+public class MapHelperTest {
+	// テスト用：コピー元
+	private class From {
+		public int Id { get; set; }
+		public string Name { get; set; }
+	}
 
-		[Fact]
-		public void CreateMapper_AutoMapperみたいな機能を構築する() {
-			var mapper = MapHelper.CreateMapper<From, To>();
+	// テスト用：コピー先
+	private class To {
+		public int Id { get; set; }
+		public string Name { get; set; }
+	}
 
-			var from = new From { Id = 1, Name = "x" };
-			var to = mapper(from);
+	[Fact]
+	public void CreateMapper_AutoMapperみたいな機能を構築する() {
+		var mapper = MapHelper.CreateMapper<From, To>();
 
-			Assert.Equal(from.Id, to.Id);
-			Assert.Equal(from.Name, to.Name);
-		}
+		var from = new From { Id = 1, Name = "x" };
+		var to = mapper(from);
+
+		Assert.Equal(from.Id, to.Id);
+		Assert.Equal(from.Name, to.Name);
 	}
 }

@@ -8,28 +8,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ControllerWebApp {
-	public class Startup {
-		public void ConfigureServices(IServiceCollection services) {
-			services.AddControllers();
+namespace ControllerWebApp;
+
+public class Startup {
+	public void ConfigureServices(IServiceCollection services) {
+		services.AddControllers();
+	}
+
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		if (env.IsDevelopment()) {
+			app.UseDeveloperExceptionPage();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-			if (env.IsDevelopment()) {
-				app.UseDeveloperExceptionPage();
-			}
+		app.UseRouting();
 
-			app.UseRouting();
-
-			app.UseEndpoints(endpoints => {
-				endpoints.MapAreaControllerRoute(
-					name: "admin",
-					areaName: "Admin",
-					pattern: "Admin/{controller=AdminDefault}/{action=Index}/{id?}");
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Default}/{action=Index}/{id?}");
-			});
-		}
+		app.UseEndpoints(endpoints => {
+			endpoints.MapAreaControllerRoute(
+				name: "admin",
+				areaName: "Admin",
+				pattern: "Admin/{controller=AdminDefault}/{action=Index}/{id?}");
+			endpoints.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Default}/{action=Index}/{id?}");
+		});
 	}
 }

@@ -7,38 +7,38 @@ using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.AspNetCore {
-	public class DataProtectorTest {
-		private static IServiceProvider GetServiceProvider() {
-			var services = new ServiceCollection();
-			services.AddDataProtection();
+namespace SampleTest.AspNetCore;
 
-			return services.BuildServiceProvider();
-		}
+public class DataProtectorTest {
+	private static IServiceProvider GetServiceProvider() {
+		var services = new ServiceCollection();
+		services.AddDataProtection();
 
-		private readonly ITestOutputHelper _output;
+		return services.BuildServiceProvider();
+	}
 
-		public DataProtectorTest(ITestOutputHelper output) {
-			_output = output;
-		}
+	private readonly ITestOutputHelper _output;
 
-		[Fact]
-		public void ProtectUnprotect_暗号化で保護データを復号できる() {
-			// Arrange
-			var protector = GetServiceProvider().GetDataProtectionProvider().CreateProtector(nameof(DataProtectorTest));
-			var expected = "Hello world!";
+	public DataProtectorTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			// Act
-			// 平文を保護する
-			var protectedData = protector.Protect(expected);
+	[Fact]
+	public void ProtectUnprotect_暗号化で保護データを復号できる() {
+		// Arrange
+		var protector = GetServiceProvider().GetDataProtectionProvider().CreateProtector(nameof(DataProtectorTest));
+		var expected = "Hello world!";
 
-			_output.WriteLine(protectedData);
+		// Act
+		// 平文を保護する
+		var protectedData = protector.Protect(expected);
 
-			// 保護を解除して平文を取り出す
-			var actual = protector.Unprotect(protectedData);
+		_output.WriteLine(protectedData);
 
-			// Assert
-			Assert.Equal(expected, actual);
-		}
+		// 保護を解除して平文を取り出す
+		var actual = protector.Unprotect(protectedData);
+
+		// Assert
+		Assert.Equal(expected, actual);
 	}
 }

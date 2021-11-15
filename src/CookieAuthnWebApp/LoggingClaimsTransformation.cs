@@ -6,18 +6,18 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace CookieAuthnWebApp {
-	public class LoggingClaimsTransformation : IClaimsTransformation {
-		private readonly ILogger _logger;
+namespace CookieAuthnWebApp;
 
-		public LoggingClaimsTransformation(ILogger<LoggingClaimsTransformation> logger) {
-			_logger = logger;
-		}
+public class LoggingClaimsTransformation : IClaimsTransformation {
+	private readonly ILogger _logger;
 
-		public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
-			_logger.LogInformation(nameof(TransformAsync));
+	public LoggingClaimsTransformation(ILogger<LoggingClaimsTransformation> logger) {
+		_logger = logger;
+	}
 
-			return Task.FromResult(principal);
-		}
+	public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
+		_logger.LogInformation(nameof(TransformAsync));
+
+		return Task.FromResult(principal);
 	}
 }

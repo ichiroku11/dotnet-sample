@@ -5,39 +5,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DistributedCacheWebApp.Controllers {
-	public class SessionController : Controller {
-		private const string _sessionKey = "session-sample";
+namespace DistributedCacheWebApp.Controllers;
 
-		private ISession Session => HttpContext.Session;
+public class SessionController : Controller {
+	private const string _sessionKey = "session-sample";
 
-		public IActionResult Get() {
-			// セッションから取得
-			var value = Session.GetString(_sessionKey);
-			if (string.IsNullOrWhiteSpace(value)) {
-				return Content("get error");
-			}
+	private ISession Session => HttpContext.Session;
 
-			return Content($"get: {value}");
+	public IActionResult Get() {
+		// セッションから取得
+		var value = Session.GetString(_sessionKey);
+		if (string.IsNullOrWhiteSpace(value)) {
+			return Content("get error");
 		}
 
-		public IActionResult Set(string value) {
-			if (string.IsNullOrEmpty(value)) {
-				return Content("set error");
-			}
-
-			// セッションに設定
-			Session.SetString(_sessionKey, $"{value}");
-
-			return Content($"set: {value}");
-		}
-
-		public IActionResult Remove() {
-			// セッションから削除
-			Session.Remove(_sessionKey);
-
-			return Content($"remove");
-		}
+		return Content($"get: {value}");
 	}
 
+	public IActionResult Set(string value) {
+		if (string.IsNullOrEmpty(value)) {
+			return Content("set error");
+		}
+
+		// セッションに設定
+		Session.SetString(_sessionKey, $"{value}");
+
+		return Content($"set: {value}");
+	}
+
+	public IActionResult Remove() {
+		// セッションから削除
+		Session.Remove(_sessionKey);
+
+		return Content($"remove");
+	}
 }

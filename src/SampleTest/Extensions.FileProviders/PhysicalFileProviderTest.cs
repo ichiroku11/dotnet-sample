@@ -9,69 +9,69 @@ using Microsoft.Extensions.FileProviders;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Extensions.FileProviders {
-	public class PhysicalFileProviderTest : IDisposable {
-		private static readonly string _tempFolder = Path.Combine(Directory.GetCurrentDirectory(), $"${nameof(PhysicalFileProviderTest)}");
+namespace SampleTest.Extensions.FileProviders;
 
-		private readonly ITestOutputHelper _output;
+public class PhysicalFileProviderTest : IDisposable {
+	private static readonly string _tempFolder = Path.Combine(Directory.GetCurrentDirectory(), $"${nameof(PhysicalFileProviderTest)}");
 
-		public PhysicalFileProviderTest(ITestOutputHelper output) {
-			_output = output;
+	private readonly ITestOutputHelper _output;
 
-			// 作業フォルダ
-			Directory.CreateDirectory(_tempFolder);
-			_output.WriteLine(_tempFolder);
+	public PhysicalFileProviderTest(ITestOutputHelper output) {
+		_output = output;
 
-			// テスト用ファイル
-			File.WriteAllText(Path.Combine(_tempFolder, "test.txt"), "test");
-		}
+		// 作業フォルダ
+		Directory.CreateDirectory(_tempFolder);
+		_output.WriteLine(_tempFolder);
 
-		public void Dispose() {
-			Directory.Delete(_tempFolder, true);
-		}
+		// テスト用ファイル
+		File.WriteAllText(Path.Combine(_tempFolder, "test.txt"), "test");
+	}
 
-		[Fact]
-		public void Constructor_存在しないフォルダパスを引数に指定すると例外がスローされる() {
-			// Arrange
-			// Act
-			// Assert
-			Assert.Throws<DirectoryNotFoundException>(() => {
-				new PhysicalFileProvider(Path.Combine(_tempFolder, "notfound"));
-			});
-		}
+	public void Dispose() {
+		Directory.Delete(_tempFolder, true);
+	}
 
-		[Fact]
-		public async Task GetFileInfo_ファイルを取得できる() {
-			// Arrange
-			var fileProvider = new PhysicalFileProvider(_tempFolder);
+	[Fact]
+	public void Constructor_存在しないフォルダパスを引数に指定すると例外がスローされる() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Throws<DirectoryNotFoundException>(() => {
+			new PhysicalFileProvider(Path.Combine(_tempFolder, "notfound"));
+		});
+	}
 
-			// Act
-			var fileInfo = fileProvider.GetFileInfo("test.txt");
+	[Fact]
+	public async Task GetFileInfo_ファイルを取得できる() {
+		// Arrange
+		var fileProvider = new PhysicalFileProvider(_tempFolder);
 
-			using var stream = fileInfo.CreateReadStream();
-			using var reader = new StreamReader(stream);
-			var content = await reader.ReadToEndAsync();
+		// Act
+		var fileInfo = fileProvider.GetFileInfo("test.txt");
 
-			// Assert
-			Assert.True(fileInfo.Exists);
-			Assert.Equal("test", content);
-		}
+		using var stream = fileInfo.CreateReadStream();
+		using var reader = new StreamReader(stream);
+		var content = await reader.ReadToEndAsync();
 
-		[Fact]
-		public void GetFileInfo_スコープ外のファイルは存在していてもアクセスできない() {
-			// Arrange
-			var subFolder = Path.Combine(_tempFolder, "sub");
-			Directory.CreateDirectory(subFolder);
+		// Assert
+		Assert.True(fileInfo.Exists);
+		Assert.Equal("test", content);
+	}
 
-			var fileProvider = new PhysicalFileProvider(subFolder);
+	[Fact]
+	public void GetFileInfo_スコープ外のファイルは存在していてもアクセスできない() {
+		// Arrange
+		var subFolder = Path.Combine(_tempFolder, "sub");
+		Directory.CreateDirectory(subFolder);
 
-			// Act
-			var fileInfo = fileProvider.GetFileInfo("test.txt");
+		var fileProvider = new PhysicalFileProvider(subFolder);
 
-			// Assert
-			// 実際にはファイルは存在するがIFileInfoから見つけられない
-			Assert.True(File.Exists(Path.Combine(_tempFolder, "test.txt")));
-			Assert.False(fileInfo.Exists);
-		}
+		// Act
+		var fileInfo = fileProvider.GetFileInfo("test.txt");
+
+		// Assert
+		// 実際にはファイルは存在するがIFileInfoから見つけられない
+		Assert.True(File.Exists(Path.Combine(_tempFolder, "test.txt")));
+		Assert.False(fileInfo.Exists);
 	}
 }

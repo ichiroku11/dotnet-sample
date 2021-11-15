@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace PolicyAuthzWebApp.Controllers {
-	public class DefaultController : Controller {
-		public IActionResult Index() {
-			return Content($"~/default/{nameof(Index).ToLower()}");
-		}
+namespace PolicyAuthzWebApp.Controllers;
+
+public class DefaultController : Controller {
+	public IActionResult Index() {
+		return Content($"~/default/{nameof(Index).ToLower()}");
 	}
 }

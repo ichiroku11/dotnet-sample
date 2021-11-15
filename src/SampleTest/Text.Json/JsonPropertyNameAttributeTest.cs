@@ -7,37 +7,37 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Text.Json {
-	public class JsonPropertyNameAttributeTest {
-		private class Sample {
-			// JSON文字列中のプロパティ名を指定する
-			[JsonPropertyName("Val")]
-			public int Value { get; init; }
-		}
+namespace SampleTest.Text.Json;
 
-		[Fact]
-		public void Serialize_JsonPropertyNameAttributeを使ってシリアライズする() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
+public class JsonPropertyNameAttributeTest {
+	private class Sample {
+		// JSON文字列中のプロパティ名を指定する
+		[JsonPropertyName("Val")]
+		public int Value { get; init; }
+	}
 
-			// Act
-			var sample = JsonSerializer.Serialize(new Sample { Value = 1 }, options);
+	[Fact]
+	public void Serialize_JsonPropertyNameAttributeを使ってシリアライズする() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
 
-			// Assert
-			// PropertyNamingPolicyよりJsonPropertyNameAttributeが優先される
-			Assert.Equal(@"{""Val"":1}", sample);
-		}
+		// Act
+		var sample = JsonSerializer.Serialize(new Sample { Value = 1 }, options);
 
-		[Fact]
-		public void Deserialize_JsonPropertyNameAttributeを使ってデシリアライズする() {
-			// Arrange
-			// Act
-			var sample = JsonSerializer.Deserialize<Sample>(@"{""Val"":1}");
+		// Assert
+		// PropertyNamingPolicyよりJsonPropertyNameAttributeが優先される
+		Assert.Equal(@"{""Val"":1}", sample);
+	}
 
-			// Assert
-			Assert.Equal(1, sample.Value);
-		}
+	[Fact]
+	public void Deserialize_JsonPropertyNameAttributeを使ってデシリアライズする() {
+		// Arrange
+		// Act
+		var sample = JsonSerializer.Deserialize<Sample>(@"{""Val"":1}");
+
+		// Assert
+		Assert.Equal(1, sample.Value);
 	}
 }

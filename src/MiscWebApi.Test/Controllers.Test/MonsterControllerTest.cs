@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace MiscWebApi.Controllers.Test {
-	public partial class MonsterControllerTest : ControllerTestBase {
-		private static readonly Monster _slime = new Monster {
-			Id = 1,
-			Name = "スライム",
-		};
+namespace MiscWebApi.Controllers.Test;
 
-		public MonsterControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
-			: base(output, factory) {
-		}
+public partial class MonsterControllerTest : ControllerTestBase {
+	private static readonly Monster _slime = new Monster {
+		Id = 1,
+		Name = "スライム",
+	};
+
+	public MonsterControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+		: base(output, factory) {
 	}
 }

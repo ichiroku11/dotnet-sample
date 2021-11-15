@@ -8,103 +8,103 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MiscWebApi.Controllers.Test {
-	public partial class MonsterControllerTest {
-		[Fact]
-		public async Task GetAsync_Ok() {
-			// Arrange
-			using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster");
+namespace MiscWebApi.Controllers.Test;
 
-			// Act
-			using var response = await SendAsync(request);
-			var monsters = await DeserializeAsync<IList<Monster>>(response);
+public partial class MonsterControllerTest {
+	[Fact]
+	public async Task GetAsync_Ok() {
+		// Arrange
+		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(2, monsters.Count);
-			Assert.Contains(monsters, monster => monster.Id == 1 && monster.Name == "スライム");
-			Assert.Contains(monsters, monster => monster.Id == 2 && monster.Name == "ドラキー");
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var monsters = await DeserializeAsync<IList<Monster>>(response);
 
-		[Fact]
-		public async Task GetByIdAsync_Ok() {
-			// Arrange
-			using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster/1");
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal(2, monsters.Count);
+		Assert.Contains(monsters, monster => monster.Id == 1 && monster.Name == "スライム");
+		Assert.Contains(monsters, monster => monster.Id == 2 && monster.Name == "ドラキー");
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			var monster = await DeserializeAsync<Monster>(response);
+	[Fact]
+	public async Task GetByIdAsync_Ok() {
+		// Arrange
+		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster/1");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(1, monster.Id);
-			Assert.Equal("スライム", monster.Name);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var monster = await DeserializeAsync<Monster>(response);
 
-		[Fact]
-		public async Task GetByIdAsync_NotFound() {
-			// Arrange
-			using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster/0");
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal(1, monster.Id);
+		Assert.Equal("スライム", monster.Name);
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			// エラーの場合は、ProblemDetails型（RFC7807）のJSONが返ってくる
-			var problem = await DeserializeAsync<ProblemDetails>(response);
+	[Fact]
+	public async Task GetByIdAsync_NotFound() {
+		// Arrange
+		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster/0");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-			Assert.NotNull(problem);
-			Assert.Equal((int)HttpStatusCode.NotFound, problem.Status.Value);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		// エラーの場合は、ProblemDetails型（RFC7807）のJSONが返ってくる
+		var problem = await DeserializeAsync<ProblemDetails>(response);
 
-		// FromQuery属性：クエリ文字列から
-		[Fact]
-		public async Task GetQueryAsync_Ok() {
-			// Arrange
-			var url = $"/api/monster/query?id={_slime.Id}&name={_slime.Name}";
-			using var request = new HttpRequestMessage(HttpMethod.Get, url);
+		// Assert
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+		Assert.NotNull(problem);
+		Assert.Equal((int)HttpStatusCode.NotFound, problem.Status.Value);
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			var monster = await DeserializeAsync<Monster>(response);
+	// FromQuery属性：クエリ文字列から
+	[Fact]
+	public async Task GetQueryAsync_Ok() {
+		// Arrange
+		var url = $"/api/monster/query?id={_slime.Id}&name={_slime.Name}";
+		using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(_slime.Id, monster.Id);
-			Assert.Equal(_slime.Name, monster.Name);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var monster = await DeserializeAsync<Monster>(response);
 
-		// FromRoute属性：ルートパラメータからバインドできる
-		[Fact]
-		public async Task GetRouteAsync_Ok() {
-			// Arrange
-			var url = $"/api/monster/route/{_slime.Id}/{_slime.Name}";
-			using var request = new HttpRequestMessage(HttpMethod.Get, url);
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal(_slime.Id, monster.Id);
+		Assert.Equal(_slime.Name, monster.Name);
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			var monster = await DeserializeAsync<Monster>(response);
+	// FromRoute属性：ルートパラメータからバインドできる
+	[Fact]
+	public async Task GetRouteAsync_Ok() {
+		// Arrange
+		var url = $"/api/monster/route/{_slime.Id}/{_slime.Name}";
+		using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(_slime.Id, monster.Id);
-			Assert.Equal(_slime.Name, monster.Name);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var monster = await DeserializeAsync<Monster>(response);
 
-		[Fact]
-		public async Task GetRouteAsync_Query文字列はバインドされない() {
-			// Arrange
-			var url = $"/api/monster/route/2/ドラキー?id={_slime.Id}&name={_slime.Name}";
-			using var request = new HttpRequestMessage(HttpMethod.Get, url);
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal(_slime.Id, monster.Id);
+		Assert.Equal(_slime.Name, monster.Name);
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			var monster = await DeserializeAsync<Monster>(response);
+	[Fact]
+	public async Task GetRouteAsync_Query文字列はバインドされない() {
+		// Arrange
+		var url = $"/api/monster/route/2/ドラキー?id={_slime.Id}&name={_slime.Name}";
+		using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(2, monster.Id);
-			Assert.Equal("ドラキー", monster.Name);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var monster = await DeserializeAsync<Monster>(response);
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal(2, monster.Id);
+		Assert.Equal("ドラキー", monster.Name);
 	}
 }

@@ -9,125 +9,125 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.IdentityModel.Tokens.Jwt {
-	public class JwtPayloadTest {
-		private readonly ITestOutputHelper _output;
+namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-		public JwtPayloadTest(ITestOutputHelper output) {
-			_output = output;
-		}
+public class JwtPayloadTest {
+	private readonly ITestOutputHelper _output;
 
-		[Fact]
-		public void Constructor_空のペイロードを生成する() {
-			// Arrange
-			var payload = new JwtPayload {
-			};
+	public JwtPayloadTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			// Act
-			// Assert
-			Assert.Null(payload.Sub);
-			Assert.Null(payload.Nonce);
-			Assert.Null(payload.Nbf);
-			Assert.Null(payload.Iss);
-			Assert.Null(payload.Iat);
-			Assert.Null(payload.Exp);
-			Assert.Empty(payload.Aud);
+	[Fact]
+	public void Constructor_空のペイロードを生成する() {
+		// Arrange
+		var payload = new JwtPayload {
+		};
 
-			_output.WriteLine(payload.SerializeToJson());
-		}
+		// Act
+		// Assert
+		Assert.Null(payload.Sub);
+		Assert.Null(payload.Nonce);
+		Assert.Null(payload.Nbf);
+		Assert.Null(payload.Iss);
+		Assert.Null(payload.Iat);
+		Assert.Null(payload.Exp);
+		Assert.Empty(payload.Aud);
 
-		[Fact]
-		public void Constructor_クレームからペイロードを生成する() {
-			// Arrange
-			var claims = new[] {
+		_output.WriteLine(payload.SerializeToJson());
+	}
+
+	[Fact]
+	public void Constructor_クレームからペイロードを生成する() {
+		// Arrange
+		var claims = new[] {
 				new Claim(JwtRegisteredClaimNames.Iss, "i"),
 				new Claim(JwtRegisteredClaimNames.Aud, "a"),
 			};
 
-			// Act
-			var payload = new JwtPayload(claims);
+		// Act
+		var payload = new JwtPayload(claims);
 
-			// Assert
-			Assert.Null(payload.Sub);
-			Assert.Null(payload.Nonce);
-			Assert.Null(payload.Nbf);
-			Assert.Equal("i", payload.Iss);
-			Assert.Null(payload.Iat);
-			Assert.Null(payload.Exp);
-			var audience = Assert.Single(payload.Aud);
-			Assert.Equal("a", audience);
+		// Assert
+		Assert.Null(payload.Sub);
+		Assert.Null(payload.Nonce);
+		Assert.Null(payload.Nbf);
+		Assert.Equal("i", payload.Iss);
+		Assert.Null(payload.Iat);
+		Assert.Null(payload.Exp);
+		var audience = Assert.Single(payload.Aud);
+		Assert.Equal("a", audience);
 
-			_output.WriteLine(payload.SerializeToJson());
-		}
+		_output.WriteLine(payload.SerializeToJson());
+	}
 
-		[Fact]
-		public void Constructor_issuerとaudienceからペイロードを生成する() {
-			// Arrange
-			// Act
-			var payload = new JwtPayload(issuer: "i", audience: "a", claims: null, notBefore: null, expires: null);
+	[Fact]
+	public void Constructor_issuerとaudienceからペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(issuer: "i", audience: "a", claims: null, notBefore: null, expires: null);
 
-			// Assert
-			Assert.Null(payload.Sub);
-			Assert.Null(payload.Nonce);
-			Assert.Null(payload.Nbf);
-			Assert.Equal("i", payload.Iss);
-			Assert.Null(payload.Iat);
-			Assert.Null(payload.Exp);
-			var audience = Assert.Single(payload.Aud);
-			Assert.Equal("a", audience);
+		// Assert
+		Assert.Null(payload.Sub);
+		Assert.Null(payload.Nonce);
+		Assert.Null(payload.Nbf);
+		Assert.Equal("i", payload.Iss);
+		Assert.Null(payload.Iat);
+		Assert.Null(payload.Exp);
+		var audience = Assert.Single(payload.Aud);
+		Assert.Equal("a", audience);
 
-			_output.WriteLine(payload.SerializeToJson());
-		}
+		_output.WriteLine(payload.SerializeToJson());
+	}
 
-		[Fact]
-		public void Constructor_issuerとaudienceとnotBeforeとexpiresを指定してペイロードを生成する() {
-			// Arrange
-			// Act
-			var payload = new JwtPayload(
-				issuer: "i",
-				audience: "a",
-				claims: null,
-				notBefore: EpochTime.UnixEpoch.AddSeconds(1),
-				expires: EpochTime.UnixEpoch.AddSeconds(2));
+	[Fact]
+	public void Constructor_issuerとaudienceとnotBeforeとexpiresを指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: "i",
+			audience: "a",
+			claims: null,
+			notBefore: EpochTime.UnixEpoch.AddSeconds(1),
+			expires: EpochTime.UnixEpoch.AddSeconds(2));
 
-			// Assert
-			Assert.Null(payload.Sub);
-			Assert.Null(payload.Nonce);
-			Assert.Equal(1, payload.Nbf);
-			Assert.Equal("i", payload.Iss);
-			Assert.Null(payload.Iat);
-			Assert.Equal(2, payload.Exp);
-			var audience = Assert.Single(payload.Aud);
-			Assert.Equal("a", audience);
+		// Assert
+		Assert.Null(payload.Sub);
+		Assert.Null(payload.Nonce);
+		Assert.Equal(1, payload.Nbf);
+		Assert.Equal("i", payload.Iss);
+		Assert.Null(payload.Iat);
+		Assert.Equal(2, payload.Exp);
+		var audience = Assert.Single(payload.Aud);
+		Assert.Equal("a", audience);
 
-			_output.WriteLine(payload.SerializeToJson());
-		}
+		_output.WriteLine(payload.SerializeToJson());
+	}
 
-		[Fact]
-		public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
-			// Arrange
-			var payload = new JwtPayload {
-			};
+	[Fact]
+	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
+		// Arrange
+		var payload = new JwtPayload {
+		};
 
-			// Act
-			var actual = payload.SerializeToJson();
+		// Act
+		var actual = payload.SerializeToJson();
 
-			// Assert
-			Assert.Equal("{}", actual);
-		}
+		// Assert
+		Assert.Equal("{}", actual);
+	}
 
-		[Fact]
-		public void Base64UrlEncode_空のペイロードをBase64Urlにエンコードする() {
-			// Arrange
-			var payload = new JwtPayload {
-			};
+	[Fact]
+	public void Base64UrlEncode_空のペイロードをBase64Urlにエンコードする() {
+		// Arrange
+		var payload = new JwtPayload {
+		};
 
-			// Act
-			var actual = payload.Base64UrlEncode();
-			_output.WriteLine(actual);
+		// Act
+		var actual = payload.Base64UrlEncode();
+		_output.WriteLine(actual);
 
-			// Assert
-			Assert.Equal(Base64UrlEncoder.Encode("{}"), actual);
-		}
+		// Assert
+		Assert.Equal(Base64UrlEncoder.Encode("{}"), actual);
 	}
 }
