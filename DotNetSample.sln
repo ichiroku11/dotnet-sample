@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30709.132
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleTest", "src\SampleTest\SampleTest.csproj", "{2E6B1D40-1E31-4E2B-BB21-D52549DB414D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{70422AA2-759C-41EC-A5F9-4F3F352E2B3A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiscWebApi", "src\MiscWebApi\MiscWebApi.csproj", "{E233E3A1-45A0-4F4E-8A50-D143D2A3197A}"
@@ -86,11 +87,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureAdB2cConsoleApp", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalSignatureConsoleApp", "src\DigitalSignatureConsoleApp\DigitalSignatureConsoleApp.csproj", "{44F219D2-5F99-44A3-9481-58FBE8AA6388}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridCryptoConsoleApp", "src\HybridCryptoConsoleApp\HybridCryptoConsoleApp.csproj", "{23E4E46B-86BB-486E-8EBC-831451729938}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HybridCryptoConsoleApp", "src\HybridCryptoConsoleApp\HybridCryptoConsoleApp.csproj", "{23E4E46B-86BB-486E-8EBC-831451729938}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewWebApp", "src\ViewWebApp\ViewWebApp.csproj", "{D26261F7-D82A-49B1-BFDD-9FEFA6CA2EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewComponentWebApp", "src\ViewComponentWebApp\ViewComponentWebApp.csproj", "{53ACC366-37E0-413A-B9E9-C4B07FF20906}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewComponentWebApp", "src\ViewComponentWebApp\ViewComponentWebApp.csproj", "{53ACC366-37E0-413A-B9E9-C4B07FF20906}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
