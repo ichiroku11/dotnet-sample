@@ -8,28 +8,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EndpointWebApp.Controllers {
-	public class EndpointController : Controller {
-		private readonly EndpointDataSource _dataSource;
+namespace EndpointWebApp.Controllers;
 
-		public EndpointController(EndpointDataSource dataSource) {
-			_dataSource = dataSource;
-		}
+public class EndpointController : Controller {
+	private readonly EndpointDataSource _dataSource;
 
-		[Route("~/endpoints")]
-		public IActionResult Index() {
-			var builder = new StringBuilder();
+	public EndpointController(EndpointDataSource dataSource) {
+		_dataSource = dataSource;
+	}
 
-			foreach (var endpoint in _dataSource.Endpoints) {
-				builder.AppendLine(endpoint.DisplayName);
+	[Route("~/endpoints")]
+	public IActionResult Index() {
+		var builder = new StringBuilder();
 
-				foreach (var metadata in endpoint.Metadata) {
-					builder.AppendLine($"\t{metadata}");
-				}
-				builder.AppendLine();
+		foreach (var endpoint in _dataSource.Endpoints) {
+			builder.AppendLine(endpoint.DisplayName);
+
+			foreach (var metadata in endpoint.Metadata) {
+				builder.AppendLine($"\t{metadata}");
 			}
-
-			return Content(builder.ToString());
+			builder.AppendLine();
 		}
+
+		return Content(builder.ToString());
 	}
 }

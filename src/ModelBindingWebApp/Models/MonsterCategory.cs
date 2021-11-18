@@ -6,40 +6,40 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ModelBindingWebApp.Models {
-	public enum MonsterCategory {
-		None = 0,
+namespace ModelBindingWebApp.Models;
 
-		[Display(Name = "スライム系")]
-		Slime,
+public enum MonsterCategory {
+	None = 0,
 
-		[Display(Name = "けもの系")]
-		Animal,
+	[Display(Name = "スライム系")]
+	Slime,
 
-		[Display(Name = "鳥系")]
-		Fly,
-	}
+	[Display(Name = "けもの系")]
+	Animal,
 
-	public static class MonsterCategoryExtensions {
-		private static readonly Dictionary<MonsterCategory, DisplayAttribute> _displayAttributes
-			= typeof(MonsterCategory)
-				.GetFields(BindingFlags.Public | BindingFlags.Static)
-				.ToDictionary(
-					field => (MonsterCategory)field.GetValue(null),
-					field => field.GetCustomAttributes<DisplayAttribute>().FirstOrDefault());
+	[Display(Name = "鳥系")]
+	Fly,
+}
 
-		public static string GetDisplayName(this MonsterCategory category)
-			=> _displayAttributes[category]?.Name;
+public static class MonsterCategoryExtensions {
+	private static readonly Dictionary<MonsterCategory, DisplayAttribute> _displayAttributes
+		= typeof(MonsterCategory)
+			.GetFields(BindingFlags.Public | BindingFlags.Static)
+			.ToDictionary(
+				field => (MonsterCategory)field.GetValue(null),
+				field => field.GetCustomAttributes<DisplayAttribute>().FirstOrDefault());
 
-		public static SelectListItem ToSelectListItem(this MonsterCategory category) {
-			var displayName = category == MonsterCategory.None
-				? "選択してください"
-				: category.GetDisplayName();
+	public static string GetDisplayName(this MonsterCategory category)
+		=> _displayAttributes[category]?.Name;
 
-			return new SelectListItem {
-				Text = displayName,
-				Value = category.ToString().ToLower(),
-			};
-		}
+	public static SelectListItem ToSelectListItem(this MonsterCategory category) {
+		var displayName = category == MonsterCategory.None
+			? "選択してください"
+			: category.GetDisplayName();
+
+		return new SelectListItem {
+			Text = displayName,
+			Value = category.ToString().ToLower(),
+		};
 	}
 }

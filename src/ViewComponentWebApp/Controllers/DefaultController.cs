@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ViewComponentWebApp.Controllers {
-	public class DefaultController : Controller {
-		public IActionResult Index() {
-			return View();
-		}
+namespace ViewComponentWebApp.Controllers;
+
+public class DefaultController : Controller {
+	public IActionResult Index() {
+		return View();
 	}
 }

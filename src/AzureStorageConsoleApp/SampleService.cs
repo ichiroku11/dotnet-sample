@@ -7,43 +7,43 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AzureStorageConsoleApp {
-	public class SampleService : IHostedService {
-		private readonly IServiceProvider _services;
-		private readonly IHostApplicationLifetime _lifetime;
-		private readonly ILogger _logger;
+namespace AzureStorageConsoleApp;
 
-		public SampleService(
-			IHost host,
-			IHostApplicationLifetime lifetime,
-			ILogger<SampleService> logger) {
-			_services = host.Services;
-			_lifetime = lifetime;
-			_logger = logger;
-		}
+public class SampleService : IHostedService {
+	private readonly IServiceProvider _services;
+	private readonly IHostApplicationLifetime _lifetime;
+	private readonly ILogger _logger;
 
-		public Task StartAsync(CancellationToken cancellationToken) {
-			_logger.LogInformation(nameof(StartAsync));
+	public SampleService(
+		IHost host,
+		IHostApplicationLifetime lifetime,
+		ILogger<SampleService> logger) {
+		_services = host.Services;
+		_lifetime = lifetime;
+		_logger = logger;
+	}
 
-			// アプリケーションの開始が完了したら
-			_lifetime.ApplicationStarted.Register(async () => {
-				try {
-					// Blobサンプルを実行
-					await _services.GetRequiredService<BlobSample>().RunAsync();
-				} catch (Exception) {
-					throw;
-				}
+	public Task StartAsync(CancellationToken cancellationToken) {
+		_logger.LogInformation(nameof(StartAsync));
 
-				// アプリケーションを終了
-				_lifetime.StopApplication();
-			});
+		// アプリケーションの開始が完了したら
+		_lifetime.ApplicationStarted.Register(async () => {
+			try {
+				// Blobサンプルを実行
+				await _services.GetRequiredService<BlobSample>().RunAsync();
+			} catch (Exception) {
+				throw;
+			}
 
-			return Task.CompletedTask;
-		}
+			// アプリケーションを終了
+			_lifetime.StopApplication();
+		});
 
-		public Task StopAsync(CancellationToken cancellationToken) {
-			_logger.LogInformation(nameof(StopAsync));
-			return Task.CompletedTask;
-		}
+		return Task.CompletedTask;
+	}
+
+	public Task StopAsync(CancellationToken cancellationToken) {
+		_logger.LogInformation(nameof(StopAsync));
+		return Task.CompletedTask;
 	}
 }

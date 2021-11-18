@@ -5,26 +5,26 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DigitalSignatureConsoleApp {
-	// 署名を生成する
-	public class SignatureCreator {
-		private readonly MessageHasher _hasher;
-		private readonly RSAParameters _parameters;
+namespace DigitalSignatureConsoleApp;
 
-		public SignatureCreator(RSAParameters parameters) {
-			_hasher = new MessageHasher();
-			_parameters = parameters;
-		}
+// 署名を生成する
+public class SignatureCreator {
+	private readonly MessageHasher _hasher;
+	private readonly RSAParameters _parameters;
 
-		// メッセージの署名を生成する（メッセージに署名する）
-		public byte[] CreateSignature(string message) {
-			var messageHash = _hasher.Hash(message);
+	public SignatureCreator(RSAParameters parameters) {
+		_hasher = new MessageHasher();
+		_parameters = parameters;
+	}
 
-			using var rsa = RSA.Create(_parameters);
-			var formatter = new RSAPKCS1SignatureFormatter(rsa);
-			formatter.SetHashAlgorithm(HashAlgorithmName.SHA256.Name);
+	// メッセージの署名を生成する（メッセージに署名する）
+	public byte[] CreateSignature(string message) {
+		var messageHash = _hasher.Hash(message);
 
-			return formatter.CreateSignature(messageHash);
-		}
+		using var rsa = RSA.Create(_parameters);
+		var formatter = new RSAPKCS1SignatureFormatter(rsa);
+		formatter.SetHashAlgorithm(HashAlgorithmName.SHA256.Name);
+
+		return formatter.CreateSignature(messageHash);
 	}
 }

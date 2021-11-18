@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HostedServiceWebApp.Services {
-	// Scopedで追加するサービス
-	public class SampleScopedService {
-		private readonly ILogger _logger;
+namespace HostedServiceWebApp.Services;
 
-		public SampleScopedService(ILogger<SampleScopedService> logger) {
-			_logger = logger;
-		}
+// Scopedで追加するサービス
+public class SampleScopedService {
+	private readonly ILogger _logger;
 
-		public Task ActionAsync() {
-			_logger.LogInformation($"{nameof(ActionAsync)}");
-			return Task.CompletedTask;
-		}
+	public SampleScopedService(ILogger<SampleScopedService> logger) {
+		_logger = logger;
+	}
+
+	public Task ActionAsync() {
+		_logger.LogInformation($"{nameof(ActionAsync)}");
+		return Task.CompletedTask;
 	}
 }

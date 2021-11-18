@@ -5,112 +5,112 @@ using System.Reactive.Subjects;
 using System.Text;
 using Xunit;
 
-namespace SampleTest.Reactive {
-	public class ObservableCombiningOperatorsTest {
-		// CombineLatestはZipに近いかも
-		[Fact]
-		public void CombineLatest_シーケンスの最新を結合する() {
-			// Arrange
-			var subject1 = new Subject<int>();
-			var subject2 = new Subject<int>();
-			var values = new List<string>();
+namespace SampleTest.Reactive;
 
-			// Act
-			// Assert
-			subject1
-				.CombineLatest(subject2, (value1, value2) => $"{value1}:{value2}")
-				.Subscribe(value => values.Add(value));
+public class ObservableCombiningOperatorsTest {
+	// CombineLatestはZipに近いかも
+	[Fact]
+	public void CombineLatest_シーケンスの最新を結合する() {
+		// Arrange
+		var subject1 = new Subject<int>();
+		var subject2 = new Subject<int>();
+		var values = new List<string>();
 
-			// 2つ目のシーケンスが発行されていないのでまだ空
-			subject1.OnNext(1);
-			Assert.Empty(values);
+		// Act
+		// Assert
+		subject1
+			.CombineLatest(subject2, (value1, value2) => $"{value1}:{value2}")
+			.Subscribe(value => values.Add(value));
 
-			// 2つ目のシーケンスが発行されたので発行される
-			subject2.OnNext(2);
-			Assert.Equal(new List<string> { "1:2" }, values);
+		// 2つ目のシーケンスが発行されていないのでまだ空
+		subject1.OnNext(1);
+		Assert.Empty(values);
 
-			subject2.OnNext(3);
-			Assert.Equal(new List<string> { "1:2", "1:3" }, values);
+		// 2つ目のシーケンスが発行されたので発行される
+		subject2.OnNext(2);
+		Assert.Equal(new List<string> { "1:2" }, values);
 
-			subject1.OnNext(4);
-			Assert.Equal(new List<string> { "1:2", "1:3", "4:3" }, values);
-		}
+		subject2.OnNext(3);
+		Assert.Equal(new List<string> { "1:2", "1:3" }, values);
 
-		[Fact]
-		public void Merge_シーケンスをマージする() {
-			// Arrange
-			var subject1 = new Subject<int>();
-			var subject2 = new Subject<int>();
-			var values = new List<int>();
+		subject1.OnNext(4);
+		Assert.Equal(new List<string> { "1:2", "1:3", "4:3" }, values);
+	}
 
-			// Act
-			Observable.Merge(subject1, subject2)
-				.Subscribe(value => values.Add(value));
-			// 以下でも同じこと
-			/*
-			subject1.Merge(subject2)
-				.Subscribe(value => values.Add(value));
-			*/
+	[Fact]
+	public void Merge_シーケンスをマージする() {
+		// Arrange
+		var subject1 = new Subject<int>();
+		var subject2 = new Subject<int>();
+		var values = new List<int>();
 
-			// マージ元から発行されたら即座に後続に発行
-			subject1.OnNext(1);
-			subject2.OnNext(2);
-			subject1.OnNext(3);
-			subject2.OnNext(4);
+		// Act
+		Observable.Merge(subject1, subject2)
+			.Subscribe(value => values.Add(value));
+		// 以下でも同じこと
+		/*
+		subject1.Merge(subject2)
+			.Subscribe(value => values.Add(value));
+		*/
 
-			// Assert
-			Assert.Equal(new List<int> { 1, 2, 3, 4 }, values);
+		// マージ元から発行されたら即座に後続に発行
+		subject1.OnNext(1);
+		subject2.OnNext(2);
+		subject1.OnNext(3);
+		subject2.OnNext(4);
 
-			subject1.Dispose();
-			subject2.Dispose();
-		}
+		// Assert
+		Assert.Equal(new List<int> { 1, 2, 3, 4 }, values);
 
-		[Fact]
-		public void StartWith_シーケンスの前に発行する() {
-			// Arrange
-			var values = new List<int>();
+		subject1.Dispose();
+		subject2.Dispose();
+	}
 
-			// Act
-			Observable.Return(3)
-				.StartWith(1, 2)
-				.Subscribe(value => values.Add(value));
+	[Fact]
+	public void StartWith_シーケンスの前に発行する() {
+		// Arrange
+		var values = new List<int>();
 
-			// Assert
-			Assert.Equal(new List<int> { 1, 2, 3 }, values);
-		}
+		// Act
+		Observable.Return(3)
+			.StartWith(1, 2)
+			.Subscribe(value => values.Add(value));
 
-		[Fact]
-		public void Zip_シーケンスをマージする() {
-			// Arrange
-			var values = new List<string>();
+		// Assert
+		Assert.Equal(new List<int> { 1, 2, 3 }, values);
+	}
 
-			// Act
-			Observable.Range(1, 3)
-				.Zip(
-					Observable.Range(4, 3),
-					(value1, value2) => $"{value1}:{value2}")
-				.Subscribe(value => values.Add(value));
+	[Fact]
+	public void Zip_シーケンスをマージする() {
+		// Arrange
+		var values = new List<string>();
 
-			// Assert
-			Assert.Equal(new List<string> { "1:4", "2:5", "3:6" }, values);
-		}
+		// Act
+		Observable.Range(1, 3)
+			.Zip(
+				Observable.Range(4, 3),
+				(value1, value2) => $"{value1}:{value2}")
+			.Subscribe(value => values.Add(value));
 
-		[Fact]
-		public void Zip_どちらかのシーケンスが完了した段階で完了する() {
-			// Arrange
-			var values = new List<string>();
+		// Assert
+		Assert.Equal(new List<string> { "1:4", "2:5", "3:6" }, values);
+	}
 
-			// Act
-			// 1つ目はシーケンスは3つ発行して完了
-			// 2つ目のシーケンスは2つ発行して完了
-			Observable.Range(1, 3)
-				.Zip(
-					Observable.Range(4, 2),
-					(value1, value2) => $"{value1}:{value2}")
-				.Subscribe(value => values.Add(value));
+	[Fact]
+	public void Zip_どちらかのシーケンスが完了した段階で完了する() {
+		// Arrange
+		var values = new List<string>();
 
-			// Assert
-			Assert.Equal(new List<string> { "1:4", "2:5" }, values);
-		}
+		// Act
+		// 1つ目はシーケンスは3つ発行して完了
+		// 2つ目のシーケンスは2つ発行して完了
+		Observable.Range(1, 3)
+			.Zip(
+				Observable.Range(4, 2),
+				(value1, value2) => $"{value1}:{value2}")
+			.Subscribe(value => values.Add(value));
+
+		// Assert
+		Assert.Equal(new List<string> { "1:4", "2:5" }, values);
 	}
 }

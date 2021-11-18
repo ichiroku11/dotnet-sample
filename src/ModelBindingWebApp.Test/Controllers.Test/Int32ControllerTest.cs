@@ -8,50 +8,50 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace ModelBindingWebApp.Controllers.Test {
-	public class Int32ControllerTest : ControllerTestBase {
-		public Int32ControllerTest(
-			ITestOutputHelper output,
-			WebApplicationFactory<Startup> factory)
-			: base(output, factory) {
-		}
+namespace ModelBindingWebApp.Controllers.Test;
 
-		[Fact]
-		public async Task GetWithQuery_クエリ文字列を省略するとintは0になる() {
-			// Arrange
-			using var request = new HttpRequestMessage(HttpMethod.Get, "/int32/getwithquery");
+public class Int32ControllerTest : ControllerTestBase {
+	public Int32ControllerTest(
+		ITestOutputHelper output,
+		WebApplicationFactory<Startup> factory)
+		: base(output, factory) {
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			var content = await response.Content.ReadAsStringAsync();
+	[Fact]
+	public async Task GetWithQuery_クエリ文字列を省略するとintは0になる() {
+		// Arrange
+		using var request = new HttpRequestMessage(HttpMethod.Get, "/int32/getwithquery");
 
-			// Assert
-			Assert.Equal("0", content);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var content = await response.Content.ReadAsStringAsync();
 
-		[Fact]
-		public async Task GetWithRoute_ルートのパラメータを省略するとNotFound() {
-			// Arrange
-			using var request = new HttpRequestMessage(HttpMethod.Get, "/int32/getwithroute");
+		// Assert
+		Assert.Equal("0", content);
+	}
 
-			// Act
-			using var response = await SendAsync(request);
+	[Fact]
+	public async Task GetWithRoute_ルートのパラメータを省略するとNotFound() {
+		// Arrange
+		using var request = new HttpRequestMessage(HttpMethod.Get, "/int32/getwithroute");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-		}
+		// Act
+		using var response = await SendAsync(request);
 
-		[Fact]
-		public async Task Post_フォームデータを省略するとintは0になる() {
-			// Arrange
-			using var request = new HttpRequestMessage(HttpMethod.Post, "/int32/post");
+		// Assert
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+	}
 
-			// Act
-			using var response = await SendAsync(request);
-			var content = await response.Content.ReadAsStringAsync();
+	[Fact]
+	public async Task Post_フォームデータを省略するとintは0になる() {
+		// Arrange
+		using var request = new HttpRequestMessage(HttpMethod.Post, "/int32/post");
 
-			// Assert
-			Assert.Equal("0", content);
-		}
+		// Act
+		using var response = await SendAsync(request);
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal("0", content);
 	}
 }

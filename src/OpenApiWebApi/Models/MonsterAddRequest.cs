@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OpenApiWebApi.Models {
+namespace OpenApiWebApi.Models;
+
+/// <summary>
+/// モンスター追加リクエスト
+/// </summary>
+public class MonsterAddRequest {
 	/// <summary>
-	/// モンスター追加リクエスト
+	/// モンスター名
 	/// </summary>
-	public class MonsterAddRequest {
-		/// <summary>
-		/// モンスター名
-		/// </summary>
-		[Required]
-		public string Name { get; set; }
-	}
+	[Required]
+	public string Name { get; set; }
 }

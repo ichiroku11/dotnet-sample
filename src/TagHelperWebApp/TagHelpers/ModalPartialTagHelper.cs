@@ -10,44 +10,44 @@ using System.Linq;
 using System.Threading.Tasks;
 using TagHelperWebApp.Models;
 
-namespace TagHelperWebApp.TagHelpers {
-	public class ModalPartialTagHelper : TagHelper {
-		private readonly ModalPartialViewModel _model = new ModalPartialViewModel();
-		private readonly PartialTagHelper _inner;
+namespace TagHelperWebApp.TagHelpers;
 
-		public ModalPartialTagHelper(ICompositeViewEngine viewEngine, IViewBufferScope viewBufferScope) {
-			_inner = new PartialTagHelper(viewEngine, viewBufferScope) {
-				Name = "_Modal",
-				Model = _model,
-			};
-		}
+public class ModalPartialTagHelper : TagHelper {
+	private readonly ModalPartialViewModel _model = new ModalPartialViewModel();
+	private readonly PartialTagHelper _inner;
 
-		// PartialTagHelperにViewContextが必要みたい
-		// これがないとNullReferenceException
-		[HtmlAttributeNotBound]
-		[ViewContext]
-		public ViewContext ViewContext {
-			get => _inner.ViewContext;
-			set => _inner.ViewContext = value;
-		}
+	public ModalPartialTagHelper(ICompositeViewEngine viewEngine, IViewBufferScope viewBufferScope) {
+		_inner = new PartialTagHelper(viewEngine, viewBufferScope) {
+			Name = "_Modal",
+			Model = _model,
+		};
+	}
 
-		// モーダルのID
-		public string Id {
-			get => _model.Id;
-			set => _model.Id = value;
-		}
+	// PartialTagHelperにViewContextが必要みたい
+	// これがないとNullReferenceException
+	[HtmlAttributeNotBound]
+	[ViewContext]
+	public ViewContext ViewContext {
+		get => _inner.ViewContext;
+		set => _inner.ViewContext = value;
+	}
 
-		// モーダルのタイトル
-		public string Title {
-			get => _model.Title;
-			set => _model.Title = value;
-		}
+	// モーダルのID
+	public string Id {
+		get => _model.Id;
+		set => _model.Id = value;
+	}
 
-		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
-			// 子コンテンツをモーダルのボディ用htmlとする
-			_model.Body = await output.GetChildContentAsync();
+	// モーダルのタイトル
+	public string Title {
+		get => _model.Title;
+		set => _model.Title = value;
+	}
 
-			await _inner.ProcessAsync(context, output);
-		}
+	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
+		// 子コンテンツをモーダルのボディ用htmlとする
+		_model.Body = await output.GetChildContentAsync();
+
+		await _inner.ProcessAsync(context, output);
 	}
 }

@@ -9,36 +9,36 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace OptionPatternWebApp {
-	public class Startup {
-		private readonly IConfiguration _config;
+namespace OptionPatternWebApp;
 
-		public Startup(IConfiguration config) {
-			_config = config;
+public class Startup {
+	private readonly IConfiguration _config;
+
+	public Startup(IConfiguration config) {
+		_config = config;
+	}
+
+	public void ConfigureServices(IServiceCollection services) {
+		// 設定をクラスにバインドできるようにする
+		services.Configure<SampleOptions>(_config.GetSection("App:Sample"));
+		// 別の方法
+		//services.Configure<SampleOptions>(_config.GetSection("App").GetSection("Sample"));
+		services.Configure<SampleOptionsMonitor>(_config.GetSection("App:SampleMonitor"));
+
+		services.AddControllers();
+	}
+
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		if (env.IsDevelopment()) {
+			app.UseDeveloperExceptionPage();
 		}
 
-		public void ConfigureServices(IServiceCollection services) {
-			// 設定をクラスにバインドできるようにする
-			services.Configure<SampleOptions>(_config.GetSection("App:Sample"));
-			// 別の方法
-			//services.Configure<SampleOptions>(_config.GetSection("App").GetSection("Sample"));
-			services.Configure<SampleOptionsMonitor>(_config.GetSection("App:SampleMonitor"));
+		app.UseRouting();
 
-			services.AddControllers();
-		}
-
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-			if (env.IsDevelopment()) {
-				app.UseDeveloperExceptionPage();
-			}
-
-			app.UseRouting();
-
-			app.UseEndpoints(endpoints => {
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Default}/{action=Index}/{id?}");
-			});
-		}
+		app.UseEndpoints(endpoints => {
+			endpoints.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Default}/{action=Index}/{id?}");
+		});
 	}
 }

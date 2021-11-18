@@ -9,29 +9,29 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace AsyncSuffixTrimmedWebApp {
-	public class Startup {
-		public void ConfigureServices(IServiceCollection services) {
-			services.AddControllersWithViews();
+namespace AsyncSuffixTrimmedWebApp;
 
-			services.Configure<RouteOptions>(options => {
-				options.LowercaseQueryStrings = true;
-				options.LowercaseUrls = true;
-			});
+public class Startup {
+	public void ConfigureServices(IServiceCollection services) {
+		services.AddControllersWithViews();
+
+		services.Configure<RouteOptions>(options => {
+			options.LowercaseQueryStrings = true;
+			options.LowercaseUrls = true;
+		});
+	}
+
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		if (env.IsDevelopment()) {
+			app.UseDeveloperExceptionPage();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-			if (env.IsDevelopment()) {
-				app.UseDeveloperExceptionPage();
-			}
+		app.UseRouting();
 
-			app.UseRouting();
-
-			app.UseEndpoints(endpoints => {
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Default}/{action=Index}/{id?}");
-			});
-		}
+		app.UseEndpoints(endpoints => {
+			endpoints.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Default}/{action=Index}/{id?}");
+		});
 	}
 }

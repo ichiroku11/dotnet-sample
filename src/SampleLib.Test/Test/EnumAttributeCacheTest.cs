@@ -4,54 +4,54 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Xunit;
 
-namespace SampleLib.Test {
-	public class EnumAttributeCacheTest {
-		private enum Fruit {
-			None = 0,
+namespace SampleLib.Test;
 
-			[Display(Name = "りんご")]
-			Apple,
+public class EnumAttributeCacheTest {
+	private enum Fruit {
+		None = 0,
 
-			[Display(Name = "バナナ")]
-			Banana,
-		}
+		[Display(Name = "りんご")]
+		Apple,
 
-		private enum Vegetable {
-			None = 0,
+		[Display(Name = "バナナ")]
+		Banana,
+	}
 
-			[Display(Name = "たまねぎ")]
-			Onion,
+	private enum Vegetable {
+		None = 0,
 
-			[Display(Name = "にんじん")]
-			Carrot
-		}
+		[Display(Name = "たまねぎ")]
+		Onion,
 
-		[Fact]
-		public void Get_取得できるその1() {
-			// Arrange
-			// Act
-			var attribute = EnumAttributeCache<Fruit, DisplayAttribute>.Get(Fruit.None);
+		[Display(Name = "にんじん")]
+		Carrot
+	}
 
-			// Assert
-			Assert.Null(attribute);
-		}
+	[Fact]
+	public void Get_取得できるその1() {
+		// Arrange
+		// Act
+		var attribute = EnumAttributeCache<Fruit, DisplayAttribute>.Get(Fruit.None);
 
-		[Fact]
-		public void Get_取得できるその2() {
-			// Arrange
-			// Act
-			// Fruitの属性が遅延実行でキャッシュされる
-			var attribute1 = EnumAttributeCache<Fruit, DisplayAttribute>.Get(Fruit.Apple);
-			var attribute2 = EnumAttributeCache<Fruit, DisplayAttribute>.Get(Fruit.Banana);
-			// Vegetableの属性が遅延実行でキャッシュされる
-			var attribute3 = EnumAttributeCache<Vegetable, DisplayAttribute>.Get(Vegetable.Onion);
-			var attribute4 = EnumAttributeCache<Vegetable, DisplayAttribute>.Get(Vegetable.Carrot);
+		// Assert
+		Assert.Null(attribute);
+	}
 
-			// Assert
-			Assert.Equal("りんご", attribute1.Name);
-			Assert.Equal("バナナ", attribute2.Name);
-			Assert.Equal("たまねぎ", attribute3.Name);
-			Assert.Equal("にんじん", attribute4.Name);
-		}
+	[Fact]
+	public void Get_取得できるその2() {
+		// Arrange
+		// Act
+		// Fruitの属性が遅延実行でキャッシュされる
+		var attribute1 = EnumAttributeCache<Fruit, DisplayAttribute>.Get(Fruit.Apple);
+		var attribute2 = EnumAttributeCache<Fruit, DisplayAttribute>.Get(Fruit.Banana);
+		// Vegetableの属性が遅延実行でキャッシュされる
+		var attribute3 = EnumAttributeCache<Vegetable, DisplayAttribute>.Get(Vegetable.Onion);
+		var attribute4 = EnumAttributeCache<Vegetable, DisplayAttribute>.Get(Vegetable.Carrot);
+
+		// Assert
+		Assert.Equal("りんご", attribute1.Name);
+		Assert.Equal("バナナ", attribute2.Name);
+		Assert.Equal("たまねぎ", attribute3.Name);
+		Assert.Equal("にんじん", attribute4.Name);
 	}
 }

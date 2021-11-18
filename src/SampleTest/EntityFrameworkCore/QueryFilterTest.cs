@@ -6,57 +6,57 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.EntityFrameworkCore {
-	public class QueryFilterTest : IDisposable {
-		private class Sample {
-			public int Id { get; init; }
-			public string Name { get; init; }
+namespace SampleTest.EntityFrameworkCore;
+
+public class QueryFilterTest : IDisposable {
+	private class Sample {
+		public int Id { get; init; }
+		public string Name { get; init; }
+	}
+
+	private class SampleDbContext : SqlServerDbContext {
+		public DbSet<Sample> Samples { get; init; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<Sample>()
+				.ToTable(nameof(Sample))
+				// グローバルフィルタ
+				.HasQueryFilter(entity => entity.Name != null);
 		}
+	}
 
-		private class SampleDbContext : SqlServerDbContext {
-			public DbSet<Sample> Samples { get; init; }
+	private SampleDbContext _context;
 
-			protected override void OnModelCreating(ModelBuilder modelBuilder) {
-				modelBuilder.Entity<Sample>()
-					.ToTable(nameof(Sample))
-					// グローバルフィルタ
-					.HasQueryFilter(entity => entity.Name != null);
-			}
+	public QueryFilterTest() {
+		_context = new SampleDbContext();
+	}
+
+	public void Dispose() {
+		if (_context != null) {
+			_context.Dispose();
+			_context = null;
 		}
+	}
 
-		private SampleDbContext _context;
+	[Fact]
+	public async Task FromSqlRaw_HasQueryFilterを確認する() {
+		var samples = await _context.Samples
+			.FromSqlRaw("select 1 as Id, null as Name")
+			.ToListAsync();
+		var sample = samples.FirstOrDefault();
 
-		public QueryFilterTest() {
-			_context = new SampleDbContext();
-		}
+		Assert.Null(sample);
+	}
 
-		public void Dispose() {
-			if (_context != null) {
-				_context.Dispose();
-				_context = null;
-			}
-		}
+	[Fact]
+	public async Task FromSqlRaw_IgnoreQueryFiltersを確認する() {
+		var samples = await _context.Samples
+			.FromSqlRaw("select 1 as Id, null as Name")
+			.IgnoreQueryFilters()
+			.ToListAsync();
+		var sample = samples.FirstOrDefault();
 
-		[Fact]
-		public async Task FromSqlRaw_HasQueryFilterを確認する() {
-			var samples = await _context.Samples
-				.FromSqlRaw("select 1 as Id, null as Name")
-				.ToListAsync();
-			var sample = samples.FirstOrDefault();
-
-			Assert.Null(sample);
-		}
-
-		[Fact]
-		public async Task FromSqlRaw_IgnoreQueryFiltersを確認する() {
-			var samples = await _context.Samples
-				.FromSqlRaw("select 1 as Id, null as Name")
-				.IgnoreQueryFilters()
-				.ToListAsync();
-			var sample = samples.FirstOrDefault();
-
-			Assert.Equal(1, sample.Id);
-			Assert.Null(sample.Name);
-		}
+		Assert.Equal(1, sample.Id);
+		Assert.Null(sample.Name);
 	}
 }

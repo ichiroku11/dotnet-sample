@@ -3,119 +3,119 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace ModelBindingWebApp.Helpers.Test {
-	public class ModelStateDictionaryJsonSerializerTest {
-		// RawValue is null
-		private const string _jsonRawValueIsNull
-			= @"[{""key"":""k"",""rawValues"":[],""attemptedValue"":""a"",""errorMessages"":[]}]";
+namespace ModelBindingWebApp.Helpers.Test;
 
-		[Fact(DisplayName = "Serialize_RawValueがnullの場合に正しく処理できる")]
-		public void Serialize_RawValueIsNull() {
-			// Arrange
-			var modelStates = new ModelStateDictionary();
-			modelStates.SetModelValue("k", null, "a");
+public class ModelStateDictionaryJsonSerializerTest {
+	// RawValue is null
+	private const string _jsonRawValueIsNull
+		= @"[{""key"":""k"",""rawValues"":[],""attemptedValue"":""a"",""errorMessages"":[]}]";
 
-			// Act
-			var json = ModelStateDictionaryJsonSerializer.Serialize(modelStates);
+	[Fact(DisplayName = "Serialize_RawValueがnullの場合に正しく処理できる")]
+	public void Serialize_RawValueIsNull() {
+		// Arrange
+		var modelStates = new ModelStateDictionary();
+		modelStates.SetModelValue("k", null, "a");
 
-			// Assert
-			Assert.Equal(_jsonRawValueIsNull, json);
-		}
+		// Act
+		var json = ModelStateDictionaryJsonSerializer.Serialize(modelStates);
 
-		[Fact(DisplayName = "Deserialize_RawValueがnullの場合に正しく処理できる")]
-		public void Deserialize_RawValueIsNull() {
-			// Arrange
-			// Act
-			var modelStates = ModelStateDictionaryJsonSerializer.Deserialize(_jsonRawValueIsNull);
+		// Assert
+		Assert.Equal(_jsonRawValueIsNull, json);
+	}
 
-			// Assert
-			Assert.Single(modelStates);
+	[Fact(DisplayName = "Deserialize_RawValueがnullの場合に正しく処理できる")]
+	public void Deserialize_RawValueIsNull() {
+		// Arrange
+		// Act
+		var modelStates = ModelStateDictionaryJsonSerializer.Deserialize(_jsonRawValueIsNull);
 
-			var (key, modelState) = modelStates.First();
-			Assert.Equal("k", key);
+		// Assert
+		Assert.Single(modelStates);
 
-			Assert.Null(modelState.RawValue);
+		var (key, modelState) = modelStates.First();
+		Assert.Equal("k", key);
 
-			Assert.Equal("a", modelState.AttemptedValue);
+		Assert.Null(modelState.RawValue);
 
-			Assert.Empty(modelState.Errors);
-		}
+		Assert.Equal("a", modelState.AttemptedValue);
 
-		// RawValue is string
-		private const string _jsonRawValueIsString
-			= @"[{""key"":""k"",""rawValues"":[""r""],""attemptedValue"":""a"",""errorMessages"":[]}]";
+		Assert.Empty(modelState.Errors);
+	}
 
-		[Fact(DisplayName = "Serialize_RawValueがstringの場合に正しく処理できる")]
-		public void Serialize_RawValueIsString() {
-			// Arrange
-			var modelStates = new ModelStateDictionary();
-			modelStates.SetModelValue("k", "r", "a");
+	// RawValue is string
+	private const string _jsonRawValueIsString
+		= @"[{""key"":""k"",""rawValues"":[""r""],""attemptedValue"":""a"",""errorMessages"":[]}]";
 
-			// Act
-			var json = ModelStateDictionaryJsonSerializer.Serialize(modelStates);
+	[Fact(DisplayName = "Serialize_RawValueがstringの場合に正しく処理できる")]
+	public void Serialize_RawValueIsString() {
+		// Arrange
+		var modelStates = new ModelStateDictionary();
+		modelStates.SetModelValue("k", "r", "a");
 
-			// Assert
-			Assert.Equal(_jsonRawValueIsString, json);
-		}
+		// Act
+		var json = ModelStateDictionaryJsonSerializer.Serialize(modelStates);
 
-		[Fact(DisplayName = "Deserialize_RawValueがstringの場合に正しく処理できる")]
-		public void Deserialize_RawValueIsString() {
-			// Arrange
-			// Act
-			var modelStates = ModelStateDictionaryJsonSerializer.Deserialize(_jsonRawValueIsString);
+		// Assert
+		Assert.Equal(_jsonRawValueIsString, json);
+	}
 
-			// Assert
-			Assert.Single(modelStates);
+	[Fact(DisplayName = "Deserialize_RawValueがstringの場合に正しく処理できる")]
+	public void Deserialize_RawValueIsString() {
+		// Arrange
+		// Act
+		var modelStates = ModelStateDictionaryJsonSerializer.Deserialize(_jsonRawValueIsString);
 
-			var (key, modelState) = modelStates.First();
-			Assert.Equal("k", key);
+		// Assert
+		Assert.Single(modelStates);
 
-			Assert.IsType<string>(modelState.RawValue);
-			Assert.Equal("r", modelState.RawValue);
+		var (key, modelState) = modelStates.First();
+		Assert.Equal("k", key);
 
-			Assert.Equal("a", modelState.AttemptedValue);
+		Assert.IsType<string>(modelState.RawValue);
+		Assert.Equal("r", modelState.RawValue);
 
-			Assert.Empty(modelState.Errors);
-		}
+		Assert.Equal("a", modelState.AttemptedValue);
 
-		// RawValue is string[]
-		private const string _jsonRawValueIsStringArray
-			= @"[{""key"":""k"",""rawValues"":[""r1"",""r2""],""attemptedValue"":""a"",""errorMessages"":[]}]";
+		Assert.Empty(modelState.Errors);
+	}
 
-		[Fact(DisplayName = "Serialize_RawValueがstring[]の場合に正しく処理できる")]
-		public void Serialize_RawValueIsStringArray() {
-			// Arrange
-			var modelStates = new ModelStateDictionary();
-			modelStates.SetModelValue("k", new[] { "r1", "r2" }, "a");
+	// RawValue is string[]
+	private const string _jsonRawValueIsStringArray
+		= @"[{""key"":""k"",""rawValues"":[""r1"",""r2""],""attemptedValue"":""a"",""errorMessages"":[]}]";
 
-			// Act
-			var json = ModelStateDictionaryJsonSerializer.Serialize(modelStates);
+	[Fact(DisplayName = "Serialize_RawValueがstring[]の場合に正しく処理できる")]
+	public void Serialize_RawValueIsStringArray() {
+		// Arrange
+		var modelStates = new ModelStateDictionary();
+		modelStates.SetModelValue("k", new[] { "r1", "r2" }, "a");
 
-			// Assert
-			Assert.Equal(_jsonRawValueIsStringArray, json);
-		}
+		// Act
+		var json = ModelStateDictionaryJsonSerializer.Serialize(modelStates);
 
-		[Fact(DisplayName = "Deserialize_RawValueがstring[]の場合に正しく処理できる")]
-		public void Deserialize_RawValueIsStringArray() {
-			// Arrange
-			// Act
-			var modelStates = ModelStateDictionaryJsonSerializer.Deserialize(_jsonRawValueIsStringArray);
+		// Assert
+		Assert.Equal(_jsonRawValueIsStringArray, json);
+	}
 
-			// Assert
-			Assert.Single(modelStates);
+	[Fact(DisplayName = "Deserialize_RawValueがstring[]の場合に正しく処理できる")]
+	public void Deserialize_RawValueIsStringArray() {
+		// Arrange
+		// Act
+		var modelStates = ModelStateDictionaryJsonSerializer.Deserialize(_jsonRawValueIsStringArray);
 
-			var (key, modelState) = modelStates.First();
-			Assert.Equal("k", key);
+		// Assert
+		Assert.Single(modelStates);
 
-			Assert.IsType<string[]>(modelState.RawValue);
-			var rawValues = modelState.RawValue as string[];
-			Assert.Equal(2, rawValues.Length);
-			Assert.Equal("r1", rawValues[0]);
-			Assert.Equal("r2", rawValues[1]);
+		var (key, modelState) = modelStates.First();
+		Assert.Equal("k", key);
 
-			Assert.Equal("a", modelState.AttemptedValue);
+		Assert.IsType<string[]>(modelState.RawValue);
+		var rawValues = modelState.RawValue as string[];
+		Assert.Equal(2, rawValues.Length);
+		Assert.Equal("r1", rawValues[0]);
+		Assert.Equal("r2", rawValues[1]);
 
-			Assert.Empty(modelState.Errors);
-		}
+		Assert.Equal("a", modelState.AttemptedValue);
+
+		Assert.Empty(modelState.Errors);
 	}
 }

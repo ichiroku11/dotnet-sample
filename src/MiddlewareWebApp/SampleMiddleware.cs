@@ -7,50 +7,50 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MiddlewareWebApp {
-	// 参考
-	// https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/middleware/write?view=aspnetcore-3.1
+namespace MiddlewareWebApp;
 
-	// ミドルウェア
-	// - RequestDelegate型のパラメータを持つパブリックコンストラクタ
-	// - HttpContext型のパラメータを持つInvokeメソッドかInvokeAsyncメソッド
-	// を持つ
+// 参考
+// https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/middleware/write?view=aspnetcore-3.1
 
-	// サンプルミドルウェア
-	public class SampleMiddleware {
-		private static readonly JsonSerializerOptions _options
-			= new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
+// ミドルウェア
+// - RequestDelegate型のパラメータを持つパブリックコンストラクタ
+// - HttpContext型のパラメータを持つInvokeメソッドかInvokeAsyncメソッド
+// を持つ
 
-		private readonly RequestDelegate _next;
-		private readonly ILogger _logger;
-		private readonly string _label;
+// サンプルミドルウェア
+public class SampleMiddleware {
+	private static readonly JsonSerializerOptions _options
+		= new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
 
-		public SampleMiddleware(RequestDelegate next, ILogger<SampleMiddleware> logger, string label) {
-			_next = next;
-			_logger = logger;
-			_label = label;
-		}
+	private readonly RequestDelegate _next;
+	private readonly ILogger _logger;
+	private readonly string _label;
 
-		private void Log(HttpContext context, bool beforeRequestDelegate) {
-			var routeValues = context.Request.RouteValues;
+	public SampleMiddleware(RequestDelegate next, ILogger<SampleMiddleware> logger, string label) {
+		_next = next;
+		_logger = logger;
+		_label = label;
+	}
 
-			var json = new {
-				label = _label,
-				beforeRequestDelegate,
-				controller = routeValues["controller"],
-				action = routeValues["action"],
-			};
-			_logger.LogInformation(JsonSerializer.Serialize(json, _options));
-		}
+	private void Log(HttpContext context, bool beforeRequestDelegate) {
+		var routeValues = context.Request.RouteValues;
 
-		public async Task InvokeAsync(HttpContext context) {
-			Log(context, true);
+		var json = new {
+			label = _label,
+			beforeRequestDelegate,
+			controller = routeValues["controller"],
+			action = routeValues["action"],
+		};
+		_logger.LogInformation(JsonSerializer.Serialize(json, _options));
+	}
 
-			await _next(context);
+	public async Task InvokeAsync(HttpContext context) {
+		Log(context, true);
 
-			Log(context, false);
-		}
+		await _next(context);
+
+		Log(context, false);
 	}
 }

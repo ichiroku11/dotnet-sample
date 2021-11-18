@@ -4,22 +4,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Xunit;
 
-namespace SampleLib.Test {
-	public class EnumExtensionsTest {
-		private enum Fruit {
-			None = 0,
+namespace SampleLib.Test;
 
-			[Display(Name = "りんご")]
-			Apple,
-		}
+public class EnumExtensionsTest {
+	private enum Fruit {
+		None = 0,
 
-		[Fact]
-		public void DisplayName_取得できる() {
-			// Arrange
-			// Act
-			// Assert
-			Assert.Null(Fruit.None.DisplayName());
-			Assert.Equal("りんご", Fruit.Apple.DisplayName());
-		}
+		[Display(Name = "りんご")]
+		Apple,
+	}
+
+	[Fact]
+	public void DisplayName_取得できる() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Null(Fruit.None.DisplayName());
+		Assert.Equal("りんご", Fruit.Apple.DisplayName());
 	}
 }

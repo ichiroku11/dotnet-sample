@@ -6,144 +6,144 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Extensions.FileSystemGlobbing {
-	// https://docs.microsoft.com/ja-jp/dotnet/core/extensions/file-globbing
-	public class MatcherTest {
-		[Fact]
-		public void Match_マッチが1つ見つかる動きを確認する() {
-			// Arrange
-			var matcher = new Matcher();
-			// 含めるパターン指定する
-			matcher.AddInclude("*.md");
+namespace SampleTest.Extensions.FileSystemGlobbing;
 
-			// Act
-			// 指定したパスがマッチするかどうかを確認する
-			var result = matcher.Match("readme.md");
+// https://docs.microsoft.com/ja-jp/dotnet/core/extensions/file-globbing
+public class MatcherTest {
+	[Fact]
+	public void Match_マッチが1つ見つかる動きを確認する() {
+		// Arrange
+		var matcher = new Matcher();
+		// 含めるパターン指定する
+		matcher.AddInclude("*.md");
 
-			// Assert
-			Assert.IsType<PatternMatchingResult>(result);
-			Assert.True(result.HasMatches);
+		// Act
+		// 指定したパスがマッチするかどうかを確認する
+		var result = matcher.Match("readme.md");
 
-			var match = Assert.Single(result.Files);
-			Assert.IsType<FilePatternMatch>(match);
-			Assert.Equal("readme.md", match.Path);
-		}
+		// Assert
+		Assert.IsType<PatternMatchingResult>(result);
+		Assert.True(result.HasMatches);
 
-		[Fact]
-		public void Match_マッチが見つからない動きを確認する() {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude("*.md");
+		var match = Assert.Single(result.Files);
+		Assert.IsType<FilePatternMatch>(match);
+		Assert.Equal("readme.md", match.Path);
+	}
 
-			// Act
-			var result = matcher.Match("readme.txt");
+	[Fact]
+	public void Match_マッチが見つからない動きを確認する() {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude("*.md");
 
-			// Assert
-			Assert.False(result.HasMatches);
-			Assert.Empty(result.Files);
-		}
+		// Act
+		var result = matcher.Match("readme.txt");
 
-		[Theory]
-		[InlineData("readme.md")]
-		[InlineData("folder/readme.md")]
-		[InlineData("folder/subfolder/readme.md")]
-		public void Match_globstarで任意のディレクトリ内にあるファイルが見つかる動きを確認する(string file) {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude("**/*.md");
+		// Assert
+		Assert.False(result.HasMatches);
+		Assert.Empty(result.Files);
+	}
 
-			// Act
-			var result = matcher.Match(file);
+	[Theory]
+	[InlineData("readme.md")]
+	[InlineData("folder/readme.md")]
+	[InlineData("folder/subfolder/readme.md")]
+	public void Match_globstarで任意のディレクトリ内にあるファイルが見つかる動きを確認する(string file) {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude("**/*.md");
 
-			// Assert
-			Assert.True(result.HasMatches);
-			var match = Assert.Single(result.Files);
-			Assert.Equal(file, match.Path);
-		}
+		// Act
+		var result = matcher.Match(file);
 
-		[Theory]
-		[InlineData("readme.md", false)]
-		[InlineData("folder/readme.md", true)]
-		[InlineData("folder/subfolder/readme.md", false)]
-		public void Match_ワイルドカードでサブディレクトリ内にあるファイルが見つかる動きを確認する(string file, bool expected) {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude("*/*.md");
+		// Assert
+		Assert.True(result.HasMatches);
+		var match = Assert.Single(result.Files);
+		Assert.Equal(file, match.Path);
+	}
 
-			// Act
-			var actual = matcher.Match(file).HasMatches;
+	[Theory]
+	[InlineData("readme.md", false)]
+	[InlineData("folder/readme.md", true)]
+	[InlineData("folder/subfolder/readme.md", false)]
+	public void Match_ワイルドカードでサブディレクトリ内にあるファイルが見つかる動きを確認する(string file, bool expected) {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude("*/*.md");
 
-			// Assert
-			Assert.Equal(expected, actual);
-		}
+		// Act
+		var actual = matcher.Match(file).HasMatches;
 
-		// FilePatternMatch.Path - パターンの開始を基準とした相対パス
-		// FilePatternMatch.Stem - パターンのワイルド―カード部分を基準とした相対パス
-		// https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/FilePatternMatch.cs
-		[Theory]
-		// globstar
-		[InlineData("src/Project/**/*.cs", "src/Project/File.cs", "File.cs")]
-		[InlineData("src/Project/**/*.cs", "src/Project/Interfaces/IFile.cs", "Interfaces/IFile.cs")]
-		[InlineData("src/Project/**/*.cs", "src/Project/Interfaces/Files/IFile.cs", "Interfaces/Files/IFile.cs")]
-		// wildcard
-		[InlineData("src/Project/*/*.cs", "src/Project/Interfaces/IFile.cs", "Interfaces/IFile.cs")]
-		public void Match_FilePatternMatchのPathとStemを確認する(string pattern, string file, string expectedStem) {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude(pattern);
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 
-			// Act
-			var result = matcher.Match(file);
+	// FilePatternMatch.Path - パターンの開始を基準とした相対パス
+	// FilePatternMatch.Stem - パターンのワイルド―カード部分を基準とした相対パス
+	// https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/FilePatternMatch.cs
+	[Theory]
+	// globstar
+	[InlineData("src/Project/**/*.cs", "src/Project/File.cs", "File.cs")]
+	[InlineData("src/Project/**/*.cs", "src/Project/Interfaces/IFile.cs", "Interfaces/IFile.cs")]
+	[InlineData("src/Project/**/*.cs", "src/Project/Interfaces/Files/IFile.cs", "Interfaces/Files/IFile.cs")]
+	// wildcard
+	[InlineData("src/Project/*/*.cs", "src/Project/Interfaces/IFile.cs", "Interfaces/IFile.cs")]
+	public void Match_FilePatternMatchのPathとStemを確認する(string pattern, string file, string expectedStem) {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude(pattern);
 
-			// Assert
-			Assert.True(result.HasMatches);
-			var match = Assert.Single(result.Files);
-			Assert.Equal(file, match.Path);
-			Assert.Equal(expectedStem, match.Stem);
-		}
+		// Act
+		var result = matcher.Match(file);
 
-		[Fact]
-		public void Match_ルートディレクトリを指定した場合は相対ファイルパスはマッチしない() {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude("*.md");
+		// Assert
+		Assert.True(result.HasMatches);
+		var match = Assert.Single(result.Files);
+		Assert.Equal(file, match.Path);
+		Assert.Equal(expectedStem, match.Stem);
+	}
 
-			// Act
-			var result = matcher.Match(@"c:\temp", @"readme.md");
+	[Fact]
+	public void Match_ルートディレクトリを指定した場合は相対ファイルパスはマッチしない() {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude("*.md");
 
-			Assert.False(result.HasMatches);
-		}
+		// Act
+		var result = matcher.Match(@"c:\temp", @"readme.md");
 
-		[Fact]
-		public void Match_ルートディレクトリを指定した場合は絶対ファイルパスはマッチする() {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude("*.md");
+		Assert.False(result.HasMatches);
+	}
 
-			// Act
-			var result = matcher.Match(@"c:\temp", @"c:\temp\readme.md");
+	[Fact]
+	public void Match_ルートディレクトリを指定した場合は絶対ファイルパスはマッチする() {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude("*.md");
 
-			Assert.True(result.HasMatches);
-			var match = Assert.Single(result.Files);
-			Assert.Equal("readme.md", match.Path);
-			Assert.Equal("readme.md", match.Stem);
-		}
+		// Act
+		var result = matcher.Match(@"c:\temp", @"c:\temp\readme.md");
 
-		[Fact]
-		public void Execute_InMemoryDirectoryInfoとあわせて使ってみる() {
-			// Arrange
-			var matcher = new Matcher();
-			matcher.AddInclude("*.md");
+		Assert.True(result.HasMatches);
+		var match = Assert.Single(result.Files);
+		Assert.Equal("readme.md", match.Path);
+		Assert.Equal("readme.md", match.Stem);
+	}
 
-			// Act
-			// Matchメソッドの実装はこうなっている
-			var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", new[] { @"c:\temp\readme.md" });
-			var result = matcher.Execute(dirInfo);
+	[Fact]
+	public void Execute_InMemoryDirectoryInfoとあわせて使ってみる() {
+		// Arrange
+		var matcher = new Matcher();
+		matcher.AddInclude("*.md");
 
-			Assert.True(result.HasMatches);
-			var match = Assert.Single(result.Files);
-			Assert.Equal("readme.md", match.Path);
-			Assert.Equal("readme.md", match.Stem);
-		}
+		// Act
+		// Matchメソッドの実装はこうなっている
+		var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", new[] { @"c:\temp\readme.md" });
+		var result = matcher.Execute(dirInfo);
+
+		Assert.True(result.HasMatches);
+		var match = Assert.Single(result.Files);
+		Assert.Equal("readme.md", match.Path);
+		Assert.Equal("readme.md", match.Stem);
 	}
 }

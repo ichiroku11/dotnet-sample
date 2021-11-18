@@ -7,17 +7,18 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Text.Json {
-	public class ObjectToInferredTypesConverterTest {
-		// 型を推論してデシリアライズするJsonConverter
-		// 参考
-		// https://docs.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#deserialize-inferred-types-to-object-properties
-		private class ObjectToInferredTypesConverter : JsonConverter<object> {
-			public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-				=> reader.TokenType switch {
+namespace SampleTest.Text.Json;
+
+public class ObjectToInferredTypesConverterTest {
+	// 型を推論してデシリアライズするJsonConverter
+	// 参考
+	// https://docs.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#deserialize-inferred-types-to-object-properties
+	private class ObjectToInferredTypesConverter : JsonConverter<object> {
+		public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+			=> reader.TokenType switch {
 					// bool
 					JsonTokenType.True => true,
-					JsonTokenType.False => false,
+				JsonTokenType.False => false,
 					// long
 					JsonTokenType.Number when reader.TryGetInt64(out var value) => value,
 					// double
@@ -28,85 +29,84 @@ namespace SampleTest.Text.Json {
 					JsonTokenType.String => reader.GetString(),
 					// 上記以外（たぶんオブジェクトとか配列とか）
 					_ => JsonDocument.ParseValue(ref reader).RootElement.Clone()
-				};
-
-			public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options) {
-				throw new NotImplementedException();
-			}
-		}
-
-		private static JsonSerializerOptions GetJsonSerializerOptions() {
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
 			};
-			options.Converters.Add(new ObjectToInferredTypesConverter());
 
-			return options;
+		public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options) {
+			throw new NotImplementedException();
 		}
+	}
 
-		public static IEnumerable<object[]> GetTestDataForDeserialize() {
-			// bool
-			yield return new object[] { @"{""value"":true}", true };
+	private static JsonSerializerOptions GetJsonSerializerOptions() {
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
+		options.Converters.Add(new ObjectToInferredTypesConverter());
 
-			// long
-			yield return new object[] { @"{""value"":1}", 1L };
+		return options;
+	}
 
-			// string
-			yield return new object[] { @"{""value"":""abc""}", "abc" };
+	public static IEnumerable<object[]> GetTestDataForDeserialize() {
+		// bool
+		yield return new object[] { @"{""value"":true}", true };
 
-			// DateTime
-			yield return new object[] { @"{""value"":""2021-01-09""}", new DateTime(2021, 1, 9), };
-		}
+		// long
+		yield return new object[] { @"{""value"":1}", 1L };
 
-		private class SampleData1 {
-			public object Value { get; init; }
-		}
+		// string
+		yield return new object[] { @"{""value"":""abc""}", "abc" };
 
-		[Theory]
-		[MemberData(nameof(GetTestDataForDeserialize))]
-		public void Deserialize_推論された型をobjectのプロパティにデシリアライズする(string json, object expected) {
-			// Arrange
+		// DateTime
+		yield return new object[] { @"{""value"":""2021-01-09""}", new DateTime(2021, 1, 9), };
+	}
 
-			// Act
-			var data = JsonSerializer.Deserialize<SampleData1>(json, GetJsonSerializerOptions());
+	private class SampleData1 {
+		public object Value { get; init; }
+	}
 
-			// Assert
-			Assert.IsType(expected.GetType(), data.Value);
-			Assert.Equal(expected, data.Value);
-		}
+	[Theory]
+	[MemberData(nameof(GetTestDataForDeserialize))]
+	public void Deserialize_推論された型をobjectのプロパティにデシリアライズする(string json, object expected) {
+		// Arrange
 
-		private class SampleData2 {
-			// プロパティに定義されていないデータを扱う
-			[JsonExtensionData]
-			public Dictionary<string, object> Exts { get; init; }
-		}
+		// Act
+		var data = JsonSerializer.Deserialize<SampleData1>(json, GetJsonSerializerOptions());
 
-		[Theory]
-		[MemberData(nameof(GetTestDataForDeserialize))]
-		public void Deserialize_推論された型をJsonExtensionDataを指定したobjectのディクショナリにデシリアライズする(string json, object expected) {
-			// Arrange
+		// Assert
+		Assert.IsType(expected.GetType(), data.Value);
+		Assert.Equal(expected, data.Value);
+	}
 
-			// Act
-			var data = JsonSerializer.Deserialize<SampleData2>(json, GetJsonSerializerOptions());
+	private class SampleData2 {
+		// プロパティに定義されていないデータを扱う
+		[JsonExtensionData]
+		public Dictionary<string, object> Exts { get; init; }
+	}
 
-			// Assert
-			Assert.Single(data.Exts);
-			Assert.IsType(expected.GetType(), data.Exts["value"]);
-			Assert.Equal(expected, data.Exts["value"]);
-		}
+	[Theory]
+	[MemberData(nameof(GetTestDataForDeserialize))]
+	public void Deserialize_推論された型をJsonExtensionDataを指定したobjectのディクショナリにデシリアライズする(string json, object expected) {
+		// Arrange
 
-		[Theory]
-		[MemberData(nameof(GetTestDataForDeserialize))]
-		public void Deserialize_推論された型をobjectのディクショナリにデシリアライズする(string json, object expected) {
-			// Arrange
+		// Act
+		var data = JsonSerializer.Deserialize<SampleData2>(json, GetJsonSerializerOptions());
 
-			// Act
-			var values = JsonSerializer.Deserialize<Dictionary<string, object>>(json, GetJsonSerializerOptions());
+		// Assert
+		Assert.Single(data.Exts);
+		Assert.IsType(expected.GetType(), data.Exts["value"]);
+		Assert.Equal(expected, data.Exts["value"]);
+	}
 
-			// Assert
-			Assert.Single(values);
-			Assert.IsType(expected.GetType(), values["value"]);
-			Assert.Equal(expected, values["value"]);
-		}
+	[Theory]
+	[MemberData(nameof(GetTestDataForDeserialize))]
+	public void Deserialize_推論された型をobjectのディクショナリにデシリアライズする(string json, object expected) {
+		// Arrange
+
+		// Act
+		var values = JsonSerializer.Deserialize<Dictionary<string, object>>(json, GetJsonSerializerOptions());
+
+		// Assert
+		Assert.Single(values);
+		Assert.IsType(expected.GetType(), values["value"]);
+		Assert.Equal(expected, values["value"]);
 	}
 }

@@ -4,59 +4,59 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Threading {
-	// TaskCompletionSourceを使ったサンプル
-	public class TaskCompletionSourceTest {
-		[Fact]
-		public async Task<int> SetResult() {
-			// 指定した時間が経過した後に結果を返すローカル関数
-			Task<TResult> completeAsync<TResult>(TResult result, int milliseconds) {
-				var source = new TaskCompletionSource<TResult>();
+namespace SampleTest.Threading;
 
-				// 指定時間後に結果を設定
-				var fireAndForgetTask = Task.Delay(milliseconds).ContinueWith(_ => source.SetResult(result));
+// TaskCompletionSourceを使ったサンプル
+public class TaskCompletionSourceTest {
+	[Fact]
+	public async Task<int> SetResult() {
+		// 指定した時間が経過した後に結果を返すローカル関数
+		Task<TResult> completeAsync<TResult>(TResult result, int milliseconds) {
+			var source = new TaskCompletionSource<TResult>();
 
-				return source.Task;
-			}
+			// 指定時間後に結果を設定
+			var fireAndForgetTask = Task.Delay(milliseconds).ContinueWith(_ => source.SetResult(result));
 
-			// 100ms後に結果を取得できる
-			Assert.Equal(1, await completeAsync(1, 100));
-
-			return 0;
+			return source.Task;
 		}
 
-		[Fact]
-		public async Task SetCanceled() {
-			// 指定した時間が経過した後にキャンセルするローカル関数
-			Task cancelAsync(int milliseconds) {
-				var source = new TaskCompletionSource<int>();
+		// 100ms後に結果を取得できる
+		Assert.Equal(1, await completeAsync(1, 100));
 
-				// 指定時間後にキャンセル
-				var fireAndForgetTask = Task.Delay(milliseconds).ContinueWith(_ => source.SetCanceled());
+		return 0;
+	}
 
-				return source.Task;
-			}
+	[Fact]
+	public async Task SetCanceled() {
+		// 指定した時間が経過した後にキャンセルするローカル関数
+		Task cancelAsync(int milliseconds) {
+			var source = new TaskCompletionSource<int>();
 
-			// 100ms後にキャンセルされる
-			await Assert.ThrowsAsync<TaskCanceledException>(async () => await cancelAsync(100));
+			// 指定時間後にキャンセル
+			var fireAndForgetTask = Task.Delay(milliseconds).ContinueWith(_ => source.SetCanceled());
+
+			return source.Task;
 		}
 
-		[Fact]
-		public async Task SetException() {
-			// 指定した時間が経過した後に例外をスローするローカル関数
-			Task throwAsync<TException>(TException exception, int milliseconds)
-				where TException : Exception {
-				var source = new TaskCompletionSource<int>();
+		// 100ms後にキャンセルされる
+		await Assert.ThrowsAsync<TaskCanceledException>(async () => await cancelAsync(100));
+	}
 
-				// 指定時間後に例外をスロー
-				var fireAndForgetTask = Task.Delay(milliseconds).ContinueWith(_ => source.SetException(exception));
+	[Fact]
+	public async Task SetException() {
+		// 指定した時間が経過した後に例外をスローするローカル関数
+		Task throwAsync<TException>(TException exception, int milliseconds)
+			where TException : Exception {
+			var source = new TaskCompletionSource<int>();
 
-				return source.Task;
-			}
+			// 指定時間後に例外をスロー
+			var fireAndForgetTask = Task.Delay(milliseconds).ContinueWith(_ => source.SetException(exception));
 
-			// 100ms後に例外スローされる
-			await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
-				async () => await throwAsync(new ArgumentOutOfRangeException(), 100));
+			return source.Task;
 		}
+
+		// 100ms後に例外スローされる
+		await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+			async () => await throwAsync(new ArgumentOutOfRangeException(), 100));
 	}
 }

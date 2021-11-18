@@ -6,55 +6,56 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.EntityFrameworkCore {
-	// 複合主キー、複合外部キーを試す
-	// 参考
-	// https://docs.microsoft.com/ja-jp/ef/core/modeling/relationships?tabs=fluent-api%2Cfluent-api-composite-key%2Csimple-key#foreign-key
-	[Collection(CollectionNames.EfCoreSample)]
-	public class CompositeKeyTest : IDisposable {
-		private class Sample {
-			public int Id1 { get; init; }
-			public int Id2 { get; init; }
-			public string Value { get; init; }
-			public List<SampleDetail> Details { get; init; }
+namespace SampleTest.EntityFrameworkCore;
+
+// 複合主キー、複合外部キーを試す
+// 参考
+// https://docs.microsoft.com/ja-jp/ef/core/modeling/relationships?tabs=fluent-api%2Cfluent-api-composite-key%2Csimple-key#foreign-key
+[Collection(CollectionNames.EfCoreSample)]
+public class CompositeKeyTest : IDisposable {
+	private class Sample {
+		public int Id1 { get; init; }
+		public int Id2 { get; init; }
+		public string Value { get; init; }
+		public List<SampleDetail> Details { get; init; }
+	}
+
+	private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
+
+	private class SampleDbContext : SqlServerDbContext {
+		public DbSet<Sample> Samples { get; init; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<Sample>().ToTable(nameof(Sample))
+				// 複合主キー
+				.HasKey(entity => new { entity.Id1, entity.Id2 });
+
+			modelBuilder.Entity<SampleDetail>().ToTable(nameof(SampleDetail))
+				// 複合主キー
+				.HasKey(entity => new { entity.SampleId1, entity.SampleId2, entity.DetailNo });
 		}
+	}
 
-		private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
+	private SampleDbContext _context;
 
-		private class SampleDbContext : SqlServerDbContext {
-			public DbSet<Sample> Samples { get; init; }
+	public CompositeKeyTest() {
+		_context = new SampleDbContext();
 
-			protected override void OnModelCreating(ModelBuilder modelBuilder) {
-				modelBuilder.Entity<Sample>().ToTable(nameof(Sample))
-					// 複合主キー
-					.HasKey(entity => new { entity.Id1, entity.Id2 });
+		DropTable();
+		InitTable();
+	}
 
-				modelBuilder.Entity<SampleDetail>().ToTable(nameof(SampleDetail))
-					// 複合主キー
-					.HasKey(entity => new { entity.SampleId1, entity.SampleId2, entity.DetailNo });
-			}
+	public void Dispose() {
+		DropTable();
+
+		if (_context != null) {
+			_context.Dispose();
+			_context = null;
 		}
+	}
 
-		private SampleDbContext _context;
-
-		public CompositeKeyTest() {
-			_context = new SampleDbContext();
-
-			DropTable();
-			InitTable();
-		}
-
-		public void Dispose() {
-			DropTable();
-
-			if (_context != null) {
-				_context.Dispose();
-				_context = null;
-			}
-		}
-
-		private void InitTable() {
-			var sql = @"
+	private void InitTable() {
+		var sql = @"
 create table dbo.Sample(
 	Id1 int not null,
 	Id2 int not null,
@@ -79,75 +80,74 @@ output inserted.*
 values
 	(1, 2, 1, N'a-1'),
 	(1, 2, 2, N'a-2');";
-			_context.Database.ExecuteSqlRaw(sql);
-		}
+		_context.Database.ExecuteSqlRaw(sql);
+	}
 
-		private void DropTable() {
-			var sql = @"
+	private void DropTable() {
+		var sql = @"
 drop table if exists dbo.SampleDetail;
 drop table if exists dbo.Sample;";
-			_context.Database.ExecuteSqlRaw(sql);
-		}
+		_context.Database.ExecuteSqlRaw(sql);
+	}
 
-		[Fact]
-		public async Task FirstOrDefault_関連データなしで取得する() {
-			// Arrange
-			// Act
-			var sample = await _context.Samples
-				.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
+	[Fact]
+	public async Task FirstOrDefault_関連データなしで取得する() {
+		// Arrange
+		// Act
+		var sample = await _context.Samples
+			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
-			// Assert
-			Assert.Equal(1, sample.Id1);
-			Assert.Equal(2, sample.Id2);
-			Assert.Equal("a", sample.Value);
-			Assert.Null(sample.Details);
-		}
+		// Assert
+		Assert.Equal(1, sample.Id1);
+		Assert.Equal(2, sample.Id2);
+		Assert.Equal("a", sample.Value);
+		Assert.Null(sample.Details);
+	}
 
-		[Fact]
-		public async Task FirstOrDefault_関連データとともに取得する() {
-			// Arrange
-			// Act
-			var sample = await _context.Samples
-				.Include(sample => sample.Details)
-				.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
+	[Fact]
+	public async Task FirstOrDefault_関連データとともに取得する() {
+		// Arrange
+		// Act
+		var sample = await _context.Samples
+			.Include(sample => sample.Details)
+			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
-			// Assert
-			Assert.Equal(1, sample.Id1);
-			Assert.Equal(2, sample.Id2);
-			Assert.Equal("a", sample.Value);
-			Assert.Equal(2, sample.Details.Count);
-			Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample.Details);
-			Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample.Details);
-		}
+		// Assert
+		Assert.Equal(1, sample.Id1);
+		Assert.Equal(2, sample.Id2);
+		Assert.Equal("a", sample.Value);
+		Assert.Equal(2, sample.Details.Count);
+		Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample.Details);
+		Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample.Details);
+	}
 
-		[Fact]
-		public async Task Add_関連データとともに追加する() {
-			// Arrange
-			var expected = new Sample {
-				Id1 = 1,
-				Id2 = 3,
-				Value = "b",
-				Details = new List<SampleDetail> {
+	[Fact]
+	public async Task Add_関連データとともに追加する() {
+		// Arrange
+		var expected = new Sample {
+			Id1 = 1,
+			Id2 = 3,
+			Value = "b",
+			Details = new List<SampleDetail> {
 					new SampleDetail(1, 3, 1, "b-1"),
 					new SampleDetail(1, 3, 2, "b-2"),
 				},
-			};
+		};
 
-			// Act
-			_context.Samples.Add(expected);
-			var rows = await _context.SaveChangesAsync();
+		// Act
+		_context.Samples.Add(expected);
+		var rows = await _context.SaveChangesAsync();
 
-			var actual = await _context.Samples
-				.Include(sample => sample.Details)
-				.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 3);
+		var actual = await _context.Samples
+			.Include(sample => sample.Details)
+			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 3);
 
-			// Assert
-			Assert.Equal(3, rows);
+		// Assert
+		Assert.Equal(3, rows);
 
-			Assert.Equal(expected.Id1, actual.Id1);
-			Assert.Equal(expected.Id2, actual.Id2);
-			Assert.Equal(expected.Value, actual.Value);
-			Assert.Equal(expected.Details.OrderBy(detail => detail.DetailNo), actual.Details.OrderBy(detail => detail.DetailNo));
-		}
+		Assert.Equal(expected.Id1, actual.Id1);
+		Assert.Equal(expected.Id2, actual.Id2);
+		Assert.Equal(expected.Value, actual.Value);
+		Assert.Equal(expected.Details.OrderBy(detail => detail.DetailNo), actual.Details.OrderBy(detail => detail.DetailNo));
 	}
 }

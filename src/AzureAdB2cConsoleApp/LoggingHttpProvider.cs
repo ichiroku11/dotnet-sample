@@ -8,38 +8,38 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AzureAdB2cConsoleApp {
-	public class LoggingHttpProvider : IHttpProvider {
-		private readonly IHttpProvider _provider;
-		private readonly ILogger _logger;
+namespace AzureAdB2cConsoleApp;
 
-		public LoggingHttpProvider(IHttpProvider provider, ILogger logger) {
-			_provider = provider;
-			_logger = logger;
-		}
+public class LoggingHttpProvider : IHttpProvider {
+	private readonly IHttpProvider _provider;
+	private readonly ILogger _logger;
 
-		public ISerializer Serializer => _provider.Serializer;
+	public LoggingHttpProvider(IHttpProvider provider, ILogger logger) {
+		_provider = provider;
+		_logger = logger;
+	}
 
-		public TimeSpan OverallTimeout {
-			get => _provider.OverallTimeout;
-			set => _provider.OverallTimeout = value;
-		}
+	public ISerializer Serializer => _provider.Serializer;
 
-		public void Dispose() {
-			_provider.Dispose();
-		}
+	public TimeSpan OverallTimeout {
+		get => _provider.OverallTimeout;
+		set => _provider.OverallTimeout = value;
+	}
 
-		public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {
-			return _provider.SendAsync(request);
-		}
+	public void Dispose() {
+		_provider.Dispose();
+	}
 
-		public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken) {
-			_logger.LogInformation(request.ToString());
+	public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {
+		return _provider.SendAsync(request);
+	}
 
-			var response = await _provider.SendAsync(request, completionOption, cancellationToken);
+	public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken) {
+		_logger.LogInformation(request.ToString());
 
-			_logger.LogInformation(response.ToString());
-			return response;
-		}
+		var response = await _provider.SendAsync(request, completionOption, cancellationToken);
+
+		_logger.LogInformation(response.ToString());
+		return response;
 	}
 }

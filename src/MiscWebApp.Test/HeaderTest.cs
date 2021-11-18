@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace MiscWebApp.Test {
-	public class HeaderTest : TestBase {
-		public HeaderTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
-			: base(output, factory) {
-		}
+namespace MiscWebApp.Test;
 
-		[Fact]
-		public async Task テスト実行だとレスポンスヘッダがなさげ() {
-			// Arrange
-			var request = new HttpRequestMessage(HttpMethod.Get, "/header");
+public class HeaderTest : TestBase {
+	public HeaderTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+		: base(output, factory) {
+	}
 
-			// Act
-			var response = await SendAsync(request);
+	[Fact]
+	public async Task テスト実行だとレスポンスヘッダがなさげ() {
+		// Arrange
+		var request = new HttpRequestMessage(HttpMethod.Get, "/header");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Empty(response.Headers);
-		}
+		// Act
+		var response = await SendAsync(request);
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Empty(response.Headers);
 	}
 }

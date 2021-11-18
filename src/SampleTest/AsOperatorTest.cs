@@ -3,42 +3,42 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace SampleTest {
-	public class AsOperatorTest {
-		[Fact]
-		public void AsOperator_Int32のListはInt32のIListに変換できる() {
-			// Arrange
-			var items = new List<int> { 1 };
+namespace SampleTest;
 
-			// Act
-			// Assert
-			Assert.NotNull(items as IList<int>);
-		}
+public class AsOperatorTest {
+	[Fact]
+	public void AsOperator_Int32のListはInt32のIListに変換できる() {
+		// Arrange
+		var items = new List<int> { 1 };
 
-		private interface ISample {
-		}
+		// Act
+		// Assert
+		Assert.NotNull(items as IList<int>);
+	}
 
-		private class Sample : ISample {
-		}
+	private interface ISample {
+	}
 
-		[Fact]
-		public void AsOperator_クラスのListはクラスのIListに変換できる() {
-			// Arrange
-			var items = new List<Sample> { new Sample() };
+	private class Sample : ISample {
+	}
 
-			// Act
-			// Assert
-			Assert.NotNull(items as IList<Sample>);
-		}
+	[Fact]
+	public void AsOperator_クラスのListはクラスのIListに変換できる() {
+		// Arrange
+		var items = new List<Sample> { new Sample() };
 
-		[Fact]
-		public void AsOperator_クラスのListはインターフェイスのIListに変換できない() {
-			// Arrange
-			var items = new List<Sample> { new Sample() };
+		// Act
+		// Assert
+		Assert.NotNull(items as IList<Sample>);
+	}
 
-			// Act
-			// Assert
-			Assert.Null(items as IList<ISample>);
-		}
+	[Fact]
+	public void AsOperator_クラスのListはインターフェイスのIListに変換できない() {
+		// Arrange
+		var items = new List<Sample> { new Sample() };
+
+		// Act
+		// Assert
+		Assert.Null(items as IList<ISample>);
 	}
 }

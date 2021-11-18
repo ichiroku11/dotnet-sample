@@ -8,95 +8,95 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Extensions.FileSystemGlobbing {
-	public class InMemoryDirectoryInfoTest {
-		private readonly ITestOutputHelper _output;
+namespace SampleTest.Extensions.FileSystemGlobbing;
 
-		public InMemoryDirectoryInfoTest(ITestOutputHelper output) {
-			_output = output;
-		}
+public class InMemoryDirectoryInfoTest {
+	private readonly ITestOutputHelper _output;
 
-		[Fact]
-		public void FullName_フォルダのフルパスを確認できる() {
-			// Arrange
-			var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", null);
+	public InMemoryDirectoryInfoTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			// Act
-			var fullName = dirInfo.FullName;
+	[Fact]
+	public void FullName_フォルダのフルパスを確認できる() {
+		// Arrange
+		var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", null);
 
-			// Assert
-			Assert.Equal(@"c:\temp", fullName);
-		}
+		// Act
+		var fullName = dirInfo.FullName;
 
-		[Fact]
-		public void Name_フォルダ名を確認する() {
-			// Arrange
-			var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", null);
+		// Assert
+		Assert.Equal(@"c:\temp", fullName);
+	}
 
-			// Act
-			var name = dirInfo.Name;
+	[Fact]
+	public void Name_フォルダ名を確認する() {
+		// Arrange
+		var dirInfo = new InMemoryDirectoryInfo(@"c:\temp", null);
 
-			// Assert
-			Assert.Equal(@"temp", name);
-		}
+		// Act
+		var name = dirInfo.Name;
 
-		[Fact]
-		public void EnumerateFileSystemInfos_カレントディレクトリをルートに指定するとファイルを列挙できる() {
-			// Arrange
-			var root = Directory.GetCurrentDirectory();
-			_output.WriteLine(root);
+		// Assert
+		Assert.Equal(@"temp", name);
+	}
 
-			var files = new List<string> {
+	[Fact]
+	public void EnumerateFileSystemInfos_カレントディレクトリをルートに指定するとファイルを列挙できる() {
+		// Arrange
+		var root = Directory.GetCurrentDirectory();
+		_output.WriteLine(root);
+
+		var files = new List<string> {
 				"readme.md"
 			};
-			var dirInfo = new InMemoryDirectoryInfo(root, files);
+		var dirInfo = new InMemoryDirectoryInfo(root, files);
 
-			// Act
-			var fileInfos = dirInfo.EnumerateFileSystemInfos();
+		// Act
+		var fileInfos = dirInfo.EnumerateFileSystemInfos();
 
-			// Assert
-			var fileInfo = Assert.Single(fileInfos);
-			_output.WriteLine(fileInfo.FullName);
+		// Assert
+		var fileInfo = Assert.Single(fileInfos);
+		_output.WriteLine(fileInfo.FullName);
 
-			Assert.Equal("readme.md", fileInfo.Name);
-		}
+		Assert.Equal("readme.md", fileInfo.Name);
+	}
 
-		[Fact]
-		public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとファイルを列挙できない() {
-			// Arrange
-			var root = @"c:\temp";
-			_output.WriteLine(root);
+	[Fact]
+	public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとファイルを列挙できない() {
+		// Arrange
+		var root = @"c:\temp";
+		_output.WriteLine(root);
 
-			var files = new List<string> {
+		var files = new List<string> {
 				"readme.md"
 			};
-			var dirInfo = new InMemoryDirectoryInfo(root, files);
+		var dirInfo = new InMemoryDirectoryInfo(root, files);
 
-			// Act
-			var fileInfos = dirInfo.EnumerateFileSystemInfos();
+		// Act
+		var fileInfos = dirInfo.EnumerateFileSystemInfos();
 
-			// Assert
-			Assert.Empty(fileInfos);
-		}
+		// Assert
+		Assert.Empty(fileInfos);
+	}
 
-		[Fact]
-		public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとフルパスで指定したファイルを列挙できる() {
-			// Arrange
-			var root = @"c:\temp";
-			_output.WriteLine(root);
+	[Fact]
+	public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとフルパスで指定したファイルを列挙できる() {
+		// Arrange
+		var root = @"c:\temp";
+		_output.WriteLine(root);
 
-			var files = new List<string> {
+		var files = new List<string> {
 				@"c:\temp\readme.md"
 			};
-			var dirInfo = new InMemoryDirectoryInfo(root, files);
+		var dirInfo = new InMemoryDirectoryInfo(root, files);
 
-			// Act
-			var fileInfos = dirInfo.EnumerateFileSystemInfos();
+		// Act
+		var fileInfos = dirInfo.EnumerateFileSystemInfos();
 
-			// Assert
-			var fileInfo = Assert.Single(fileInfos);
-			Assert.Equal("readme.md", fileInfo.Name);
-			Assert.Equal(@"c:\temp\readme.md", fileInfo.FullName);
-		}
+		// Assert
+		var fileInfo = Assert.Single(fileInfos);
+		Assert.Equal("readme.md", fileInfo.Name);
+		Assert.Equal(@"c:\temp\readme.md", fileInfo.FullName);
 	}
 }

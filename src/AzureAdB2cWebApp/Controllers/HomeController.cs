@@ -6,20 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AzureAdB2cWebApp.Controllers {
-	[Authorize]
-	public class HomeController : Controller {
-		[AllowAnonymous]
-		public IActionResult Index() => View();
+namespace AzureAdB2cWebApp.Controllers;
 
-		[AllowAnonymous]
-		public IActionResult Option() => View();
+[Authorize]
+public class HomeController : Controller {
+	[AllowAnonymous]
+	public IActionResult Index() => View();
 
-		public async Task<IActionResult> ClaimAsync() {
-			var result = await HttpContext.AuthenticateAsync();
-			ViewBag.Properties = result.Properties;
+	[AllowAnonymous]
+	public IActionResult Option() => View();
 
-			return View();
-		}
+	public async Task<IActionResult> ClaimAsync() {
+		var result = await HttpContext.AuthenticateAsync();
+		ViewBag.Properties = result.Properties;
+
+		return View();
 	}
 }

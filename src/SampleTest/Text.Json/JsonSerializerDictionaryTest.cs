@@ -6,35 +6,36 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.Text.Json {
-	public class JsonSerializerDictionaryTest {
-		private record SampleItem(string Value);
+namespace SampleTest.Text.Json;
 
-		private class SampleWithDictionary {
-			public IDictionary<string, SampleItem> Items { get; init; }
-		}
+public class JsonSerializerDictionaryTest {
+	private record SampleItem(string Value);
 
-		[Fact]
-		public void Serialize_IDictionaryはオブジェクトにシリアライズされる() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-				WriteIndented = true,
-			};
+	private class SampleWithDictionary {
+		public IDictionary<string, SampleItem> Items { get; init; }
+	}
 
-			var sample = new SampleWithDictionary {
-				Items = new Dictionary<string, SampleItem>() {
-					["a"] = new SampleItem("x"),
-					["b"] = new SampleItem("y"),
-				},
-			};
+	[Fact]
+	public void Serialize_IDictionaryはオブジェクトにシリアライズされる() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			WriteIndented = true,
+		};
 
-			// Act
-			var actual = JsonSerializer.Serialize(sample, options);
+		var sample = new SampleWithDictionary {
+			Items = new Dictionary<string, SampleItem>() {
+				["a"] = new SampleItem("x"),
+				["b"] = new SampleItem("y"),
+			},
+		};
 
-			// Assert
-			// IDictionaryはオブジェクトとしてシリアライズされる
-			var expected = @"{
+		// Act
+		var actual = JsonSerializer.Serialize(sample, options);
+
+		// Assert
+		// IDictionaryはオブジェクトとしてシリアライズされる
+		var expected = @"{
   ""items"": {
     ""a"": {
       ""value"": ""x""
@@ -44,17 +45,17 @@ namespace SampleTest.Text.Json {
     }
   }
 }";
-			Assert.Equal(expected, actual);
-		}
+		Assert.Equal(expected, actual);
+	}
 
-		[Fact]
-		public void Deserialize_オブジェクトをIDictionaryにデシリアライズする() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
+	[Fact]
+	public void Deserialize_オブジェクトをIDictionaryにデシリアライズする() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
 
-			var json = @"{
+		var json = @"{
   ""items"": {
     ""a"": {
       ""value"": ""x""
@@ -65,24 +66,24 @@ namespace SampleTest.Text.Json {
   }
 }";
 
-			// Act
-			var actual = JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
+		// Act
+		var actual = JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
 
-			// Assert
-			// オブジェクトをIDictionaryとしてデシリアライズできる
-			Assert.Equal(2, actual.Items.Count);
-			Assert.Equal("x", actual.Items["a"].Value);
-			Assert.Equal("y", actual.Items["b"].Value);
-		}
+		// Assert
+		// オブジェクトをIDictionaryとしてデシリアライズできる
+		Assert.Equal(2, actual.Items.Count);
+		Assert.Equal("x", actual.Items["a"].Value);
+		Assert.Equal("y", actual.Items["b"].Value);
+	}
 
-		[Fact]
-		public void Deserialize_KeyValueオブジェクトの配列をIDictionaryにデシリアライズできない様子() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
+	[Fact]
+	public void Deserialize_KeyValueオブジェクトの配列をIDictionaryにデシリアライズできない様子() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
 
-			var json = @"{
+		var json = @"{
   ""items"": [
     {
       ""key"": ""a"",
@@ -93,12 +94,11 @@ namespace SampleTest.Text.Json {
   ]
 }";
 
-			// Act
-			// Assert
-			// KeyValueオブジェクトの配列はIDictionaryとしてデシリアライズできない？
-			Assert.Throws<JsonException>(() => {
-				JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
-			});
-		}
+		// Act
+		// Assert
+		// KeyValueオブジェクトの配列はIDictionaryとしてデシリアライズできない？
+		Assert.Throws<JsonException>(() => {
+			JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
+		});
 	}
 }

@@ -3,67 +3,67 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace SampleTest {
-	// null条件演算子のテスト
-	public class NullConditionalOperatorTest {
-		// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/builtin-types/nullable-value-types#how-to-identify-a-nullable-value-type
+namespace SampleTest;
 
-		// 指定した値がnullableかどうか
-		private static bool IsNullable<TValue>(TValue _) {
-			var type = typeof(TValue);
-			return Nullable.GetUnderlyingType(type) != null;
-		}
+// null条件演算子のテスト
+public class NullConditionalOperatorTest {
+	// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/builtin-types/nullable-value-types#how-to-identify-a-nullable-value-type
 
-		private class Sample1 {
-			public int Value { get; init; }
-		}
+	// 指定した値がnullableかどうか
+	private static bool IsNullable<TValue>(TValue _) {
+		var type = typeof(TValue);
+		return Nullable.GetUnderlyingType(type) != null;
+	}
 
-		[Fact]
-		public void Null条件演算子_getterプロパティの値はnull許容型になる() {
-			// Arrange
-			var sample = new Sample1 {
-				Value = 1,
-			};
+	private class Sample1 {
+		public int Value { get; init; }
+	}
 
-			// Act
-			// Assert
-			Assert.Equal(1, sample.Value);
+	[Fact]
+	public void Null条件演算子_getterプロパティの値はnull許容型になる() {
+		// Arrange
+		var sample = new Sample1 {
+			Value = 1,
+		};
 
-			// 通常のプロパティアクセスはnull許容型ではない
-			Assert.False(IsNullable(sample.Value));
+		// Act
+		// Assert
+		Assert.Equal(1, sample.Value);
 
-			// null条件演算子でのプロパティアクセスはnull許容型になる
-			Assert.True(IsNullable(sample?.Value));
-		}
+		// 通常のプロパティアクセスはnull許容型ではない
+		Assert.False(IsNullable(sample.Value));
 
-		private class Sample2 {
-			private int _value;
-			public int this[string key] {
-				get {
-					return _value;
-				}
-				set {
-					_value = value;
-				}
+		// null条件演算子でのプロパティアクセスはnull許容型になる
+		Assert.True(IsNullable(sample?.Value));
+	}
+
+	private class Sample2 {
+		private int _value;
+		public int this[string key] {
+			get {
+				return _value;
+			}
+			set {
+				_value = value;
 			}
 		}
+	}
 
-		[Fact]
-		public void Null条件演算子_インデクサの値はnull許容型になる() {
-			// Arrange
-			var sample = new Sample2 {
-				["a"] = 1,
-			};
+	[Fact]
+	public void Null条件演算子_インデクサの値はnull許容型になる() {
+		// Arrange
+		var sample = new Sample2 {
+			["a"] = 1,
+		};
 
-			// Act
-			// Assert
-			Assert.Equal(1, sample["a"]);
+		// Act
+		// Assert
+		Assert.Equal(1, sample["a"]);
 
-			// 通常のインデクサアクセスはnull許容型ではない
-			Assert.False(IsNullable(sample["a"]));
+		// 通常のインデクサアクセスはnull許容型ではない
+		Assert.False(IsNullable(sample["a"]));
 
-			// null条件演算子でのインデクサアクセスはnull許容型になる
-			Assert.True(IsNullable(sample?["a"]));
-		}
+		// null条件演算子でのインデクサアクセスはnull許容型になる
+		Assert.True(IsNullable(sample?["a"]));
 	}
 }

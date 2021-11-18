@@ -8,122 +8,122 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Text.Json {
-	public class JsonStringEnumConverterTest {
-		// enum<=>文字列・数値の変換を試すテスト
-		private enum SampleCode {
-			Unknown = 0,
-			Ok,
-			NotFound,
-		}
+namespace SampleTest.Text.Json;
 
-		private class SampleData {
-			public SampleCode Code { get; set; }
-		}
+public class JsonStringEnumConverterTest {
+	// enum<=>文字列・数値の変換を試すテスト
+	private enum SampleCode {
+		Unknown = 0,
+		Ok,
+		NotFound,
+	}
 
-		private readonly ITestOutputHelper _output;
+	private class SampleData {
+		public SampleCode Code { get; set; }
+	}
 
-		public JsonStringEnumConverterTest(ITestOutputHelper output) {
-			_output = output;
-		}
+	private readonly ITestOutputHelper _output;
 
-		[Fact]
-		public void Serialize_デフォルトではenumは数値にシリアライズされる() {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
+	public JsonStringEnumConverterTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			var data = new SampleData {
-				Code = SampleCode.Ok,
-			};
+	[Fact]
+	public void Serialize_デフォルトではenumは数値にシリアライズされる() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
 
-			// Act
-			var json = JsonSerializer.Serialize(data, options);
+		var data = new SampleData {
+			Code = SampleCode.Ok,
+		};
 
-			// Assert
-			Assert.Equal(@"{""code"":1}", json);
-		}
+		// Act
+		var json = JsonSerializer.Serialize(data, options);
 
-		[Theory]
-		// JsonStringEnumConverterを使うと、enum値を文字列でシリアライズできる
-		[InlineData(false, @"{""code"":""NotFound""}")]
-		// JsonStringEnumConverterにJsonNamingPolicy.CamelCaseを指定すると、enum値をキャメルケースでシリアライズできる
-		[InlineData(true, @"{""code"":""notFound""}")]
-		public void Serialize_JsonStringEnumConverterを使ってenumを文字列としてシリアライズする(bool camelCase, string expected) {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			};
-			options.Converters.Add(new JsonStringEnumConverter(camelCase ? JsonNamingPolicy.CamelCase : null));
+		// Assert
+		Assert.Equal(@"{""code"":1}", json);
+	}
 
-			var data = new SampleData {
-				Code = SampleCode.NotFound,
-			};
+	[Theory]
+	// JsonStringEnumConverterを使うと、enum値を文字列でシリアライズできる
+	[InlineData(false, @"{""code"":""NotFound""}")]
+	// JsonStringEnumConverterにJsonNamingPolicy.CamelCaseを指定すると、enum値をキャメルケースでシリアライズできる
+	[InlineData(true, @"{""code"":""notFound""}")]
+	public void Serialize_JsonStringEnumConverterを使ってenumを文字列としてシリアライズする(bool camelCase, string expected) {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
+		options.Converters.Add(new JsonStringEnumConverter(camelCase ? JsonNamingPolicy.CamelCase : null));
 
-			// Act
-			var actual = JsonSerializer.Serialize(data, options);
+		var data = new SampleData {
+			Code = SampleCode.NotFound,
+		};
 
-			// Assert
-			Assert.Equal(expected, actual);
-		}
+		// Act
+		var actual = JsonSerializer.Serialize(data, options);
 
-		[Fact]
-		public void Deserialize_デフォルトでは数値をenumにデシリアライズできる() {
-			// Arrange
-			var json = @"{""code"":1}";
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 
-			// Act
-			var data = JsonSerializer.Deserialize<SampleData>(json, options);
+	[Fact]
+	public void Deserialize_デフォルトでは数値をenumにデシリアライズできる() {
+		// Arrange
+		var json = @"{""code"":1}";
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
 
-			// Assert
-			Assert.Equal(SampleCode.Ok, data.Code);
-		}
+		// Act
+		var data = JsonSerializer.Deserialize<SampleData>(json, options);
 
-		[Theory]
-		[InlineData(@"{""code"":""Ok""}")]
-		[InlineData(@"{""code"":""ok""}")]
-		[InlineData(@"{""code"":""1""}")]
-		public void Deerialize_デフォルトでは文字列をenumにデシリアライズできず例外が発生する(string json) {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
+		// Assert
+		Assert.Equal(SampleCode.Ok, data.Code);
+	}
 
-			// Act
-			// Assert
-			var exception = Assert.Throws<JsonException>(() => {
-				JsonSerializer.Deserialize<SampleData>(json, options);
-			});
-			_output.WriteLine(exception.ToString());
-		}
+	[Theory]
+	[InlineData(@"{""code"":""Ok""}")]
+	[InlineData(@"{""code"":""ok""}")]
+	[InlineData(@"{""code"":""1""}")]
+	public void Deerialize_デフォルトでは文字列をenumにデシリアライズできず例外が発生する(string json) {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
 
-		[Theory]
-		[InlineData(@"{""code"":""NotFound""}")]
-		// キャメルケース、すべて大文字・小文字でもデイシリアライズできる
-		[InlineData(@"{""code"":""notFound""}")]
-		[InlineData(@"{""code"":""notfound""}")]
-		[InlineData(@"{""code"":""NOTFOUND""}")]
-		// 数字、数字の文字列でもデイシリアライズできる
-		[InlineData(@"{""code"":2}")]
-		[InlineData(@"{""code"":""2""}")]
-		public void Deerialize_JsonStringEnumConverterを使って文字列をenumにデシリアライズする(string json) {
-			// Arrange
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
-			options.Converters.Add(new JsonStringEnumConverter());
+		// Act
+		// Assert
+		var exception = Assert.Throws<JsonException>(() => {
+			JsonSerializer.Deserialize<SampleData>(json, options);
+		});
+		_output.WriteLine(exception.ToString());
+	}
 
-			// Act
-			var data = JsonSerializer.Deserialize<SampleData>(json, options);
+	[Theory]
+	[InlineData(@"{""code"":""NotFound""}")]
+	// キャメルケース、すべて大文字・小文字でもデイシリアライズできる
+	[InlineData(@"{""code"":""notFound""}")]
+	[InlineData(@"{""code"":""notfound""}")]
+	[InlineData(@"{""code"":""NOTFOUND""}")]
+	// 数字、数字の文字列でもデイシリアライズできる
+	[InlineData(@"{""code"":2}")]
+	[InlineData(@"{""code"":""2""}")]
+	public void Deerialize_JsonStringEnumConverterを使って文字列をenumにデシリアライズする(string json) {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
+		options.Converters.Add(new JsonStringEnumConverter());
 
-			// Assert
-			Assert.Equal(SampleCode.NotFound, data.Code);
+		// Act
+		var data = JsonSerializer.Deserialize<SampleData>(json, options);
 
-		}
+		// Assert
+		Assert.Equal(SampleCode.NotFound, data.Code);
 
 	}
+
 }

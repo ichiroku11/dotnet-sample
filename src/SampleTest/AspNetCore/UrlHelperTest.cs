@@ -13,131 +13,131 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.AspNetCore {
-	// 参考
-	// https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Core/test/Routing/UrlHelperTest.cs
-	// https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Core/test/Routing/UrlHelperTestBase.cs
-	public class UrlHelperTest {
-		private class PassThroughRouter : IRouter {
-			public VirtualPathData GetVirtualPath(VirtualPathContext context) => null;
+namespace SampleTest.AspNetCore;
 
-			public Task RouteAsync(RouteContext routeContext) {
-				routeContext.Handler = httpContext => Task.CompletedTask;
-				return Task.CompletedTask;
-			}
+// 参考
+// https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Core/test/Routing/UrlHelperTest.cs
+// https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Core/test/Routing/UrlHelperTestBase.cs
+public class UrlHelperTest {
+	private class PassThroughRouter : IRouter {
+		public VirtualPathData GetVirtualPath(VirtualPathContext context) => null;
+
+		public Task RouteAsync(RouteContext routeContext) {
+			routeContext.Handler = httpContext => Task.CompletedTask;
+			return Task.CompletedTask;
 		}
+	}
 
-		// IServiceProvider（サービス一覧）を生成
-		private static IServiceProvider CreateServiceProvider() {
-			var services = new ServiceCollection();
+	// IServiceProvider（サービス一覧）を生成
+	private static IServiceProvider CreateServiceProvider() {
+		var services = new ServiceCollection();
 
-			services
-				.AddOptions()
-				.AddLogging()
-				.AddRouting(options => {
-					options.LowercaseQueryStrings = true;
-					options.LowercaseUrls = true;
-				})
-				.AddSingleton(UrlEncoder.Default);
+		services
+			.AddOptions()
+			.AddLogging()
+			.AddRouting(options => {
+				options.LowercaseQueryStrings = true;
+				options.LowercaseUrls = true;
+			})
+			.AddSingleton(UrlEncoder.Default);
 
-			return services.BuildServiceProvider();
-		}
+		return services.BuildServiceProvider();
+	}
 
-		// HttpContextを生成
-		private static HttpContext CreateHttpContext(
-			IServiceProvider services,
-			string scheme,
-			string host,
-			string app) {
-			var context = new DefaultHttpContext {
-				RequestServices = services
-			};
+	// HttpContextを生成
+	private static HttpContext CreateHttpContext(
+		IServiceProvider services,
+		string scheme,
+		string host,
+		string app) {
+		var context = new DefaultHttpContext {
+			RequestServices = services
+		};
 
-			var request = context.Request;
-			request.Scheme = scheme;
-			request.Host = new HostString(host);
-			request.PathBase = new PathString(app);
+		var request = context.Request;
+		request.Scheme = scheme;
+		request.Host = new HostString(host);
+		request.PathBase = new PathString(app);
 
-			return context;
-		}
+		return context;
+	}
 
-		// ActionContextを生成
-		private static ActionContext CreateActionContext(HttpContext httpContext, RouteData routeData = default)
-			=> new ActionContext(httpContext, routeData ?? new RouteData(), new ActionDescriptor());
+	// ActionContextを生成
+	private static ActionContext CreateActionContext(HttpContext httpContext, RouteData routeData = default)
+		=> new ActionContext(httpContext, routeData ?? new RouteData(), new ActionDescriptor());
 
-		// IRouteBuilderを生成
-		private static IRouteBuilder CreateRouteBuilder(IServiceProvider services) {
-			var app = new Mock<IApplicationBuilder>();
+	// IRouteBuilderを生成
+	private static IRouteBuilder CreateRouteBuilder(IServiceProvider services) {
+		var app = new Mock<IApplicationBuilder>();
 
-			app.SetupGet(a => a.ApplicationServices)
-				.Returns(services);
+		app.SetupGet(a => a.ApplicationServices)
+			.Returns(services);
 
-			return new RouteBuilder(app.Object) {
-				DefaultHandler = new PassThroughRouter(),
-			};
-		}
+		return new RouteBuilder(app.Object) {
+			DefaultHandler = new PassThroughRouter(),
+		};
+	}
 
-		// IRouterを生成
-		private static IRouter CreateRouter(IServiceProvider services) {
-			var routeBuilder = CreateRouteBuilder(services);
-			// デフォルトのルートを追加
-			routeBuilder.MapRoute(
-				name: "default",
-				template: "{controller}/{action}/{id?}",
-				new { controller = "default", action = "index" });
-			return routeBuilder.Build();
-		}
+	// IRouterを生成
+	private static IRouter CreateRouter(IServiceProvider services) {
+		var routeBuilder = CreateRouteBuilder(services);
+		// デフォルトのルートを追加
+		routeBuilder.MapRoute(
+			name: "default",
+			template: "{controller}/{action}/{id?}",
+			new { controller = "default", action = "index" });
+		return routeBuilder.Build();
+	}
 
-		// UrlHelperを生成
-		private static UrlHelper CreateUrlHelper(string scheme, string host, string app) {
-			var services = CreateServiceProvider();
-			var httpContext = CreateHttpContext(services, scheme, host, app);
-			var actionContext = CreateActionContext(httpContext);
-			actionContext.RouteData.Routers.Add(CreateRouter(services));
+	// UrlHelperを生成
+	private static UrlHelper CreateUrlHelper(string scheme, string host, string app) {
+		var services = CreateServiceProvider();
+		var httpContext = CreateHttpContext(services, scheme, host, app);
+		var actionContext = CreateActionContext(httpContext);
+		actionContext.RouteData.Routers.Add(CreateRouter(services));
 
-			return new UrlHelper(actionContext);
-		}
+		return new UrlHelper(actionContext);
+	}
 
-		public static IEnumerable<object[]> GetTestDataForActionLink() {
-			yield return new[] {
+	public static IEnumerable<object[]> GetTestDataForActionLink() {
+		yield return new[] {
 				"example.jp", "", null, null, null, "https://example.jp/"
 			};
-			// appあり
-			yield return new[] {
+		// appあり
+		yield return new[] {
 				"example.jp", "/app", null, null, null, "https://example.jp/app"
 			};
-			// actionあり
-			yield return new[] {
+		// actionあり
+		yield return new[] {
 				"example.jp", "/app", "x", null, null, "https://example.jp/app/default/x"
 			};
-			// action/controllerあり
-			yield return new[] {
+		// action/controllerあり
+		yield return new[] {
 				"example.jp", "/app", "x", "y", null, "https://example.jp/app/y/x"
 			};
-			// パラメータあり（ルートに含まれる）
-			yield return new object[] {
+		// パラメータあり（ルートに含まれる）
+		yield return new object[] {
 				"example.jp", "/app", "x", "y", new { id = 1 }, "https://example.jp/app/y/x/1"
 			};
-			// パラメータあり（クエリ文字列）
-			yield return new object[] {
+		// パラメータあり（クエリ文字列）
+		yield return new object[] {
 				"example.jp", "/app", "x", "y", new { value = "abc" }, "https://example.jp/app/y/x?value=abc"
 			};
-		}
+	}
 
-		[Theory]
-		[MemberData(nameof(GetTestDataForActionLink))]
-		public void ActionLink_絶対URLを生成できる(
-			string host, string app,
-			string action, string contoller, object values,
-			string expected) {
-			// Arrange
-			var urlHelper = CreateUrlHelper("https", host, app);
+	[Theory]
+	[MemberData(nameof(GetTestDataForActionLink))]
+	public void ActionLink_絶対URLを生成できる(
+		string host, string app,
+		string action, string contoller, object values,
+		string expected) {
+		// Arrange
+		var urlHelper = CreateUrlHelper("https", host, app);
 
-			// Act
-			var actual = urlHelper.ActionLink(action, contoller, values);
+		// Act
+		var actual = urlHelper.ActionLink(action, contoller, values);
 
-			// Assert
-			Assert.Equal(expected: expected, actual);
-		}
+		// Assert
+		Assert.Equal(expected: expected, actual);
 	}
 }

@@ -7,66 +7,66 @@ using System.Text.Json.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.Text.Json {
-	public class DateTimeConverterTest {
-		// 独自フォーマットの日付文字列とDateTimeを変換するJsonConverter
-		private class DateTimeConverter : JsonConverter<DateTime> {
-			private static readonly string _format = "yyyy/MM/dd HH:mm:ss";
+namespace SampleTest.Text.Json;
 
-			public override DateTime Read(
-				ref Utf8JsonReader reader,
-				Type typeToConvert,
-				JsonSerializerOptions options)
-				=> DateTime.ParseExact(reader.GetString(), _format, CultureInfo.InvariantCulture);
+public class DateTimeConverterTest {
+	// 独自フォーマットの日付文字列とDateTimeを変換するJsonConverter
+	private class DateTimeConverter : JsonConverter<DateTime> {
+		private static readonly string _format = "yyyy/MM/dd HH:mm:ss";
 
-			public override void Write(
-				Utf8JsonWriter writer,
-				DateTime value,
-				JsonSerializerOptions options)
-				=> writer.WriteStringValue(value.ToString(_format, CultureInfo.InvariantCulture));
-		}
+		public override DateTime Read(
+			ref Utf8JsonReader reader,
+			Type typeToConvert,
+			JsonSerializerOptions options)
+			=> DateTime.ParseExact(reader.GetString(), _format, CultureInfo.InvariantCulture);
 
-		// JSONに変換するデータ
-		private class ConverterSample {
-			public DateTime Value { get; set; }
-		}
+		public override void Write(
+			Utf8JsonWriter writer,
+			DateTime value,
+			JsonSerializerOptions options)
+			=> writer.WriteStringValue(value.ToString(_format, CultureInfo.InvariantCulture));
+	}
 
-		private readonly ITestOutputHelper _output;
+	// JSONに変換するデータ
+	private class ConverterSample {
+		public DateTime Value { get; set; }
+	}
 
-		public DateTimeConverterTest(ITestOutputHelper output) {
-			_output = output;
-		}
+	private readonly ITestOutputHelper _output;
 
-		[Fact]
-		public void Deserialize_デフォルトではDateTimeにデシリアライズできない独自の形式の日付文字列がある() {
-			// Arrange
-			var json = @"{""value"":""2020/06/01 12:34:56""}";
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
+	public DateTimeConverterTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			// Act
-			// Assert
-			var exception = Assert.Throws<JsonException>(() => {
-				JsonSerializer.Deserialize<ConverterSample>(json, options);
-			});
-			_output.WriteLine(exception.ToString());
-		}
+	[Fact]
+	public void Deserialize_デフォルトではDateTimeにデシリアライズできない独自の形式の日付文字列がある() {
+		// Arrange
+		var json = @"{""value"":""2020/06/01 12:34:56""}";
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
 
-		[Fact]
-		public void Deserialize_独自の形式の日付文字列をDateTimeにデシリアライズする() {
-			// Arrange
-			var json = @"{""value"":""2020/06/01 12:34:56""}";
-			var options = new JsonSerializerOptions {
-				PropertyNameCaseInsensitive = true,
-			};
-			options.Converters.Add(new DateTimeConverter());
+		// Act
+		// Assert
+		var exception = Assert.Throws<JsonException>(() => {
+			JsonSerializer.Deserialize<ConverterSample>(json, options);
+		});
+		_output.WriteLine(exception.ToString());
+	}
 
-			// Act
-			var sample = JsonSerializer.Deserialize<ConverterSample>(json, options);
+	[Fact]
+	public void Deserialize_独自の形式の日付文字列をDateTimeにデシリアライズする() {
+		// Arrange
+		var json = @"{""value"":""2020/06/01 12:34:56""}";
+		var options = new JsonSerializerOptions {
+			PropertyNameCaseInsensitive = true,
+		};
+		options.Converters.Add(new DateTimeConverter());
 
-			// Assert
-			Assert.Equal(new DateTime(2020, 6, 1, 12, 34, 56), sample.Value);
-		}
+		// Act
+		var sample = JsonSerializer.Deserialize<ConverterSample>(json, options);
+
+		// Assert
+		Assert.Equal(new DateTime(2020, 6, 1, 12, 34, 56), sample.Value);
 	}
 }

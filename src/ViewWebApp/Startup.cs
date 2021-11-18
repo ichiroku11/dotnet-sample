@@ -7,28 +7,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ViewWebApp {
-	public class Startup {
-		public void ConfigureServices(IServiceCollection services) {
-			services.AddRazorPages();
+namespace ViewWebApp;
 
-			services.AddControllersWithViews();
+public class Startup {
+	public void ConfigureServices(IServiceCollection services) {
+		services.AddRazorPages();
+
+		services.AddControllersWithViews();
+	}
+
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		if (env.IsDevelopment()) {
+			app.UseDeveloperExceptionPage();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-			if (env.IsDevelopment()) {
-				app.UseDeveloperExceptionPage();
-			}
+		app.UseRouting();
 
-			app.UseRouting();
+		app.UseEndpoints(endpoints => {
+			endpoints.MapRazorPages();
 
-			app.UseEndpoints(endpoints => {
-				endpoints.MapRazorPages();
-
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Default}/{action=Index}/{id?}");
-			});
-		}
+			endpoints.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Default}/{action=Index}/{id?}");
+		});
 	}
 }

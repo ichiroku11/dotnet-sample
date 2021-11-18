@@ -8,80 +8,80 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SampleTest.IdentityModel.Tokens.Jwt {
-	public class JwtHeaderTest {
-		private readonly ITestOutputHelper _output;
+namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-		public JwtHeaderTest(ITestOutputHelper output) {
-			_output = output;
-		}
+public class JwtHeaderTest {
+	private readonly ITestOutputHelper _output;
 
-		[Fact]
-		public void Constructor_空のヘッダーを生成する() {
-			// Arrange
-			// Act
-			var header = new JwtHeader();
+	public JwtHeaderTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
-			// Assert
-			Assert.Null(header.Typ);
-			Assert.Null(header.Alg);
+	[Fact]
+	public void Constructor_空のヘッダーを生成する() {
+		// Arrange
+		// Act
+		var header = new JwtHeader();
 
-			_output.WriteLine(header.SerializeToJson());
-		}
+		// Assert
+		Assert.Null(header.Typ);
+		Assert.Null(header.Alg);
 
-		[Fact]
-		public void Constructor_署名なしのヘッダーを生成する() {
-			// Arrange
-			// Act
-			var header = new JwtHeader(signingCredentials: null);
+		_output.WriteLine(header.SerializeToJson());
+	}
 
-			// Assert
-			Assert.Equal("JWT", header.Typ);
-			Assert.Equal("none", header.Alg);
+	[Fact]
+	public void Constructor_署名なしのヘッダーを生成する() {
+		// Arrange
+		// Act
+		var header = new JwtHeader(signingCredentials: null);
 
-			_output.WriteLine(header.SerializeToJson());
-		}
+		// Assert
+		Assert.Equal("JWT", header.Typ);
+		Assert.Equal("none", header.Alg);
 
-		[Fact]
-		public void Constructor_HS256署名付きのヘッダーを生成する() {
-			// Arrange
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
-			var algorithm = SecurityAlgorithms.HmacSha256;
-			var credentials = new SigningCredentials(key, algorithm);
+		_output.WriteLine(header.SerializeToJson());
+	}
 
-			// Act
-			var header = new JwtHeader(credentials);
+	[Fact]
+	public void Constructor_HS256署名付きのヘッダーを生成する() {
+		// Arrange
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
+		var algorithm = SecurityAlgorithms.HmacSha256;
+		var credentials = new SigningCredentials(key, algorithm);
 
-			// Assert
-			Assert.Equal("JWT", header.Typ);
-			Assert.Equal("HS256", header.Alg);
+		// Act
+		var header = new JwtHeader(credentials);
 
-			_output.WriteLine(header.SerializeToJson());
-		}
+		// Assert
+		Assert.Equal("JWT", header.Typ);
+		Assert.Equal("HS256", header.Alg);
 
-		[Fact]
-		public void SerializeToJson_空のヘッダーをJSONにシリアライズする() {
-			// Arrange
-			var header = new JwtHeader();
+		_output.WriteLine(header.SerializeToJson());
+	}
 
-			// Act
-			var actual = header.SerializeToJson();
+	[Fact]
+	public void SerializeToJson_空のヘッダーをJSONにシリアライズする() {
+		// Arrange
+		var header = new JwtHeader();
 
-			// Assert
-			Assert.Equal("{}", actual);
-		}
+		// Act
+		var actual = header.SerializeToJson();
 
-		[Fact]
-		public void Base64UrlEncode_空のヘッダーをBase64Urlにエンコードする() {
-			// Arrange
-			var header = new JwtHeader();
+		// Assert
+		Assert.Equal("{}", actual);
+	}
 
-			// Act
-			var actual = header.Base64UrlEncode();
-			_output.WriteLine(actual);
+	[Fact]
+	public void Base64UrlEncode_空のヘッダーをBase64Urlにエンコードする() {
+		// Arrange
+		var header = new JwtHeader();
 
-			// Assert
-			Assert.Equal(Base64UrlEncoder.Encode("{}"), actual);
-		}
+		// Act
+		var actual = header.Base64UrlEncode();
+		_output.WriteLine(actual);
+
+		// Assert
+		Assert.Equal(Base64UrlEncoder.Encode("{}"), actual);
 	}
 }

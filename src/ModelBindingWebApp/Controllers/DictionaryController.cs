@@ -5,37 +5,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ModelBindingWebApp.Models;
 
-namespace ModelBindingWebApp.Controllers {
-	// ディクショナリへのバインドを試す
-	// https://docs.microsoft.com/ja-jp/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1
+namespace ModelBindingWebApp.Controllers;
 
-	[Route("api/[controller]")]
-	[ApiController]
-	public class DictionaryController : ControllerBase {
-		// 何か時間がかかる処理
-		private Task ActionAsync() => Task.CompletedTask;
+// ディクショナリへのバインドを試す
+// https://docs.microsoft.com/ja-jp/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1
 
-		// ~/api/dictionary
-		[HttpPost]
-		public async Task<IDictionary<string, int>> PostAsync(
-			// Formデータをバインドする
-			[FromForm] IDictionary<string, int> values) {
-			await ActionAsync();
+[Route("api/[controller]")]
+[ApiController]
+public class DictionaryController : ControllerBase {
+	// 何か時間がかかる処理
+	private Task ActionAsync() => Task.CompletedTask;
 
-			return values;
-		}
+	// ~/api/dictionary
+	[HttpPost]
+	public async Task<IDictionary<string, int>> PostAsync(
+		// Formデータをバインドする
+		[FromForm] IDictionary<string, int> values) {
+		await ActionAsync();
 
-		// 5.0 => バインドできる
-		// 3.x => バインドできない様子だった
-		// NotSupportedExceptionがスローされた
-		// The collection type 'System.Collections.Generic.Dictionary`2[System.Int32,MiscWebApi.Models.Sample]' is not supported.
-		// ~/api/dictionary/complex
-		[HttpPost("complex")]
-		public async Task<IDictionary<int, Sample>> PostAsync(
-			[FromForm] IDictionary<int, Sample> values) {
-			await ActionAsync();
+		return values;
+	}
 
-			return values;
-		}
+	// 5.0 => バインドできる
+	// 3.x => バインドできない様子だった
+	// NotSupportedExceptionがスローされた
+	// The collection type 'System.Collections.Generic.Dictionary`2[System.Int32,MiscWebApi.Models.Sample]' is not supported.
+	// ~/api/dictionary/complex
+	[HttpPost("complex")]
+	public async Task<IDictionary<int, Sample>> PostAsync(
+		[FromForm] IDictionary<int, Sample> values) {
+		await ActionAsync();
+
+		return values;
 	}
 }

@@ -5,27 +5,27 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HybridCryptoConsoleApp {
-	// RSA、AESによる復号を行う
-	public class Decryptor {
-		private readonly RSAParameters _parameters;
+namespace HybridCryptoConsoleApp;
 
-		public Decryptor(RSAParameters parameters) {
-			_parameters = parameters;
-		}
+// RSA、AESによる復号を行う
+public class Decryptor {
+	private readonly RSAParameters _parameters;
 
-		// 復号
-		public string Decrypt(byte[] cipher, byte[] iv, byte[] key) {
-			using var rsa = RSA.Create(_parameters);
-			var deformatter = new RSAPKCS1KeyExchangeDeformatter(rsa);
+	public Decryptor(RSAParameters parameters) {
+		_parameters = parameters;
+	}
 
-			using var aes = Aes.Create();
-			// IVとセッションキーを復号して共通鍵を取り出す
-			aes.IV = deformatter.DecryptKeyExchange(iv);
-			aes.Key = deformatter.DecryptKeyExchange(key);
+	// 復号
+	public string Decrypt(byte[] cipher, byte[] iv, byte[] key) {
+		using var rsa = RSA.Create(_parameters);
+		var deformatter = new RSAPKCS1KeyExchangeDeformatter(rsa);
 
-			// メッセージをAESで復号する
-			return aes.Decrypt(cipher);
-		}
+		using var aes = Aes.Create();
+		// IVとセッションキーを復号して共通鍵を取り出す
+		aes.IV = deformatter.DecryptKeyExchange(iv);
+		aes.Key = deformatter.DecryptKeyExchange(key);
+
+		// メッセージをAESで復号する
+		return aes.Decrypt(cipher);
 	}
 }

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OpenApiWebApi.Models {
-	// summaryがOpenAPIに出力される
+namespace OpenApiWebApi.Models;
+
+// summaryがOpenAPIに出力される
+/// <summary>
+/// モンスター
+/// </summary>
+public class Monster {
 	/// <summary>
-	/// モンスター
+	/// ID
 	/// </summary>
-	public class Monster {
-		/// <summary>
-		/// ID
-		/// </summary>
-		public int Id { get; init; }
-		/// <summary>
-		/// 名前
-		/// </summary>
-		public string Name { get; init; }
-	}
+	public int Id { get; init; }
+	/// <summary>
+	/// 名前
+	/// </summary>
+	public string Name { get; init; }
 }

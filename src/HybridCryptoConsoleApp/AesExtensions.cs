@@ -6,36 +6,36 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HybridCryptoConsoleApp {
-	public static class AesExtensions {
-		// AESで暗号化する
-		public static byte[] Encrypt(this Aes aes, string plain) {
-			using var memoryStream = new MemoryStream();
-			using var cryptoStream = new CryptoStream(
-				stream: memoryStream,
-				transform: aes.CreateEncryptor(),
-				mode: CryptoStreamMode.Write,
-				leaveOpen: false);
+namespace HybridCryptoConsoleApp;
 
-			using var writer = new StreamWriter(cryptoStream);
-			writer.Write(plain);
-			// MemoryStream.ToArrayするためにクローズする
-			writer.Close();
+public static class AesExtensions {
+	// AESで暗号化する
+	public static byte[] Encrypt(this Aes aes, string plain) {
+		using var memoryStream = new MemoryStream();
+		using var cryptoStream = new CryptoStream(
+			stream: memoryStream,
+			transform: aes.CreateEncryptor(),
+			mode: CryptoStreamMode.Write,
+			leaveOpen: false);
 
-			return memoryStream.ToArray();
-		}
+		using var writer = new StreamWriter(cryptoStream);
+		writer.Write(plain);
+		// MemoryStream.ToArrayするためにクローズする
+		writer.Close();
 
-		// AESで復号する
-		public static string Decrypt(this Aes aes, byte[] cipher) {
-			using var memoryStream = new MemoryStream(cipher);
-			using var cryptoStream = new CryptoStream(
-				stream: memoryStream,
-				transform: aes.CreateDecryptor(),
-				mode: CryptoStreamMode.Read,
-				leaveOpen: false);
+		return memoryStream.ToArray();
+	}
 
-			using var reader = new StreamReader(cryptoStream);
-			return reader.ReadToEnd();
-		}
+	// AESで復号する
+	public static string Decrypt(this Aes aes, byte[] cipher) {
+		using var memoryStream = new MemoryStream(cipher);
+		using var cryptoStream = new CryptoStream(
+			stream: memoryStream,
+			transform: aes.CreateDecryptor(),
+			mode: CryptoStreamMode.Read,
+			leaveOpen: false);
+
+		using var reader = new StreamReader(cryptoStream);
+		return reader.ReadToEnd();
 	}
 }

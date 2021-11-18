@@ -7,20 +7,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MiddlewareWebApp {
-	public class Program {
-		public static void Main(string[] args) {
-			CreateHostBuilder(args).Build().Run();
-		}
+namespace MiddlewareWebApp;
 
-		public static IHostBuilder CreateHostBuilder(string[] args) =>
-			Host.CreateDefaultBuilder(args)
-				.ConfigureWebHostDefaults(webBuilder => {
+public class Program {
+	public static void Main(string[] args) {
+		CreateHostBuilder(args).Build().Run();
+	}
+
+	public static IHostBuilder CreateHostBuilder(string[] args) =>
+		Host.CreateDefaultBuilder(args)
+			.ConfigureWebHostDefaults(webBuilder => {
 					// SampleMiddleware、SampleStartupFilterを使ったStartup
 					//webBuilder.UseStartup<SampleStartup>();
 
 					// Use/UseWhen/Runを使ったStartup
 					webBuilder.UseStartup<ExtensionMethodStartup>();
-				});
-	}
+			});
 }

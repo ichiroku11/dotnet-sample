@@ -1,61 +1,61 @@
 using System;
 using Xunit;
 
-namespace SampleTest {
-	public class TypeTest {
-		private class Base {
-		}
+namespace SampleTest;
 
-		private interface IInterface {
-		}
+public class TypeTest {
+	private class Base {
+	}
 
-		private class Derived : Base, IInterface {
-		}
+	private interface IInterface {
+	}
 
-		[Fact]
-		public void IsAssignableFrom() {
-			var baseType = typeof(Base);
-			var derivedType = typeof(Derived);
-			var interfaceType = typeof(IInterface);
+	private class Derived : Base, IInterface {
+	}
 
-			// Base型の変数に、Derived型のインスタンスを割り当てることができる
-			Assert.True(baseType.IsAssignableFrom(derivedType));
+	[Fact]
+	public void IsAssignableFrom() {
+		var baseType = typeof(Base);
+		var derivedType = typeof(Derived);
+		var interfaceType = typeof(IInterface);
 
-			// Derived型の変数に、Base型のインスタンスを割り当てることができない
-			Assert.False(derivedType.IsAssignableFrom(baseType));
+		// Base型の変数に、Derived型のインスタンスを割り当てることができる
+		Assert.True(baseType.IsAssignableFrom(derivedType));
 
-			// Base型の変数に、Base型のインスタンスを割り当てることができる
-			Assert.True(baseType.IsAssignableFrom(baseType));
+		// Derived型の変数に、Base型のインスタンスを割り当てることができない
+		Assert.False(derivedType.IsAssignableFrom(baseType));
 
-			// IInterface型の変数に、Derived型のインスタンスを割り当てることができる
-			Assert.True(interfaceType.IsAssignableFrom(derivedType));
-		}
+		// Base型の変数に、Base型のインスタンスを割り当てることができる
+		Assert.True(baseType.IsAssignableFrom(baseType));
 
-		[Fact]
-		public void IsSubclassOf() {
-			var baseType = typeof(Base);
-			var derivedType = typeof(Derived);
-			var interfaceType = typeof(IInterface);
+		// IInterface型の変数に、Derived型のインスタンスを割り当てることができる
+		Assert.True(interfaceType.IsAssignableFrom(derivedType));
+	}
 
-			// BaseはDerivedのサブクラスではない
-			Assert.False(baseType.IsSubclassOf(derivedType));
+	[Fact]
+	public void IsSubclassOf() {
+		var baseType = typeof(Base);
+		var derivedType = typeof(Derived);
+		var interfaceType = typeof(IInterface);
 
-			// DerivedはBaseのサブクラスである
-			Assert.True(derivedType.IsSubclassOf(baseType));
+		// BaseはDerivedのサブクラスではない
+		Assert.False(baseType.IsSubclassOf(derivedType));
 
-			// Derived（インターフェイスの実装）はIInterfaceのサブクラスではない
-			Assert.False(derivedType.IsSubclassOf(interfaceType));
-		}
+		// DerivedはBaseのサブクラスである
+		Assert.True(derivedType.IsSubclassOf(baseType));
 
-		// リフレクションではないけど
-		[Fact]
-		public void IsOperator() {
-			var @base = new Base();
-			var derived = new Derived();
+		// Derived（インターフェイスの実装）はIInterfaceのサブクラスではない
+		Assert.False(derivedType.IsSubclassOf(interfaceType));
+	}
 
-			Assert.True(@base is Base);
-			Assert.True(derived is Base);
-			Assert.True(derived is IInterface);
-		}
+	// リフレクションではないけど
+	[Fact]
+	public void IsOperator() {
+		var @base = new Base();
+		var derived = new Derived();
+
+		Assert.True(@base is Base);
+		Assert.True(derived is Base);
+		Assert.True(derived is IInterface);
 	}
 }

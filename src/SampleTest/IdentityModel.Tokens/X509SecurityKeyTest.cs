@@ -8,31 +8,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SampleTest.IdentityModel.Tokens {
-	public class X509SecurityKeyTest {
-		[Fact]
-		public void Constructor_秘密鍵を保持するインスタンスを生成する() {
-			// Arrange
-			using var certificate = X509Certificate2Helper.GetDevelopmentCertificate();
+namespace SampleTest.IdentityModel.Tokens;
 
-			// Act
-			var key = new X509SecurityKey(certificate);
+public class X509SecurityKeyTest {
+	[Fact]
+	public void Constructor_秘密鍵を保持するインスタンスを生成する() {
+		// Arrange
+		using var certificate = X509Certificate2Helper.GetDevelopmentCertificate();
 
-			// Assert
-			Assert.Equal(PrivateKeyStatus.Exists, key.PrivateKeyStatus);
-		}
+		// Act
+		var key = new X509SecurityKey(certificate);
 
-		[Fact]
-		public void Constructor_秘密鍵を保持しないインスタンスを生成する() {
-			// Arrange
-			using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
-			using var certificate2 = certificate1.RemovePrivateKey();
+		// Assert
+		Assert.Equal(PrivateKeyStatus.Exists, key.PrivateKeyStatus);
+	}
 
-			// Act
-			var key = new X509SecurityKey(certificate2);
+	[Fact]
+	public void Constructor_秘密鍵を保持しないインスタンスを生成する() {
+		// Arrange
+		using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
+		using var certificate2 = certificate1.RemovePrivateKey();
 
-			// Assert
-			Assert.Equal(PrivateKeyStatus.DoesNotExist, key.PrivateKeyStatus);
-		}
+		// Act
+		var key = new X509SecurityKey(certificate2);
+
+		// Assert
+		Assert.Equal(PrivateKeyStatus.DoesNotExist, key.PrivateKeyStatus);
 	}
 }
