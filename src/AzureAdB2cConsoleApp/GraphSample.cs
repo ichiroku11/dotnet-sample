@@ -1,7 +1,7 @@
+using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
-using Microsoft.Graph.Auth;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 
 namespace AzureAdB2cConsoleApp;
 
+// 参考
+// https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management
+// https://docs.microsoft.com/ja-jp/graph/sdks/choose-authentication-providers?tabs=CS#client-credentials-provider
+
 public class GraphSample {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new() {
@@ -25,8 +29,6 @@ public class GraphSample {
 	private readonly IConfiguration _config;
 	private readonly ILogger _logger;
 
-	// Graph APIを呼び出すアプリ（資格情報などを管理する）
-	private readonly IConfidentialClientApplication _confidentialClientApp;
 	// カスタム属性の名前のヘルパー
 	private readonly CustomAttributeHelper _customAttributeHelper;
 
@@ -34,11 +36,6 @@ public class GraphSample {
 		_config = config;
 		_logger = logger;
 
-		_confidentialClientApp = ConfidentialClientApplicationBuilder
-			.Create(_config["ClientId"])
-			.WithTenantId(_config["TenantId"])
-			.WithClientSecret(_config["ClientSecret"])
-			.Build();
 		_customAttributeHelper = new CustomAttributeHelper(_config["ExtensionAppClientId"]);
 	}
 
@@ -151,15 +148,23 @@ public class GraphSample {
 	}
 
 	public async Task RunAsync() {
-		// 認証プロバイダー
-		// https://docs.microsoft.com/ja-jp/graph/sdks/choose-authentication-providers?tabs=CS#client-credentials-provider
-		var clientCredentialProvider = new ClientCredentialProvider(_confidentialClientApp);
+		// クレデンシャル
+		var credential = new ClientSecretCredential(
+			tenantId: _config["TenantId"],
+			clientId: _config["ClientId"],
+			clientSecret: _config["ClientSecret"],
+			options: new TokenCredentialOptions {
+				AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+			});
+
+		// スコープ
+		var scopes = new[] { "https://graph.microsoft.com/.default" };
 
 		// HTTPプロバイダー
 		using var httpProvider = new LoggingHttpProvider(new HttpProvider(), _logger);
 
 		// Graph APIを呼び出すクライアント
-		var client = new GraphServiceClient(clientCredentialProvider, httpProvider);
+		var client = new GraphServiceClient(credential, scopes, httpProvider);
 
 		// ユーザ一覧を取得
 		await GetUsersAsync(client);
