@@ -7,47 +7,44 @@ using Xunit;
 namespace SampleLib.Linq.Test;
 
 public class EnumerableExtensionsTest {
-	public class Sample {
-		public int Number { get; set; }
-		public string Text { get; set; }
-	}
+	public record Sample(int Number, string Text);
 
 	public static IEnumerable<object[]> GetTestDataForDistinctAnonymousObjectKey() {
 		yield return new object[] {
 				// source
 				new[] {
-					new Sample { Number = 1, Text = "x", },
-					new Sample { Number = 1, Text = "x", },
+					new Sample(1, "x"),
+					new Sample(1, "x"),
 				},
 				// distinct
 				new[] {
-					new Sample { Number = 1, Text = "x", },
+					new Sample(1, "x"),
 				}
 			};
 
 		yield return new object[] {
 				// source
 				new[] {
-					new Sample { Number = 1, Text = "x", },
-					new Sample { Number = 1, Text = "y", },
+					new Sample(1, "x"),
+					new Sample(1, "y"),
 				},
 				// distinct
 				new[] {
-					new Sample { Number = 1, Text = "x", },
-					new Sample { Number = 1, Text = "y", },
+					new Sample(1, "x"),
+					new Sample(1, "y"),
 				}
 			};
 
 		yield return new object[] {
 				// source
 				new[] {
-					new Sample { Number = 1, Text = "x", },
-					new Sample { Number = 2, Text = "x", },
+					new Sample(1, "x"),
+					new Sample(2, "x"),
 				},
 				// distinct
 				new[] {
-					new Sample { Number = 1, Text = "x", },
-					new Sample { Number = 2, Text = "x", },
+					new Sample(1, "x"),
+					new Sample(2, "x"),
 				}
 			};
 	}
