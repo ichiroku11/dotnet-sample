@@ -19,10 +19,6 @@ public static class StringExtensions {
 	/// <param name="original"></param>
 	/// <returns></returns>
 	public static string ToKebabCase(this string original) {
-		if (original == null) {
-			throw new ArgumentNullException(nameof(original));
-		}
-
 		if (!_regexToKebab.IsMatch(original)) {
 			throw new ArgumentException("", nameof(original));
 		}
