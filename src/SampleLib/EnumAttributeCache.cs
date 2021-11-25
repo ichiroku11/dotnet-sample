@@ -14,13 +14,13 @@ public static class EnumAttributeCache<TEnum, TAttribute>
 	where TAttribute : Attribute {
 
 	// 遅延実行する
-	private static readonly Lazy<Dictionary<TEnum, TAttribute>> _attributes
-		= new Lazy<Dictionary<TEnum, TAttribute>>(EnumHelper.GetAttributes<TEnum, TAttribute>);
+	private static readonly Lazy<Dictionary<TEnum, TAttribute?>> _attributes
+		= new(EnumHelper.GetAttributes<TEnum, TAttribute>);
 
 	/// <summary>
 	/// 属性を取得
 	/// </summary>
 	/// <param name="enum"></param>
 	/// <returns></returns>
-	public static TAttribute Get(TEnum @enum) => _attributes.Value[@enum];
+	public static TAttribute? Get(TEnum @enum) => _attributes.Value[@enum];
 }
