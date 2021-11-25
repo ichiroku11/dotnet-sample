@@ -17,6 +17,8 @@ public static class EnumerableExtensions {
 	public static IEnumerable<TSource> Distinct<TSource, TKey>(
 		this IEnumerable<TSource> source,
 		Func<TSource, TKey> compareKeySelector)
+		where TSource : notnull
+		where TKey : notnull
 		=> source.Distinct(new EqualityComparer<TSource, TKey>(compareKeySelector));
 
 	/// <summary>
@@ -32,5 +34,7 @@ public static class EnumerableExtensions {
 		this IEnumerable<TSource> first,
 		IEnumerable<TSource> second,
 		Func<TSource, TKey> compareKeySelector)
+		where TSource : notnull
+		where TKey : notnull
 		=> first.SequenceEqual(second, new EqualityComparer<TSource, TKey>(compareKeySelector));
 }
