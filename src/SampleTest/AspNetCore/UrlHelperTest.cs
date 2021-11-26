@@ -63,8 +63,8 @@ public class UrlHelperTest {
 	}
 
 	// ActionContextを生成
-	private static ActionContext CreateActionContext(HttpContext httpContext, RouteData routeData = default)
-		=> new ActionContext(httpContext, routeData ?? new RouteData(), new ActionDescriptor());
+	private static ActionContext CreateActionContext(HttpContext httpContext, RouteData? routeData = default)
+		=> new(httpContext, routeData ?? new RouteData(), new ActionDescriptor());
 
 	// IRouteBuilderを生成
 	private static IRouteBuilder CreateRouteBuilder(IServiceProvider services) {

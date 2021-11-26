@@ -11,7 +11,7 @@ public static class AssertHelper {
 	/// 
 	/// </summary>
 	/// <param name="message"></param>
-	public static void Fail(string message = null) {
+	public static void Fail(string? message = null) {
 		Assert.True(false, message ?? "Never be called.");
 	}
 }
