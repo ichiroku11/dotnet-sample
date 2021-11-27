@@ -8,7 +8,7 @@ namespace SampleTest.Collections;
 public class HashSetTest {
 	private class Sample {
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 	}
 
 	[Fact]
