@@ -8,9 +8,9 @@ namespace SampleTest;
 
 public class DynamicObjectTest {
 	private class DynamicBag : DynamicObject {
-		private readonly Dictionary<string, object> _storage = new();
+		private readonly Dictionary<string, object?> _storage = new();
 
-		public override bool TryGetMember(GetMemberBinder binder, out object result) {
+		public override bool TryGetMember(GetMemberBinder binder, out object? result) {
 			//return base.TryGetMember(binder, out result);
 
 			if (_storage.ContainsKey(binder.Name)) {
