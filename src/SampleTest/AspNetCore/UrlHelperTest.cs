@@ -20,7 +20,7 @@ namespace SampleTest.AspNetCore;
 // https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Core/test/Routing/UrlHelperTestBase.cs
 public class UrlHelperTest {
 	private class PassThroughRouter : IRouter {
-		public VirtualPathData GetVirtualPath(VirtualPathContext context) => null;
+		public VirtualPathData? GetVirtualPath(VirtualPathContext context) => null;
 
 		public Task RouteAsync(RouteContext routeContext) {
 			routeContext.Handler = httpContext => Task.CompletedTask;
@@ -99,7 +99,7 @@ public class UrlHelperTest {
 		return new UrlHelper(actionContext);
 	}
 
-	public static IEnumerable<object[]> GetTestDataForActionLink() {
+	public static IEnumerable<object?[]> GetTestDataForActionLink() {
 		yield return new[] {
 				"example.jp", "", null, null, null, "https://example.jp/"
 			};

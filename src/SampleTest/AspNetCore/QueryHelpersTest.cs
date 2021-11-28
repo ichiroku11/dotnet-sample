@@ -53,7 +53,7 @@ public class QueryHelpersTest {
 
 	[Theory]
 	[MemberData(nameof(GetTestDataForAddQueryString))]
-	public void AddQueryString_クエリ文字列を追加できる(string url, IEnumerable<KeyValuePair<string, string>> query, string expected) {
+	public void AddQueryString_クエリ文字列を追加できる(string url, IEnumerable<KeyValuePair<string, string?>> query, string expected) {
 		// Arrange
 		// Act
 		var actual = QueryHelpers.AddQueryString(url, query);
