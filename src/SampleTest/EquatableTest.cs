@@ -16,9 +16,9 @@ public class EquatableTest {
 		public int X { get; }
 		public int Y { get; }
 
-		public override bool Equals(object obj) => Equals(obj as Vector);
+		public override bool Equals(object? obj) => Equals(obj as Vector);
 
-		public bool Equals(Vector other) {
+		public bool Equals(Vector? other) {
 			return
 				other != null &&
 				X == other.X &&
@@ -27,11 +27,11 @@ public class EquatableTest {
 
 		public override int GetHashCode() => HashCode.Combine(X, Y);
 
-		public static bool operator ==(Vector left, Vector right) {
+		public static bool operator ==(Vector? left, Vector? right) {
 			return EqualityComparer<Vector>.Default.Equals(left, right);
 		}
 
-		public static bool operator !=(Vector left, Vector right) {
+		public static bool operator !=(Vector? left, Vector? right) {
 			return !(left == right);
 		}
 	}
