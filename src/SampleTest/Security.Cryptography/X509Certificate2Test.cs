@@ -39,6 +39,11 @@ public class X509Certificate2Test {
 		// Arrange
 		using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
 
+		if (certificate1 is null) {
+			AssertHelper.Fail();
+			return;
+		}
+
 		// Act
 		using var certificate2 = new X509Certificate2(certificate1.Export(X509ContentType.Cert));
 
