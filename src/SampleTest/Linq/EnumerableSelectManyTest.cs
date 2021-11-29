@@ -63,7 +63,7 @@ public class EnumerableSelectManyTest {
 
 	// 子を持つ（階層構造がある）クラス
 	private class Item {
-		public Item(string name, IEnumerable<Item> children = default) {
+		public Item(string name, IEnumerable<Item>? children = default) {
 			Name = name;
 			Children = children ?? Enumerable.Empty<Item>();
 		}
