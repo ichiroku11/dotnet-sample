@@ -27,6 +27,11 @@ public class X509SecurityKeyTest {
 	public void Constructor_秘密鍵を保持しないインスタンスを生成する() {
 		// Arrange
 		using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
+		if (certificate1 is null) {
+			AssertHelper.Fail();
+			return;
+		}
+
 		using var certificate2 = certificate1.RemovePrivateKey();
 
 		// Act
