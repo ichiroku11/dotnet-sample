@@ -119,7 +119,7 @@ public class JwtSecurityTokenHandlerTest {
 	}
 
 	public class TestDataForValidateToken : IEnumerable<object[]>, IDisposable {
-		private X509Certificate2 _certificate;
+		private X509Certificate2? _certificate;
 
 		public TestDataForValidateToken() {
 			_certificate = X509Certificate2Helper.GetDevelopmentCertificate();
@@ -140,7 +140,7 @@ public class JwtSecurityTokenHandlerTest {
 			// RS256
 			yield return new object[] {
 					new X509SigningCredentials(_certificate),
-					new X509SecurityKey(_certificate.RemovePrivateKey()),
+					new X509SecurityKey(_certificate?.RemovePrivateKey()),
 				};
 		}
 

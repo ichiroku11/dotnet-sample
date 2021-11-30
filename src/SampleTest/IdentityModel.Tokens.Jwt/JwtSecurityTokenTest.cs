@@ -46,8 +46,8 @@ public class JwtSecurityTokenTest {
 		Assert.Equal(expected, actual);
 	}
 
-	public class TestDataForSignatureAlgorithm : IEnumerable<object[]>, IDisposable {
-		private X509Certificate2 _certificate;
+	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
+		private X509Certificate2? _certificate;
 
 		public TestDataForSignatureAlgorithm() {
 			_certificate = X509Certificate2Helper.GetDevelopmentCertificate();
@@ -58,9 +58,9 @@ public class JwtSecurityTokenTest {
 			_certificate = null;
 		}
 
-		public IEnumerator<object[]> GetEnumerator() {
+		public IEnumerator<object?[]> GetEnumerator() {
 			// 署名アルゴリズムがnull
-			yield return new object[] {
+			yield return new object?[] {
 					new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
 					null,
 				};
