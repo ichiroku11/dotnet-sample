@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -137,7 +138,7 @@ public class TypeConverterTest {
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));
 
 		// Act
-		var actual = converter.GetStandardValues() is ICollection<Fruit> values
+		var actual = converter.GetStandardValues() is ICollection values
 			? values.Cast<Fruit>()
 			: throw new InvalidOperationException();
 
