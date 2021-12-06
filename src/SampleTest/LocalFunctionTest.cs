@@ -65,7 +65,7 @@ public partial class LocalFunctionTest {
 
 	#region 非同期メソッドでローカル関数を使うサンプル
 	// 何かしらの読み込み処理（ローカル関数を使わない）
-	private async Task<int> OldstyleLoadAsync(string key) {
+	private async Task<int> OldstyleLoadAsync(string? key) {
 		if (string.IsNullOrWhiteSpace(key)) {
 			throw new ArgumentException(nameof(key));
 		}
@@ -90,13 +90,13 @@ public partial class LocalFunctionTest {
 	}
 
 	// 何かしらの読み込み処理（ローカル関数を使う）
-	private Task<int> AwesomeLoadAsync(string key) {
+	private Task<int> AwesomeLoadAsync(string? key) {
 		if (string.IsNullOrWhiteSpace(key)) {
 			throw new ArgumentException(nameof(key));
 		}
 
 		// ローカル関数の定義
-		async Task<int> load() {
+		static async Task<int> load() {
 			// 重たい処理
 			await Task.Delay(1000);
 
