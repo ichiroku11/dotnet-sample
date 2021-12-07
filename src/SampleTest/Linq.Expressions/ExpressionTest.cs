@@ -63,7 +63,7 @@ public class ExpressionTest {
 		Func<Item, int, int> createFunc() {
 			var target = Expression.Parameter(typeof(Item));
 			var param = Expression.Parameter(typeof(int));
-			var method = Expression.Call(target, typeof(Item).GetMethod("GetValue"), param);
+			var method = Expression.Call(target, typeof(Item).GetMethod("GetValue")!, param);
 
 			var lambda = Expression.Lambda<Func<Item, int, int>>(method, target, param);
 

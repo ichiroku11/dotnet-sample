@@ -12,13 +12,13 @@ public class MapHelperTest {
 	// テスト用：コピー元
 	private class From {
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 	}
 
 	// テスト用：コピー先
 	private class To {
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 	}
 
 	[Fact]

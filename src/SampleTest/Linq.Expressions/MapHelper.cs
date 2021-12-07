@@ -38,7 +38,8 @@ public static class MapHelper {
 			.Select(entry =>
 				// コピー先のプロパティにコピー元のプロパティの値を代入する式
 				Expression.Assign(
-					Expression.Property(result, entry.To),
+					// entry.To != nullでフィルタしてるけど「!」が必要みたい
+					Expression.Property(result, entry.To!),
 					Expression.Property(source, entry.From)));
 
 		// ブロックに格納する式の本体
