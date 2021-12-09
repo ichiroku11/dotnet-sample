@@ -76,7 +76,7 @@ public class HttpClientCookieTest : IDisposable {
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, statusCode);
 		Assert.True(containsSetCookie);
-		Assert.Equal("abc=xyz; path=/", cookieValues.Single());
+		Assert.Equal("abc=xyz; path=/", cookieValues!.Single());
 	}
 
 	[Fact]
