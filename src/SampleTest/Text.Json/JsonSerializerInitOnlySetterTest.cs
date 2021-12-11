@@ -12,7 +12,7 @@ public class JsonSerializerInitOnlySetterTest {
 	// init専用セッターのサンプル
 	private class SampleWithInitOnlySetter {
 		public int Number { get; init; }
-		public string Text { get; init; }
+		public string Text { get; init; } = "";
 	}
 
 	[Fact]
@@ -23,7 +23,7 @@ public class JsonSerializerInitOnlySetterTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<SampleWithInitOnlySetter>(@"{""number"":1,""text"":""Abc""}", options);
+		var sample = JsonSerializer.Deserialize<SampleWithInitOnlySetter>(@"{""number"":1,""text"":""Abc""}", options)!;
 
 		// Assert
 		Assert.Equal(1, sample.Number);

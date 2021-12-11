@@ -12,7 +12,7 @@ public class JsonSerializerDictionaryTest {
 	private record SampleItem(string Value);
 
 	private class SampleWithDictionary {
-		public IDictionary<string, SampleItem> Items { get; init; }
+		public IDictionary<string, SampleItem> Items { get; init; } = new Dictionary<string, SampleItem>();
 	}
 
 	[Fact]
@@ -67,7 +67,7 @@ public class JsonSerializerDictionaryTest {
 }";
 
 		// Act
-		var actual = JsonSerializer.Deserialize<SampleWithDictionary>(json, options);
+		var actual = JsonSerializer.Deserialize<SampleWithDictionary>(json, options)!;
 
 		// Assert
 		// オブジェクトをIDictionaryとしてデシリアライズできる

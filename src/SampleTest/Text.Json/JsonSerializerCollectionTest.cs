@@ -46,7 +46,7 @@ public class JsonSerializerCollectionTest {
 
 		// Act
 		var json = @"{""items"":[{""number"":1,""text"":""a""}]}";
-		var actual = JsonSerializer.Deserialize<SampleWithEnumerable>(json, options);
+		var actual = JsonSerializer.Deserialize<SampleWithEnumerable>(json, options)!;
 
 		// Assert
 		Assert.Single(actual.Items);

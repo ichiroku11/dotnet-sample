@@ -50,7 +50,7 @@ public class JsonIncludeAttributeTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample2>(@"{""value1"":1, ""value2"":2}", options);
+		var sample = JsonSerializer.Deserialize<Sample2>(@"{""value1"":1, ""value2"":2}", options)!;
 
 		// Assert
 		Assert.Equal(0, sample.Value1);

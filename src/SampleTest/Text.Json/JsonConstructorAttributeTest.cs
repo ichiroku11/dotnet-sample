@@ -84,7 +84,7 @@ public class JsonConstructorAttributeTest {
 		var sample = JsonSerializer.Deserialize<Sample3>(json, options);
 
 		// Assert
-		Assert.Equal(expectedValue, sample.Value);
+		Assert.Equal(expectedValue, sample?.Value);
 	}
 
 	// JsonConstructorAttributeを使ってコンストラクタを指定する
@@ -114,6 +114,6 @@ public class JsonConstructorAttributeTest {
 		var sample = JsonSerializer.Deserialize<Sample4>(json, options);
 
 		// Assert
-		Assert.Equal(expectedValue, sample.Value);
+		Assert.Equal(expectedValue, sample?.Value);
 	}
 }

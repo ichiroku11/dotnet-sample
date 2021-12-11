@@ -35,7 +35,7 @@ public class JsonPropertyNameAttributeTest {
 	public void Deserialize_JsonPropertyNameAttributeを使ってデシリアライズする() {
 		// Arrange
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample>(@"{""Val"":1}");
+		var sample = JsonSerializer.Deserialize<Sample>(@"{""Val"":1}")!;
 
 		// Assert
 		Assert.Equal(1, sample.Value);

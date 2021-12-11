@@ -14,11 +14,11 @@ namespace SampleTest.Text.Json;
 public class JsonExtensionDataAttributeTest {
 	private class ExtensionDataSample {
 		public int Number { get; set; }
-		public string Text { get; set; }
+		public string Text { get; set; } = "";
 		// JsonExtensionData属性を指定できるのは、
 		// Dictionary<string, object>またはDictionary<string, JsonElement>
 		[JsonExtensionData]
-		public Dictionary<string, object> Exts { get; set; }
+		public Dictionary<string, object> Exts { get; set; } = new();
 	}
 
 	[Fact]
@@ -54,7 +54,7 @@ public class JsonExtensionDataAttributeTest {
 		};
 
 		// Act
-		var data = JsonSerializer.Deserialize<ExtensionDataSample>(json, options);
+		var data = JsonSerializer.Deserialize<ExtensionDataSample>(json, options)!;
 
 		// Assert
 		Assert.Equal(1, data.Number);

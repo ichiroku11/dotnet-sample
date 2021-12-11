@@ -45,7 +45,7 @@ public class JsonNumberHandlingAttributeTest {
 		var json = @"{""value1"":1,""value2"":""2""}";
 
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample>(json, options);
+		var sample = JsonSerializer.Deserialize<Sample>(json, options)!;
 
 		// Assert
 		Assert.Equal(1, sample.Value1);
