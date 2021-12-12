@@ -35,7 +35,7 @@ public class JsonSerializerRecordTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<SampleRecord>(@"{""number"":1,""text"":""Abc""}", options);
+		var sample = JsonSerializer.Deserialize<SampleRecord>(@"{""number"":1,""text"":""Abc""}", options)!;
 
 		// Assert
 		Assert.Equal(1, sample.Number);

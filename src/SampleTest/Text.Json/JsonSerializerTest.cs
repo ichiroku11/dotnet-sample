@@ -159,7 +159,7 @@ public class JsonSerializerTest {
 
 	private class Sample {
 		public int Number { get; set; }
-		public string Text { get; set; }
+		public string Text { get; set; } = "";
 	}
 
 	[Fact]
@@ -168,7 +168,7 @@ public class JsonSerializerTest {
 		// Act
 		// Assert
 		Assert.Throws<ArgumentNullException>(() => {
-			JsonSerializer.Deserialize<Sample>(default(string));
+			JsonSerializer.Deserialize<Sample>(default(string)!);
 		});
 	}
 

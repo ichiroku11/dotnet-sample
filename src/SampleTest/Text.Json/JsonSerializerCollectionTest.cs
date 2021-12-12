@@ -15,7 +15,7 @@ public class JsonSerializerCollectionTest {
 	private record SampleItem(int Number, string Text);
 
 	private class SampleWithEnumerable {
-		public IEnumerable<SampleItem> Items { get; init; }
+		public IEnumerable<SampleItem> Items { get; init; } = Enumerable.Empty<SampleItem>();
 	}
 
 	[Fact]

@@ -25,7 +25,7 @@ public class JsonConstructorAttributeTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample1>(@"{""value1"":1, ""value2"":1}", options);
+		var sample = JsonSerializer.Deserialize<Sample1>(@"{""value1"":1, ""value2"":1}", options)!;
 
 		// Assert
 		Assert.Equal(0, sample.Value1);
@@ -52,7 +52,7 @@ public class JsonConstructorAttributeTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample2>(json, options);
+		var sample = JsonSerializer.Deserialize<Sample2>(json, options)!;
 
 		// Assert
 		Assert.Equal(expectedValue, sample.Value);
@@ -81,10 +81,10 @@ public class JsonConstructorAttributeTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample3>(json, options);
+		var sample = JsonSerializer.Deserialize<Sample3>(json, options)!;
 
 		// Assert
-		Assert.Equal(expectedValue, sample?.Value);
+		Assert.Equal(expectedValue, sample.Value);
 	}
 
 	// JsonConstructorAttributeを使ってコンストラクタを指定する
@@ -111,9 +111,9 @@ public class JsonConstructorAttributeTest {
 		};
 
 		// Act
-		var sample = JsonSerializer.Deserialize<Sample4>(json, options);
+		var sample = JsonSerializer.Deserialize<Sample4>(json, options)!;
 
 		// Assert
-		Assert.Equal(expectedValue, sample?.Value);
+		Assert.Equal(expectedValue, sample.Value);
 	}
 }
