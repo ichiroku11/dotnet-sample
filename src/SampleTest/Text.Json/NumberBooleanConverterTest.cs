@@ -58,7 +58,7 @@ public class NumberBooleanConverterTest {
 		};
 
 		// Act
-		var data = JsonSerializer.Deserialize<ConverterSample>(json, options);
+		var data = JsonSerializer.Deserialize<ConverterSample>(json, options)!;
 
 		// Assert
 		Assert.True(data.Enable);
