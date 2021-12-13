@@ -11,7 +11,7 @@ namespace SampleTest.EntityFrameworkCore;
 public class QueryFilterTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
-		public string Name { get; init; }
+		public string? Name { get; init; }
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
