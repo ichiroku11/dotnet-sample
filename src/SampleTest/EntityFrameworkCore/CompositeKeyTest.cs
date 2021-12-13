@@ -23,7 +23,7 @@ public class CompositeKeyTest : IDisposable {
 	private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample))

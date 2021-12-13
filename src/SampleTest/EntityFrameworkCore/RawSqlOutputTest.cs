@@ -16,7 +16,7 @@ public class RawSqlOutputTest : IDisposable {
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));

@@ -91,10 +91,10 @@ public class RelatedDataTest : IDisposable {
 		};
 
 	private class MonsterDbContext : SqlServerDbContext {
-		public DbSet<MonsterCategory> MonsterCategories { get; set; }
-		public DbSet<Monster> Monsters { get; set; }
-		public DbSet<Item> Items { get; set; }
-		public DbSet<MonsterItem> MonsterItems { get; set; }
+		public DbSet<MonsterCategory> MonsterCategories => Set<MonsterCategory>();
+		public DbSet<Monster> Monsters => Set<Monster>();
+		public DbSet<Item> Items => Set<Item>();
+		public DbSet<MonsterItem> MonsterItems => Set<MonsterItem>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<MonsterCategory>().ToTable(nameof(MonsterCategory));

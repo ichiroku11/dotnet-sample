@@ -21,7 +21,7 @@ public class DbSetSubQueryTest : IDisposable {
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<MenuItem> MenuItems { get; set; }
+		public DbSet<MenuItem> MenuItems => Set<MenuItem>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<MenuItem>().ToTable(nameof(MenuItem));

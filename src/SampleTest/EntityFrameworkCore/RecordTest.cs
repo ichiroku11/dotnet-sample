@@ -13,7 +13,7 @@ public class RecordTest : IDisposable {
 	private record Sample(int Id, string Name);
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));

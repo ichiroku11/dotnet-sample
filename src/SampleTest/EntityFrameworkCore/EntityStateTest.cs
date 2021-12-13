@@ -18,7 +18,7 @@ public class EntityStateTest : IDisposable {
 
 	// InMemory
 	private class SampleDbContext : AppDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 			base.OnConfiguring(optionsBuilder);
