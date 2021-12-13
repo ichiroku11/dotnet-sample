@@ -14,7 +14,7 @@ public class ObjectToInferredTypesConverterTest {
 	// 参考
 	// https://docs.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#deserialize-inferred-types-to-object-properties
 	private class ObjectToInferredTypesConverter : JsonConverter<object> {
-		public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 			=> reader.TokenType switch {
 					// bool
 					JsonTokenType.True => true,
@@ -60,7 +60,7 @@ public class ObjectToInferredTypesConverterTest {
 	}
 
 	private class SampleData1 {
-		public object Value { get; init; }
+		public object? Value { get; init; }
 	}
 
 	[Theory]
@@ -69,7 +69,7 @@ public class ObjectToInferredTypesConverterTest {
 		// Arrange
 
 		// Act
-		var data = JsonSerializer.Deserialize<SampleData1>(json, GetJsonSerializerOptions());
+		var data = JsonSerializer.Deserialize<SampleData1>(json, GetJsonSerializerOptions())!;
 
 		// Assert
 		Assert.IsType(expected.GetType(), data.Value);
@@ -79,7 +79,7 @@ public class ObjectToInferredTypesConverterTest {
 	private class SampleData2 {
 		// プロパティに定義されていないデータを扱う
 		[JsonExtensionData]
-		public Dictionary<string, object> Exts { get; init; }
+		public Dictionary<string, object> Exts { get; init; } = new();
 	}
 
 	[Theory]
@@ -88,7 +88,7 @@ public class ObjectToInferredTypesConverterTest {
 		// Arrange
 
 		// Act
-		var data = JsonSerializer.Deserialize<SampleData2>(json, GetJsonSerializerOptions());
+		var data = JsonSerializer.Deserialize<SampleData2>(json, GetJsonSerializerOptions())!;
 
 		// Assert
 		Assert.Single(data.Exts);
@@ -102,7 +102,7 @@ public class ObjectToInferredTypesConverterTest {
 		// Arrange
 
 		// Act
-		var values = JsonSerializer.Deserialize<Dictionary<string, object>>(json, GetJsonSerializerOptions());
+		var values = JsonSerializer.Deserialize<Dictionary<string, object>>(json, GetJsonSerializerOptions())!;
 
 		// Assert
 		Assert.Single(values);
