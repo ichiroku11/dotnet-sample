@@ -11,10 +11,7 @@ using Xunit.Abstractions;
 namespace SampleTest.EntityFrameworkCore;
 
 public class EntityStateTest : IDisposable {
-	private class Sample {
-		public int Id { get; init; }
-		public string Name { get; init; }
-	}
+	private record Sample(int Id, string Name);
 
 	// InMemory
 	private class SampleDbContext : AppDbContext {
@@ -31,19 +28,15 @@ public class EntityStateTest : IDisposable {
 		}
 	}
 
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 	private readonly ITestOutputHelper _output;
 
 	public EntityStateTest(ITestOutputHelper output) {
-		_context = new SampleDbContext();
 		_output = output;
 	}
 
 	public void Dispose() {
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	// テストパターン
@@ -62,7 +55,7 @@ public class EntityStateTest : IDisposable {
 	[MemberData(nameof(TestPatterns))]
 	public void EntityStateがAddedになる(TestPattern pattern) {
 		// Arrange
-		var entity = new Sample { Id = 1, Name = "a" };
+		var entity = new Sample(1, "a");
 
 		// Act
 		if (pattern == TestPattern.DbContext) {
@@ -81,7 +74,7 @@ public class EntityStateTest : IDisposable {
 	[MemberData(nameof(TestPatterns))]
 	public void EntityStateがModifiedになる(TestPattern pattern) {
 		// Arrange
-		var entity = new Sample { Id = 1, Name = "a" };
+		var entity = new Sample(1, "a");
 
 		// Act
 		if (pattern == TestPattern.DbContext) {
@@ -100,7 +93,7 @@ public class EntityStateTest : IDisposable {
 	[MemberData(nameof(TestPatterns))]
 	public void EntityStateがDeletedになる(TestPattern pattern) {
 		// Arrange
-		var entity = new Sample { Id = 1, Name = "a" };
+		var entity = new Sample(1, "a");
 
 		// Act
 		if (pattern == TestPattern.DbContext) {
@@ -119,7 +112,7 @@ public class EntityStateTest : IDisposable {
 	[MemberData(nameof(TestPatterns))]
 	public void EntityStateがUnchangedになる(TestPattern pattern) {
 		// Arrange
-		var entity = new Sample { Id = 1, Name = "a" };
+		var entity = new Sample(1, "a");
 
 		// Act
 		if (pattern == TestPattern.DbContext) {
@@ -137,7 +130,7 @@ public class EntityStateTest : IDisposable {
 	[Fact]
 	public void EntityStateがDetachedになる() {
 		// Arrange
-		var entity = new Sample { Id = 1, Name = "a" };
+		var entity = new Sample(1, "a");
 
 		// Act
 		// Assert
