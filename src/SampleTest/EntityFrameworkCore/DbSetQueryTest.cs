@@ -12,7 +12,7 @@ namespace SampleTest.EntityFrameworkCore;
 public class DbSetQueryTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
-		public string Name { get; init; }
+		public string Name { get; init; } = "";
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
@@ -23,11 +23,9 @@ public class DbSetQueryTest : IDisposable {
 		}
 	}
 
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 
 	public DbSetQueryTest() {
-		_context = new SampleDbContext();
-
 		DropTable();
 		InitTable();
 	}
@@ -35,17 +33,14 @@ public class DbSetQueryTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {
 		var sql = @"
 create table dbo.Sample(
 	Id int,
-	Name nvarchar(10),
+	Name nvarchar(10) not null,
 	constraint PK_Sample primary key(Id)
 );
 
@@ -66,8 +61,8 @@ values
 	public async Task FindAsync_主キーで検索できる() {
 		var sample = await _context.Samples.FindAsync(1);
 
-		Assert.Equal(1, sample.Id);
-		Assert.Equal("a", sample.Name);
+		Assert.Equal(1, sample?.Id);
+		Assert.Equal("a", sample?.Name);
 	}
 
 	[Fact]
@@ -81,8 +76,8 @@ values
 	public async Task FirstOrDefaultAsync_述語を使って検索できる() {
 		var sample = await _context.Samples.FirstOrDefaultAsync(entity => entity.Id == 1);
 
-		Assert.Equal(1, sample.Id);
-		Assert.Equal("a", sample.Name);
+		Assert.Equal(1, sample?.Id);
+		Assert.Equal("a", sample?.Name);
 	}
 
 	// SQLに変換できないメソッド
@@ -103,7 +98,7 @@ values
 	public async Task FirstOrDefaultAsync_述語にExpressionを指定して検索できる() {
 		var sample = await _context.Samples.FirstOrDefaultAsync(PredicateExpression(1));
 
-		Assert.Equal(1, sample.Id);
-		Assert.Equal("a", sample.Name);
+		Assert.Equal(1, sample?.Id);
+		Assert.Equal("a", sample?.Name);
 	}
 }
