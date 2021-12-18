@@ -12,7 +12,7 @@ namespace SampleTest.EntityFrameworkCore;
 public class RawSqlTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
-		public string Name { get; init; }
+		public string Name { get; init; } = "";
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
@@ -23,17 +23,10 @@ public class RawSqlTest : IDisposable {
 		}
 	}
 
-	private SampleDbContext _context;
-
-	public RawSqlTest() {
-		_context = new SampleDbContext();
-	}
+	private readonly SampleDbContext _context = new();
 
 	public void Dispose() {
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	// FromSqlInterpolated
