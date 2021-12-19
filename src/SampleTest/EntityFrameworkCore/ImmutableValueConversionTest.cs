@@ -26,8 +26,8 @@ public class ImmutableValueConversionTest {
 	}
 
 	private class User {
-		public int Id { get; set; }
-		public UserName Name { get; set; }
+		public int Id { get; init; }
+		public UserName Name { get; init; } = new UserName("");
 	}
 
 	private class UserDbContext : SqlServerDbContext {
@@ -52,7 +52,7 @@ public class ImmutableValueConversionTest {
 			.FirstOrDefaultAsync();
 
 		Assert.Equal(1, user?.Id);
-		Assert.Equal("a", user.Name?.Value);
+		Assert.Equal("a", user?.Name?.Value);
 	}
 
 	// 本当は追加や更新も試したいけど
