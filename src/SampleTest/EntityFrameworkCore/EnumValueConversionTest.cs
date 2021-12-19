@@ -50,7 +50,7 @@ public class EnumValueConversionTest {
 	}
 
 	private class MonsterDbContext : SqlServerDbContext {
-		public DbSet<Monster> Monsters { get; set; }
+		public DbSet<Monster> Monsters => Set<Monster>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Monster>().ToTable(nameof(Monster));

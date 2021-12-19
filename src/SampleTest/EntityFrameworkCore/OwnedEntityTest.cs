@@ -24,7 +24,7 @@ public class OwnedEntityTest : IDisposable {
 	// private record Mail(int Id, MailAddress From, MailAddress To);
 
 	private class MailDbContext : SqlServerDbContext {
-		public DbSet<Mail> Mails { get; init; }
+		public DbSet<Mail> Mails => Set<Mail>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Mail>().ToTable(nameof(Mail))

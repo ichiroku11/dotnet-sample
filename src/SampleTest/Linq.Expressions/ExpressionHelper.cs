@@ -25,8 +25,8 @@ public static class ExpressionHelper {
 			}
 		}
 
-		// nullで良いか悩む
-		return null;
+		// 未実装
+		throw new NotImplementedException();
 	}
 
 	/// <summary>
@@ -37,7 +37,9 @@ public static class ExpressionHelper {
 	/// <returns></returns>
 	public static IEnumerable<string> GetMemberNames<TSource>(Expression<Func<TSource, object>> expression) {
 		if (expression.Body is NewExpression @new) {
-			return @new.Members.Select(member => member.Name);
+			if (@new.Members is not null) {
+				return @new.Members.Select(member => member.Name);
+			}
 		}
 
 		return Enumerable.Empty<string>();

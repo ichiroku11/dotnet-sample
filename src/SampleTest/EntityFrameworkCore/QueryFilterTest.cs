@@ -11,11 +11,11 @@ namespace SampleTest.EntityFrameworkCore;
 public class QueryFilterTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
-		public string Name { get; init; }
+		public string? Name { get; init; }
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>()

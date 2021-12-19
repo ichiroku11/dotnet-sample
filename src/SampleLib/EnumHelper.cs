@@ -15,13 +15,13 @@ public static class EnumHelper {
 	/// <typeparam name="TEnum"></typeparam>
 	/// <typeparam name="TAttribute"></typeparam>
 	/// <returns></returns>
-	public static Dictionary<TEnum, TAttribute> GetAttributes<TEnum, TAttribute>()
+	public static Dictionary<TEnum, TAttribute?> GetAttributes<TEnum, TAttribute>()
 		where TEnum : Enum
 		where TAttribute : Attribute {
 		return typeof(TEnum)
 			.GetFields(BindingFlags.Public | BindingFlags.Static)
 			.ToDictionary(
-				field => (TEnum)field.GetValue(null),
+				field => field.GetValue(null) is TEnum value ? value : throw new InvalidOperationException(),
 				field => field.GetCustomAttributes<TAttribute>().FirstOrDefault());
 	}
 

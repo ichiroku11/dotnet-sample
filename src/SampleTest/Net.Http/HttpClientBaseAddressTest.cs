@@ -70,7 +70,7 @@ public class HttpClientBaseAddressTest {
 		using var client = server.CreateClient();
 
 		// Assert
-		Assert.Equal(expectedClientBaseUri, client.BaseAddress.AbsoluteUri);
+		Assert.Equal(expectedClientBaseUri, client.BaseAddress?.AbsoluteUri);
 	}
 
 	// HttpClient.BaseAddressの最後の「/」やリクエストの相対パスの最初の「/」の有無は気にしなくてよく
@@ -99,7 +99,7 @@ public class HttpClientBaseAddressTest {
 
 		// Act
 		var response = await client.GetAsync(requestUri);
-		var actualUri = response.RequestMessage.RequestUri.AbsoluteUri;
+		var actualUri = response.RequestMessage?.RequestUri?.AbsoluteUri;
 		var actualContent = await response.Content.ReadAsStringAsync();
 
 		// Assert
@@ -143,7 +143,7 @@ public class HttpClientBaseAddressTest {
 
 		// Act
 		var response = await client.GetAsync(requestUri);
-		var actualUri = response.RequestMessage.RequestUri.AbsoluteUri;
+		var actualUri = response.RequestMessage?.RequestUri?.AbsoluteUri;
 		var actualContent = await response.Content.ReadAsStringAsync();
 
 		// Assert

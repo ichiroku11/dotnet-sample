@@ -27,8 +27,8 @@ public class EnumHelperTest {
 		// Assert
 		Assert.Equal(3, attributes.Count);
 		Assert.Null(attributes[Fruit.None]);
-		Assert.Equal("りんご", attributes[Fruit.Apple].Name);
-		Assert.Equal("バナナ", attributes[Fruit.Banana].Name);
+		Assert.Equal("りんご", attributes[Fruit.Apple]?.Name);
+		Assert.Equal("バナナ", attributes[Fruit.Banana]?.Name);
 	}
 
 	[Fact]

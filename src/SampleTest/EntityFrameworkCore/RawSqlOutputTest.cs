@@ -12,22 +12,20 @@ namespace SampleTest.EntityFrameworkCore;
 public class RawSqlOutputTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
-		public string Name { get; init; }
+		public string Name { get; init; } = "";
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));
 		}
 	}
 
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 
 	public RawSqlOutputTest() {
-		_context = new SampleDbContext();
-
 		DropTable();
 		InitTable();
 	}
@@ -35,17 +33,14 @@ public class RawSqlOutputTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {
 		var sql = @"
 create table dbo.Sample(
 	Id int,
-	Name nvarchar(10),
+	Name nvarchar(10) not null,
 	constraint PK_Sample primary key(Id)
 );
 

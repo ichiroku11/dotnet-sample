@@ -9,7 +9,7 @@ public class ExpressionHelperTest {
 	// テスト用
 	public class Item {
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 	}
 
 	[Fact]

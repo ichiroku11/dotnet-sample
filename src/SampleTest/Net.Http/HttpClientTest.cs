@@ -61,7 +61,7 @@ public class HttpClientTest : IDisposable {
 		// Arrange
 		// Act
 		var response = await _client.GetAsync("/");
-		var contentType = response.Content.Headers.ContentType.MediaType;
+		var contentType = response.Content.Headers!.ContentType!.MediaType;
 		var contentText = await response.Content.ReadAsStringAsync();
 
 		// Assert

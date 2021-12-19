@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SampleLib.AspNetCore;
 
 public static class X509StoreExtensions {
-	public static X509Certificate2 GetCertificate(
+	public static X509Certificate2? GetCertificate(
 		this X509Store store, string subjectName, string issuerName, string friendlyName) {
 
 		var certificates = store.Certificates

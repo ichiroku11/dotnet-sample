@@ -18,7 +18,10 @@ public class DateTimeConverterTest {
 			ref Utf8JsonReader reader,
 			Type typeToConvert,
 			JsonSerializerOptions options)
-			=> DateTime.ParseExact(reader.GetString(), _format, CultureInfo.InvariantCulture);
+			=> DateTime.ParseExact(
+				reader.GetString() ?? throw new InvalidOperationException(),
+				_format,
+				CultureInfo.InvariantCulture);
 
 		public override void Write(
 			Utf8JsonWriter writer,
@@ -67,6 +70,6 @@ public class DateTimeConverterTest {
 		var sample = JsonSerializer.Deserialize<ConverterSample>(json, options);
 
 		// Assert
-		Assert.Equal(new DateTime(2020, 6, 1, 12, 34, 56), sample.Value);
+		Assert.Equal(new DateTime(2020, 6, 1, 12, 34, 56), sample?.Value);
 	}
 }

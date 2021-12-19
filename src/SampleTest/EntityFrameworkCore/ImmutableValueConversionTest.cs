@@ -18,9 +18,9 @@ public class ImmutableValueConversionTest {
 
 		public string Value { get; }
 
-		public override bool Equals(object obj) => Equals(obj as UserName);
+		public override bool Equals(object? obj) => Equals(obj as UserName);
 
-		public bool Equals(UserName other) => other != null && Value == other.Value;
+		public bool Equals(UserName? other) => other != null && Value == other.Value;
 
 		public override int GetHashCode() => HashCode.Combine(Value);
 	}
@@ -31,7 +31,7 @@ public class ImmutableValueConversionTest {
 	}
 
 	private class UserDbContext : SqlServerDbContext {
-		public DbSet<User> Users { get; set; }
+		public DbSet<User> Users => Set<User>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<User>()

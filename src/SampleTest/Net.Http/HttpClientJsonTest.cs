@@ -104,7 +104,7 @@ public class HttpClientJsonTest : IDisposable {
 		var sample = await _client.GetFromJsonAsync<Sample>("/get");
 
 		// Assert
-		Assert.Equal(1, sample.Value);
+		Assert.Equal(1, sample!.Value);
 	}
 
 	[Fact]
@@ -115,7 +115,7 @@ public class HttpClientJsonTest : IDisposable {
 		var sample = await response.Content.ReadFromJsonAsync<Sample>();
 
 		// Assert
-		Assert.Equal(2, sample.Value);
+		Assert.Equal(2, sample!.Value);
 	}
 
 	[Fact]
@@ -126,7 +126,7 @@ public class HttpClientJsonTest : IDisposable {
 		var sample = await response.Content.ReadFromJsonAsync<Sample>();
 
 		// Assert
-		Assert.Equal(3, sample.Value);
+		Assert.Equal(3, sample!.Value);
 	}
 
 }

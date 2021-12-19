@@ -10,17 +10,10 @@ using Xunit;
 namespace SampleTest.EntityFrameworkCore;
 
 public class DatabaseFacadeTest : IDisposable {
-	private AppDbContext _context;
-
-	public DatabaseFacadeTest() {
-		_context = new SqlServerDbContext();
-	}
+	private readonly SqlServerDbContext _context = new();
 
 	public void Dispose() {
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	[Fact]

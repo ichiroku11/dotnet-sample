@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -24,13 +25,12 @@ public class TypeConverterTest {
 	public static IEnumerable<object[]> GetFruits() => _fruits.Select(fruit => new object[] { fruit });
 
 	// Fruit.Appleに変換できる文字列を取得
-	public static IEnumerable<object[]> GetStringsCanConvertToApple() {
-		return new[] {
-					"Apple",
-					"apple",
-					"1"
-				}.Select(fruit => new object[] { fruit });
-	}
+	public static IEnumerable<object[]> GetStringsCanConvertToApple()
+		=> new[] {
+			"Apple",
+			"apple",
+			"1"
+		}.Select(fruit => new object[] { fruit });
 
 	[Fact]
 	public void GetConverter_EnumのTypeConverterはEnumConverter() {
@@ -94,7 +94,9 @@ public class TypeConverterTest {
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));
 
 		// Act
-		var actual = (Fruit)converter.ConvertFromString(value);
+		var actual = converter.ConvertFromString(value) is Fruit fruit
+			? fruit
+			: throw new InvalidOperationException();
 
 		// Assert
 		Assert.Equal(Fruit.Apple, actual);
@@ -107,7 +109,9 @@ public class TypeConverterTest {
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));
 
 		// Act
-		var actual = (Fruit)converter.ConvertFrom(value);
+		var actual = converter.ConvertFrom(value) is Fruit fruit
+			? fruit
+			: throw new InvalidOperationException();
 
 		// Assert
 		Assert.Equal(Fruit.Apple, actual);
@@ -134,7 +138,9 @@ public class TypeConverterTest {
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));
 
 		// Act
-		var actual = converter.GetStandardValues().Cast<Fruit>();
+		var actual = converter.GetStandardValues() is ICollection values
+			? values.Cast<Fruit>()
+			: throw new InvalidOperationException();
 
 		// Assert
 		Assert.Equal(_fruits, actual);

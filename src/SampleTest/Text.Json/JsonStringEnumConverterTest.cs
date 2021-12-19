@@ -78,7 +78,7 @@ public class JsonStringEnumConverterTest {
 		};
 
 		// Act
-		var data = JsonSerializer.Deserialize<SampleData>(json, options);
+		var data = JsonSerializer.Deserialize<SampleData>(json, options)!;
 
 		// Assert
 		Assert.Equal(SampleCode.Ok, data.Code);
@@ -119,7 +119,7 @@ public class JsonStringEnumConverterTest {
 		options.Converters.Add(new JsonStringEnumConverter());
 
 		// Act
-		var data = JsonSerializer.Deserialize<SampleData>(json, options);
+		var data = JsonSerializer.Deserialize<SampleData>(json, options)!;
 
 		// Assert
 		Assert.Equal(SampleCode.NotFound, data.Code);

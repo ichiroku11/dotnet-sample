@@ -12,6 +12,6 @@ public static class EnumExtensions {
 	/// <typeparam name="TEnum"></typeparam>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	public static string DisplayName<TEnum>(this TEnum value) where TEnum : Enum
+	public static string? DisplayName<TEnum>(this TEnum value) where TEnum : Enum
 		=> EnumAttributeCache<TEnum, DisplayAttribute>.Get(value)?.Name;
 }

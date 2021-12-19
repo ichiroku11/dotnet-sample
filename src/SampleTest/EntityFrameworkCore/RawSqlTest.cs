@@ -12,28 +12,21 @@ namespace SampleTest.EntityFrameworkCore;
 public class RawSqlTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
-		public string Name { get; init; }
+		public string Name { get; init; } = "";
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));
 		}
 	}
 
-	private SampleDbContext _context;
-
-	public RawSqlTest() {
-		_context = new SampleDbContext();
-	}
+	private readonly SampleDbContext _context = new();
 
 	public void Dispose() {
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	// FromSqlInterpolated

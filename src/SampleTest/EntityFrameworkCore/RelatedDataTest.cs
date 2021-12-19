@@ -14,38 +14,39 @@ namespace SampleTest.EntityFrameworkCore;
 // https://docs.microsoft.com/ja-jp/ef/core/saving/related-data
 [Collection(CollectionNames.EfCoreMonster)]
 public class RelatedDataTest : IDisposable {
-	private static class EqualityComparerFactory<TElement> {
-		public static EqualityComparer<TElement> Create<TKey>(Func<TElement, TKey> keySelector) {
+	private static class EqualityComparerFactory<TElement> where TElement : notnull {
+		public static EqualityComparer<TElement> Create<TKey>(Func<TElement, TKey> keySelector) where TKey : notnull {
 			return new EqualityComparer<TElement, TKey>(keySelector);
 		}
 	}
 
 	private class MonsterCategory {
-		public int Id { get; set; }
-		public string Name { get; set; }
+		public int Id { get; init; }
+		public string Name { get; init; } = "";
 	}
 
 	private class Monster {
-		public int Id { get; set; }
-		public int CategoryId { get; set; }
-		public string Name { get; set; }
+		public int Id { get; init; }
+		public int CategoryId { get; init; }
+		public string Name { get; init; } = "";
 
 		// Navigation
-		public MonsterCategory Category { get; set; }
-		public List<MonsterItem> Items { get; set; }
+		public MonsterCategory? Category { get; init; }
+		public List<MonsterItem>? Items { get; init; }
 	}
+
 	private class Item {
-		public int Id { get; set; }
-		public string Name { get; set; }
+		public int Id { get; init; }
+		public string Name { get; init; } = "";
 	}
 
 	private class MonsterItem {
-		public int MonsterId { get; set; }
-		public int ItemId { get; set; }
+		public int MonsterId { get; init; }
+		public int ItemId { get; init; }
 
 		// Navigation
-		public Monster Monster { get; set; }
-		public Item Item { get; set; }
+		public Monster? Monster { get; init; }
+		public Item? Item { get; init; }
 	}
 
 	private static readonly EqualityComparer<MonsterCategory> _monsterCategoryComparer
@@ -62,39 +63,39 @@ public class RelatedDataTest : IDisposable {
 
 	private static readonly IReadOnlyDictionary<int, MonsterCategory> _monsterCategories
 		= new Dictionary<int, MonsterCategory>() {
-				{ 1, new MonsterCategory { Id = 1, Name = "Slime", } },
-				{ 2, new MonsterCategory { Id = 2, Name = "Animal", } },
-				{ 3, new MonsterCategory { Id = 3, Name = "Fly", } }
+			{ 1, new MonsterCategory { Id = 1, Name = "Slime", } },
+			{ 2, new MonsterCategory { Id = 2, Name = "Animal", } },
+			{ 3, new MonsterCategory { Id = 3, Name = "Fly", } }
 		};
 
 	private static readonly IReadOnlyCollection<Monster> _monsters
 		= new[] {
-				new Monster { Id = 1, CategoryId = 1, Name = "スライム", },
-				new Monster { Id = 2, CategoryId = 2, Name = "ドラキー", },
+			new Monster { Id = 1, CategoryId = 1, Name = "スライム", },
+			new Monster { Id = 2, CategoryId = 2, Name = "ドラキー", },
 		};
 
 	private static readonly IReadOnlyDictionary<int, Item> _items
 		= new Dictionary<int, Item> {
-				{ 1, new Item { Id = 1, Name = "やくそう", } },
-				{ 2, new Item { Id = 2, Name = "スライムゼリー", } },
-				{ 3, new Item { Id = 3, Name = "キメラのつばさ", } },
+			{ 1, new Item { Id = 1, Name = "やくそう", } },
+			{ 2, new Item { Id = 2, Name = "スライムゼリー", } },
+			{ 3, new Item { Id = 3, Name = "キメラのつばさ", } },
 		};
 
 	private static readonly IReadOnlyCollection<MonsterItem> _monsterItems
 		= new[] {
-				// スライム => やくそう、スライムゼリー
-				new MonsterItem { MonsterId = 1, ItemId = 1, },
-				new MonsterItem { MonsterId = 1, ItemId = 2, },
-				// ドラキー => やくそう、キメラのつばさ
-				new MonsterItem { MonsterId = 2, ItemId = 1, },
-				new MonsterItem { MonsterId = 2, ItemId = 3, },
+			// スライム => やくそう、スライムゼリー
+			new MonsterItem { MonsterId = 1, ItemId = 1, },
+			new MonsterItem { MonsterId = 1, ItemId = 2, },
+			// ドラキー => やくそう、キメラのつばさ
+			new MonsterItem { MonsterId = 2, ItemId = 1, },
+			new MonsterItem { MonsterId = 2, ItemId = 3, },
 		};
 
 	private class MonsterDbContext : SqlServerDbContext {
-		public DbSet<MonsterCategory> MonsterCategories { get; set; }
-		public DbSet<Monster> Monsters { get; set; }
-		public DbSet<Item> Items { get; set; }
-		public DbSet<MonsterItem> MonsterItems { get; set; }
+		public DbSet<MonsterCategory> MonsterCategories => Set<MonsterCategory>();
+		public DbSet<Monster> Monsters => Set<Monster>();
+		public DbSet<Item> Items => Set<Item>();
+		public DbSet<MonsterItem> MonsterItems => Set<MonsterItem>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<MonsterCategory>().ToTable(nameof(MonsterCategory));
@@ -106,11 +107,9 @@ public class RelatedDataTest : IDisposable {
 		}
 	}
 
-	private MonsterDbContext _context;
+	private readonly MonsterDbContext _context = new();
 
 	public RelatedDataTest() {
-		_context = new MonsterDbContext();
-
 		DropTable();
 		CreateTable();
 	}
@@ -118,10 +117,7 @@ public class RelatedDataTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private int CreateTable() {
@@ -215,12 +211,12 @@ delete from dbo.MonsterCategory;";
 				Id = monster.Id,
 				CategoryId = monster.CategoryId,
 				Name = monster.Name,
-					// ナビゲーションプロパティにカテゴリを設定
-					Category = _monsterCategories[monster.CategoryId]
+				// ナビゲーションプロパティにカテゴリを設定
+				Category = _monsterCategories[monster.CategoryId]
 			})
 			.OrderBy(monster => monster.Id);
 		var expectedCategories = expectedMonsters
-			.Select(monster => monster.Category)
+			.Select(monster => monster.Category!)
 			.Distinct(_monsterCategoryComparer);
 
 		// Act
@@ -284,7 +280,7 @@ delete from dbo.MonsterCategory;";
 			actual,
 			monster => Assert.Equal(
 				_monsterCategories[monster.CategoryId],
-				monster.Category,
+				monster.Category!,
 				_monsterCategoryComparer));
 	}
 
@@ -304,8 +300,8 @@ delete from dbo.MonsterCategory;";
 				Id = monster.Id,
 				CategoryId = monster.CategoryId,
 				Name = monster.Name,
-					// ナビゲーションプロパティにMonsterItemを設定
-					Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
+				// ナビゲーションプロパティにMonsterItemを設定
+				Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
 			})
 			.OrderBy(monster => monster.Id);
 		_context.Monsters.AddRange(expected);
@@ -333,7 +329,7 @@ delete from dbo.MonsterCategory;";
 		Assert.All(
 			actual,
 			actual => Assert.Equal(
-				expected.FirstOrDefault(monster => monster.Id == actual.Id).Items,
+				expected.FirstOrDefault(monster => monster.Id == actual.Id)?.Items,
 				actual.Items,
 				_monsterItemComparer));
 	}
@@ -354,8 +350,8 @@ delete from dbo.MonsterCategory;";
 				Id = monster.Id,
 				CategoryId = monster.CategoryId,
 				Name = monster.Name,
-					// ナビゲーションプロパティにMonsterItemを設定
-					Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
+				// ナビゲーションプロパティにMonsterItemを設定
+				Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
 			})
 			.OrderBy(monster => monster.Id);
 		_context.Monsters.AddRange(expected);
@@ -367,7 +363,7 @@ delete from dbo.MonsterCategory;";
 		// Assert
 		// IncludeとThenIncludeを使ってモンスター一覧とアイテム一覧、アイテムをあわせて取得
 		var actual = await _context.Monsters
-			.Include(monster => monster.Items)
+			.Include(monster => monster.Items!)
 				.ThenInclude(monsterItem => monsterItem.Item)
 			.OrderBy(monster => monster.Id)
 			.ToListAsync();
@@ -376,15 +372,15 @@ delete from dbo.MonsterCategory;";
 		Assert.All(
 			actual,
 			actual => Assert.Equal(
-				expected.FirstOrDefault(monster => monster.Id == actual.Id).Items,
+				expected.FirstOrDefault(monster => monster.Id == actual.Id)?.Items,
 				actual.Items,
 				_monsterItemComparer));
 		// ItemプロパティのItemが正しい
 		Assert.All(
-			actual.SelectMany(monster => monster.Items),
+			actual.SelectMany(monster => monster.Items!),
 			actual => Assert.Equal(
 				_items[actual.ItemId],
-				actual.Item,
+				actual.Item!,
 				_itemComparer));
 	}
 }

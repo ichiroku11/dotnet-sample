@@ -12,8 +12,8 @@ namespace SampleTest.EntityFrameworkCore;
 public class DbSetSubQueryTest : IDisposable {
 	private class MenuItem {
 		public int Id { get; set; }
-		public string Name { get; set; }
-		public string Category { get; set; }
+		public string Name { get; set; } = "";
+		public string Category { get; set; } = "";
 		public decimal Price { get; set; }
 
 		public override string ToString()
@@ -21,7 +21,7 @@ public class DbSetSubQueryTest : IDisposable {
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<MenuItem> MenuItems { get; set; }
+		public DbSet<MenuItem> MenuItems => Set<MenuItem>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<MenuItem>().ToTable(nameof(MenuItem));
@@ -29,11 +29,10 @@ public class DbSetSubQueryTest : IDisposable {
 	}
 
 	private readonly ITestOutputHelper _output;
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 
 	public DbSetSubQueryTest(ITestOutputHelper output) {
 		_output = output;
-		_context = new SampleDbContext();
 
 		DropTable();
 		InitTable();
@@ -42,10 +41,7 @@ public class DbSetSubQueryTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {

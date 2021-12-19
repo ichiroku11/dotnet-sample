@@ -20,6 +20,6 @@ public class ExceptionTest {
 		_output.WriteLine(exception.ToString());
 
 		Assert.Equal("outer", exception.Message);
-		Assert.Equal("inner", exception.InnerException.Message);
+		Assert.Equal("inner", exception.InnerException?.Message);
 	}
 }

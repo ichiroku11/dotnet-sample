@@ -11,7 +11,7 @@ namespace SampleTest;
 public class ConfigurationBuilderTest {
 	// オプション
 	private class Options {
-		public string Sample { get; set; }
+		public string Sample { get; init; } = "";
 	}
 
 	// オプションのjsonストリームを取得

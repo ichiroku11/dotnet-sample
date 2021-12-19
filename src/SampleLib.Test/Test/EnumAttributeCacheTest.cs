@@ -49,9 +49,9 @@ public class EnumAttributeCacheTest {
 		var attribute4 = EnumAttributeCache<Vegetable, DisplayAttribute>.Get(Vegetable.Carrot);
 
 		// Assert
-		Assert.Equal("りんご", attribute1.Name);
-		Assert.Equal("バナナ", attribute2.Name);
-		Assert.Equal("たまねぎ", attribute3.Name);
-		Assert.Equal("にんじん", attribute4.Name);
+		Assert.Equal("りんご", attribute1?.Name);
+		Assert.Equal("バナナ", attribute2?.Name);
+		Assert.Equal("たまねぎ", attribute3?.Name);
+		Assert.Equal("にんじん", attribute4?.Name);
 	}
 }

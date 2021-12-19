@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
@@ -11,17 +11,19 @@ namespace SampleTest;
 public class ConversionOperatorTest {
 	// 0～9までの数値を表す
 	private struct Digit {
+		public static ITestOutputHelper? Output { get; set; }
+
 		// すべてのDigit型をbyte型に変換できるため
 		// Digit => byteは暗黙的な変換
 		public static implicit operator byte(Digit value) {
-			Output.WriteLine($"implicit: {nameof(Digit)} => byte");
+			Output?.WriteLine($"implicit: {nameof(Digit)} => byte");
 			return value.Value;
 		}
 
 		// すべてのbyte型をDigit型に変換できるとは限らないため
 		// byte => Digitは明示的な変換
 		public static explicit operator Digit(byte value) {
-			Output.WriteLine($"explicit: byte => {nameof(Digit)}");
+			Output?.WriteLine($"explicit: byte => {nameof(Digit)}");
 			return new Digit(value);
 		}
 
@@ -37,17 +39,13 @@ public class ConversionOperatorTest {
 		public byte Value { get; }
 	}
 
-
-	// Digit内で使いたいのでstatic
-	private static ITestOutputHelper Output { get; set; }
-
 	private readonly ITestOutputHelper _output;
-
 
 	public ConversionOperatorTest(ITestOutputHelper output) {
 		_output = output;
 
-		Output = _output;
+		// あまりよい方法ではないが・・・
+		Digit.Output = _output;
 	}
 
 

@@ -16,14 +16,14 @@ public class CompositeKeyTest : IDisposable {
 	private class Sample {
 		public int Id1 { get; init; }
 		public int Id2 { get; init; }
-		public string Value { get; init; }
-		public List<SampleDetail> Details { get; init; }
+		public string Value { get; init; } = "";
+		public List<SampleDetail>? Details { get; init; }
 	}
 
 	private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample))
@@ -36,11 +36,9 @@ public class CompositeKeyTest : IDisposable {
 		}
 	}
 
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 
 	public CompositeKeyTest() {
-		_context = new SampleDbContext();
-
 		DropTable();
 		InitTable();
 	}
@@ -48,10 +46,7 @@ public class CompositeKeyTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {
@@ -98,10 +93,10 @@ drop table if exists dbo.Sample;";
 			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
 		// Assert
-		Assert.Equal(1, sample.Id1);
-		Assert.Equal(2, sample.Id2);
-		Assert.Equal("a", sample.Value);
-		Assert.Null(sample.Details);
+		Assert.Equal(1, sample?.Id1);
+		Assert.Equal(2, sample?.Id2);
+		Assert.Equal("a", sample?.Value);
+		Assert.Null(sample?.Details);
 	}
 
 	[Fact]
@@ -113,12 +108,12 @@ drop table if exists dbo.Sample;";
 			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
 		// Assert
-		Assert.Equal(1, sample.Id1);
-		Assert.Equal(2, sample.Id2);
-		Assert.Equal("a", sample.Value);
-		Assert.Equal(2, sample.Details.Count);
-		Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample.Details);
-		Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample.Details);
+		Assert.Equal(1, sample?.Id1);
+		Assert.Equal(2, sample?.Id2);
+		Assert.Equal("a", sample?.Value);
+		Assert.Equal(2, sample?.Details?.Count);
+		Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample?.Details);
+		Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample?.Details);
 	}
 
 	[Fact]
@@ -145,9 +140,9 @@ drop table if exists dbo.Sample;";
 		// Assert
 		Assert.Equal(3, rows);
 
-		Assert.Equal(expected.Id1, actual.Id1);
-		Assert.Equal(expected.Id2, actual.Id2);
-		Assert.Equal(expected.Value, actual.Value);
-		Assert.Equal(expected.Details.OrderBy(detail => detail.DetailNo), actual.Details.OrderBy(detail => detail.DetailNo));
+		Assert.Equal(expected.Id1, actual?.Id1);
+		Assert.Equal(expected.Id2, actual?.Id2);
+		Assert.Equal(expected.Value, actual?.Value);
+		Assert.Equal(expected.Details.OrderBy(detail => detail.DetailNo), actual?.Details?.OrderBy(detail => detail.DetailNo));
 	}
 }

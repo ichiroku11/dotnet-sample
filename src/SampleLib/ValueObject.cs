@@ -20,7 +20,7 @@ public abstract class ValueObject {
 
 	protected abstract IEnumerable<object> GetAtomicValues();
 
-	public override bool Equals(object obj) {
+	public override bool Equals(object? obj) {
 		if (obj == null || obj.GetType() != GetType()) {
 			return false;
 		}
@@ -45,6 +45,6 @@ public abstract class ValueObject {
 	}
 
 	public ValueObject GetCopy() {
-		return this.MemberwiseClone() as ValueObject;
+		return this.MemberwiseClone() as ValueObject ?? throw new InvalidOperationException();
 	}
 }

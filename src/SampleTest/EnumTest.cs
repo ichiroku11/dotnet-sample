@@ -22,9 +22,9 @@ public class EnumTest {
 
 	private static readonly IEnumerable<Fruit> _fruits
 		= new[] {
-				Fruit.Apple,
-				Fruit.Banana,
-				Fruit.Orange
+			Fruit.Apple,
+			Fruit.Banana,
+			Fruit.Orange
 		};
 
 	[Flags]
@@ -136,7 +136,8 @@ public class EnumTest {
 		// Act
 		var fruits = typeof(Fruit)
 			.GetFields(BindingFlags.Public | BindingFlags.Static)
-			.Select(field => (Fruit)field.GetValue(null));
+			.Select(field => field.GetValue(null))
+			.Cast<Fruit>();
 
 		// Assert
 		Assert.Equal(_fruits, fruits);
@@ -147,12 +148,12 @@ public class EnumTest {
 		// Arrange
 		// Act
 		var displayAttribute = typeof(Fruit)
-			.GetField(nameof(Fruit.Apple))
+			.GetField(nameof(Fruit.Apple))?
 			.GetCustomAttributes<DisplayAttribute>()
 			.First();
 
 		// Assert
-		Assert.Equal("りんご", displayAttribute.Name);
+		Assert.Equal("りんご", displayAttribute?.Name);
 	}
 
 	[Fact]
@@ -162,7 +163,7 @@ public class EnumTest {
 		var displayAttributes = typeof(Fruit)
 			.GetFields(BindingFlags.Public | BindingFlags.Static)
 			.ToDictionary(
-				field => (Fruit)field.GetValue(null),
+				field => field.GetValue(null) is Fruit value ? value : throw new InvalidOperationException(),
 				field => field.GetCustomAttributes<DisplayAttribute>().First());
 
 		// Assert

@@ -12,13 +12,13 @@ namespace SampleTest;
 // https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 public class InitOnlySetterTest {
 	public class Sample {
-		public Sample(string value = null) {
+		public Sample(string? value = null) {
 			// コンストラクタで値を設定できる
 			Value = value;
 		}
 
 		// オブジェクト初期化子で値を設定できる
-		public string Value { get; init; }
+		public string? Value { get; init; }
 	}
 
 	[Fact]

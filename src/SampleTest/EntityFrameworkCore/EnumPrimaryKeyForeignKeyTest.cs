@@ -40,8 +40,8 @@ public class EnumPrimaryKeyForeignKeyTest {
 	}
 
 	private class MonsterDbContext : SqlServerDbContext {
-		public DbSet<MonsterCategory> MonsterCategories { get; set; }
-		public DbSet<Monster> Monsters { get; set; }
+		public DbSet<MonsterCategory> MonsterCategories => Set<MonsterCategory>();
+		public DbSet<Monster> Monsters => Set<Monster>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<MonsterCategory>().ToTable(nameof(MonsterCategory));

@@ -13,18 +13,16 @@ public class RecordTest : IDisposable {
 	private record Sample(int Id, string Name);
 
 	private class SampleDbContext : SqlServerDbContext {
-		public DbSet<Sample> Samples { get; init; }
+		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));
 		}
 	}
 
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 
 	public RecordTest() {
-		_context = new SampleDbContext();
-
 		DropTable();
 		InitTable();
 	}
@@ -32,17 +30,14 @@ public class RecordTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {
 		var sql = @"
 create table dbo.Sample(
 	Id int,
-	Name nvarchar(10),
+	Name nvarchar(10) not null,
 	constraint PK_Sample primary key(Id)
 );
 
@@ -62,7 +57,7 @@ values
 	public async Task FirstOrDefault_record型のモデルを取得する() {
 		// Arrange
 		// Act
-		var sample = await _context.Samples.FirstOrDefaultAsync();
+		var sample = (await _context.Samples.FirstOrDefaultAsync())!;
 
 		// Assert
 		Assert.Equal(1, sample.Id);

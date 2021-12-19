@@ -10,7 +10,10 @@ namespace SampleLib;
 /// </summary>
 /// <typeparam name="TElement"></typeparam>
 /// <typeparam name="TKey"></typeparam>
-public class EqualityComparer<TElement, TKey> : EqualityComparer<TElement> {
+public class EqualityComparer<TElement, TKey> : EqualityComparer<TElement>
+	where TElement : notnull
+	where TKey : notnull {
+
 	private readonly Func<TElement, TKey> _keySelector;
 
 	/// <summary>
@@ -47,10 +50,6 @@ public class EqualityComparer<TElement, TKey> : EqualityComparer<TElement> {
 	/// <param name="obj"></param>
 	/// <returns></returns>
 	public override int GetHashCode([DisallowNull] TElement obj) {
-		if (obj == null) {
-			return 0;
-		}
-
 		return _keySelector(obj).GetHashCode();
 	}
 }
