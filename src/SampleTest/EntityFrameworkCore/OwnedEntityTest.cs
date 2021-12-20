@@ -12,13 +12,15 @@ namespace SampleTest.EntityFrameworkCore;
 // https://docs.microsoft.com/ja-jp/ef/core/modeling/owned-entities
 public class OwnedEntityTest : IDisposable {
 	// メールアドレス
-	private record MailAddress(string Address, string Name);
+	private record MailAddress(string Address, string Name) {
+		public static readonly MailAddress Empty = new("", "");
+	}
 
 	// メール
 	private record Mail {
 		public int Id { get; init; }
-		public MailAddress From { get; init; }
-		public MailAddress To { get; init; }
+		public MailAddress From { get; init; } = MailAddress.Empty;
+		public MailAddress To { get; init; } = MailAddress.Empty;
 	}
 	// このrecord型は無理っぽい（なぜ）
 	// private record Mail(int Id, MailAddress From, MailAddress To);
@@ -45,11 +47,9 @@ public class OwnedEntityTest : IDisposable {
 		}
 	}
 
-	private MailDbContext _context;
+	private readonly MailDbContext _context = new();
 
 	public OwnedEntityTest() {
-		_context = new MailDbContext();
-
 		DropTable();
 		InitTable();
 	}
@@ -57,10 +57,7 @@ public class OwnedEntityTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {

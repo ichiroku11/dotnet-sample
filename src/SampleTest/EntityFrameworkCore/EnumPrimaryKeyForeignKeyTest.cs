@@ -27,7 +27,7 @@ public class EnumPrimaryKeyForeignKeyTest {
 		// 主キー
 		[Key, Column("Id")]
 		public MonsterCategoryType Type { get; set; }
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 	}
 
 	private class Monster {
@@ -35,8 +35,8 @@ public class EnumPrimaryKeyForeignKeyTest {
 		// 外部キー
 		[Column("CategoryId")]
 		public MonsterCategoryType CategoryType { get; set; }
-		public string Name { get; set; }
-		public MonsterCategory Category { get; set; }
+		public string Name { get; set; } = "";
+		public MonsterCategory? Category { get; set; }
 	}
 
 	private class MonsterDbContext : SqlServerDbContext {
@@ -53,12 +53,12 @@ public class EnumPrimaryKeyForeignKeyTest {
 		var sql = @"
 create table dbo.MonsterCategory(
 	Id int,
-	Name nvarchar(20),
+	Name nvarchar(20) not null,
 	constraint PK_MonsterCategory primary key(Id)
 );
 create table dbo.Monster(
 	Id int,
-	Name nvarchar(20),
+	Name nvarchar(20) not null,
 	CategoryId int,
 	constraint PK_Monster primary key(Id),
 	constraint FK_Monster_MonsterCategory foreign key(CategoryId)
@@ -76,32 +76,32 @@ drop table if exists dbo.MonsterCategory;";
 
 	private static async Task InitTableAsync(MonsterDbContext context) {
 		var monsterCategories = new[] {
-				new MonsterCategory {
-					Type = MonsterCategoryType.Slime,
-					Name = "スライム系",
-				},
-				new MonsterCategory {
-					Type = MonsterCategoryType.Animal,
-					Name = "けもの系",
-				},
-				new MonsterCategory {
-					Type = MonsterCategoryType.Fly,
-					Name = "鳥系",
-				},
-			};
+			new MonsterCategory {
+				Type = MonsterCategoryType.Slime,
+				Name = "スライム系",
+			},
+			new MonsterCategory {
+				Type = MonsterCategoryType.Animal,
+				Name = "けもの系",
+			},
+			new MonsterCategory {
+				Type = MonsterCategoryType.Fly,
+				Name = "鳥系",
+			},
+		};
 
 		var monsters = new[] {
-				new Monster {
-					Id = 1,
-					Name = "スライム",
-					CategoryType = MonsterCategoryType.Slime,
-				},
-				new Monster {
-					Id = 2,
-					Name = "ドラキー",
-					CategoryType = MonsterCategoryType.Fly,
-				},
-			};
+			new Monster {
+				Id = 1,
+				Name = "スライム",
+				CategoryType = MonsterCategoryType.Slime,
+			},
+			new Monster {
+				Id = 2,
+				Name = "ドラキー",
+				CategoryType = MonsterCategoryType.Fly,
+			},
+		};
 
 		context.MonsterCategories.AddRange(monsterCategories);
 		context.Monsters.AddRange(monsters);
@@ -151,17 +151,17 @@ drop table if exists dbo.MonsterCategory;";
 			await CreateTableAsync(context);
 			await InitTableAsync(context);
 
-			var monster = await context.Monsters
+			var monster = (await context.Monsters
 				// カテゴリをインクルード
 				.Include(monster => monster.Category)
-				.FirstOrDefaultAsync(monster => monster.CategoryType == MonsterCategoryType.Fly);
+				.FirstOrDefaultAsync(monster => monster.CategoryType == MonsterCategoryType.Fly))!;
 
 			Assert.NotNull(monster);
 			Assert.Equal(2, monster.Id);
 			Assert.Equal("ドラキー", monster.Name);
 			Assert.Equal(MonsterCategoryType.Fly, monster.CategoryType);
-			Assert.Equal(MonsterCategoryType.Fly, monster.Category.Type);
-			Assert.Equal("鳥系", monster.Category.Name);
+			Assert.Equal(MonsterCategoryType.Fly, monster.Category?.Type);
+			Assert.Equal("鳥系", monster.Category?.Name);
 		} catch (Exception exception) {
 			_output.WriteLine(exception.ToString());
 			AssertHelper.Fail();
