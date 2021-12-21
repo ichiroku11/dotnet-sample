@@ -23,7 +23,7 @@ public class SignatureCreator {
 
 		using var rsa = RSA.Create(_parameters);
 		var formatter = new RSAPKCS1SignatureFormatter(rsa);
-		formatter.SetHashAlgorithm(HashAlgorithmName.SHA256.Name);
+		formatter.SetHashAlgorithm(HashAlgorithmName.SHA256.Name!);
 
 		return formatter.CreateSignature(messageHash);
 	}
