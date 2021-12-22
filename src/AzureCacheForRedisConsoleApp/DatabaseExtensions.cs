@@ -21,7 +21,7 @@ public static class DatabaseExtensions {
 		return (string)result;
 	}
 
-	public static async Task<TValue> GettAsync<TValue>(this IDatabase database, string key) {
+	public static async Task<TValue?> GetAsync<TValue>(this IDatabase database, string key) {
 		var json = await database.StringGetAsync(key);
 
 		return JsonSerializer.Deserialize<TValue>(json, _options);

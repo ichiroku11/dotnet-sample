@@ -57,7 +57,7 @@ public class RedisSample {
 
 		// オブジェクトを設定・取得
 		await database.SetAsync("test", new Message("Hello Redis!"));
-		var message = await database.GettAsync<Message>("test");
-		_logger.LogInformation($"{nameof(DatabaseExtensions.GettAsync)}: {message.Content}");
+		var message = await database.GetAsync<Message>("test");
+		_logger.LogInformation($"{nameof(DatabaseExtensions.GetAsync)}: {message?.Content}");
 	}
 }
