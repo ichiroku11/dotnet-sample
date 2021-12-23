@@ -37,6 +37,6 @@ public class MessageHelper {
 	/// <returns></returns>
 	public static TMessage FromByteArray<TMessage>(byte[] bytes) {
 		var json = _encoding.GetString(bytes);
-		return JsonSerializer.Deserialize<TMessage>(json, _options);
+		return JsonSerializer.Deserialize<TMessage>(json, _options) ?? throw new InvalidOperationException();
 	}
 }
