@@ -32,7 +32,7 @@ public class DefaultController : Controller {
 			var builder = new StringBuilder();
 			builder.Append("ModelState:")
 				.Append($" {nameof(entry.Key)}={entry.Key}")
-				.Append($", {nameof(entry.Value.RawValue)}.Type={entry.Value.RawValue.GetType()}")
+				.Append($", {nameof(entry.Value.RawValue)}.Type={entry.Value.RawValue?.GetType()}")
 				.Append($", {nameof(entry.Value.RawValue)}={entry.Value.GetRawValueAsString()}");
 			_logger.LogInformation(builder.ToString());
 		}
