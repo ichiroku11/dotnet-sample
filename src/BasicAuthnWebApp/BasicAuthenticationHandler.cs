@@ -22,8 +22,8 @@ public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticat
 		: base(options, logger, encoder, clock) {
 	}
 
-	protected new BasicAuthenticationEvents Events {
-		get => (BasicAuthenticationEvents)base.Events;
+	protected new BasicAuthenticationEvents? Events {
+		get => base.Events as BasicAuthenticationEvents;
 		set => base.Events = value;
 	}
 
@@ -49,7 +49,9 @@ public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticat
 			return AuthenticateResult.Fail("Invalid credentials");
 		}
 
-		var principal = await Options.CredentialsValidator?.ValidateAsync(userName, password, Scheme);
+		var principal = Options.CredentialsValidator is null
+			? throw new InvalidOperationException()
+			: await Options.CredentialsValidator.ValidateAsync(userName, password, Scheme);
 		if (principal == null) {
 			return AuthenticateResult.Fail("Invalid username or password");
 		}
