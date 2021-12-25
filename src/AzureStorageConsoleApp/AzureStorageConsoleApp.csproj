@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>e395fd0f-62df-4fcc-83da-5f6e4c3929f3</UserSecretsId>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
