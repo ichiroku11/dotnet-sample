@@ -26,13 +26,13 @@ public class SampleStartup {
 		app.UseEndpoints(endpoints => {
 			endpoints
 				.MapGet("/metadata", async context => {
-						// UseRouting以降のミドルウェアであればエンドポイントを取得できる
-						var endpoint = context.GetEndpoint();
-					await context.Response.WriteLineAsync(endpoint.DisplayName);
+					// UseRouting以降のミドルウェアであればエンドポイントを取得できる
+					var endpoint = context.GetEndpoint();
+					await context.Response.WriteLineAsync(endpoint?.DisplayName ?? "");
 
-						// エンドポイントに関連するメタデータを取得
-						var metadata = endpoint.Metadata.GetMetadata<ISampleMetadata>();
-					await context.Response.WriteLineAsync($"{nameof(ISampleMetadata)}:{metadata.Value}");
+					// エンドポイントに関連するメタデータを取得
+					var metadata = endpoint?.Metadata.GetMetadata<ISampleMetadata>();
+					await context.Response.WriteLineAsync($"{nameof(ISampleMetadata)}:{metadata?.Value}");
 				})
 				.WithDisplayName("metadata")
 				// メタデータを指定する
@@ -42,9 +42,9 @@ public class SampleStartup {
 				.MapGet("/endpoints", async context => {
 					var endpointDataSource = context.RequestServices.GetRequiredService<EndpointDataSource>();
 
-						// エンドポイント一覧
-						foreach (var endpoint in endpointDataSource.Endpoints) {
-						await context.Response.WriteLineAsync(endpoint.DisplayName);
+					// エンドポイント一覧
+					foreach (var endpoint in endpointDataSource.Endpoints) {
+						await context.Response.WriteLineAsync(endpoint?.DisplayName ?? "");
 					}
 				})
 				.WithDisplayName("endpoints");
