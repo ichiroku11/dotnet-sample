@@ -43,7 +43,7 @@ public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup
 		Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
 		Assert.Equal(
 			new Uri(_factory.Server.BaseAddress, "/account/login").ToString(),
-			response.Headers.Location.GetLeftPart(UriPartial.Path));
+			response.Headers.Location?.GetLeftPart(UriPartial.Path));
 	}
 
 	[Fact]
@@ -61,15 +61,15 @@ public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup
 		Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
 		Assert.Equal(
 			new Uri(_factory.Server.BaseAddress, "/account/accessdenied").ToString(),
-			response.Headers.Location.GetLeftPart(UriPartial.Path));
+			response.Headers.Location?.GetLeftPart(UriPartial.Path));
 	}
 
 	private class AuthenticateResult {
 		public bool Succeeded { get; init; }
-		public string NameIdentifier { get; init; }
-		public string Role { get; init; }
-		public string Item { get; init; }
-		public string Parameter { get; init; }
+		public string NameIdentifier { get; init; } = "";
+		public string Role { get; init; } = "";
+		public string Item { get; init; } = "";
+		public string Parameter { get; init; } = "";
 	}
 
 	[Fact]
@@ -82,7 +82,7 @@ public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup
 		var content = await response.Content.ReadAsStringAsync();
 		_output.WriteLine(content);
 
-		var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
+		var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions)!;
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -107,7 +107,7 @@ public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup
 		var content = await response.Content.ReadAsStringAsync();
 		_output.WriteLine(content);
 
-		var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions);
+		var result = JsonSerializer.Deserialize<AuthenticateResult>(content, _jsonSerializerOptions)!;
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);

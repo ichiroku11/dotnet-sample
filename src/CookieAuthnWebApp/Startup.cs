@@ -34,9 +34,9 @@ public class Startup {
 
 				options.Events = new LoggingCookieAuthenticationEvents {
 					OnSigningIn = (CookieSigningInContext context) => {
-							// Claimを追加できる
-							var identity = (ClaimsIdentity)context.Principal.Identity;
-						identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+						// Claimを追加できる
+						var identity = context.Principal?.Identity as ClaimsIdentity;
+						identity?.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
 						return Task.CompletedTask;
 					},
 				};
@@ -87,10 +87,10 @@ public class Startup {
 				var principal = new ClaimsPrincipal(identity);
 
 				var properties = new AuthenticationProperties(
-					items: new Dictionary<string, string> {
+					items: new Dictionary<string, string?> {
 						["x"] = "2",
 					},
-					parameters: new Dictionary<string, object>() {
+					parameters: new Dictionary<string, object?>() {
 						["y"] = 3,
 					});
 
