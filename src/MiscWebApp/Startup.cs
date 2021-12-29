@@ -43,12 +43,12 @@ public class Startup {
 				var connection = new {
 					// サーバのIPアドレスとポート番号
 					Local = new {
-						IpAddress = context.Connection.LocalIpAddress.ToString(),
+						IpAddress = context.Connection.LocalIpAddress?.ToString(),
 						Port = context.Connection.LocalPort
 					},
 					// クライアントのIPアドレスとポート番号
 					Remote = new {
-						IpAddress = context.Connection.RemoteIpAddress.ToString(),
+						IpAddress = context.Connection.RemoteIpAddress?.ToString(),
 						Port = context.Connection.RemotePort
 					},
 				};
@@ -64,7 +64,7 @@ public class Startup {
 				var subpath = context.GetRouteValue("subpath") as string;
 				// たぶん同じ
 				//var subpath = context.Request.RouteValues["subpath"] as string;
-				if (!provider.TryGetContentType(subpath, out var contentType)) {
+				if (!provider.TryGetContentType(subpath ?? "", out var contentType)) {
 					context.Response.StatusCode = (int)HttpStatusCode.NotFound;
 					return;
 				}

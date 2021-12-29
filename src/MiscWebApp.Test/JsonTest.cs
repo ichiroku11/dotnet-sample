@@ -34,6 +34,6 @@ public class JsonTest : TestBase {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(1, actual.Value);
+		Assert.Equal(1, actual?.Value);
 	}
 }
