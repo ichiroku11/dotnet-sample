@@ -11,9 +11,13 @@ public class Sample : IEquatable<Sample> {
 	[Required]
 	public int Id { get; set; }
 	[Required]
-	public string Name { get; set; }
+	public string Name { get; set; } = "";
 
 	public bool Equals([AllowNull] Sample other) {
-		return Id.Equals(Id) && Name.Equals(other.Name);
+		if (other is null) {
+			return false;
+		}
+
+		return Id.Equals(other.Id) && Name.Equals(other.Name);
 	}
 }

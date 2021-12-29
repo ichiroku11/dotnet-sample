@@ -8,7 +8,7 @@ namespace ModelBindingWebApp.Models;
 
 // バインドする型がGeometryModelならGeometryModelBinderを提供する
 public class GeometryModelBinderProvider : IModelBinderProvider {
-	public IModelBinder GetBinder(ModelBinderProviderContext context) {
+	public IModelBinder? GetBinder(ModelBinderProviderContext context) {
 		if (context.Metadata.ModelType != typeof(GeometryModel)) {
 			return null;
 		}

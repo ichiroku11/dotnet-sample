@@ -10,7 +10,7 @@ namespace ModelBindingWebApp.Helpers;
 // ModelStateを保存する属性
 public class SaveModelStateAttribute : ActionFilterAttribute {
 	// リダイレクトかどうか
-	private static bool IsRedirectResult(IActionResult result)
+	private static bool IsRedirectResult(IActionResult? result)
 		=> result is RedirectToActionResult || result is RedirectToRouteResult;
 
 	public override void OnActionExecuted(ActionExecutedContext context) {
@@ -19,7 +19,7 @@ public class SaveModelStateAttribute : ActionFilterAttribute {
 			return;
 		}
 
-		if (!(context.Controller is Controller controller)) {
+		if (context.Controller is not Controller controller) {
 			// ありえるの？
 			return;
 		}

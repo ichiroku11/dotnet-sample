@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SampleLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,20 +23,10 @@ public enum MonsterCategory {
 }
 
 public static class MonsterCategoryExtensions {
-	private static readonly Dictionary<MonsterCategory, DisplayAttribute> _displayAttributes
-		= typeof(MonsterCategory)
-			.GetFields(BindingFlags.Public | BindingFlags.Static)
-			.ToDictionary(
-				field => (MonsterCategory)field.GetValue(null),
-				field => field.GetCustomAttributes<DisplayAttribute>().FirstOrDefault());
-
-	public static string GetDisplayName(this MonsterCategory category)
-		=> _displayAttributes[category]?.Name;
-
 	public static SelectListItem ToSelectListItem(this MonsterCategory category) {
 		var displayName = category == MonsterCategory.None
 			? "選択してください"
-			: category.GetDisplayName();
+			: category.DisplayName();
 
 		return new SelectListItem {
 			Text = displayName,

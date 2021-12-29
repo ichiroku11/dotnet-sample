@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,12 +12,14 @@ namespace ModelBindingWebApp.Models;
 public class GeometryModelBinder : IModelBinder {
 	// サブクラスのバインダーとメタデータ
 	private readonly Dictionary<Type, (IModelBinder binder, ModelMetadata metadata)> _binders
-		= new Dictionary<Type, (IModelBinder binder, ModelMetadata metadata)>();
+		= new();
 
-	private bool TryGetSubclassBinder(Type type, out IModelBinder binder, out ModelMetadata metadata) {
+	private bool TryGetSubclassBinder(
+		Type type,
+		[NotNullWhen(true)] out IModelBinder? binder,
+		[NotNullWhen(true)] out ModelMetadata? metadata) {
 		if (!_binders.ContainsKey(type)) {
-			binder = null;
-			metadata = null;
+			(binder, metadata) = (null, null);
 			return false;
 		}
 
