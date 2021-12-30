@@ -26,9 +26,9 @@ public class AreaRolesAuthorizationRequirement : AuthorizationHandler<AreaRolesA
 	public IEnumerable<string> AllowedRoles { get; }
 	public RolesAuthorizationRequirement RolesAuthorizationRequirement { get; }
 
-	private string GetAreaName(object resource) {
+	private string GetAreaName(object? resource) {
 		if (resource is AuthorizationFilterContext context) {
-			return context.HttpContext.Request.RouteValues["area"] as string;
+			return context.HttpContext.Request.RouteValues["area"] as string ?? "";
 		}
 
 		throw new InvalidOperationException();
