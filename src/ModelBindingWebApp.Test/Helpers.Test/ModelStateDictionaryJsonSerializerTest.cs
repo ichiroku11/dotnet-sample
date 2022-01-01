@@ -34,12 +34,12 @@ public class ModelStateDictionaryJsonSerializerTest {
 
 		var (key, modelState) = modelStates.First();
 		Assert.Equal("k", key);
+		
+		Assert.Null(modelState?.RawValue);
 
-		Assert.Null(modelState.RawValue);
+		Assert.Equal("a", modelState?.AttemptedValue);
 
-		Assert.Equal("a", modelState.AttemptedValue);
-
-		Assert.Empty(modelState.Errors);
+		Assert.Empty(modelState?.Errors);
 	}
 
 	// RawValue is string
@@ -71,12 +71,12 @@ public class ModelStateDictionaryJsonSerializerTest {
 		var (key, modelState) = modelStates.First();
 		Assert.Equal("k", key);
 
-		Assert.IsType<string>(modelState.RawValue);
-		Assert.Equal("r", modelState.RawValue);
+		Assert.IsType<string>(modelState?.RawValue);
+		Assert.Equal("r", modelState?.RawValue);
 
-		Assert.Equal("a", modelState.AttemptedValue);
+		Assert.Equal("a", modelState?.AttemptedValue);
 
-		Assert.Empty(modelState.Errors);
+		Assert.Empty(modelState?.Errors);
 	}
 
 	// RawValue is string[]
@@ -108,14 +108,14 @@ public class ModelStateDictionaryJsonSerializerTest {
 		var (key, modelState) = modelStates.First();
 		Assert.Equal("k", key);
 
-		Assert.IsType<string[]>(modelState.RawValue);
-		var rawValues = modelState.RawValue as string[];
-		Assert.Equal(2, rawValues.Length);
-		Assert.Equal("r1", rawValues[0]);
-		Assert.Equal("r2", rawValues[1]);
+		Assert.IsType<string[]>(modelState?.RawValue);
+		var rawValues = modelState?.RawValue as string[];
+		Assert.Equal(2, rawValues?.Length);
+		Assert.Equal("r1", rawValues?[0]);
+		Assert.Equal("r2", rawValues?[1]);
 
-		Assert.Equal("a", modelState.AttemptedValue);
+		Assert.Equal("a", modelState?.AttemptedValue);
 
-		Assert.Empty(modelState.Errors);
+		Assert.Empty(modelState?.Errors);
 	}
 }

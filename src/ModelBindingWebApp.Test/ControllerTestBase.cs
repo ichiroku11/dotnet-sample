@@ -21,8 +21,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<S
 	}
 
 	public void Dispose() {
-		_client?.Dispose();
-		_client = null;
+		_client.Dispose();
 	}
 
 	protected void WriteLine(string message) => _output.WriteLine(message);
