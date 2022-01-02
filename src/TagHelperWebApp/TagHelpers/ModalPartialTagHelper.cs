@@ -13,7 +13,7 @@ using TagHelperWebApp.Models;
 namespace TagHelperWebApp.TagHelpers;
 
 public class ModalPartialTagHelper : TagHelper {
-	private readonly ModalPartialViewModel _model = new ModalPartialViewModel();
+	private readonly ModalPartialViewModel _model = new();
 	private readonly PartialTagHelper _inner;
 
 	public ModalPartialTagHelper(ICompositeViewEngine viewEngine, IViewBufferScope viewBufferScope) {
