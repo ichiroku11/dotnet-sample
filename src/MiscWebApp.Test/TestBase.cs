@@ -20,8 +20,7 @@ public abstract class TestBase : IClassFixture<WebApplicationFactory<Startup>>, 
 	protected ITestOutputHelper Output { get; }
 
 	public void Dispose() {
-		_client?.Dispose();
-		_client = null;
+		_client.Dispose();
 	}
 
 	protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {

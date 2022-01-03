@@ -39,8 +39,8 @@ public static class StreamExtensions {
 	public static async Task<TObject> ReadFromJsonAsync<TObject>(this Stream stream) {
 		using var reader = new StreamReader(stream, _encoding, leaveOpen: true);
 		// 1行を読み込む
-		var json = await reader.ReadLineAsync();
+		var json = await reader.ReadLineAsync() ?? throw new InvalidOperationException();
 
-		return JsonSerializer.Deserialize<TObject>(json, _options);
+		return JsonSerializer.Deserialize<TObject>(json, _options) ?? throw new InvalidOperationException();
 	}
 }

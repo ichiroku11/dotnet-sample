@@ -17,11 +17,11 @@ namespace BasicAuthnWebApp;
 public class Startup {
 	// テスト用
 	private class TestCredentialsValidator : ICredentialsValidator {
-		public Task<ClaimsPrincipal> ValidateAsync(string userName, string password, AuthenticationScheme scheme) {
+		public Task<ClaimsPrincipal?> ValidateAsync(string userName, string password, AuthenticationScheme scheme) {
 			// 仮に
 			if (!string.Equals(userName, "abc", StringComparison.Ordinal) ||
 				!string.Equals(password, "xyz", StringComparison.Ordinal)) {
-				return null;
+				return Task.FromResult<ClaimsPrincipal?>(null);
 			}
 
 			var claims = new[] {
@@ -30,7 +30,7 @@ public class Startup {
 			var identity = new ClaimsIdentity(claims, scheme.Name);
 			var principal = new ClaimsPrincipal(identity);
 
-			return Task.FromResult(principal);
+			return Task.FromResult<ClaimsPrincipal?>(principal);
 		}
 	}
 

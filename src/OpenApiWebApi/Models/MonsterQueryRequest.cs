@@ -12,5 +12,5 @@ public class MonsterQueryRequest {
 	/// <summary>
 	/// モンスター名
 	/// </summary>
-	public string Name { get; set; }
+	public string Name { get; init; } = "";
 }

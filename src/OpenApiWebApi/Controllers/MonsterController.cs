@@ -30,16 +30,16 @@ namespace OpenApiWebApi.Controllers;
 [OpenApiTag("Monster", Description = "モンスター")]
 public class MonsterController : ControllerBase {
 	private static readonly ConcurrentDictionary<int, Monster> _monsters
-		= new ConcurrentDictionary<int, Monster>(
+		= new(
 			new[] {
-					new Monster {
-						Id = 1,
-						Name = "スライム"
-					},
-					new Monster {
-						Id = 2,
-						Name = "ドラキー"
-					}
+				new Monster {
+					Id = 1,
+					Name = "スライム"
+				},
+				new Monster {
+					Id = 2,
+					Name = "ドラキー"
+				}
 			}.ToDictionary(monster => monster.Id));
 	// 最大ID
 	private static int _maxId = 2;

@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace BasicAuthnWebApp;
 
 public class BasicAuthenticationOptions : AuthenticationSchemeOptions {
-	public ICredentialsValidator CredentialsValidator { get; set; }
+	public ICredentialsValidator? CredentialsValidator { get; set; }
 }

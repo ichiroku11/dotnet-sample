@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CookieAuthnWebApp;
 
 public class LoggingCookieAuthenticationEvents : CookieAuthenticationEvents {
-	private ILogger _logger;
+	private ILogger? _logger;
 
 	private ILogger GetLogger<TOptions>(BaseContext<TOptions> context) where TOptions : AuthenticationSchemeOptions {
 		if (_logger == null) {

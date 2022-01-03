@@ -12,8 +12,14 @@ namespace ModelBindingWebApp.Helpers;
 public static class ModelStateDictionaryJsonSerializer {
 	// JSONシリアライズ用のオブジェクト
 	private class JsonEntry {
-		public static JsonEntry Create(string key, ModelStateEntry entry)
-			=> new JsonEntry {
+		public static JsonEntry Create(string key, ModelStateEntry? entry) {
+			if (entry == null) {
+				return new JsonEntry {
+					Key = key,
+				};
+			}
+
+			return new JsonEntry {
 				Key = key,
 				RawValues = entry.RawValue switch {
 					null => new string[0],
@@ -24,19 +30,20 @@ public static class ModelStateDictionaryJsonSerializer {
 				AttemptedValue = entry.AttemptedValue,
 				ErrorMessages = entry.Errors.Select(error => error.ErrorMessage),
 			};
+		}
 
-		public string Key { get; set; }
+		public string Key { get; set; } = "";
 
 		// ModelStateEntry.RawValueはおそらくstringかstring[]になる
 		// JSONでstringとstring[]の2パターンの読み込みが難しそうなのでstring[]として扱う
-		public string[] RawValues { get; set; }
+		public string[] RawValues { get; set; } = Array.Empty<string>();
 
-		public string AttemptedValue { get; set; }
+		public string? AttemptedValue { get; set; }
 
-		public IEnumerable<string> ErrorMessages { get; set; }
+		public IEnumerable<string> ErrorMessages { get; set; } = Enumerable.Empty<string>();
 
 		[JsonIgnore]
-		public object RawValue => RawValues.Length switch {
+		public object? RawValue => RawValues.Length switch {
 			0 => null,
 			1 => RawValues[0],
 			_ => RawValues,
@@ -59,7 +66,7 @@ public static class ModelStateDictionaryJsonSerializer {
 	public static ModelStateDictionary Deserialize(string json) {
 		var modelStates = new ModelStateDictionary();
 
-		var entries = JsonSerializer.Deserialize<JsonEntry[]>(json, _jsonSerializerOptions);
+		var entries = JsonSerializer.Deserialize<JsonEntry[]>(json, _jsonSerializerOptions) ?? Enumerable.Empty<JsonEntry>();
 		foreach (var entry in entries) {
 			modelStates.SetModelValue(entry.Key, entry.RawValue, entry.AttemptedValue);
 			foreach (var errorMessage in entry.ErrorMessages) {

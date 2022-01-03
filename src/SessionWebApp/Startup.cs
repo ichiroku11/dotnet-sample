@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,8 +43,13 @@ public class Startup {
 			// セッションに設定
 			endpoints.MapGet("/session/set/{key}:{value}", async context => {
 				var session = context.Session;
+
 				var key = context.Request.RouteValues["key"] as string;
 				var value = context.Request.RouteValues["value"] as string;
+				if (key is null || value is null) {
+					context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+					return;
+				}
 
 				session.SetString(key, value);
 
@@ -53,7 +59,12 @@ public class Startup {
 			// セッションから削除
 			endpoints.MapGet("/session/remove/{key}", async context => {
 				var session = context.Session;
+
 				var key = context.Request.RouteValues["key"] as string;
+				if (key is null) {
+					context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+					return;
+				}
 
 				session.Remove(key);
 

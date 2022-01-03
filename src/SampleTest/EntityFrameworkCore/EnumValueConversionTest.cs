@@ -36,7 +36,7 @@ public class EnumValueConversionTest {
 
 	private class Monster {
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string Name { get; set; } = "";
 		public MonsterCategory Category { get; set; }
 	}
 
@@ -82,22 +82,22 @@ public class EnumValueConversionTest {
 			EnumStringMonsterDbContext _ => @"
 create table dbo.Monster(
 	Id int,
-	Name nvarchar(20),
-	Category varchar(10),
+	Name nvarchar(20) not null,
+	Category varchar(10) not null,
 	constraint PK_Monster primary key(Id)
 );",
 			EnumChar2MonsterDbContext _ => @"
 create table dbo.Monster(
 	Id int,
-	Name nvarchar(20),
-	Category char(2),
+	Name nvarchar(20) not null,
+	Category char(2) not null,
 	constraint PK_Monster primary key(Id)
 );",
 			_ => @"
 create table dbo.Monster(
 	Id int,
-	Name nvarchar(20),
-	Category tinyint,
+	Name nvarchar(20) not null,
+	Category tinyint not null,
 	constraint PK_Monster primary key(Id)
 );",
 		};
@@ -116,7 +116,8 @@ create table dbo.Monster(
 	}
 
 	private static async Task<Monster> FindAsync(MonsterDbContext context, int id) {
-		return await context.Monsters.FirstOrDefaultAsync(monster => monster.Id == id);
+		var monster = await context.Monsters.FirstOrDefaultAsync(monster => monster.Id == id);
+		return monster ?? throw new ArgumentException(null, nameof(id));
 	}
 
 	[Theory]

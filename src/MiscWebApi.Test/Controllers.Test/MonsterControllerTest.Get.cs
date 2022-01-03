@@ -22,7 +22,7 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(2, monsters.Count);
+		Assert.Equal(2, monsters?.Count);
 		Assert.Contains(monsters, monster => monster.Id == 1 && monster.Name == "スライム");
 		Assert.Contains(monsters, monster => monster.Id == 2 && monster.Name == "ドラキー");
 	}
@@ -38,8 +38,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(1, monster.Id);
-		Assert.Equal("スライム", monster.Name);
+		Assert.Equal(1, monster?.Id);
+		Assert.Equal("スライム", monster?.Name);
 	}
 
 	[Fact]
@@ -55,7 +55,7 @@ public partial class MonsterControllerTest {
 		// Assert
 		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Equal((int)HttpStatusCode.NotFound, problem.Status.Value);
+		Assert.Equal((int)HttpStatusCode.NotFound, problem?.Status);
 	}
 
 	// FromQuery属性：クエリ文字列から
@@ -71,8 +71,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(_slime.Id, monster.Id);
-		Assert.Equal(_slime.Name, monster.Name);
+		Assert.Equal(_slime.Id, monster?.Id);
+		Assert.Equal(_slime.Name, monster?.Name);
 	}
 
 	// FromRoute属性：ルートパラメータからバインドできる
@@ -88,8 +88,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(_slime.Id, monster.Id);
-		Assert.Equal(_slime.Name, monster.Name);
+		Assert.Equal(_slime.Id, monster?.Id);
+		Assert.Equal(_slime.Name, monster?.Name);
 	}
 
 	[Fact]
@@ -104,7 +104,7 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(2, monster.Id);
-		Assert.Equal("ドラキー", monster.Name);
+		Assert.Equal(2, monster?.Id);
+		Assert.Equal("ドラキー", monster?.Name);
 	}
 }

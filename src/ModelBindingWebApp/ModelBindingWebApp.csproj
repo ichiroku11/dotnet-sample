@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SampleLib\SampleLib.csproj" />
+  </ItemGroup>
+
 </Project>

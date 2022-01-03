@@ -69,7 +69,7 @@ public class DictionaryControllerTest : ControllerTestBase {
 		// Act
 		using var response = await SendAsync(request);
 		var json = await response.Content.ReadAsStringAsync();
-		var values = JsonSerializer.Deserialize<IDictionary<string, int>>(json, _jsonSerializerOptions);
+		var values = JsonSerializer.Deserialize<IDictionary<string, int>>(json, _jsonSerializerOptions)!;
 
 		// Assert
 		Assert.Equal(2, values.Count);
@@ -112,7 +112,7 @@ public class DictionaryControllerTest : ControllerTestBase {
 		// Act
 		using var response = await SendAsync(request);
 		var json = await response.Content.ReadAsStringAsync();
-		var values = JsonSerializer.Deserialize<IDictionary<string, Sample>>(json, _jsonSerializerOptions);
+		var values = JsonSerializer.Deserialize<IDictionary<string, Sample>>(json, _jsonSerializerOptions)!;
 
 		// Assert
 		Assert.Equal(2, values.Count);

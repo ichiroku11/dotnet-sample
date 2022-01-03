@@ -22,17 +22,19 @@ public partial class MonsterControllerTest {
 			case PostContentType.FormUrlEncoded:
 				// application/x-www-form-urlencoded
 				var formValues = new Dictionary<string, string> {
-						{ "id", monster.Id.ToString() },
-						{ "name", monster.Name },
-					};
+					{ "id", monster.Id.ToString() },
+					{ "name", monster.Name },
+				};
 				return new FormUrlEncodedContent(formValues);
 			case PostContentType.JsonString:
 			case PostContentType.JsonStringTextPlain:
 				var content = GetJsonStringContent(monster);
-				content.Headers.ContentType.MediaType
-					= contentType == PostContentType.JsonString
-						? "application/json"
-						: "text/plain";
+				if (content.Headers.ContentType is not null) {
+					content.Headers.ContentType.MediaType
+						= contentType == PostContentType.JsonString
+							? "application/json"
+							: "text/plain";
+				}
 				return content;
 		}
 
@@ -56,8 +58,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(_slime.Id, monster.Id);
-		Assert.Equal(_slime.Name, monster.Name);
+		Assert.Equal(_slime.Id, monster?.Id);
+		Assert.Equal(_slime.Name, monster?.Name);
 	}
 
 	// Formデータをバインドできない
@@ -79,7 +81,7 @@ public partial class MonsterControllerTest {
 		// Assert
 		Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Equal((int)HttpStatusCode.UnsupportedMediaType, problem.Status.Value);
+		Assert.Equal((int)HttpStatusCode.UnsupportedMediaType, problem?.Status);
 	}
 
 	// （Required属性の）バリエーションエラー
@@ -99,9 +101,9 @@ public partial class MonsterControllerTest {
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Equal((int)HttpStatusCode.BadRequest, problem.Status.Value);
+		Assert.Equal((int)HttpStatusCode.BadRequest, problem?.Status);
 		// "errors"キーの値に、バリデーションエラーの内容が含まれている
-		Assert.Contains("errors", problem.Extensions);
+		Assert.Contains("errors", problem?.Extensions);
 	}
 	#endregion
 
@@ -122,8 +124,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(_slime.Id, monster.Id);
-		Assert.Equal(_slime.Name, monster.Name);
+		Assert.Equal(_slime.Id, monster?.Id);
+		Assert.Equal(_slime.Name, monster?.Name);
 	}
 
 	// JSONをバインドできない（400が返ってくる）
@@ -143,7 +145,7 @@ public partial class MonsterControllerTest {
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Equal((int)HttpStatusCode.BadRequest, problem.Status.Value);
+		Assert.Equal((int)HttpStatusCode.BadRequest, problem?.Status);
 	}
 	#endregion
 
@@ -165,8 +167,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(_slime.Id, responseMonster.Id);
-		Assert.Equal(_slime.Name, responseMonster.Name);
+		Assert.Equal(_slime.Id, responseMonster?.Id);
+		Assert.Equal(_slime.Name, responseMonster?.Name);
 	}
 
 	// Consumes属性がない場合
@@ -190,7 +192,7 @@ public partial class MonsterControllerTest {
 		// Assert
 		Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Equal((int)HttpStatusCode.UnsupportedMediaType, problem.Status.Value);
+		Assert.Equal((int)HttpStatusCode.UnsupportedMediaType, problem?.Status);
 	}
 
 	// Consumes属性がある場合
@@ -210,8 +212,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(_slime.Id, responseMonster.Id);
-		Assert.Equal(_slime.Name, responseMonster.Name);
+		Assert.Equal(_slime.Id, responseMonster?.Id);
+		Assert.Equal(_slime.Name, responseMonster?.Name);
 	}
 
 	// Consumes属性がある場合
@@ -230,7 +232,7 @@ public partial class MonsterControllerTest {
 
 		// Act
 		using var response = await SendAsync(request);
-		var responseText = await response.Content?.ReadAsStringAsync();
+		var responseText = await response.Content.ReadAsStringAsync();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);

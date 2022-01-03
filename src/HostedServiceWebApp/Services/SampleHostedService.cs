@@ -13,7 +13,7 @@ namespace HostedServiceWebApp.Services;
 // https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/host/hosted-services
 public class SampleHostedService : IHostedService, IDisposable {
 	private readonly ILogger _logger;
-	private Timer _timer;
+	private Timer? _timer;
 	private int _count;
 
 	public SampleHostedService(ILogger<SampleHostedService> logger) {
@@ -21,7 +21,7 @@ public class SampleHostedService : IHostedService, IDisposable {
 	}
 
 	// 何か定期的に実行する処理
-	private void Action(object state) {
+	private void Action(object? state) {
 		var count = Interlocked.Increment(ref _count);
 
 		_logger.LogInformation($"{nameof(Action)} {nameof(count)} = {count}");
@@ -53,7 +53,7 @@ public class SampleHostedService : IHostedService, IDisposable {
 	public Task StopAsync(CancellationToken cancellationToken) {
 		_logger.LogInformation(nameof(StopAsync));
 
-		_timer.Change(Timeout.Infinite, Timeout.Infinite);
+		_timer?.Change(Timeout.Infinite, Timeout.Infinite);
 
 		return Task.CompletedTask;
 	}

@@ -15,7 +15,7 @@ public class MonsterFormModel : IValidatableObject {
 
 	[Display(Name = "名前")]
 	[Required(ErrorMessage = "{0}を入力してください")]
-	public string Name { get; init; }
+	public string Name { get; init; } = "";
 
 	[Display(Name = "カテゴリ")]
 	public MonsterCategory Category { get; init; }

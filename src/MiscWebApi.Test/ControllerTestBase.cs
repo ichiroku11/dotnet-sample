@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -21,7 +22,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<S
 		return content;
 	}
 
-	protected static async Task<TModel> DeserializeAsync<TModel>(HttpResponseMessage response) {
+	protected static async Task<TModel?> DeserializeAsync<TModel>(HttpResponseMessage response) {
 		var json = await response.Content.ReadAsStringAsync();
 		var model = JsonSerializer.Deserialize<TModel>(json, _jsonSerializerOptions);
 		return model;
@@ -38,8 +39,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<S
 	}
 
 	public void Dispose() {
-		_client?.Dispose();
-		_client = null;
+		_client.Dispose();
 	}
 
 	protected void WriteLine(string message) => _output.WriteLine(message);

@@ -14,5 +14,5 @@ public class MonsterAddRequest {
 	/// モンスター名
 	/// </summary>
 	[Required]
-	public string Name { get; set; }
+	public string Name { get; init; } = "";
 }

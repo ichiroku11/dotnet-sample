@@ -68,14 +68,19 @@ public class GeometryControllerTest : ControllerTestBase {
 
 	// サブクラスを考慮したGeometryModelの比較
 	private class GeometryModelComparer : IEqualityComparer<GeometryModel> {
+
 		public bool Equals([AllowNull] GeometryModel x, [AllowNull] GeometryModel y) {
+			if (x is null || y is null) {
+				return false;
+			}
+
 			if (x.GetType() != y.GetType()) {
 				return false;
 			}
 
 			if (x.GeometryType == GeometryType.Line && y.GeometryType == GeometryType.Line) {
-				var lineX = x as GeometryLineModel;
-				var lineY = y as GeometryLineModel;
+				var lineX = x as GeometryLineModel ?? throw new ArgumentException("", nameof(x));
+				var lineY = y as GeometryLineModel ?? throw new ArgumentException("", nameof(y));
 
 				return lineX.X1 == lineY.X1
 					&& lineX.Y1 == lineY.Y1
@@ -83,8 +88,8 @@ public class GeometryControllerTest : ControllerTestBase {
 					&& lineX.Y2 == lineY.Y2;
 
 			} else if (x.GeometryType == GeometryType.Circle && y.GeometryType == GeometryType.Circle) {
-				var circleX = x as GeometryCircleModel;
-				var circleY = x as GeometryCircleModel;
+				var circleX = x as GeometryCircleModel ?? throw new ArgumentException("", nameof(x));
+				var circleY = x as GeometryCircleModel ?? throw new ArgumentException("", nameof(x));
 
 				return circleX.R == circleY.R
 					&& circleX.X == circleY.X
@@ -98,7 +103,7 @@ public class GeometryControllerTest : ControllerTestBase {
 			return obj switch {
 				GeometryLineModel line => HashCode.Combine(line.GeometryType, line.X1, line.Y1, line.X2, line.Y2),
 				GeometryCircleModel circle => HashCode.Combine(circle.GeometryType, circle.R, circle.X, circle.Y),
-				_ => throw new ArgumentException(nameof(obj)),
+				_ => throw new ArgumentException("", nameof(obj)),
 			};
 		}
 	}
@@ -114,7 +119,8 @@ public class GeometryControllerTest : ControllerTestBase {
 		// Act
 		using var response = await SendAsync(request);
 		var content = await response.Content.ReadAsStringAsync();
-		var actual = JsonSerializer.Deserialize(content, expected.GetType(), _jsonSerializerOptions) as GeometryModel;
+		var actual = JsonSerializer.Deserialize(content, expected.GetType(), _jsonSerializerOptions) as GeometryModel
+			?? throw new ArgumentException("", nameof(expected));
 
 		// Assert
 		Assert.IsType(expected.GetType(), actual);

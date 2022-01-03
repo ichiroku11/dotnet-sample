@@ -25,17 +25,10 @@ public class QueryFilterTest : IDisposable {
 		}
 	}
 
-	private SampleDbContext _context;
-
-	public QueryFilterTest() {
-		_context = new SampleDbContext();
-	}
+	private readonly SampleDbContext _context = new();
 
 	public void Dispose() {
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	[Fact]
@@ -56,7 +49,8 @@ public class QueryFilterTest : IDisposable {
 			.ToListAsync();
 		var sample = samples.FirstOrDefault();
 
-		Assert.Equal(1, sample.Id);
-		Assert.Null(sample.Name);
+		Assert.NotNull(sample);
+		Assert.Equal(1, sample?.Id);
+		Assert.Null(sample?.Name);
 	}
 }

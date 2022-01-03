@@ -23,7 +23,7 @@ public class SignatureVerifier {
 
 		using var rsa = RSA.Create(_parameters);
 		var deformatter = new RSAPKCS1SignatureDeformatter(rsa);
-		deformatter.SetHashAlgorithm(HashAlgorithmName.SHA256.Name);
+		deformatter.SetHashAlgorithm(HashAlgorithmName.SHA256.Name!);
 
 		return deformatter.VerifySignature(messageHash, signature);
 	}

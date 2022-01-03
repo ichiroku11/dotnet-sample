@@ -20,7 +20,7 @@ public static class TempDataDictionaryExtensions {
 	}
 
 	// ModelStateを取得
-	public static ModelStateDictionary GetModelState(this ITempDataDictionary tempData) {
+	public static ModelStateDictionary? GetModelState(this ITempDataDictionary tempData) {
 		var json = tempData[_modelStateKey] as string;
 		if (string.IsNullOrWhiteSpace(json)) {
 			return null;

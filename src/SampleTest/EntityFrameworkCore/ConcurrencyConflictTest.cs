@@ -19,10 +19,10 @@ public class ConcurrencyConflictTest : IDisposable {
 	private class Sample {
 		public int Id { get; set; }
 
-		public string Value { get; set; }
+		public string Value { get; set; } = "";
 
 		[Timestamp]
-		public byte[] Version { get; set; }
+		public byte[] Version { get; set; } = Array.Empty<byte>();
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
@@ -34,11 +34,10 @@ public class ConcurrencyConflictTest : IDisposable {
 	}
 
 	private readonly ITestOutputHelper _output;
-	private SampleDbContext _context;
+	private readonly SampleDbContext _context = new();
 
 	public ConcurrencyConflictTest(ITestOutputHelper output) {
 		_output = output;
-		_context = new SampleDbContext();
 
 		DropTable();
 		InitTable();
@@ -47,10 +46,7 @@ public class ConcurrencyConflictTest : IDisposable {
 	public void Dispose() {
 		DropTable();
 
-		if (_context != null) {
-			_context.Dispose();
-			_context = null;
-		}
+		_context.Dispose();
 	}
 
 	private void InitTable() {
@@ -79,7 +75,7 @@ values
 		// Arrange
 		// Act
 		// Assert
-		var sample1 = await _context.Samples.FindAsync(1);
+		var sample1 = (await _context.Samples.FindAsync(1))!;
 		_output.WriteLine(sample1.Version.ToHexString());
 		Assert.Equal("a", sample1.Value);
 
@@ -101,7 +97,7 @@ values
 		_context.Entry(sample1).State = EntityState.Detached;
 
 		// 値が更新されていることを確認する
-		var sample2 = await _context.Samples.FindAsync(1);
+		var sample2 = (await _context.Samples.FindAsync(1))!;
 		_output.WriteLine(sample1.Version.ToHexString());
 		Assert.Equal("b", sample2.Value);
 	}
@@ -111,7 +107,7 @@ values
 		// Arrange
 		// Act
 		// Assert
-		var sample1 = await _context.Samples.FindAsync(1);
+		var sample1 = (await _context.Samples.FindAsync(1))!;
 		Assert.Equal("a", sample1.Value);
 		var sample2 = new Sample {
 			Id = sample1.Id,

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace BasicAuthnWebApp;
 public class BasicAuthenticationCredentialsDecoder {
 	// デコード
 	// ユーザ名とパスワードを取り出す
-	public bool TryDecode(string encodedCredentials, out string userName, out string password) {
+	public bool TryDecode(string encodedCredentials, [NotNullWhen(true)] out string? userName, [NotNullWhen(true)] out string? password) {
 		userName = null;
 		password = null;
 

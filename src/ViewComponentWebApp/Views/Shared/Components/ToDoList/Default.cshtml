@@ -1,7 +1,10 @@
 @* 既定のビュー名はDefault.cshtml *@
 @using ViewComponentWebApp.Models
+@{
+	IEnumerable<Todo> todos = ViewBag.Todos;
+}
 <ul>
-	@foreach (var todo in ViewBag.Todos as IEnumerable<Todo>) {
+	@foreach (var todo in todos) {
 		<li>@todo.Label</li>
 	}
 </ul>
