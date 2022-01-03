@@ -17,5 +17,5 @@ public class MonsterCategoryResponse {
 	/// <summary>
 	/// カテゴリ名
 	/// </summary>
-	public string CategoryName { get; init; }
+	public string CategoryName { get; init; } = "";
 }

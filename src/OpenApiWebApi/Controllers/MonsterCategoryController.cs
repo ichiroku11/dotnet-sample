@@ -32,7 +32,7 @@ public class MonsterCategoryController : ControllerBase {
 
 		return new MonsterCategoryResponse {
 			Category = category,
-			CategoryName = category.DisplayName(),
+			CategoryName = category.DisplayName() ?? "",
 		};
 	}
 }

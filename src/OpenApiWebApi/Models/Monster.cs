@@ -17,5 +17,5 @@ public class Monster {
 	/// <summary>
 	/// 名前
 	/// </summary>
-	public string Name { get; init; }
+	public string Name { get; init; } = "";
 }
