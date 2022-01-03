@@ -9,7 +9,7 @@
 		<input asp-for="Form.Id" />
 	</div>
 	<div>
-		<select asp-for="Form.Category" asp-items="Model.CategorySelectListItems"></select>
+		<select asp-for="Form.Category" asp-items="Model?.CategorySelectListItems"></select>
 	</div>
 	<div>
 		<input asp-for="Form.Name" />
