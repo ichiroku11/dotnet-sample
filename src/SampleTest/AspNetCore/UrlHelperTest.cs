@@ -6,11 +6,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SampleTest.AspNetCore;

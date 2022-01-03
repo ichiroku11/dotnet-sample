@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace OptionPatternWebApp;
 
 // appsettings.jsonのSample以下をバインドするクラス

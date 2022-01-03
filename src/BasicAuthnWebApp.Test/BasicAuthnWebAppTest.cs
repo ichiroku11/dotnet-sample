@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
-using System;
 using System.Net;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace BasicAuthnWebApp.Test;
