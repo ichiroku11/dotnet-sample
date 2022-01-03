@@ -34,7 +34,7 @@
 				<li><a asp-controller="Home" asp-action="Claim">Claim</a></li>
 			</ul>
 			<ul>
-				@if (User.Identity.IsAuthenticated) {
+				@if (User.Identity?.IsAuthenticated ?? false) {
 					<li><a asp-controller="Account" asp-action="EditProfile">Edit profile</a></li>
 					<li><a asp-controller="Account" asp-action="SignOut">Sign out</a></li>
 				} else {
