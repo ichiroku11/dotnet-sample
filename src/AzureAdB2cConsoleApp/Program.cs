@@ -10,6 +10,7 @@ class Program {
 			.ConfigureServices(services => {
 				services
 					.AddHostedService<SampleService>()
+					.AddTransient<GraphCreateUserSample>()
 					.AddTransient<GraphGetUserListSample>()
 					.AddTransient<GraphGetUserSample>()
 					.AddTransient<GraphUpdateUserSample>();

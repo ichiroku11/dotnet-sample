@@ -32,6 +32,9 @@ public abstract class GraphSampleBase {
 		_customAttributeHelper = new CustomAttributeHelper(_config["ExtensionAppClientId"]);
 	}
 
+	// テナントID（作成時に必要）
+	protected string TenantId => _config["TenantId"];
+
 	// カスタム属性の名前を取得
 	protected string GetCustomAttributeFullName(string attributeName) => _customAttributeHelper.GetFullName(attributeName);
 
@@ -43,7 +46,7 @@ public abstract class GraphSampleBase {
 	public async Task RunAsync() {
 		// クレデンシャル
 		var credential = new ClientSecretCredential(
-			tenantId: _config["TenantId"],
+			tenantId: TenantId,
 			clientId: _config["ClientId"],
 			clientSecret: _config["ClientSecret"],
 			options: new TokenCredentialOptions {
