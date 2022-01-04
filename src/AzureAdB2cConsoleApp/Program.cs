@@ -10,7 +10,9 @@ class Program {
 			.ConfigureServices(services => {
 				services
 					.AddHostedService<SampleService>()
-					.AddTransient<GraphSample>();
+					.AddTransient<GraphGetUserListSample>()
+					.AddTransient<GraphGetUserSample>()
+					.AddTransient<GraphUpdateUserSample>();
 			})
 			.RunConsoleAsync();
 	}

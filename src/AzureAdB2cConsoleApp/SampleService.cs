@@ -23,7 +23,7 @@ public class SampleService : IHostedService {
 
 		_lifetime.ApplicationStarted.Register(async () => {
 			try {
-				await _services.GetRequiredService<GraphSample>().RunAsync();
+				await _services.GetRequiredService<GraphGetUserListSample>().RunAsync();
 			} catch (Exception) {
 				throw;
 			}
