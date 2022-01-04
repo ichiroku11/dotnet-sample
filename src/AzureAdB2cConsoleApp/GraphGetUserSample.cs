@@ -10,6 +10,7 @@ public class GraphGetUserSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		// IDを指定
 		var id = "{id}";
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
@@ -19,13 +20,21 @@ public class GraphGetUserSample : GraphSampleBase {
 				"surname",
 				"givenName",
 				"identities",
-				attributeName
+				attributeName,
 			});
-
 		// ユーザーをID指定で取得
 		var user = await client.Users[id]
 			.Request()
 			.Select(select)
+			/*
+			// 取得するデータを式でも表現できるが、カスタム属性は取得できないのかも
+			.Select(user => new {
+				user.Id,
+				user.Surname,
+				user.GivenName,
+				user.Identities,
+			})
+			*/
 			.GetAsync();
 
 		ShowUser(user);
