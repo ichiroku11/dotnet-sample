@@ -15,7 +15,7 @@ public class GraphGetUserListSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		var attributeName = GetCustomAttributeFullName("TestNumber");
+		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		var select = string.Join(',', new[] {
 			"id",

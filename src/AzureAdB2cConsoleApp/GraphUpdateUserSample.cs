@@ -12,7 +12,7 @@ public class GraphUpdateUserSample : GraphSampleBase {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		var id = "{id}";
 
-		var attributeName = GetCustomAttributeFullName("TestNumber");
+		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 		var attributeValue = new Random().Next(1, 10);
 
 		// 更新
