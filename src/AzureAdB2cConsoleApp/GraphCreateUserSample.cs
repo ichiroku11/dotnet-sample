@@ -10,29 +10,30 @@ public class GraphCreateUserSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		var random = new Random();
+
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
-		var attributeValue = new Random().Next(1, 10);
+		var attributeValue = random.Next(1, 10);
+
+		var suffix = random.Next(1, 100).ToString();
 
 		var userToAdd = new User {
-			// todo:
-			GivenName = "",
-			Surname = "",
+			GivenName = $"太郎{suffix}",
+			Surname = "テスト",
 			AdditionalData = new Dictionary<string, object> {
 				[attributeName] = attributeValue,
 			},
 			Identities = new[] {
 				new ObjectIdentity {
 					Issuer = TenantId,
-					// todo:
-					IssuerAssignedId = "",
+					IssuerAssignedId = $"taro{suffix}@example.jp",
 					SignInType = "emailAddress",
 				},
 			},
 			PasswordProfile = new() {
 				// 次回のログインでパスワードを変更する
 				ForceChangePasswordNextSignIn = true,
-				// todo:
-				Password = "",
+				Password = PasswordHelper.Generate(6, 6, 4),
 			},
 		};
 		var userAdded = await client.Users
