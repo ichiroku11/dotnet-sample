@@ -10,7 +10,7 @@ namespace AzureAdB2cConsoleApp;
 // 関連リソース
 // https://docs.microsoft.com/ja-jp/graph/api/resources/user?view=graph-rest-1.0
 // https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity?view=graph-rest-1.0
-// メールアドレスは、identitiesコレクション内のsignInTypeが"emailAddress"のissurAssignedIdに含まれる様子
+// ログインのメールアドレスは、identitiesコレクション内のsignInTypeが"emailAddress"のissurAssignedIdに含まれる様子
 public class GraphGetUserListSample : GraphSampleBase {
 	public GraphGetUserListSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
 	}
@@ -22,6 +22,7 @@ public class GraphGetUserListSample : GraphSampleBase {
 			"id",
 			"surname",
 			"givenName",
+			// ログインのメールアドレスが含まれる
 			"identities",
 			// 一覧では取得できない？
 			//"passwordProfile",
