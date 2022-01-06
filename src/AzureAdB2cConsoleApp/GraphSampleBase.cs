@@ -43,8 +43,10 @@ public abstract class GraphSampleBase {
 	// ユーザー情報をの表示
 	protected void ShowUser(User user) => _logger.LogInformation(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 
+	// サンプルの実行
 	protected abstract Task RunCoreAsync(GraphServiceClient client);
 
+	// サンプルの実行
 	public async Task RunAsync() {
 		// クレデンシャル
 		var credential = new ClientSecretCredential(
