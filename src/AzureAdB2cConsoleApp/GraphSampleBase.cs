@@ -41,7 +41,7 @@ public abstract class GraphSampleBase {
 	protected string GetCustomAttributeFullName(string attributeName) => _customAttributeHelper.GetFullName(attributeName);
 
 	// ユーザー情報をの表示
-	protected void ShowUser(User user) => Console.WriteLine(JsonSerializer.Serialize(user, _jsonSerializerOptions));
+	protected void ShowUser(User user) => _logger.LogInformation(JsonSerializer.Serialize(user, _jsonSerializerOptions));
 
 	protected abstract Task RunCoreAsync(GraphServiceClient client);
 
