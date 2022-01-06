@@ -24,6 +24,8 @@ public class SampleService : IHostedService {
 		_lifetime.ApplicationStarted.Register(async () => {
 			try {
 				await _services.GetRequiredService<GraphGetUserListSample>().RunAsync();
+				// ユーザー作成
+				//await _services.GetRequiredService<GraphCreateUserSample>().RunAsync();
 			} catch (Exception) {
 				throw;
 			}

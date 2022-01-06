@@ -17,25 +17,36 @@ public class GraphCreateUserSample : GraphSampleBase {
 
 		var suffix = random.Next(1, 100).ToString();
 
+		var givenName = $"太郎{suffix}";
+		var surname = "テスト";
+
+		var mail = $"taro{suffix}@example.jp";
+		var password = PasswordHelper.Generate(6, 6, 4);
+
 		var userToAdd = new User {
-			GivenName = $"太郎{suffix}",
-			Surname = "テスト",
+			DisplayName = $"{surname} {givenName}",
+			GivenName = givenName,
+			Surname = surname,
 			AdditionalData = new Dictionary<string, object> {
 				[attributeName] = attributeValue,
 			},
 			Identities = new[] {
 				new ObjectIdentity {
 					Issuer = TenantId,
-					IssuerAssignedId = $"taro{suffix}@example.jp",
+					IssuerAssignedId = mail,
 					SignInType = "emailAddress",
 				},
 			},
 			PasswordProfile = new() {
 				// 次回のログインでパスワードを変更する
 				ForceChangePasswordNextSignIn = true,
-				Password = PasswordHelper.Generate(6, 6, 4),
+				Password = password,
 			},
 		};
+
+		Logger.LogInformation(mail);
+		Logger.LogInformation(password);
+
 		var userAdded = await client.Users
 			.Request()
 			.AddAsync(userToAdd);

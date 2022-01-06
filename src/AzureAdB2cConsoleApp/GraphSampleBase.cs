@@ -32,6 +32,8 @@ public abstract class GraphSampleBase {
 		_customAttributeHelper = new CustomAttributeHelper(_config["ExtensionAppClientId"]);
 	}
 
+	protected ILogger Logger => _logger;
+
 	// テナントID（作成時に必要）
 	protected string TenantId => _config["TenantId"];
 
