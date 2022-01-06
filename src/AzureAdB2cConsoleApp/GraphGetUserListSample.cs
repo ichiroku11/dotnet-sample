@@ -26,6 +26,11 @@ public class GraphGetUserListSample : GraphSampleBase {
 			"identities",
 			// 一覧では取得できない？
 			//"passwordProfile",
+			/*
+			"displayName",
+			"mailNickname",
+			"userPrincipalName",
+			*/
 			attributeName,
 		});
 

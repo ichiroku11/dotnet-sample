@@ -24,22 +24,30 @@ public class GraphCreateUserSample : GraphSampleBase {
 		var password = PasswordHelper.Generate(6, 6, 4);
 
 		var userToAdd = new User {
+			// DisplayNameも必要（B2Cのユーザーフローでサインアップすると"unknown"になるのに）
 			DisplayName = $"{surname} {givenName}",
+			// 名
 			GivenName = givenName,
+			// 性
 			Surname = surname,
+			// カスタム属性
 			AdditionalData = new Dictionary<string, object> {
 				[attributeName] = attributeValue,
 			},
 			Identities = new[] {
+				// サインインするための情報
+				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
 				new ObjectIdentity {
 					Issuer = TenantId,
 					IssuerAssignedId = mail,
+					// メールアドレスでログインする
 					SignInType = "emailAddress",
 				},
 			},
 			PasswordProfile = new() {
 				// 次回のログインでパスワードを変更する
 				ForceChangePasswordNextSignIn = true,
+				// パスワード
 				Password = password,
 			},
 		};
