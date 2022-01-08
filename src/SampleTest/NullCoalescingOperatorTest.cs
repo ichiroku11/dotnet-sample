@@ -74,4 +74,29 @@ public class NullCoalescingOperatorTest {
 		Assert.Equal(0, result);
 		Assert.Equal(3, count);
 	}
+
+	[Fact]
+	public void Null合体割り当て演算子_動きを確認する() {
+		int? value = null;
+
+		value ??= 1;
+		// 次のコードと同じ
+		/*
+		if (value is null) {
+			value = 1;
+		}
+		*/
+
+		Assert.Equal(1, value);
+	}
+
+	[Fact]
+	public void Null合体割り当て演算子_評価した値を確認する() {
+		int? value = null;
+
+		// 割り当て後の値を返す関数
+		int? getValue() => value ??= 1;
+
+		Assert.Equal(1, getValue());
+	}
 }
