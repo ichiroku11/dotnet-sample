@@ -48,6 +48,19 @@ public class NullCoalescingOperatorTest {
 	}
 
 	[Fact]
+	public void Null合体演算子_左辺が非nullの場合に右辺が呼び出されないことを確認する() {
+		// Arrange
+		int? value = 1;
+
+		// Act
+		// 例外がスローされない
+		int? actual = value ?? throw new InvalidOperationException();
+
+		// Assert
+		Assert.Equal(1, actual);
+	}
+
+	[Fact]
 	public void Null合体演算子_評価順を確認する() {
 		var count = 0;
 		int? getX() {
