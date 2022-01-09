@@ -60,6 +60,23 @@ public class SwitchPatternMatchingTest {
 	}
 
 	[Theory]
+	[InlineData(DayOfWeek.Monday, "weekday")]
+	[InlineData(DayOfWeek.Friday, "weekday")]
+	[InlineData(DayOfWeek.Saturday, "holiday")]
+	[InlineData(DayOfWeek.Sunday, "holiday")]
+	public void Switch_リレーショナルパターンを試す(DayOfWeek dayOfWeek, string expected) {
+		// Arrange
+		// Act
+		var actual = dayOfWeek switch {
+			>= DayOfWeek.Monday and <= DayOfWeek.Friday => "weekday",
+			_ => "holiday",
+		};
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
 	[InlineData(null, null, 1)]
 	[InlineData(1, null, 2)]
 	[InlineData(null, 2, 3)]
@@ -88,9 +105,9 @@ public class SwitchPatternMatchingTest {
 	private static bool IsLeapYear(int year)
 		=> (year % 400, year % 100, year % 4) switch {
 			(0, _, _) => true,  // 400の倍数 => うるう年
-				(_, 0, _) => false, // ↑以外で100の倍数 => 平年
-				(_, _, 0) => true,  // ↑以外で4の倍数 => うるう年
-				_ => false,
+			(_, 0, _) => false, // ↑以外で100の倍数 => 平年
+			(_, _, 0) => true,  // ↑以外で4の倍数 => うるう年
+			_ => false,
 		};
 
 	[Theory]
@@ -163,7 +180,14 @@ public class SwitchPatternMatchingTest {
 	public void Switch_プロパティを利用したサンプル(Point point, Quadrant expected) {
 		// Arrange
 		// Act
-		var actual = point switch { { X: 0, Y: 0 } => Quadrant.Origin, { X: _, Y: 0 } => Quadrant.OnBorder, { X: 0, Y: _ } => Quadrant.OnBorder, { X: var x, Y: var y } when x > 0 && y > 0 => Quadrant.One, { X: var x, Y: var y } when x < 0 && y > 0 => Quadrant.Two, { X: var x, Y: var y } when x < 0 && y < 0 => Quadrant.Three, { X: var x, Y: var y } when x > 0 && y < 0 => Quadrant.Four,
+		var actual = point switch {
+			{ X: 0, Y: 0 } => Quadrant.Origin,
+			{ X: _, Y: 0 } => Quadrant.OnBorder,
+			{ X: 0, Y: _ } => Quadrant.OnBorder,
+			{ X: var x, Y: var y } when x > 0 && y > 0 => Quadrant.One,
+			{ X: var x, Y: var y } when x < 0 && y > 0 => Quadrant.Two,
+			{ X: var x, Y: var y } when x < 0 && y < 0 => Quadrant.Three,
+			{ X: var x, Y: var y } when x > 0 && y < 0 => Quadrant.Four,
 			_ => throw new InvalidOperationException(),
 		};
 
