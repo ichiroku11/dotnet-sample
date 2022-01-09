@@ -17,8 +17,8 @@ public class Startup {
 			.AddCookie(options => {
 				options.Cookie.Name = "auth";
 
-					// リダイレクト用のパスを小文字に
-					options.AccessDeniedPath = CookieAuthenticationDefaults.AccessDeniedPath.ToString().ToLower();
+				// リダイレクト用のパスを小文字に
+				options.AccessDeniedPath = CookieAuthenticationDefaults.AccessDeniedPath.ToString().ToLower();
 				options.LoginPath = CookieAuthenticationDefaults.LoginPath.ToString().ToLower();
 				options.LogoutPath = CookieAuthenticationDefaults.LogoutPath.ToString().ToLower();
 
