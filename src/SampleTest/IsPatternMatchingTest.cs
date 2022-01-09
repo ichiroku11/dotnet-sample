@@ -100,4 +100,14 @@ public class IsPatternMatchingTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Fact]
+	public void Is_プロパティパターンを試す() {
+		// Arrange
+		var date = new DateTime(2022, 1, 9);
+
+		// Act
+		// Assert
+		Assert.True(date is { Year: 2022, Month: 1, Day: 9 });
+	}
 }
