@@ -11,7 +11,14 @@ builder.Services.AddScoped<MonsterStore>();
 var app = builder.Build();
 
 app.MapGet("/monsters", (MonsterStore store) => store.GetMonsters());
-app.MapGet("/monsters/{id}", (MonsterStore store, int id) => store.GetMonster(id));
+app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
+	var monster = store.GetMonster(id);
+	if (monster is null) {
+		return Results.NotFound();
+	}
+
+	return Results.Ok(monster);
+});
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
