@@ -5,15 +5,13 @@ using System.Collections.Concurrent;
 // https://docs.microsoft.com/ja-jp/learn/modules/build-web-api-minimal-database/
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<MonsterStore>();
+
 var app = builder.Build();
 
+app.MapGet("/monsters", (MonsterStore store) => store.GetMonsters());
 app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/monsters", () => {
-	var store = new MonsterStore();
-	return store.GetMonsters();
-});
-
 
 app.Run();
 
@@ -27,7 +25,7 @@ internal class MonsterStore {
 		= new(new[] {
 			new Monster {
 				Id = 1,
-				Name = "スライム", 
+				Name = "スライム",
 			},
 			new Monster {
 				Id = 2,
