@@ -11,6 +11,7 @@ builder.Services.AddScoped<MonsterStore>();
 var app = builder.Build();
 
 app.MapGet("/monsters", (MonsterStore store) => store.GetMonsters());
+app.MapGet("/monsters/{id}", (MonsterStore store, int id) => store.GetMonster(id));
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
@@ -34,4 +35,6 @@ internal class MonsterStore {
 		}.ToDictionary(monster => monster.Id));
 
 	public IList<Monster> GetMonsters() => _monsters.Values.OrderBy(monster => monster.Id).ToList();
+
+	public Monster? GetMonster(int id) => _monsters.TryGetValue(id, out var monster) ? monster : null;
 }
