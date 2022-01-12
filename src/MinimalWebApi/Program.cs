@@ -11,6 +11,7 @@ builder.Services.AddScoped<MonsterStore>();
 var app = builder.Build();
 
 app.MapGet("/monsters", (MonsterStore store) => store.GetMonsters());
+
 app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
 	var monster = store.GetMonster(id);
 	if (monster is null) {
@@ -19,6 +20,13 @@ app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
 
 	return Results.Ok(monster);
 });
+
+app.MapPost("/monsters", (MonsterStore store, Monster monster) => {
+	return store.TryAddMonster(monster)
+		? Results.NoContent()
+		: Results.BadRequest();
+});
+
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
@@ -44,4 +52,6 @@ internal class MonsterStore {
 	public IList<Monster> GetMonsters() => _monsters.Values.OrderBy(monster => monster.Id).ToList();
 
 	public Monster? GetMonster(int id) => _monsters.TryGetValue(id, out var monster) ? monster : null;
+
+	public bool TryAddMonster(Monster monster) => _monsters.TryAdd(monster.Id, monster);
 }
