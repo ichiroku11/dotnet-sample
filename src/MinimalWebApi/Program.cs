@@ -10,8 +10,10 @@ builder.Services.AddScoped<MonsterStore>();
 
 var app = builder.Build();
 
+// 取得
 app.MapGet("/monsters", (MonsterStore store) => store.GetMonsters());
 
+// 取得
 app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
 	var monster = store.GetMonster(id);
 	if (monster is null) {
@@ -21,8 +23,16 @@ app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
 	return Results.Ok(monster);
 });
 
+// 作成
 app.MapPost("/monsters", (MonsterStore store, Monster monster) => {
 	return store.TryAddMonster(monster)
+		? Results.NoContent()
+		: Results.BadRequest();
+});
+
+// 更新
+app.MapPut("/monsters", (MonsterStore store, Monster monster) => {
+	return store.TryUpdateMonster(monster)
 		? Results.NoContent()
 		: Results.BadRequest();
 });
@@ -31,22 +41,13 @@ app.MapGet("/", () => "Hello World!");
 
 app.Run();
 
-internal class Monster {
-	public int Id { get; init; }
-	public string Name { get; init; } = "";
-}
+internal record Monster(int Id, string Name);
 
 internal class MonsterStore {
 	private static readonly ConcurrentDictionary<int, Monster> _monsters
 		= new(new[] {
-			new Monster {
-				Id = 1,
-				Name = "スライム",
-			},
-			new Monster {
-				Id = 2,
-				Name = "ドラキー",
-			},
+			new Monster(1, "スライム"),
+			new Monster(2, "ドラキー"),
 		}.ToDictionary(monster => monster.Id));
 
 	public IList<Monster> GetMonsters() => _monsters.Values.OrderBy(monster => monster.Id).ToList();
@@ -54,4 +55,12 @@ internal class MonsterStore {
 	public Monster? GetMonster(int id) => _monsters.TryGetValue(id, out var monster) ? monster : null;
 
 	public bool TryAddMonster(Monster monster) => _monsters.TryAdd(monster.Id, monster);
+
+	public bool TryUpdateMonster(Monster monsterToUpdate) {
+		if (!_monsters.TryGetValue(monsterToUpdate.Id, out var monster)) {
+			return false;
+		}
+
+		return _monsters.TryUpdate(monsterToUpdate.Id, monsterToUpdate, monster);
+	}
 }
