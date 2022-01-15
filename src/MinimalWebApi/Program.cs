@@ -37,6 +37,13 @@ app.MapPut("/monsters", (MonsterStore store, Monster monster) => {
 		: Results.BadRequest();
 });
 
+// 削除
+app.MapDelete("/monsters/{id}", (MonsterStore store, int id) => {
+	return store.TryDeleteMonster(id)
+		? Results.NoContent()
+		: Results.BadRequest();
+});
+
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
@@ -63,4 +70,6 @@ internal class MonsterStore {
 
 		return _monsters.TryUpdate(monsterToUpdate.Id, monsterToUpdate, monster);
 	}
+
+	public bool TryDeleteMonster(int id) => _monsters.TryRemove(id, out var _);
 }
