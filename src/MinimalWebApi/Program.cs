@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
 
 // 参考
 // https://docs.microsoft.com/ja-jp/learn/modules/build-web-api-minimal-api/
@@ -15,11 +14,11 @@ builder.Services.AddScoped<MonsterStore>();
 var app = builder.Build();
 
 // 取得
-app.MapGet("/monsters", (MonsterStore store) => store.GetMonsters());
+app.MapGet("/monsters", async (MonsterStore store) => await store.GetAsync());
 
 // 取得
-app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
-	var monster = store.GetMonster(id);
+app.MapGet("/monsters/{id}", async (MonsterStore store, int id) => {
+	var monster = await store.GetAsync(id);
 	if (monster is null) {
 		return Results.NotFound();
 	}
@@ -28,24 +27,37 @@ app.MapGet("/monsters/{id}", (MonsterStore store, int id) => {
 });
 
 // 作成
-app.MapPost("/monsters", (MonsterStore store, Monster monster) => {
-	return store.TryAddMonster(monster)
-		? Results.NoContent()
-		: Results.BadRequest();
+app.MapPost("/monsters", async (MonsterStore store, Monster monster) => {
+	if ((await store.GetAsync(monster.Id)) is not null) {
+		return Results.BadRequest();
+	}
+
+	await store.AddAsync(monster);
+
+	return Results.NoContent();
 });
 
 // 更新
-app.MapPut("/monsters", (MonsterStore store, Monster monster) => {
-	return store.TryUpdateMonster(monster)
-		? Results.NoContent()
-		: Results.BadRequest();
+app.MapPut("/monsters", async (MonsterStore store, Monster monster) => {
+	if ((await store.GetAsync(monster.Id)) is null) {
+		return Results.BadRequest();
+	}
+
+	await store.UpdateAsync(monster);
+
+	return Results.NoContent();
 });
 
 // 削除
-app.MapDelete("/monsters/{id}", (MonsterStore store, int id) => {
-	return store.TryDeleteMonster(id)
-		? Results.NoContent()
-		: Results.BadRequest();
+app.MapDelete("/monsters/{id}", async (MonsterStore store, int id) => {
+	var monster = await store.GetAsync(id);
+	if (monster is null) {
+		return Results.BadRequest();
+	}
+
+	await store.DeleteAsync(monster);
+
+	return Results.NoContent();
 });
 
 app.MapGet("/", () => "Hello World!");
@@ -60,29 +72,39 @@ internal class MonsterDbContext : DbContext {
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.Entity<Monster>()
+			// 初期データ
+			// 設定されない？
+			.HasData(new Monster(1, "スライム"), new Monster(2, "ドラキー"));
 	}
 }
 
 internal class MonsterStore {
-	private static readonly ConcurrentDictionary<int, Monster> _monsters
-		= new(new[] {
-			new Monster(1, "スライム"),
-			new Monster(2, "ドラキー"),
-		}.ToDictionary(monster => monster.Id));
+	private readonly MonsterDbContext _context;
 
-	public IList<Monster> GetMonsters() => _monsters.Values.OrderBy(monster => monster.Id).ToList();
-
-	public Monster? GetMonster(int id) => _monsters.TryGetValue(id, out var monster) ? monster : null;
-
-	public bool TryAddMonster(Monster monster) => _monsters.TryAdd(monster.Id, monster);
-
-	public bool TryUpdateMonster(Monster monsterToUpdate) {
-		if (!_monsters.TryGetValue(monsterToUpdate.Id, out var monster)) {
-			return false;
-		}
-
-		return _monsters.TryUpdate(monsterToUpdate.Id, monsterToUpdate, monster);
+	public MonsterStore(MonsterDbContext context) {
+		_context = context;
 	}
 
-	public bool TryDeleteMonster(int id) => _monsters.TryRemove(id, out var _);
+	public async Task<IList<Monster>> GetAsync()
+		=> await _context.Set<Monster>().OrderBy(monster => monster.Id).ToListAsync();
+
+	public async Task<Monster?> GetAsync(int id)
+		=> await _context.Set<Monster>().FindAsync(id);
+
+	public async Task AddAsync(Monster monster) {
+		_context.Set<Monster>().Add(monster);
+		await _context.SaveChangesAsync();
+	}
+
+	public async Task UpdateAsync(Monster monster) {
+		_context.Set<Monster>().Update(monster);
+		await _context.SaveChangesAsync();
+	}
+
+	public async Task DeleteAsync(Monster monster) {
+		_context.Set<Monster>().Remove(monster);
+		await _context.SaveChangesAsync();
+	}
 }
