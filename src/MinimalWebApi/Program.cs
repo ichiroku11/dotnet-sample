@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 
 // 参考
@@ -6,6 +7,9 @@ using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<MonsterDbContext>(options => {
+	options.UseInMemoryDatabase("monster");
+});
 builder.Services.AddScoped<MonsterStore>();
 
 var app = builder.Build();
@@ -49,6 +53,15 @@ app.MapGet("/", () => "Hello World!");
 app.Run();
 
 internal record Monster(int Id, string Name);
+
+internal class MonsterDbContext : DbContext {
+	public MonsterDbContext(DbContextOptions options) : base(options) {
+	}
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder) {
+		base.OnModelCreating(modelBuilder);
+	}
+}
 
 internal class MonsterStore {
 	private static readonly ConcurrentDictionary<int, Monster> _monsters
