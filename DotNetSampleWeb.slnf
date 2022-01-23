@@ -16,6 +16,7 @@
       "src\\FallbackRouteWebApp\\FallbackRouteWebApp.csproj",
       "src\\HostedServiceWebApp\\HostedServiceWebApp.csproj",
       "src\\MiddlewareWebApp\\MiddlewareWebApp.csproj",
+      "src\\MinimalWebApi\\MinimalWebApi.csproj",
       "src\\MiscWebApi.Test\\MiscWebApi.Test.csproj",
       "src\\MiscWebApi\\MiscWebApi.csproj",
       "src\\MiscWebApp.Test\\MiscWebApp.Test.csproj",
