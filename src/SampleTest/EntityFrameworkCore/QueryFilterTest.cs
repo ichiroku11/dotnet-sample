@@ -3,6 +3,7 @@ using Xunit;
 
 namespace SampleTest.EntityFrameworkCore;
 
+// グローバルフィルターのサンプル
 public class QueryFilterTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
@@ -15,7 +16,7 @@ public class QueryFilterTest : IDisposable {
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>()
 				.ToTable(nameof(Sample))
-				// グローバルフィルタ
+				// グローバルフィルター
 				.HasQueryFilter(entity => entity.Name != null);
 		}
 	}
