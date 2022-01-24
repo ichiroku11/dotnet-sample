@@ -76,7 +76,7 @@ values
 
 		// 値を変更して更新する
 		sample1.Value = "b";
-		_context.Entry(sample1).State = EntityState.Modified;
+		_context.Update(sample1);
 		await _context.SaveChangesAsync();
 		/*
 		SET NOCOUNT ON;
@@ -98,7 +98,39 @@ values
 	}
 
 	[Fact]
-	public async Task SaveChangesAsync_DbUpdateConcurrencyExceptionがスローされることを確認する() {
+	public async Task SaveChangesAsync_DbUpdateConcurrencyExceptionがスローされることを確認する1() {
+		// Arrange
+		// Act
+		// Assert
+		var sample1 = (await _context.Samples.FindAsync(1))!;
+		Assert.Equal("a", sample1.Value);
+		_output.WriteLine(sample1.Version.ToHexString());
+
+		// sample1.Valueを変更して更新する
+		sample1.Value = "b";
+
+		// バージョンを初期化する
+		sample1.Version = new byte[sample1.Version.Length];
+		_output.WriteLine(sample1.Version.ToHexString());
+		_context.Samples.Update(sample1);
+
+		var exception = await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () => {
+			await _context.SaveChangesAsync();
+			// 「SaveChangesAsync_更新が成功する動きを確認する」と同じクエリだが
+			/*
+			SET NOCOUNT ON;
+			UPDATE [Sample] SET [Value] = @p0
+			WHERE [Id] = @p1 AND [Version] = @p2;
+			SELECT [Version]
+			FROM [Sample]
+			WHERE @@ROWCOUNT = 1 AND [Id] = @p1;
+			*/
+		});
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public async Task SaveChangesAsync_DbUpdateConcurrencyExceptionがスローされることを確認する2() {
 		// Arrange
 		// Act
 		// Assert
@@ -114,7 +146,7 @@ values
 
 		// sample1.Valueを変更して更新する
 		sample1.Value = "b";
-		_context.Entry(sample1).State = EntityState.Modified;
+		_context.Samples.Update(sample1);
 		await _context.SaveChangesAsync();
 		_output.WriteLine(sample1.Version.ToHexString());
 		_output.WriteLine(sample2.Version.ToHexString());
@@ -124,7 +156,7 @@ values
 
 		// sample2.Valueを変更して更新する
 		sample2.Value = "c";
-		_context.Entry(sample2).State = EntityState.Modified;
+		_context.Samples.Update(sample2);
 		var exception = await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () => {
 			await _context.SaveChangesAsync();
 		});
