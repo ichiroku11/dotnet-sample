@@ -7,6 +7,11 @@ namespace SampleTest;
 /// </summary>
 public static class CollectionNames {
 	/// <summary>
+	/// dbo.Blogテーブルを使用するコレクション名
+	/// </summary>
+	public const string EfCoreBlog = "EFCore_dbo.Blog";
+
+	/// <summary>
 	/// dbo.Sampleテーブルを使用するコレクション名
 	/// </summary>
 	public const string EfCoreSample = "EFCore_dbo.Sample";
