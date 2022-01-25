@@ -94,11 +94,38 @@ drop table if exists dbo.Blog;";
 		// Arrange
 		// Act
 		var blogs = await _context.Blogs
-			.Include(blog => blog.Posts.OrderByDescending(post => post.Id))
+			.Include(blog => blog.Posts.OrderBy(post => post.Id))
 			.OrderBy(blog => blog.Id)
 			.ToListAsync();
 
 		// Assert
 		Assert.Single(blogs);
+
+		// Idが2のPostは含まれない
+		var blog = blogs.First();
+		Assert.Collection(blog.Posts,
+			post => Assert.Equal(1, post.Id),
+			post => Assert.Equal(3, post.Id));
+	}
+
+	[Fact]
+	public async Task Include_HasQueryFilterを無視できる() {
+		// Arrange
+		// Act
+		var blogs = await _context.Blogs
+			.IgnoreQueryFilters()
+			.Include(blog => blog.Posts.OrderBy(post => post.Id))
+			.OrderBy(blog => blog.Id)
+			.ToListAsync();
+
+		// Assert
+		Assert.Single(blogs);
+
+		// Idが2のPostが含まれる
+		var blog = blogs.First();
+		Assert.Collection(blog.Posts,
+			post => Assert.Equal(1, post.Id),
+			post => Assert.Equal(2, post.Id),
+			post => Assert.Equal(3, post.Id));
 	}
 }
