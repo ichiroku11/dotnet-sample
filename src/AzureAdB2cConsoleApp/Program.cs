@@ -13,7 +13,7 @@ class Program {
 					.AddTransient<GraphCreateUserSample>()
 					.AddTransient<GraphGetUserListSample>()
 					.AddTransient<GraphGetUserSample>()
-					.AddTransient<GraphUpdateUserSample>();
+					.AddTransient<GraphUpdateUserCustomAttributeSample>();
 			})
 			.RunConsoleAsync();
 	}
