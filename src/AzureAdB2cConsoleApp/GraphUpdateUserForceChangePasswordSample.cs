@@ -17,7 +17,8 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 
 		var password = PasswordHelper.Generate(6, 6, 4);
 
-		// todo: うまく行かず
+		// パスワードを更新する必要するには「ユーザー管理者ロール」が必要
+		// https://docs.microsoft.com/ja-jp/azure/active-directory-b2c/microsoft-graph-get-started?tabs=app-reg-ga#optional-grant-user-administrator-role
 		// 更新
 		var userToUpdate = new User {
 			PasswordProfile = new() {
