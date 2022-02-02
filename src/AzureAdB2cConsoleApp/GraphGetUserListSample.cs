@@ -19,18 +19,27 @@ public class GraphGetUserListSample : GraphSampleBase {
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		var select = string.Join(',', new[] {
-			"id",
-			"surname",
+			// アカウントが有効かどうか
+			"accountEnabled",
+			// 表示名
+			"displayName",
+			// 名
 			"givenName",
+			// ID（GUID）
+			"id",
 			// ログインのメールアドレスが含まれる
 			"identities",
-			// 一覧では取得できない？
-			//"passwordProfile",
-			/*
-			"displayName",
+			// 最後にパスワードを変更した時刻またはパスワードが生成された時刻
+			"lastPasswordChangeDateTime",
+			// メールのエイリアス
 			"mailNickname",
+			// パスワードプロファイル（forceChangePasswordNextSignInなどが含まれる）
+			"passwordProfile",
+			// 性
+			"surname",
+			// ユーザープリンシパル名（UPN）
 			"userPrincipalName",
-			*/
+			// カスタム属性
 			attributeName,
 		});
 
