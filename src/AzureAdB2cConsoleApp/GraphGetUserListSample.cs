@@ -21,6 +21,8 @@ public class GraphGetUserListSample : GraphSampleBase {
 		var select = string.Join(',', new[] {
 			// アカウントが有効かどうか
 			"accountEnabled",
+			// 作成日時
+			"createdDateTime",
 			// 表示名
 			"displayName",
 			// 名
@@ -29,7 +31,7 @@ public class GraphGetUserListSample : GraphSampleBase {
 			"id",
 			// ログインのメールアドレスが含まれる
 			"identities",
-			// 最後にパスワードを変更した時刻またはパスワードが生成された時刻
+			// 最後にパスワードを変更した日時またはパスワードが生成された日時
 			"lastPasswordChangeDateTime",
 			// メールのエイリアス
 			"mailNickname",
