@@ -5,11 +5,12 @@ using Microsoft.Graph;
 namespace AzureAdB2cConsoleApp;
 
 // ユーザーのカスタム属性を更新
-public class GraphUpdateUserSample : GraphSampleBase {
-	public GraphUpdateUserSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
+public class GraphUpdateUserCustomAttributeSample : GraphSampleBase {
+	public GraphUpdateUserCustomAttributeSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		// todo:
 		var id = "{id}";
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);

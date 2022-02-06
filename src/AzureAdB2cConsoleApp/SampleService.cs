@@ -26,6 +26,12 @@ public class SampleService : IHostedService {
 				await _services.GetRequiredService<GraphGetUserListSample>().RunAsync();
 				// ユーザー作成
 				//await _services.GetRequiredService<GraphCreateUserSample>().RunAsync();
+				// ユーザー更新（アカウントの有効・無効）
+				//await _services.GetRequiredService<GraphUpdateUserAccountEnabledSample>().RunAsync();
+				// ユーザー更新（カスタム属性）
+				//await _services.GetRequiredService<GraphUpdateUserCustomAttributeSample>().RunAsync();
+				// ユーザー更新（パスワードリセット）
+				//await _services.GetRequiredService<GraphUpdateUserForceChangePasswordSample>().RunAsync();
 			} catch (Exception) {
 				throw;
 			}
