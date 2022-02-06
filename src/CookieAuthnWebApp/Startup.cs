@@ -22,6 +22,17 @@ public class Startup {
 				options.LoginPath = CookieAuthenticationDefaults.LoginPath.ToString().ToLower();
 				options.LogoutPath = CookieAuthenticationDefaults.LogoutPath.ToString().ToLower();
 
+				// クッキーの有効期限を変更するには、
+				// CookieAuthenticationOptions.Cookie.Expirationではなく、
+				// CookieAuthenticationOptions.ExpireTimeSpanを指定する
+				// https://docs.microsoft.com/ja-jp/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.expiretimespan?view=aspnetcore-6.0
+				//options.ExpireTimeSpan = TimeSpan.FromDays(1);
+
+				// CookieAuthenticationOptions.Cookie.Expirationは無視されるとのこと
+				// Expiration is currently ignored. Use ExpireTimeSpan to control lifetime of cookie authentication.
+				// https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.cookie?view=aspnetcore-6.0
+				//options.Cookie.Expiration = TimeSpan.FromDays(1);
+
 				options.Events = new LoggingCookieAuthenticationEvents {
 					OnSigningIn = (CookieSigningInContext context) => {
 						// Claimを追加できる
