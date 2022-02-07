@@ -67,6 +67,19 @@ public class EnumerableTest {
 	}
 
 	[Fact]
+	public void Take_Range型で指定する() {
+		// Arrange
+		var source = new[] { 0, 1, 2, 3, 4, 5 };
+
+		// Act
+		// 2番目から4番目まで（4番目は含まない）を取得
+		var actual = source.Take(2..4);
+
+		// Assert
+		Assert.Equal(new[] { 2, 3 }, actual);
+	}
+
+	[Fact]
 	public void Skip_引数にマイナスの値を指定すると同じシーケンスが返ってくる() {
 		// Arrange
 		var source = new[] { 1, 2, 3 };
