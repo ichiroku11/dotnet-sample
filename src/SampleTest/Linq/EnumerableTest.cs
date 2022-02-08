@@ -67,7 +67,7 @@ public class EnumerableTest {
 	}
 
 	[Fact]
-	public void Take_Range型で指定する() {
+	public void Take_Range型で指定してシーケンスを取得する() {
 		// Arrange
 		var source = new[] { 0, 1, 2, 3, 4, 5 };
 
@@ -77,6 +77,19 @@ public class EnumerableTest {
 
 		// Assert
 		Assert.Equal(new[] { 2, 3 }, actual);
+	}
+
+	[Fact]
+	public void Take_Range型で指定したが要素が見つからない場合は空が返ってくる() {
+		// Arrange
+		var source = new[] { 0, 1, 2, 3 };
+
+		// Act
+		// 2番目から4番目まで（4番目は含まない）を取得
+		var actual = source.Take(5..);
+
+		// Assert
+		Assert.Empty(actual);
 	}
 
 	[Fact]
