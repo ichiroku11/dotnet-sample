@@ -157,4 +157,20 @@ public class EnumerableTest {
 		Assert.True(actualReturn);
 		Assert.Equal(3, actualCount);
 	}
+
+	[Fact]
+	public void TryGetNonEnumeratedCount_yieldreturnの場合はカウントを取得できない() {
+		// Arrange
+		static IEnumerable<int> values(int count) {
+			foreach (var value in Enumerable.Range(0, count)) {
+				yield return value;
+			}
+		};
+
+		// Act
+		var actualReturn = values(3).TryGetNonEnumeratedCount(out var _);
+
+		// Assert
+		Assert.False(actualReturn);
+	}
 }
