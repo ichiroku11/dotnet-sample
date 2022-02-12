@@ -2,21 +2,6 @@ namespace SampleLib.Linq;
 
 public static class EnumerableExtensions {
 	/// <summary>
-	/// 一意の要素を取得
-	/// </summary>
-	/// <typeparam name="TSource"></typeparam>
-	/// <typeparam name="TKey"></typeparam>
-	/// <param name="source"></param>
-	/// <param name="compareKeySelector"></param>
-	/// <returns></returns>
-	public static IEnumerable<TSource> Distinct<TSource, TKey>(
-		this IEnumerable<TSource> source,
-		Func<TSource, TKey> compareKeySelector)
-		where TSource : notnull
-		where TKey : notnull
-		=> source.Distinct(new EqualityComparer<TSource, TKey>(compareKeySelector));
-
-	/// <summary>
 	/// 2つのシーケンスが等しいか
 	/// </summary>
 	/// <typeparam name="TSource"></typeparam>
