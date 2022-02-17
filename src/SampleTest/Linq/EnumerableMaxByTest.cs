@@ -22,6 +22,18 @@ public class EnumerableMaxByTest {
 			new Sample("b", 2),
 		};
 
+		// 最大値を持つ要素が複数存在するる場合は最初の要素が見つかる
+		yield return new object[] {
+			// source
+			new[] {
+				new Sample("a", 1),
+				new Sample("b", 2),
+				new Sample("c", 2),
+			},
+			// expected
+			new Sample("b", 2),
+		};
+
 		// 空のコレクションに対しての結果はnullになる
 		yield return new object?[] {
 			// source
