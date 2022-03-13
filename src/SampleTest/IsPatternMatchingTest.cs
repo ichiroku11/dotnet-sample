@@ -79,6 +79,28 @@ public class IsPatternMatchingTest {
 		Assert.Equal(expected, actual);
 	}
 
+	[Fact]
+	public void Is_notと括弧で間違えそうなパターンを確認する() {
+		// Arrange
+		// Act
+		// Assert
+#pragma warning disable CS8519, CS8793
+		// not (1 or 2)
+		// （1または2）以外であればtrue
+		Assert.True(0 is not (1 or 2));
+		Assert.False(1 is not (1 or 2));
+		Assert.False(2 is not (1 or 2));
+		Assert.True(3 is not (1 or 2));
+
+		// not 1 or 2
+		// 1以外または2であればtrue→つまり1以外であればtrue
+		Assert.True(0 is not 1 or 2);
+		Assert.False(1 is not 1 or 2);
+		Assert.True(2 is not 1 or 2);
+		Assert.True(3 is not 1 or 2);
+#pragma warning restore CS8519, CS8793
+	}
+
 	// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/patterns#var-pattern
 	[Theory]
 	[InlineData(0, false)]
