@@ -57,6 +57,16 @@ public class QueryHelpersTest {
 		Assert.Equal(expected, actual);
 	}
 
+	[Fact]
+	public void AddQueryString_クエリ文字列はURLエンコードされる() {
+		// Arrange
+		// Act
+		var actual = QueryHelpers.AddQueryString("https://example.jp/login", "returnUrl", "https://example.jp");
+
+		// Assert
+		Assert.Equal("https://example.jp/login?returnUrl=https%3A%2F%2Fexample.jp", actual);
+	}
+
 	public static IEnumerable<object[]> GetTestDataForParseQuery() {
 		// 先頭が「?」で始まる
 		yield return new object[] {
