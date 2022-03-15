@@ -101,4 +101,41 @@ public class QueryHelpersTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	public static IEnumerable<object?[]> GetTestDataForParseNullableQuery() {
+		// 先頭が「?」で始まる
+		yield return new object[] {
+				"?a=1&b=2",
+				new Dictionary<string, StringValues> {
+					["a"] = "1",
+					["b"] = "2",
+				},
+			};
+
+		// 先頭が「?」で始まらない
+		yield return new object[] {
+				"a=1&b=2",
+				new Dictionary<string, StringValues> {
+					["a"] = "1",
+					["b"] = "2",
+				},
+			};
+
+		// クエリ文字列がない
+		// ParseQueryの戻り値は空のDictionaryに対して、
+		// ParseNullableQueryの戻り値はnullになる
+		yield return new object?[] { "", null, };
+		yield return new object?[] { "?", null, };
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTestDataForParseNullableQuery))]
+	public void ParseNullableQuery_パースできる(string query, Dictionary<string, StringValues>? expected) {
+		// Arrange
+		// Act
+		var actual = QueryHelpers.ParseNullableQuery(query);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
