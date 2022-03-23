@@ -56,6 +56,20 @@ values
 	(4, N'D');";
 
 		_context.Database.ExecuteSqlRaw(sql);
+
+		// 投入されたデータに対してleft outer joinすると
+		/*
+		select *
+		from dbo.[Outer]
+			left outer join dbo.[Inner]
+				on dbo.[Outer].Id = dbo.[Inner].Id
+		order by dbo.[Outer].Id;
+
+		Id	Value	Id	Value
+		1	a	1	A
+		2	b	NULL	NULL
+		3	c	NULL	NULL
+		*/
 	}
 
 	private void DropTable() {
@@ -84,6 +98,13 @@ drop table if exists dbo.[Inner];";
 				(item, inner) => new { item.Outer, Inner = inner })
 			.OrderBy(item => item.Outer.Id)
 			.ToListAsync();
+		// 実行されるクエリ
+		/*
+		SELECT[o].[Id], [o].[Value], [i].[Id], [i].[Value]
+		FROM[Outer] AS[o]
+		LEFT JOIN[Inner] AS[i] ON[o].[Id] = [i].[Id]
+		ORDER BY[o].[Id]
+		*/
 
 		// Assert
 		Assert.Collection(actuals,
