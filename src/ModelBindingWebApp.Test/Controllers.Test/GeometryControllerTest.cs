@@ -22,39 +22,39 @@ public class GeometryControllerTest : ControllerTestBase {
 
 	public static IEnumerable<object[]> GetTestData() {
 		yield return new object[] {
-				new GeometryLineModel {
-					X1 = 1,
-					Y1 = 2,
-					X2 = 3,
-					Y2 = 4,
-				},
-			};
+			new GeometryLineModel {
+				X1 = 1,
+				Y1 = 2,
+				X2 = 3,
+				Y2 = 4,
+			},
+		};
 
 		yield return new object[] {
-				new GeometryCircleModel {
-					R = 1,
-					X = 2,
-					Y = 3,
-				},
-			};
+			new GeometryCircleModel {
+				R = 1,
+				X = 2,
+				Y = 3,
+			},
+		};
 	}
 
 	// GeometryModelからPOSTデータを作成
 	private static FormUrlEncodedContent GetContent(GeometryModel geometry) {
 		var nameValues = geometry switch {
 			GeometryLineModel line => new Dictionary<string, string> {
-					{ nameof(GeometryModel.GeometryType), line.GeometryType.ToString() },
-					{ nameof(GeometryLineModel.X1), line.X1.ToString() },
-					{ nameof(GeometryLineModel.Y1), line.Y1.ToString() },
-					{ nameof(GeometryLineModel.X2), line.X2.ToString() },
-					{ nameof(GeometryLineModel.Y2), line.Y2.ToString() },
-				},
+				{ nameof(GeometryModel.GeometryType), line.GeometryType.ToString() },
+				{ nameof(GeometryLineModel.X1), line.X1.ToString() },
+				{ nameof(GeometryLineModel.Y1), line.Y1.ToString() },
+				{ nameof(GeometryLineModel.X2), line.X2.ToString() },
+				{ nameof(GeometryLineModel.Y2), line.Y2.ToString() },
+			},
 			GeometryCircleModel circle => new Dictionary<string, string> {
-					{ nameof(GeometryModel.GeometryType), circle.GeometryType.ToString() },
-					{ nameof(GeometryCircleModel.R), circle.R.ToString() },
-					{ nameof(GeometryCircleModel.X), circle.X.ToString() },
-					{ nameof(GeometryCircleModel.Y), circle.Y.ToString() },
-				},
+				{ nameof(GeometryModel.GeometryType), circle.GeometryType.ToString() },
+				{ nameof(GeometryCircleModel.R), circle.R.ToString() },
+				{ nameof(GeometryCircleModel.X), circle.X.ToString() },
+				{ nameof(GeometryCircleModel.Y), circle.Y.ToString() },
+			},
 			_ => throw new ArgumentException(nameof(geometry)),
 		};
 

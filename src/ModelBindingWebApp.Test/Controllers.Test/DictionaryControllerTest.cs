@@ -19,37 +19,37 @@ public class DictionaryControllerTest : ControllerTestBase {
 	public static IEnumerable<object[]> GetSimpleValues() {
 		// values[a]=1&values[b]=2
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "values[a]", "1" },
-					{ "values[b]", "2" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "values[a]", "1" },
+				{ "values[b]", "2" },
+			},
+		};
 
 		// [a]=1&[b]=2
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "[a]", "1" },
-					{ "[b]", "2" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "[a]", "1" },
+				{ "[b]", "2" },
+			},
+		};
 
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "values[0].Key", "a" },
-					{ "values[0].Value", "1" },
-					{ "values[1].Key", "b" },
-					{ "values[1].Value", "2" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "values[0].Key", "a" },
+				{ "values[0].Value", "1" },
+				{ "values[1].Key", "b" },
+				{ "values[1].Value", "2" },
+			},
+		};
 
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "[0].Key", "a" },
-					{ "[0].Value", "1" },
-					{ "[1].Key", "b" },
-					{ "[1].Value", "2" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "[0].Key", "a" },
+				{ "[0].Value", "1" },
+				{ "[1].Key", "b" },
+				{ "[1].Value", "2" },
+			},
+		};
 	}
 
 	[Theory(DisplayName = "IDictionary<string, int>型のvaluesにバインドできる")]
