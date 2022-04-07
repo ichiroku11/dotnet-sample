@@ -20,45 +20,45 @@ public class CollectionControllerTest : ControllerTestBase {
 	public static IEnumerable<object[]> GetSimpleValues() {
 		// values=1&values=2
 		yield return new object[] {
-				new[] {
-					KeyValuePair.Create("values", "1"),
-					KeyValuePair.Create("values", "2"),
-				},
-			};
+			new[] {
+				KeyValuePair.Create("values", "1"),
+				KeyValuePair.Create("values", "2"),
+			},
+		};
 
 		// values[0]=1&values[1]=2
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "values[0]", "1" },
-					{ "values[1]", "2" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "values[0]", "1" },
+				{ "values[1]", "2" },
+			},
+		};
 
 		// values[0]=1&values[1]=2&values[3]=3
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "values[0]", "1" },
-					{ "values[1]", "2" },
-					// 欠番以降は無視される
-					{ "values[3]", "3" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "values[0]", "1" },
+				{ "values[1]", "2" },
+				// 欠番以降は無視される
+				{ "values[3]", "3" },
+			},
+		};
 
 		// [0]=1&[1]=2
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "[0]", "1" },
-					{ "[1]", "2" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "[0]", "1" },
+				{ "[1]", "2" },
+			},
+		};
 
 		// values[]=1&values[]=2
 		yield return new object[] {
-				new[] {
-					KeyValuePair.Create("values[]", "1"),
-					KeyValuePair.Create("values[]", "2"),
-				},
-			};
+			new[] {
+				KeyValuePair.Create("values[]", "1"),
+				KeyValuePair.Create("values[]", "2"),
+			},
+		};
 	}
 
 	[Theory(DisplayName = "IEnumerable<int>型のvaluesにバインドできる")]
@@ -80,13 +80,13 @@ public class CollectionControllerTest : ControllerTestBase {
 
 	public static IEnumerable<object[]> GetComplexValues() {
 		yield return new object[] {
-				new Dictionary<string, string>() {
-					{ "values[0].Id", "1" },
-					{ "values[0].Name", "a" },
-					{ "values[1].Id", "2" },
-					{ "values[1].Name", "b" },
-				},
-			};
+			new Dictionary<string, string>() {
+				{ "values[0].Id", "1" },
+				{ "values[0].Name", "a" },
+				{ "values[1].Id", "2" },
+				{ "values[1].Name", "b" },
+			},
+		};
 	}
 
 	[Theory(DisplayName = "IEnumerable<Sample>型のvaluesにバインドできる")]
