@@ -11,6 +11,7 @@
       "src\\ControllerWebApp\\ControllerWebApp.csproj",
       "src\\CookieAuthnWebApp.Test\\CookieAuthnWebApp.Test.csproj",
       "src\\CookieAuthnWebApp\\CookieAuthnWebApp.csproj",
+      "src\\CustomFormatterWebApp\\CustomFormatterWebApp.csproj",
       "src\\DistributedCacheWebApp\\DistributedCacheWebApp.csproj",
       "src\\EndpointWebApp\\EndpointWebApp.csproj",
       "src\\FallbackRouteWebApp\\FallbackRouteWebApp.csproj",
