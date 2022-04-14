@@ -1,6 +1,3 @@
 namespace CustomFormatterWebApp.Models;
 
-public class Sample {
-	public int Id { get; init; }
-	public string Name { get; init; } = "";
-}
+public record Sample(int Id, string Name);

@@ -6,8 +6,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-     <InternalsVisibleTo Include="CustomFormatterWebApp.Test" />
-  </ItemGroup>
-
 </Project>

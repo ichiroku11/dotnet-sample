@@ -11,4 +11,7 @@ app.MapControllerRoute(
 
 app.Run();
 
-
+// ユニットテストのため
+// https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-6.0#basic-tests-with-the-default-webapplicationfactory
+public partial class Program {
+}
