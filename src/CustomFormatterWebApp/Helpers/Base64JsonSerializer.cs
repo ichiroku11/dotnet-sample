@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace CustomFormatterWebApp.Formatters;
+namespace CustomFormatterWebApp.Helpers;
 
 public static class Base64JsonSerializer {
 	private static readonly JsonSerializerOptions _options

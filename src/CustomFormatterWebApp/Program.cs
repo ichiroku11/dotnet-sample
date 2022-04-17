@@ -1,7 +1,11 @@
 
+using CustomFormatterWebApp.Formatters;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => {
+	options.InputFormatters.Insert(0, new Base64JsonInputFormatter());
+});
 
 var app = builder.Build();
 
