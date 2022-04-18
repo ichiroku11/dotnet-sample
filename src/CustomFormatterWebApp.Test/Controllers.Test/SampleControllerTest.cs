@@ -24,7 +24,7 @@ namespace CustomFormatterWebApp.Controllers.Test {
 
 			// Act
 			using var response = await client.PostAsBase64JsonAsync("/api/sample", expected);
-			var actual = await response.Content.ReadFromJsonAsync<Sample>();
+			var actual = await response.Content.ReadFromBase64JsonAsync<Sample>();
 
 			// Assert
 			Assert.Equal(expected, actual);
