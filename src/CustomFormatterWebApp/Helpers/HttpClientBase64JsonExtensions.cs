@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 namespace CustomFormatterWebApp.Helpers;
 
 public static class HttpClientBase64JsonExtensions {
+	// JSON文字列をbase64にエンコードしてPOST
 	public static Task<HttpResponseMessage> PostAsBase64JsonAsync<TValue>(
 		this HttpClient client,
 		string? requestUri,
