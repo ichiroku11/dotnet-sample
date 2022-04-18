@@ -1,7 +1,6 @@
 using CustomFormatterWebApp.Helpers;
 using CustomFormatterWebApp.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Net.Http.Headers;
 using System.Text;
 
 namespace CustomFormatterWebApp.Formatters;
@@ -9,7 +8,7 @@ namespace CustomFormatterWebApp.Formatters;
 public class Base64JsonInputFormatter : TextInputFormatter {
 	public Base64JsonInputFormatter() {
 		SupportedEncodings.Add(Encoding.UTF8);
-		SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/palin"));
+		SupportedMediaTypes.Add(MediaTypeHeaderValues.TextPlain);
 	}
 
 	protected override bool CanReadType(Type type) {

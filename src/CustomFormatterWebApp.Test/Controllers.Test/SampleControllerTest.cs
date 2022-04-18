@@ -23,7 +23,7 @@ namespace CustomFormatterWebApp.Controllers.Test {
 			var expected = new Sample(1, "a");
 
 			// Act
-			using var response = await client.PostAsJsonAsync("/api/sample", expected);
+			using var response = await client.PostAsBase64JsonAsync("/api/sample", expected);
 			var actual = await response.Content.ReadFromJsonAsync<Sample>();
 
 			// Assert
