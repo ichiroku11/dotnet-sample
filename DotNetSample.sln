@@ -97,6 +97,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalWebApi", "src\Minima
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalizationWebApp", "src\LocalizationWebApp\LocalizationWebApp.csproj", "{F9802D27-7A90-40D3-ADC3-3D50B39F7206}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomFormatterWebApp", "src\CustomFormatterWebApp\CustomFormatterWebApp.csproj", "{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomFormatterWebApp.Test", "src\CustomFormatterWebApp.Test\CustomFormatterWebApp.Test.csproj", "{3D4BB4BE-F205-4421-B0CF-E720802CF574}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -271,6 +275,14 @@ Global
 		{F9802D27-7A90-40D3-ADC3-3D50B39F7206}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9802D27-7A90-40D3-ADC3-3D50B39F7206}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9802D27-7A90-40D3-ADC3-3D50B39F7206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D4BB4BE-F205-4421-B0CF-E720802CF574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D4BB4BE-F205-4421-B0CF-E720802CF574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D4BB4BE-F205-4421-B0CF-E720802CF574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D4BB4BE-F205-4421-B0CF-E720802CF574}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -315,6 +327,8 @@ Global
 		{53ACC366-37E0-413A-B9E9-C4B07FF20906} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{2BEBF83A-638E-43D9-BCA1-1C4949554B2A} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{F9802D27-7A90-40D3-ADC3-3D50B39F7206} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
+		{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
+		{3D4BB4BE-F205-4421-B0CF-E720802CF574} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}
