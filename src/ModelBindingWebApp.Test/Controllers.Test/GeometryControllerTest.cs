@@ -20,17 +20,14 @@ public class GeometryControllerTest : ControllerTestBase {
 		: base(output, factory) {
 	}
 
-	public static IEnumerable<object[]> GetTestData() {
-		yield return new object[] {
+	public static TheoryData<GeometryModel> GetTheoryData() {
+		return new() {
 			new GeometryLineModel {
 				X1 = 1,
 				Y1 = 2,
 				X2 = 3,
 				Y2 = 4,
 			},
-		};
-
-		yield return new object[] {
 			new GeometryCircleModel {
 				R = 1,
 				X = 2,
@@ -104,7 +101,7 @@ public class GeometryControllerTest : ControllerTestBase {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestData))]
+	[MemberData(nameof(GetTheoryData))]
 	public async Task Save_サブクラスをバインドできる(GeometryModel expected) {
 		// Arrange
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/geometry/save") {
