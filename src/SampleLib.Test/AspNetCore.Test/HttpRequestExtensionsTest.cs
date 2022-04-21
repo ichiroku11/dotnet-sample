@@ -46,21 +46,23 @@ public class HttpRequestExtensionsTest {
 		Assert.Equal(expected, actual, StringComparer.OrdinalIgnoreCase);
 	}
 
-	public static IEnumerable<object[]> GetTestDataForIsAjax() {
-		yield return new object[] {
+	public static TheoryData<IHeaderDictionary, bool> GetTheoryDataForIsAjax() {
+		return new() {
+			{
 				new HeaderDictionary {
 					{ "X-Requested-With", "XMLHttpRequest" },
 				},
-				true,
-			};
-		yield return new object[] {
+				true
+			},
+			{
 				new HeaderDictionary(),
-				false,
-			};
+				false
+			},
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForIsAjax))]
+	[MemberData(nameof(GetTheoryDataForIsAjax))]
 	public void IsAjax_判定できる(IHeaderDictionary headers, bool expected) {
 		// Arrange
 		var request = CreateRequest(headers);

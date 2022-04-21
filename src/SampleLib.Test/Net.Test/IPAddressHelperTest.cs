@@ -16,20 +16,22 @@ public class IPAddressHelperTest {
 		});
 	}
 
-	public static IEnumerable<object[]> GetTestDataForGetSubnetMask() {
-		yield return new object[] { 0, new IPAddress(new byte[] { 0, 0, 0, 0 }) };
-		yield return new object[] { 4, new IPAddress(new byte[] { 240, 0, 0, 0 }) };
-		yield return new object[] { 8, new IPAddress(new byte[] { 255, 0, 0, 0 }) };
-		yield return new object[] { 12, new IPAddress(new byte[] { 255, 240, 0, 0 }) };
-		yield return new object[] { 16, new IPAddress(new byte[] { 255, 255, 0, 0 }) };
-		yield return new object[] { 18, new IPAddress(new byte[] { 255, 255, 192, 0 }) };
-		yield return new object[] { 24, new IPAddress(new byte[] { 255, 255, 255, 0 }) };
-		yield return new object[] { 25, new IPAddress(new byte[] { 255, 255, 255, 128 }) };
-		yield return new object[] { 32, new IPAddress(new byte[] { 255, 255, 255, 255 }) };
+	public static TheoryData<int, IPAddress> GetTheoryDataForGetSubnetMask() {
+		return new() {
+			{ 0, new IPAddress(new byte[] { 0, 0, 0, 0 }) },
+			{ 4, new IPAddress(new byte[] { 240, 0, 0, 0 }) },
+			{ 8, new IPAddress(new byte[] { 255, 0, 0, 0 }) },
+			{ 12, new IPAddress(new byte[] { 255, 240, 0, 0 }) },
+			{ 16, new IPAddress(new byte[] { 255, 255, 0, 0 }) },
+			{ 18, new IPAddress(new byte[] { 255, 255, 192, 0 }) },
+			{ 24, new IPAddress(new byte[] { 255, 255, 255, 0 }) },
+			{ 25, new IPAddress(new byte[] { 255, 255, 255, 128 }) },
+			{ 32, new IPAddress(new byte[] { 255, 255, 255, 255 }) },
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForGetSubnetMask))]
+	[MemberData(nameof(GetTheoryDataForGetSubnetMask))]
 	public void GetSubnetMask_サブネットマスクを取得できる(int prefix, IPAddress expected) {
 		// Arrange
 		// Act
