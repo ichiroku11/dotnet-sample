@@ -95,37 +95,27 @@ public class UrlHelperTest {
 		return new UrlHelper(actionContext);
 	}
 
-	public static IEnumerable<object?[]> GetTestDataForActionLink() {
-		yield return new[] {
-				"example.jp", "", null, null, null, "https://example.jp/"
-			};
-		// appあり
-		yield return new[] {
-				"example.jp", "/app", null, null, null, "https://example.jp/app"
-			};
-		// actionあり
-		yield return new[] {
-				"example.jp", "/app", "x", null, null, "https://example.jp/app/default/x"
-			};
-		// action/controllerあり
-		yield return new[] {
-				"example.jp", "/app", "x", "y", null, "https://example.jp/app/y/x"
-			};
-		// パラメータあり（ルートに含まれる）
-		yield return new object[] {
-				"example.jp", "/app", "x", "y", new { id = 1 }, "https://example.jp/app/y/x/1"
-			};
-		// パラメータあり（クエリ文字列）
-		yield return new object[] {
-				"example.jp", "/app", "x", "y", new { value = "abc" }, "https://example.jp/app/y/x?value=abc"
-			};
+	public static TheoryData<string, string, string?, string?, object?, string> GetTheoryDataForActionLink() {
+		return new() {
+			{ "example.jp", "", null, null, null, "https://example.jp/" },
+			// appあり
+			{ "example.jp", "/app", null, null, null, "https://example.jp/app" },
+			// actionあり
+			{ "example.jp", "/app", "x", null, null, "https://example.jp/app/default/x" },
+			// action/controllerあり
+			{ "example.jp", "/app", "x", "y", null, "https://example.jp/app/y/x" },
+			// パラメータあり（ルートに含まれる）
+			{ "example.jp", "/app", "x", "y", new { id = 1 }, "https://example.jp/app/y/x/1" },
+			// パラメータあり（クエリ文字列）
+			{ "example.jp", "/app", "x", "y", new { value = "abc" }, "https://example.jp/app/y/x?value=abc" },
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForActionLink))]
+	[MemberData(nameof(GetTheoryDataForActionLink))]
 	public void ActionLink_絶対URLを生成できる(
 		string host, string app,
-		string action, string contoller, object values,
+		string? action, string? contoller, object? values,
 		string expected) {
 		// Arrange
 		var urlHelper = CreateUrlHelper("https", host, app);

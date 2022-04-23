@@ -24,26 +24,28 @@ public class BitArrayTest {
 		Assert.Equal(8, bits.Length);
 	}
 
-	public static IEnumerable<object[]> GetTestDataForIndexer() {
-		yield return new object[] {
+	public static TheoryData<byte[], bool[]> GetTheoryDataForIndexer() {
+		return new() {
+			{
 				new byte[] { 1 },
-				new [] { true, false, false, false, false, false, false, false }
-			};
-		yield return new object[] {
+				new[] { true, false, false, false, false, false, false, false }
+			},
+			{
 				new byte[] { 128 },
-				new [] { false, false, false, false, false, false, false, true, }
-			};
-		yield return new object[] {
+				new[] { false, false, false, false, false, false, false, true, }
+			},
+			{
 				new byte[] { 1, 0 },
-				new [] {
+				new[] {
 					true, false, false, false, false, false, false, false,
 					false, false, false, false, false, false, false, false,
 				}
-			};
+			},
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForIndexer))]
+	[MemberData(nameof(GetTheoryDataForIndexer))]
 	public void Indexer_指定したインデックスのbool値を確認する(byte[] bytes, bool[] expected) {
 		// Arrange
 		var actual = new BitArray(bytes);

@@ -44,10 +44,16 @@ public class EntityStateTest : IDisposable {
 		EntryState,
 	}
 
-	public static readonly IEnumerable<object[]> TestPatterns = EnumHelper.GetValues<TestPattern>().Select(pattern => new object[] { pattern });
+	public static TheoryData<TestPattern> GetTheoryData() {
+		var data = new TheoryData<TestPattern>();
+		foreach (var pattern in EnumHelper.GetValues<TestPattern>()) {
+			data.Add(pattern);
+		}
+		return data;
+	}
 
 	[Theory]
-	[MemberData(nameof(TestPatterns))]
+	[MemberData(nameof(GetTheoryData))]
 	public void EntityStateがAddedになる(TestPattern pattern) {
 		// Arrange
 		var entity = new Sample(1, "a");
@@ -66,7 +72,7 @@ public class EntityStateTest : IDisposable {
 	}
 
 	[Theory]
-	[MemberData(nameof(TestPatterns))]
+	[MemberData(nameof(GetTheoryData))]
 	public void EntityStateがModifiedになる(TestPattern pattern) {
 		// Arrange
 		var entity = new Sample(1, "a");
@@ -85,7 +91,7 @@ public class EntityStateTest : IDisposable {
 	}
 
 	[Theory]
-	[MemberData(nameof(TestPatterns))]
+	[MemberData(nameof(GetTheoryData))]
 	public void EntityStateがDeletedになる(TestPattern pattern) {
 		// Arrange
 		var entity = new Sample(1, "a");
@@ -104,7 +110,7 @@ public class EntityStateTest : IDisposable {
 	}
 
 	[Theory]
-	[MemberData(nameof(TestPatterns))]
+	[MemberData(nameof(GetTheoryData))]
 	public void EntityStateがUnchangedになる(TestPattern pattern) {
 		// Arrange
 		var entity = new Sample(1, "a");
