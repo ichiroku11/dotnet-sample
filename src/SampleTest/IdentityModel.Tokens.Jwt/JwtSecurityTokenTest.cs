@@ -16,23 +16,25 @@ public class JwtSecurityTokenTest {
 		_output = output;
 	}
 
-	public static IEnumerable<object[]> GetTestDataForToString() {
-		yield return new object[] {
+	public static TheoryData<JwtSecurityToken, string> GetTheoryDataForToString() {
+		return new() {
+			{
 				new JwtSecurityToken(),
-				@"{""alg"":""none"",""typ"":""JWT""}.{}",
-			};
-		yield return new object[] {
+				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+			},
+			{
 				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
-				@"{}.{}",
-			};
-		yield return new object[] {
+				@"{}.{}"
+			},
+			{
 				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
-				@"{""alg"":""none"",""typ"":""JWT""}.{}",
-			};
+				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+			},
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForToString))]
+	[MemberData(nameof(GetTheoryDataForToString))]
 	public void ToString_トークンの文字列表現を確認する(JwtSecurityToken token, string expected) {
 		// Arrange
 		// Act
