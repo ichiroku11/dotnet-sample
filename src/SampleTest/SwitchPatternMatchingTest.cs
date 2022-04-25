@@ -145,18 +145,20 @@ public class SwitchPatternMatchingTest {
 		OnBorder,
 	}
 
-	public static IEnumerable<object[]> GetTestData() {
-		yield return new object[] { new Point(0, 0), Quadrant.Origin };
-		yield return new object[] { new Point(1, 1), Quadrant.One };
-		yield return new object[] { new Point(-1, 1), Quadrant.Two };
-		yield return new object[] { new Point(-1, -1), Quadrant.Three };
-		yield return new object[] { new Point(1, -1), Quadrant.Four };
-		yield return new object[] { new Point(0, 1), Quadrant.OnBorder };
-		yield return new object[] { new Point(1, 0), Quadrant.OnBorder };
+	public static TheoryData<Point, Quadrant> GetTheoryData() {
+		return new() {
+			{ new Point(0, 0), Quadrant.Origin },
+			{ new Point(1, 1), Quadrant.One },
+			{ new Point(-1, 1), Quadrant.Two },
+			{ new Point(-1, -1), Quadrant.Three },
+			{ new Point(1, -1), Quadrant.Four },
+			{ new Point(0, 1), Quadrant.OnBorder },
+			{ new Point(1, 0), Quadrant.OnBorder },
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestData))]
+	[MemberData(nameof(GetTheoryData))]
 	public void Switch_Deconstructを利用したサンプル(Point point, Quadrant expected) {
 		// Arrange
 		// Act
@@ -176,7 +178,7 @@ public class SwitchPatternMatchingTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestData))]
+	[MemberData(nameof(GetTheoryData))]
 	public void Switch_プロパティを利用したサンプル(Point point, Quadrant expected) {
 		// Arrange
 		// Act

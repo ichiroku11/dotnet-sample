@@ -31,24 +31,26 @@ public class IPAddressTest {
 		Assert.True(address1.Equals(address2));
 	}
 
-	public static IEnumerable<object[]> GetTestDataForGetBytes() {
-		yield return new object[] {
+	public static TheoryData<IPAddress, byte[]> GetTheoryDataForGetBytes() {
+		return new() {
+			{
 				IPAddress.Parse("0.0.0.0"),
 				new byte[] { 0, 0, 0, 0 }
-			};
-		yield return new object[] {
+			},
+			{
 				// 10進数の並び順のバイト配列を取得できる
 				IPAddress.Parse("192.168.1.2"),
 				new byte[] { 192, 168, 1, 2 }
-			};
-		yield return new object[] {
+			},
+			{
 				new IPAddress(new byte[] { 192, 168, 1, 2 }),
 				new byte[] { 192, 168, 1, 2 }
-			};
+			},
+		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForGetBytes))]
+	[MemberData(nameof(GetTheoryDataForGetBytes))]
 	public void GetBytes_IPアドレスを表すバイト配列を取得できる(IPAddress address, byte[] expected) {
 		// Arrange
 		// Act
@@ -58,11 +60,13 @@ public class IPAddressTest {
 		Assert.Equal(expected, actual);
 	}
 
-	public static IEnumerable<object[]> GetTestDataForToString() {
-		yield return new object[] { IPAddress.Any, "0.0.0.0" };
-		yield return new object[] { IPAddress.Broadcast, "255.255.255.255" };
-		yield return new object[] { IPAddress.Loopback, "127.0.0.1" };
-		yield return new object[] { IPAddress.None, "255.255.255.255" };
+	public static TheoryData<IPAddress, string> GetTheoryDataForToString() {
+		return new() {
+			{ IPAddress.Any, "0.0.0.0" },
+			{ IPAddress.Broadcast, "255.255.255.255" },
+			{ IPAddress.Loopback, "127.0.0.1" },
+			{ IPAddress.None, "255.255.255.255" },
+		};
 	}
 
 	[Fact]
@@ -77,7 +81,7 @@ public class IPAddressTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForToString))]
+	[MemberData(nameof(GetTheoryDataForToString))]
 	public void ToString_文字列表現を確認する(IPAddress address, string expected) {
 		// Arrange
 		// Act

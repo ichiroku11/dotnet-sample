@@ -11,19 +11,19 @@ public class ObjectToInferredTypesConverterTest {
 	private class ObjectToInferredTypesConverter : JsonConverter<object> {
 		public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 			=> reader.TokenType switch {
-					// bool
-					JsonTokenType.True => true,
+				// bool
+				JsonTokenType.True => true,
 				JsonTokenType.False => false,
-					// long
-					JsonTokenType.Number when reader.TryGetInt64(out var value) => value,
-					// double
-					JsonTokenType.Number => reader.GetDouble(),
-					// DateTime
-					JsonTokenType.String when reader.TryGetDateTime(out DateTime datetime) => datetime,
-					// string
-					JsonTokenType.String => reader.GetString(),
-					// 上記以外（たぶんオブジェクトとか配列とか）
-					_ => JsonDocument.ParseValue(ref reader).RootElement.Clone()
+				// long
+				JsonTokenType.Number when reader.TryGetInt64(out var value) => value,
+				// double
+				JsonTokenType.Number => reader.GetDouble(),
+				// DateTime
+				JsonTokenType.String when reader.TryGetDateTime(out DateTime datetime) => datetime,
+				// string
+				JsonTokenType.String => reader.GetString(),
+				// 上記以外（たぶんオブジェクトとか配列とか）
+				_ => JsonDocument.ParseValue(ref reader).RootElement.Clone()
 			};
 
 		public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options) {
@@ -40,18 +40,20 @@ public class ObjectToInferredTypesConverterTest {
 		return options;
 	}
 
-	public static IEnumerable<object[]> GetTestDataForDeserialize() {
-		// bool
-		yield return new object[] { @"{""value"":true}", true };
+	public static TheoryData<string, object> GetTheoryDataForDeserialize() {
+		return new() {
+			// bool
+			{ @"{""value"":true}", true },
 
-		// long
-		yield return new object[] { @"{""value"":1}", 1L };
+			// long
+			{ @"{""value"":1}", 1L },
 
-		// string
-		yield return new object[] { @"{""value"":""abc""}", "abc" };
+			// string
+			{ @"{""value"":""abc""}", "abc" },
 
-		// DateTime
-		yield return new object[] { @"{""value"":""2021-01-09""}", new DateTime(2021, 1, 9), };
+			// DateTime
+			{ @"{""value"":""2021-01-09""}", new DateTime(2021, 1, 9) },
+		};
 	}
 
 	private class SampleData1 {
@@ -59,7 +61,7 @@ public class ObjectToInferredTypesConverterTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForDeserialize))]
+	[MemberData(nameof(GetTheoryDataForDeserialize))]
 	public void Deserialize_推論された型をobjectのプロパティにデシリアライズする(string json, object expected) {
 		// Arrange
 
@@ -78,7 +80,7 @@ public class ObjectToInferredTypesConverterTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForDeserialize))]
+	[MemberData(nameof(GetTheoryDataForDeserialize))]
 	public void Deserialize_推論された型をJsonExtensionDataを指定したobjectのディクショナリにデシリアライズする(string json, object expected) {
 		// Arrange
 
@@ -92,7 +94,7 @@ public class ObjectToInferredTypesConverterTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTestDataForDeserialize))]
+	[MemberData(nameof(GetTheoryDataForDeserialize))]
 	public void Deserialize_推論された型をobjectのディクショナリにデシリアライズする(string json, object expected) {
 		// Arrange
 
