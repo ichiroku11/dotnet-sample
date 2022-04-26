@@ -16,15 +16,12 @@ public class TypeConverterTest {
 	private static readonly IEnumerable<Fruit> _fruits = Enum.GetValues(typeof(Fruit)).Cast<Fruit>();
 
 	// Fruit一覧を取得
-	public static IEnumerable<object[]> GetFruits() => _fruits.Select(fruit => new object[] { fruit });
+	public static TheoryData<Fruit> GetTheoryDataFruits()
+		=> TheoryDataFactory.CreateFrom(_fruits);
 
 	// Fruit.Appleに変換できる文字列を取得
-	public static IEnumerable<object[]> GetStringsCanConvertToApple()
-		=> new[] {
-			"Apple",
-			"apple",
-			"1"
-		}.Select(fruit => new object[] { fruit });
+	public static TheoryData<string> GetTheoryDataStringsCanConvertToApple()
+		=> TheoryDataFactory.CreateFrom(new[] { "Apple", "apple", "1" });
 
 	[Fact]
 	public void GetConverter_EnumのTypeConverterはEnumConverter() {
@@ -37,7 +34,7 @@ public class TypeConverterTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetFruits))]
+	[MemberData(nameof(GetTheoryDataFruits))]
 	public void IsValid_enum値が定義されていることを判定できる(Fruit fruit) {
 		// Arrange
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));
@@ -82,7 +79,7 @@ public class TypeConverterTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetStringsCanConvertToApple))]
+	[MemberData(nameof(GetTheoryDataStringsCanConvertToApple))]
 	public void ConvertFromString_文字列からEnumに変換できる(string value) {
 		// Arrange
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));
@@ -97,7 +94,7 @@ public class TypeConverterTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetStringsCanConvertToApple))]
+	[MemberData(nameof(GetTheoryDataStringsCanConvertToApple))]
 	public void ConvertFrom_文字列からEnumに変換できる(string value) {
 		// Arrange
 		var converter = TypeDescriptor.GetConverter(typeof(Fruit));

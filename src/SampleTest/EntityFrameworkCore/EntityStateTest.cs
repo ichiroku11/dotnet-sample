@@ -44,13 +44,8 @@ public class EntityStateTest : IDisposable {
 		EntryState,
 	}
 
-	public static TheoryData<TestPattern> GetTheoryData() {
-		var data = new TheoryData<TestPattern>();
-		foreach (var pattern in EnumHelper.GetValues<TestPattern>()) {
-			data.Add(pattern);
-		}
-		return data;
-	}
+	public static TheoryData<TestPattern> GetTheoryData()
+		=> TheoryDataFactory.CreateFrom(EnumHelper.GetValues<TestPattern>());
 
 	[Theory]
 	[MemberData(nameof(GetTheoryData))]
