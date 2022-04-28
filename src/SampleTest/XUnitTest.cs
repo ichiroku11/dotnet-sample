@@ -39,13 +39,8 @@ public class XUnitTest : IDisposable {
 	}
 
 	// テストデータを生成するプロパティ
-	public static IEnumerable<object[]> EvenNumbers {
-		get {
-			yield return new object[] { 2 };
-			yield return new object[] { 4 };
-		}
-	}
-
+	public static TheoryData<int> EvenNumbers => new() { 2, 4 };
+		
 	[Theory]
 	// プロパティからテストデータを取得する
 	[MemberData(nameof(EvenNumbers))]
@@ -56,11 +51,8 @@ public class XUnitTest : IDisposable {
 	}
 
 	// テストデータを生成するメソッド
-	public static IEnumerable<object[]> GetEvenNumbers(int count) {
-		foreach (var index in Enumerable.Range(0, count)) {
-			yield return new object[] { 2 * index };
-		}
-	}
+	public static TheoryData<int> GetEvenNumbers(int count)
+		=> TheoryDataFactory.CreateFrom(Enumerable.Range(0, count).Select(value => value * 2));
 
 	[Theory]
 	// メソッドからテストデータを取得する
@@ -72,12 +64,11 @@ public class XUnitTest : IDisposable {
 	}
 
 	// テストデータを生成するクラス
-	public class EvenNumberEnumerable : IEnumerable<object[]> {
-		public IEnumerator<object[]> GetEnumerator() {
-			yield return new object[] { 2 };
-			yield return new object[] { 4 };
+	public class EvenNumberEnumerable : TheoryData<int> {
+		public EvenNumberEnumerable() {
+			Add(2);
+			Add(4);
 		}
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 
 	[Theory]
