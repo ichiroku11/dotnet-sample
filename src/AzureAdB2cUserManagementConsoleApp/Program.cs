@@ -7,7 +7,13 @@ await Host
 	.CreateDefaultBuilder(args)
 	.ConfigureServices(services => {
 		services
-			.AddHostedService<SampleService>();
+			.AddHostedService<SampleService>()
+			.AddTransient<GraphCreateUserSample>()
+			.AddTransient<GraphGetUserListSample>()
+			.AddTransient<GraphGetUserSample>()
+			.AddTransient<GraphUpdateUserAccountEnabledSample>()
+			.AddTransient<GraphUpdateUserCustomAttributeSample>()
+			.AddTransient<GraphUpdateUserForceChangePasswordSample>();
 	})
 	.RunConsoleAsync();
 

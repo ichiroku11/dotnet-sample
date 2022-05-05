@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-namespace AzureAdB2cConsoleApp;
+namespace AzureAdB2cUserManagementConsoleApp;
 
 // 参考
 // https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 
-namespace AzureAdB2cConsoleApp;
+namespace AzureAdB2cUserManagementConsoleApp;
 
 public class LoggingHttpProvider : IHttpProvider {
 	private readonly IHttpProvider _provider;
