@@ -26,12 +26,12 @@ public class SampleService : IHostedService {
 			try {
 				// Redisサンプルを実行
 				await _services.GetRequiredService<RedisSample>().RunAsync();
-			} catch (Exception) {
-				throw;
+			} catch (Exception exception) {
+				_logger.LogError(exception, nameof(IHostApplicationLifetime.ApplicationStarted));
+			} finally {
+				// アプリケーションを終了
+				_lifetime.StopApplication();
 			}
-
-			// アプリケーションを終了
-			_lifetime.StopApplication();
 		});
 
 		return Task.CompletedTask;

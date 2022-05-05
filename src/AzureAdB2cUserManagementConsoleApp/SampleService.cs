@@ -32,11 +32,11 @@ public class SampleService : IHostedService {
 				//await _services.GetRequiredService<GraphUpdateUserCustomAttributeSample>().RunAsync();
 				// ユーザー更新（パスワードリセット）
 				//await _services.GetRequiredService<GraphUpdateUserForceChangePasswordSample>().RunAsync();
-			} catch (Exception) {
-				throw;
+			} catch (Exception exception) {
+				_logger.LogError(exception, nameof(IHostApplicationLifetime.ApplicationStarted));
+			} finally {
+				_lifetime.StopApplication();
 			}
-
-			_lifetime.StopApplication();
 		});
 
 		return Task.CompletedTask;
