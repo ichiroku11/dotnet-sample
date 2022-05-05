@@ -101,6 +101,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomFormatterWebApp.Test"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureAdB2cUserManagementConsoleApp", "src\AzureAdB2cUserManagementConsoleApp\AzureAdB2cUserManagementConsoleApp.csproj", "{77026504-A20F-40D7-A267-03D787068F59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureAdB2cMsalConsoleApp", "src\AzureAdB2cMsalConsoleApp\AzureAdB2cMsalConsoleApp.csproj", "{296B47DF-C808-4370-BA76-5DCD5D7056B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -283,6 +285,10 @@ Global
 		{77026504-A20F-40D7-A267-03D787068F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77026504-A20F-40D7-A267-03D787068F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77026504-A20F-40D7-A267-03D787068F59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{296B47DF-C808-4370-BA76-5DCD5D7056B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{296B47DF-C808-4370-BA76-5DCD5D7056B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{296B47DF-C808-4370-BA76-5DCD5D7056B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{296B47DF-C808-4370-BA76-5DCD5D7056B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -329,6 +335,7 @@ Global
 		{AF0FE8C6-126F-446F-BDAB-6C1E6EE98815} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{3D4BB4BE-F205-4421-B0CF-E720802CF574} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{77026504-A20F-40D7-A267-03D787068F59} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
+		{296B47DF-C808-4370-BA76-5DCD5D7056B6} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}
