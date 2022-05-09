@@ -9,6 +9,7 @@ await Host
 	.CreateDefaultBuilder(args)
 	.ConfigureServices(services => {
 		services
-			.AddHostedService<SampleService>();
+			.AddHostedService<SampleService>()
+			.AddTransient<AcquireTokenInteractiveSample>();
 	})
 	.RunConsoleAsync();
