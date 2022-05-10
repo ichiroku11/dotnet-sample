@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AzureAdB2cMsalConsoleApp;
 
@@ -41,5 +42,13 @@ public class AcquireTokenInteractiveSample {
 
 		var scopes = Enumerable.Empty<string>();
 		var result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
+
+		_logger.LogInformation(result.IdToken);
+
+		var handler = new JwtSecurityTokenHandler();
+		_logger.LogInformation(handler.CanReadToken(result.IdToken).ToString());
+
+		var token = handler.ReadJwtToken(result.IdToken);
+		_logger.LogInformation(token.ToString());
 	}
 }
