@@ -29,11 +29,12 @@ public class AcquireTokenInteractiveSample {
 		// Only loopback redirect uri is supported, but https://{tenantName}.b2clogin.com/oauth2/nativeclient was found.
 		// Configure http://localhost or http://localhost:port both during app registration and when you create the PublicClientApplication object.
 		// See https://aka.ms/msal-net-os-browser for details
-		var redirectUri = "http://localhost";
+		//var redirectUri = "http://localhost";
 
 		var builder = PublicClientApplicationBuilder.Create(clientId)
 			.WithB2CAuthority(b2cAuthorityUri)
-			.WithRedirectUri(redirectUri)
+			//.WithRedirectUri(redirectUri)
+			.WithDefaultRedirectUri()
 			.WithLogging((level, message, containsPii) => {
 				// todo: 仮
 				_logger.LogInformation(message);
