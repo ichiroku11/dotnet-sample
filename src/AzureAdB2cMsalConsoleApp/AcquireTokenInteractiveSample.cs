@@ -36,10 +36,25 @@ public class AcquireTokenInteractiveSample {
 			//.WithRedirectUri(redirectUri)
 			.WithDefaultRedirectUri()
 			.WithLogging((level, message, containsPii) => {
-				// todo: 仮
-				_logger.LogInformation(message);
+				_logger.LogInformation($"{nameof(LogCallback)}: {message}");
 			});
 		var app = builder.Build();
+
+		app.UserTokenCache.SetBeforeAccessAsync(args => {
+			_logger.LogInformation($"{nameof(ITokenCache.SetBeforeAccessAsync)}");
+
+			return Task.CompletedTask;
+		});
+		app.UserTokenCache.SetBeforeWriteAsync(args => {
+			_logger.LogInformation($"{nameof(ITokenCache.SetBeforeWriteAsync)}");
+
+			return Task.CompletedTask;
+		});
+		app.UserTokenCache.SetAfterAccessAsync(args => {
+			_logger.LogInformation($"{nameof(ITokenCache.SetAfterAccessAsync)}");
+
+			return Task.CompletedTask;
+		});
 
 		var scopes = Enumerable.Empty<string>();
 		var result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
