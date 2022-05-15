@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 
-namespace AzureAdB2cConsoleApp;
+namespace AzureAdB2cUserManagementConsoleApp;
 
 // ユーザー一覧をカスタム属性付きで取得
 // https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management/blob/master/src/Services/UserService.cs

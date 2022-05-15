@@ -1,4 +1,4 @@
-namespace AzureAdB2cConsoleApp;
+namespace AzureAdB2cUserManagementConsoleApp;
 
 public class CustomAttributeHelper {
 	private readonly string _extensionAppClientId;

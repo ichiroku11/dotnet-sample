@@ -1,4 +1,4 @@
-namespace AzureAdB2cConsoleApp;
+namespace AzureAdB2cUserManagementConsoleApp;
 
 public static class PasswordHelper {
 	private const string _lowers = "abcdefghijklmnopqrstuvwxyz";

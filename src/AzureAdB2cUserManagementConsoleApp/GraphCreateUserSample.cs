@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 
-namespace AzureAdB2cConsoleApp;
+namespace AzureAdB2cUserManagementConsoleApp;
 
 // ユーザーを作成
 public class GraphCreateUserSample : GraphSampleBase {

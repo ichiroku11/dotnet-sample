@@ -2,7 +2,8 @@
   "solution": {
     "path": "DotNetSample.sln",
     "projects": [
-      "src\\AzureAdB2cConsoleApp\\AzureAdB2cConsoleApp.csproj",
+      "src\\AzureAdB2cMsalConsoleApp\\AzureAdB2cMsalConsoleApp.csproj",
+      "src\\AzureAdB2cUserManagementConsoleApp\\AzureAdB2cUserManagementConsoleApp.csproj",
       "src\\AzureCacheForRedisConsoleApp\\AzureCacheForRedisConsoleApp.csproj",
       "src\\AzureStorageConsoleApp\\AzureStorageConsoleApp.csproj",
       "src\\DigitalSignatureConsoleApp\\DigitalSignatureConsoleApp.csproj",

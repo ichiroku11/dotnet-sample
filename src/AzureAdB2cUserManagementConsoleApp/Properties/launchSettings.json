@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "AzureAdB2cConsoleApp": {
+    "AzureAdB2cUserManagementConsoleApp": {
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
