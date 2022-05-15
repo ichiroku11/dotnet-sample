@@ -4,6 +4,7 @@
     "projects": [
       "src\\AntiForgeryWebApp\\AntiForgeryWebApp.csproj",
       "src\\AsyncSuffixTrimmedWebApp\\AsyncSuffixTrimmedWebApp.csproj",
+      "src\\AzureAdB2cWebApi\\AzureAdB2cWebApi.csproj",
       "src\\AzureAdB2cWebApp\\AzureAdB2cWebApp.csproj",
       "src\\AzureAppInsightsWebApp\\AzureAppInsightsWebApp.csproj",
       "src\\BasicAuthnWebApp.Test\\BasicAuthnWebApp.Test.csproj",
