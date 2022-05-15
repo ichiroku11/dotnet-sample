@@ -40,8 +40,11 @@ public class AcquireTokenInteractiveSample {
 			});
 		var app = builder.Build();
 
+		// キャッシュにアクセスする前に呼び出される
 		app.UserTokenCache.SetBeforeAccessAsync(args => {
 			_logger.LogInformation($"{nameof(ITokenCache.SetBeforeAccessAsync)}");
+
+			// todo: キャッシュからデシリアライズする
 
 			return Task.CompletedTask;
 		});
@@ -50,21 +53,23 @@ public class AcquireTokenInteractiveSample {
 
 			return Task.CompletedTask;
 		});
+
+		// キャッシュにアクセスした後に呼び出される
 		app.UserTokenCache.SetAfterAccessAsync(args => {
 			_logger.LogInformation($"{nameof(ITokenCache.SetAfterAccessAsync)}");
+
+			// todo: キャッシュにシリアライズする	
 
 			return Task.CompletedTask;
 		});
 
 		var scopes = Enumerable.Empty<string>();
 		var result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
+		var handler = new JwtSecurityTokenHandler();
+		var token = handler.ReadJwtToken(result.IdToken);
 
 		_logger.LogInformation(result.IdToken);
-
-		var handler = new JwtSecurityTokenHandler();
-		_logger.LogInformation(handler.CanReadToken(result.IdToken).ToString());
-
-		var token = handler.ReadJwtToken(result.IdToken);
+		//_logger.LogInformation(handler.CanReadToken(result.IdToken).ToString());
 		_logger.LogInformation(token.ToString());
 	}
 }
