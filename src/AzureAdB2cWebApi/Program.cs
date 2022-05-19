@@ -1,15 +1,30 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
+
 var builder = WebApplication.CreateBuilder(args);
-
-var services = builder.Services;
-services.AddControllers();
-
 var config = builder.Configuration;
-var clientId = config["AzureAdB2C:ClientId"];
-Console.WriteLine(clientId);
+var services = builder.Services;
+
+services
+	.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddMicrosoftIdentityWebApi(
+		configuration: config,
+		configSectionName: "AzureAdB2c",
+		//jwtBearerScheme: "Bearer",
+		// OpenIdConnectEventsのデバッグログの出力
+		subscribeToJwtBearerMiddlewareDiagnosticsEvents: true);
+
+services.AddControllers();
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
+
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints => {
 	endpoints.MapControllerRoute(
 		"default",

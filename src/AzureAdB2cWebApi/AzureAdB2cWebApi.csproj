@@ -7,4 +7,8 @@
     <UserSecretsId>478939be-8f67-4513-8077-7897b8ec2bd8</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1" />
+  </ItemGroup>
+
 </Project>
