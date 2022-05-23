@@ -2,16 +2,43 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace AzureAdB2cMsalConsoleApp;
 
 public class AcquireTokenInteractiveSample {
 	private readonly IConfiguration _config;
+	private readonly IHttpClientFactory _factory;
 	private readonly ILogger _logger;
 
-	public AcquireTokenInteractiveSample(IConfiguration config, ILogger<AcquireTokenInteractiveSample> logger) {
+	public AcquireTokenInteractiveSample(
+		IConfiguration config,
+		IHttpClientFactory factory,
+		ILogger<AcquireTokenInteractiveSample> logger) {
 		_config = config;
+		_factory = factory;
 		_logger = logger;
+	}
+
+	private async Task CallApiAsync(string accessToken) {
+		var client = _factory.CreateClient();
+		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+		// todo:
+		await Task.CompletedTask;
+		/*
+		var url = "https://localhost:7237/api/value";
+		var response = await client.GetAsync(url);
+		var values = await response
+			.EnsureSuccessStatusCode()
+			.Content
+			.ReadFromJsonAsync<IEnumerable<string>>();
+
+		foreach (var value in values ?? Enumerable.Empty<string>()) {
+			Console.WriteLine(value);
+		}
+		*/
 	}
 
 	public async Task RunAsync() {
@@ -58,7 +85,7 @@ public class AcquireTokenInteractiveSample {
 		app.UserTokenCache.SetAfterAccessAsync(args => {
 			_logger.LogInformation($"{nameof(ITokenCache.SetAfterAccessAsync)}");
 
-			// todo: キャッシュにシリアライズする	
+			// todo: キャッシュにシリアライズする
 
 			return Task.CompletedTask;
 		});
@@ -71,5 +98,7 @@ public class AcquireTokenInteractiveSample {
 		_logger.LogInformation(result.IdToken);
 		//_logger.LogInformation(handler.CanReadToken(result.IdToken).ToString());
 		_logger.LogInformation(token.ToString());
+
+		await CallApiAsync(result.AccessToken);
 	}
 }

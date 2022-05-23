@@ -10,6 +10,7 @@ await Host
 	.ConfigureServices(services => {
 		services
 			.AddHostedService<SampleService>()
-			.AddTransient<AcquireTokenInteractiveSample>();
+			.AddTransient<AcquireTokenInteractiveSample>()
+			.AddHttpClient();
 	})
 	.RunConsoleAsync();
