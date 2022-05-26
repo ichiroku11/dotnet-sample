@@ -22,11 +22,12 @@ public class AcquireTokenInteractiveSample {
 	}
 
 	private async Task CallApiAsync(string accessToken) {
-		var client = _factory.CreateClient();
+		var client = _factory.CreateClient("api");
 		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
 		// todo:
 		await Task.CompletedTask;
+
 		/*
 		var url = "https://localhost:7237/api/value";
 		var response = await client.GetAsync(url);
@@ -59,6 +60,7 @@ public class AcquireTokenInteractiveSample {
 		//var redirectUri = "http://localhost";
 
 		var builder = PublicClientApplicationBuilder.Create(clientId)
+			.WithHttpClientFactory(new SimpleHttpClientFactory(_factory.CreateClient("b2c")))
 			.WithB2CAuthority(b2cAuthorityUri)
 			//.WithRedirectUri(redirectUri)
 			.WithDefaultRedirectUri()
