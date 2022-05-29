@@ -92,7 +92,15 @@ public class AcquireTokenInteractiveSample {
 			return Task.CompletedTask;
 		});
 
-		var scopes = Enumerable.Empty<string>();
+		// スコープが空だとアクセストークンがとれない（result.AccessTokenがnullになる）
+		//var scopes = Enumerable.Empty<string>();
+		// 下記手順でWeb APIアプリとスコープを登録した後、
+		// スコープを指定するとアクセストークンを取得できる
+		// https://docs.microsoft.com/ja-jp/azure/active-directory-b2c/configure-authentication-sample-web-app-with-api?tabs=visual-studio
+		var scopes = new[] {
+			$"https://{tenantName}.onmicrosoft.com/webapi/test.write",
+			$"https://{tenantName}.onmicrosoft.com/webapi/test.read",
+		};
 		var result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
 		var handler = new JwtSecurityTokenHandler();
 		var token = handler.ReadJwtToken(result.IdToken);
