@@ -10,14 +10,17 @@ namespace AzureAdB2cMsalConsoleApp;
 public class AcquireTokenInteractiveSample {
 	private readonly IConfiguration _config;
 	private readonly IHttpClientFactory _factory;
+	private readonly InMemoryTokenCache _tokenCache;
 	private readonly ILogger _logger;
 
 	public AcquireTokenInteractiveSample(
 		IConfiguration config,
 		IHttpClientFactory factory,
+		InMemoryTokenCache tokenCache,
 		ILogger<AcquireTokenInteractiveSample> logger) {
 		_config = config;
 		_factory = factory;
+		_tokenCache = tokenCache;
 		_logger = logger;
 	}
 
@@ -69,28 +72,7 @@ public class AcquireTokenInteractiveSample {
 			});
 		var app = builder.Build();
 
-		// キャッシュにアクセスする前に呼び出される
-		app.UserTokenCache.SetBeforeAccessAsync(args => {
-			_logger.LogInformation($"{nameof(ITokenCache.SetBeforeAccessAsync)}");
-
-			// todo: キャッシュからデシリアライズする
-
-			return Task.CompletedTask;
-		});
-		app.UserTokenCache.SetBeforeWriteAsync(args => {
-			_logger.LogInformation($"{nameof(ITokenCache.SetBeforeWriteAsync)}");
-
-			return Task.CompletedTask;
-		});
-
-		// キャッシュにアクセスした後に呼び出される
-		app.UserTokenCache.SetAfterAccessAsync(args => {
-			_logger.LogInformation($"{nameof(ITokenCache.SetAfterAccessAsync)}");
-
-			// todo: キャッシュにシリアライズする
-
-			return Task.CompletedTask;
-		});
+		_tokenCache.Bind(app.UserTokenCache);
 
 		// スコープが空だとアクセストークンがとれない（result.AccessTokenがnullになる）
 		//var scopes = Enumerable.Empty<string>();
