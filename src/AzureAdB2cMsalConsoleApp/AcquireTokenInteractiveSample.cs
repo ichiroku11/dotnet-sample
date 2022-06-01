@@ -24,27 +24,6 @@ public class AcquireTokenInteractiveSample {
 		_logger = logger;
 	}
 
-	private async Task CallApiAsync(string accessToken) {
-		var client = _factory.CreateClient("api");
-		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-		// todo:
-		await Task.CompletedTask;
-
-		/*
-		var url = "https://localhost:7237/api/value";
-		var response = await client.GetAsync(url);
-		var values = await response
-			.EnsureSuccessStatusCode()
-			.Content
-			.ReadFromJsonAsync<IEnumerable<string>>();
-
-		foreach (var value in values ?? Enumerable.Empty<string>()) {
-			Console.WriteLine(value);
-		}
-		*/
-	}
-
 	public async Task RunAsync() {
 		// https://docs.microsoft.com/ja-jp/azure/active-directory-b2c/integrate-with-app-code-samples
 		// https://github.com/Azure-Samples/active-directory-b2c-dotnet-desktop
@@ -91,6 +70,8 @@ public class AcquireTokenInteractiveSample {
 		//_logger.LogInformation(handler.CanReadToken(result.IdToken).ToString());
 		_logger.LogInformation(token.ToString());
 
-		await CallApiAsync(result.AccessToken);
+		var accessToken = handler.ReadJwtToken(result.AccessToken);
+		_logger.LogInformation(result.AccessToken);
+		_logger.LogInformation(accessToken.ToString());
 	}
 }
