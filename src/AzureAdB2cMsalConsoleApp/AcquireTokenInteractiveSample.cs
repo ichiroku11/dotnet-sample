@@ -42,12 +42,14 @@ public class AcquireTokenInteractiveSample {
 		//var redirectUri = "http://localhost";
 
 		var builder = PublicClientApplicationBuilder.Create(clientId)
-			.WithHttpClientFactory(new SimpleHttpClientFactory(_factory.CreateClient("b2c")))
+			// ログ
+			//.WithHttpClientFactory(new SimpleHttpClientFactory(_factory.CreateClient("b2c")))
 			.WithB2CAuthority(b2cAuthorityUri)
 			//.WithRedirectUri(redirectUri)
 			.WithDefaultRedirectUri()
 			.WithLogging((level, message, containsPii) => {
-				_logger.LogInformation($"{nameof(LogCallback)}: {message}");
+				// ログ
+				//_logger.LogInformation($"{nameof(LogCallback)}: {message}");
 			});
 		var app = builder.Build();
 

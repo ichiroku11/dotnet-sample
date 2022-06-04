@@ -1,9 +1,14 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using System.Text.Json;
 
 namespace AzureAdB2cMsalConsoleApp;
 
 public class InMemoryTokenCache {
+	private static readonly JsonSerializerOptions _options = new() {
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		WriteIndented = true,
+	};
 	private readonly ILogger _logger;
 	private byte[]? _cache;
 
@@ -11,8 +16,13 @@ public class InMemoryTokenCache {
 		_logger = logger;
 	}
 
+	private void LogInformation(string method, TokenCacheNotificationArgs args) {
+		_logger.LogInformation(method);
+		_logger.LogInformation(JsonSerializer.Serialize(new { args.HasTokens, args.HasStateChanged }, _options));
+	}
+
 	private Task OnBeforeAccessAsync(TokenCacheNotificationArgs args) {
-		_logger.LogInformation($"{nameof(OnBeforeAccessAsync)}");
+		LogInformation(nameof(OnBeforeAccessAsync), args);
 
 		// todo:
 		if (_cache is null) {
@@ -25,15 +35,15 @@ public class InMemoryTokenCache {
 		return Task.CompletedTask;
 	}
 
-	private Task OnBeforeWriteAsync(TokenCacheNotificationArgs arsg) {
-		_logger.LogInformation($"{nameof(OnBeforeWriteAsync)}");
+	private Task OnBeforeWriteAsync(TokenCacheNotificationArgs args) {
+		LogInformation(nameof(OnBeforeWriteAsync), args);
 
 		// todo:
 		return Task.CompletedTask;
 	}
 
 	private Task OnAfterAccessAsync(TokenCacheNotificationArgs args) {
-		_logger.LogInformation($"{nameof(OnAfterAccessAsync)}");
+		LogInformation(nameof(OnAfterAccessAsync), args);
 
 		// todo:
 		if (!args.HasStateChanged) {
