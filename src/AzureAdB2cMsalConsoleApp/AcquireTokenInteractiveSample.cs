@@ -66,11 +66,10 @@ public class AcquireTokenInteractiveSample {
 		};
 		var result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
 		var handler = new JwtSecurityTokenHandler();
-		var token = handler.ReadJwtToken(result.IdToken);
 
+		var idToken = handler.ReadJwtToken(result.IdToken);
 		_logger.LogInformation(result.IdToken);
-		//_logger.LogInformation(handler.CanReadToken(result.IdToken).ToString());
-		_logger.LogInformation(token.ToString());
+		_logger.LogInformation(idToken.ToString());
 
 		var accessToken = handler.ReadJwtToken(result.AccessToken);
 		_logger.LogInformation(result.AccessToken);
