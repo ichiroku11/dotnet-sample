@@ -18,7 +18,14 @@ public class InMemoryTokenCache {
 
 	private void LogInformation(string method, TokenCacheNotificationArgs args) {
 		_logger.LogInformation(method);
-		_logger.LogInformation(JsonSerializer.Serialize(new { args.HasTokens, args.HasStateChanged }, _options));
+		_logger.LogInformation(JsonSerializer.Serialize(
+			new {
+				args.Account.HomeAccountId,
+				args.HasStateChanged,
+				args.HasTokens,
+				args.SuggestedCacheKey
+			},
+			_options));
 	}
 
 	private Task OnBeforeAccessAsync(TokenCacheNotificationArgs args) {
