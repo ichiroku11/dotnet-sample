@@ -64,15 +64,48 @@ public class AcquireTokenInteractiveSample {
 			$"https://{tenantName}.onmicrosoft.com/webapi/test.write",
 			$"https://{tenantName}.onmicrosoft.com/webapi/test.read",
 		};
-		var result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
-		var handler = new JwtSecurityTokenHandler();
 
-		var idToken = handler.ReadJwtToken(result.IdToken);
-		_logger.LogInformation(result.IdToken);
-		_logger.LogInformation(idToken.ToString());
+		{
+			var result = default(AuthenticationResult);
 
-		var accessToken = handler.ReadJwtToken(result.AccessToken);
-		_logger.LogInformation(result.AccessToken);
-		_logger.LogInformation(accessToken.ToString());
+			// https://docs.microsoft.com/ja-jp/azure/active-directory/develop/scenario-desktop-acquire-token-interactive?tabs=dotnet
+			// https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-a-cached-token
+			try {
+				var account = (await app.GetAccountsAsync()).FirstOrDefault();
+				// キャッシュからアクセストークンを取得する
+				result = await app.AcquireTokenSilent(scopes, account).ExecuteAsync();
+			} catch (MsalUiRequiredException uiRequiredException) {
+				// 最初はキャッシュされていないので例外が発生する
+				_logger.LogInformation(uiRequiredException, "");
+
+				try {
+					// ユーザーにサインインを促して、アクセストークンを取得する
+					result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
+				} catch (MsalException exception) {
+					_logger.LogInformation(exception, "");
+					throw;
+				}
+			}
+
+			var handler = new JwtSecurityTokenHandler();
+
+			// IDトークン
+			var idToken = handler.ReadJwtToken(result.IdToken);
+			_logger.LogInformation(result.IdToken);
+			_logger.LogInformation(idToken.ToString());
+
+			// アクセストークン
+			var accessToken = handler.ReadJwtToken(result.AccessToken);
+			_logger.LogInformation(result.AccessToken);
+			_logger.LogInformation(accessToken.ToString());
+		}
+
+		{
+			var account = (await app.GetAccountsAsync()).FirstOrDefault();
+			// ユーザーがログインした場合、キャッシュからIDトークンとアクセストークンを取得できる
+			var result = await app.AcquireTokenSilent(scopes, account).ExecuteAsync();
+			_logger.LogInformation(result.IdToken);
+			_logger.LogInformation(result.AccessToken);
+		}
 	}
 }

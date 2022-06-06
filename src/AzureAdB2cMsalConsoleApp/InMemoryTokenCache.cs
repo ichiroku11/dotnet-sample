@@ -20,7 +20,7 @@ public class InMemoryTokenCache {
 		_logger.LogInformation(method);
 		_logger.LogInformation(JsonSerializer.Serialize(
 			new {
-				args.Account.HomeAccountId,
+				args.Account?.HomeAccountId,
 				args.HasStateChanged,
 				args.HasTokens,
 				args.SuggestedCacheKey
