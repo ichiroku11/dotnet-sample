@@ -8,6 +8,7 @@ namespace AzureAdB2cWebApi.Controllers;
 [Authorize]
 public class ClaimController : ControllerBase {
 	[HttpGet]
-	public object Get() => new { User.Identity?.IsAuthenticated };
+	public Dictionary<string, string> Get()
+		=> User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value);
 
 }
