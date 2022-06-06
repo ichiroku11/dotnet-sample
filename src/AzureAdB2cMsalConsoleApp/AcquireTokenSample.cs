@@ -7,17 +7,17 @@ using System.Net.Http.Json;
 
 namespace AzureAdB2cMsalConsoleApp;
 
-public class AcquireTokenInteractiveSample {
+public class AcquireTokenSample {
 	private readonly IConfiguration _config;
 	private readonly IHttpClientFactory _factory;
 	private readonly InMemoryTokenCache _tokenCache;
 	private readonly ILogger _logger;
 
-	public AcquireTokenInteractiveSample(
+	public AcquireTokenSample(
 		IConfiguration config,
 		IHttpClientFactory factory,
 		InMemoryTokenCache tokenCache,
-		ILogger<AcquireTokenInteractiveSample> logger) {
+		ILogger<AcquireTokenSample> logger) {
 		_config = config;
 		_factory = factory;
 		_tokenCache = tokenCache;

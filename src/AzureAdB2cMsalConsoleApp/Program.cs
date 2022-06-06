@@ -10,7 +10,7 @@ await Host
 	.ConfigureServices(services => {
 		services
 			.AddHostedService<SampleService>()
-			.AddTransient<AcquireTokenInteractiveSample>()
+			.AddTransient<AcquireTokenSample>()
 			.AddTransient<InMemoryTokenCache>();
 
 		services
