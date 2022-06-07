@@ -11,6 +11,6 @@ public class SampleService : OnceHostedService {
 	}
 
 	protected override Task RunAsync(IServiceProvider services) {
-		return services.GetRequiredService<AcquireTokenInteractiveSample>().RunAsync();
+		return services.GetRequiredService<AcquireTokenSample>().RunAsync();
 	}
 }

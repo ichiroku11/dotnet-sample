@@ -10,6 +10,16 @@ await Host
 	.ConfigureServices(services => {
 		services
 			.AddHostedService<SampleService>()
-			.AddTransient<AcquireTokenInteractiveSample>();
+			.AddTransient<AcquireTokenSample>()
+			.AddTransient<InMemoryTokenCache>();
+
+		services
+			.AddHttpClient()
+			.AddTransient<LoggingDelegatingHandler>();
+
+		services
+			.AddHttpClient("b2c")
+			.AddHttpMessageHandler<LoggingDelegatingHandler>();
+
 	})
 	.RunConsoleAsync();
