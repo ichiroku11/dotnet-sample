@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest.Collections;
 
 public class DictionaryTest {

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Xunit;
 
 namespace SampleTest.AspNetCore;
 

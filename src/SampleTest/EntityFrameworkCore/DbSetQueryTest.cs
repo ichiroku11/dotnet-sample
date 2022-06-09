@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Xunit;
 
 namespace SampleTest.EntityFrameworkCore;
 

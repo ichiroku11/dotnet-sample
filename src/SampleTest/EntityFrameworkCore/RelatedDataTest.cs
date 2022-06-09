@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SampleLib;
-using Xunit;
 
 namespace SampleTest.EntityFrameworkCore;
 

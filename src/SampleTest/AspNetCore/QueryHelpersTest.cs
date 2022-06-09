@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
-using Xunit;
 
 namespace SampleTest.AspNetCore;
 

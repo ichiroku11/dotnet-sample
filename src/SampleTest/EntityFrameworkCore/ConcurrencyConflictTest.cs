@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SampleLib;
 using System.ComponentModel.DataAnnotations;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.EntityFrameworkCore;
 

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Text.Encodings.Web;
-using Xunit;
 
 namespace SampleTest.AspNetCore;
 
