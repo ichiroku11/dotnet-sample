@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 public class ConvertTest {

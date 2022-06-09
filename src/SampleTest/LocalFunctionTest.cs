@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 // ローカル関数のテスト

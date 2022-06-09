@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 // 分解の確認用

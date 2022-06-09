@@ -1,6 +1,3 @@
-using Xunit;
-using Xunit.Abstractions;
-
 namespace SampleTest;
 
 // implicit/explicit演算子のテスト

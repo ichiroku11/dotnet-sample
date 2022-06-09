@@ -1,5 +1,3 @@
-
-
 namespace SampleTest;
 
 public class StringTest {

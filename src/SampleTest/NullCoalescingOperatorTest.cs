@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 // null合体演算子のテスト

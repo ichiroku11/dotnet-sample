@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 // switchを使ったパターンマッチングを試す

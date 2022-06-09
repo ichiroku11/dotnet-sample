@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 // null条件演算子のテスト

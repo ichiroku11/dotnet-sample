@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest;
 
 // isを使ったパターンマッチングを試す
