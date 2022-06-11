@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using Xunit;
 
 namespace SampleTest.Security.Cryptography;
 

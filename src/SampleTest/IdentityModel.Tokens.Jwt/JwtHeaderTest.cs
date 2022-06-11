@@ -1,8 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 

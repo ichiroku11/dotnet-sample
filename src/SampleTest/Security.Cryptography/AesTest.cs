@@ -1,6 +1,4 @@
 using System.Security.Cryptography;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Security.Cryptography;
 

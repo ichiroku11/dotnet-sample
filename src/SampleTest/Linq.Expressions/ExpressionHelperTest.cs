@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest.Linq.Expressions;
 
 public class ExpressionHelperTest {

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.FileSystemGlobbing;
-using Xunit;
 
 namespace SampleTest.Extensions.FileSystemGlobbing;
 

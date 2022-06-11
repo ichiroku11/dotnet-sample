@@ -1,6 +1,4 @@
 using Microsoft.Extensions.FileProviders;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Extensions.FileProviders;
 

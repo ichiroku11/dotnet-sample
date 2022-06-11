@@ -1,6 +1,4 @@
 using System.Reactive.Linq;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Reactive;
 

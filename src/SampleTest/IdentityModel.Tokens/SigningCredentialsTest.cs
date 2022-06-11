@@ -1,6 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Xunit;
 
 namespace SampleTest.IdentityModel.Tokens;
 

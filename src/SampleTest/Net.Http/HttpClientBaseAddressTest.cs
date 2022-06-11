@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Net.Http;
 

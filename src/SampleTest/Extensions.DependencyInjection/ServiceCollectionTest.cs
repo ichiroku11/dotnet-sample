@@ -1,6 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Extensions.DependencyInjection;
 

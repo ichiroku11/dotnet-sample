@@ -1,5 +1,4 @@
 using System.Reactive.Subjects;
-using Xunit;
 
 namespace SampleTest.Reactive;
 

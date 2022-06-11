@@ -4,8 +4,6 @@ using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 

@@ -1,6 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
 using SampleLib.AspNetCore;
-using Xunit;
 
 namespace SampleTest.IdentityModel.Tokens;
 

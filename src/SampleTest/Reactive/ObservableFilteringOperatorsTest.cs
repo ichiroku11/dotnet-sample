@@ -1,5 +1,4 @@
 using System.Reactive.Linq;
-using Xunit;
 
 namespace SampleTest.Reactive;
 
