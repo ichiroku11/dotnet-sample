@@ -1,6 +1,3 @@
-using Xunit;
-using Xunit.Abstractions;
-
 namespace SampleTest.Threading;
 
 public class CancellationTokenSourceTest : IDisposable {

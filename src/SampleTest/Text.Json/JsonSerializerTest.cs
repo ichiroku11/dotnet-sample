@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Text.Json;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Text.Json;
 

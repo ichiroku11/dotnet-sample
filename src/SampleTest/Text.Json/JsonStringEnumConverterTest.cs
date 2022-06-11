@@ -1,7 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace SampleTest.Text.Json;
 

@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace SampleTest.Threading;
 
 // TaskCompletionSourceを使ったサンプル
