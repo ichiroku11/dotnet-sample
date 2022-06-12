@@ -26,6 +26,35 @@ public class DateTimeTest {
 		Assert.Equal(expected, target.Kind);
 	}
 
+	public static TheoryData<DateTime, DateTimeKind, DateTime> GetTheoryDataForSpecifyKind() {
+		var local = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
+		var utc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+		var unspecified = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
+
+		return new() {
+			{
+				local,
+				DateTimeKind.Utc,
+				utc
+			},
+			{
+				unspecified,
+				DateTimeKind.Utc,
+				utc
+			}
+		};
+	}
+
+	[Theory, MemberData(nameof(GetTheoryDataForSpecifyKind))]
+	public void SpecifyKind_試す(DateTime source, DateTimeKind kind, DateTime expected) {
+		// Arrange
+		// Act
+		var actual = DateTime.SpecifyKind(source, kind);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	[Fact]
 	public void UnixEpoch_値を確認する() {
 		// Arrange
