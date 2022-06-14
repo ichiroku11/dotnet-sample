@@ -14,7 +14,8 @@ public class DateTimeTest {
 			{ DateTime.MaxValue, DateTimeKind.Unspecified },
 
 			// UTC（世界協定時刻）
-			{ DateTime.UnixEpoch, DateTimeKind.Utc }
+			{ DateTime.UnixEpoch, DateTimeKind.Utc },
+			{ DateTime.UtcNow, DateTimeKind.Utc }
 		};
 	}
 
