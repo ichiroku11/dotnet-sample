@@ -47,7 +47,7 @@ public class DateTimeTest {
 	}
 
 	[Theory, MemberData(nameof(GetTheoryDataForSpecifyKind))]
-	public void SpecifyKind_試す(DateTime source, DateTimeKind kind, DateTime expected) {
+	public void SpecifyKind_Kindプロパティの値だけが変更される(DateTime source, DateTimeKind kind, DateTime expected) {
 		// Arrange
 		// Act
 		var actual = DateTime.SpecifyKind(source, kind);
