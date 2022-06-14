@@ -56,6 +56,23 @@ public class DateTimeTest {
 		Assert.Equal(expected, actual);
 	}
 
+	public static TheoryData<DateTime, TimeSpan> GetTheoryDataForTimeOfDay() {
+		return new() {
+			{ DateTime.UnixEpoch, new TimeSpan(0, 0, 0) },
+			{ new DateTime(2022, 1, 2, 11, 12, 13), new TimeSpan(11, 12, 13) }
+		};
+	}
+
+	[Theory, MemberData(nameof(GetTheoryDataForTimeOfDay))]
+	public void TimeOfDay_0時基準の時間感覚を取得できる(DateTime source, TimeSpan expected) {
+		// Arrange
+		// Act
+		var actual = source.TimeOfDay;
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	[Fact]
 	public void UnixEpoch_値を確認する() {
 		// Arrange
