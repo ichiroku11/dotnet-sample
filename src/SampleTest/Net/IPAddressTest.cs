@@ -69,7 +69,7 @@ public class IPAddressTest {
 	}
 
 	[Fact]
-	public void OperatorEqual_値を比較しない() {
+	public void OperatorEquality_値を比較しない() {
 		// Arrange
 		var address1 = new IPAddress(new byte[] { 192, 168, 0, 1 });
 		var address2 = new IPAddress(new byte[] { 192, 168, 0, 1 });

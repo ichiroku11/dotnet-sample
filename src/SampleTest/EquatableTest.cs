@@ -41,7 +41,7 @@ public class EquatableTest {
 	}
 
 	[Fact]
-	public void OperatorEqual_正しく比較できる() {
+	public void OperatorEquality_正しく比較できる() {
 		// Arrange
 		// Act
 		// Assert
