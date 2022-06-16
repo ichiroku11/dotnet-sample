@@ -27,6 +27,26 @@ public class DateTimeTest {
 		Assert.Equal(expected, target.Kind);
 	}
 
+	public static TheoryData<DateTime, DateTime> GetTestDataForOperatorEquality() {
+		// DateTimeKind違いのインスタンスは等しいと判断される
+		var local = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
+		var utc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+		var unspecified = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
+		return new() {
+			{ local, utc },
+			{ utc, unspecified },
+			{ unspecified, local }
+		};
+	}
+	// todo:
+	[Theory, MemberData(nameof(GetTestDataForOperatorEquality))]
+	public void OperatorEquality_Kindプロパティの違いは無視されて比較される(DateTime left, DateTime right) {
+		// Arrange
+		// Act
+		// Assert
+		Assert.True(left == right);
+	}
+
 	public static TheoryData<DateTime, DateTimeKind, DateTime> GetTheoryDataForSpecifyKind() {
 		var local = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
 		var utc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
