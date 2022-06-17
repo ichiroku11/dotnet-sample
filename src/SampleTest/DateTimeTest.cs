@@ -97,13 +97,15 @@ public class DateTimeTest {
 	public void UnixEpoch_値を確認する() {
 		// Arrange
 		// Act
+		var unixEpoch = DateTime.UnixEpoch;
+
 		// Assert
-		Assert.Equal(1970, DateTime.UnixEpoch.Year);
-		Assert.Equal(1, DateTime.UnixEpoch.Month);
-		Assert.Equal(1, DateTime.UnixEpoch.Day);
-		Assert.Equal(0, DateTime.UnixEpoch.Hour);
-		Assert.Equal(0, DateTime.UnixEpoch.Minute);
-		Assert.Equal(0, DateTime.UnixEpoch.Second);
-		Assert.Equal(DateTimeKind.Utc, DateTime.UnixEpoch.Kind);
+		Assert.Equal(1970, unixEpoch.Year);
+		Assert.Equal(1, unixEpoch.Month);
+		Assert.Equal(1, unixEpoch.Day);
+		Assert.Equal(0, unixEpoch.Hour);
+		Assert.Equal(0, unixEpoch.Minute);
+		Assert.Equal(0, unixEpoch.Second);
+		Assert.Equal(DateTimeKind.Utc, unixEpoch.Kind);
 	}
 }
