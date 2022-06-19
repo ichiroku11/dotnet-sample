@@ -1,6 +1,17 @@
 namespace SampleTest;
 
 public class DateTimeOffsetTest {
+
+	[Fact]
+	public void Offset_UTC時刻のOffsetプロパティの値はゼロ() {
+		// Arrange
+		// Act
+		var offset = DateTimeOffset.UtcNow.Offset;
+
+		// Assert
+		Assert.Equal(TimeSpan.Zero, offset);
+	}
+
 	[Fact]
 	public void UnixEpoch_値を確認する() {
 		// Arrange
