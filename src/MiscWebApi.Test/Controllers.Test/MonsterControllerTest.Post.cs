@@ -46,13 +46,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonString)]
 	public async Task PostAsync_Ok(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -68,13 +69,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonStringTextPlain)]
 	public async Task PostAsync_UnsupportedMediaType(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var problem = await DeserializeAsync<ProblemDetails>(response);
 
 		// Assert
@@ -87,6 +89,7 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task PostAsync_BadRequest() {
 		// Arrange
+		var client = CreateClient();
 		// NameのRequired属性でバリデーションエラー
 		using var content = GetPostContent(PostContentType.JsonString, new Monster { Id = 1, Name = "" });
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster") {
@@ -94,7 +97,7 @@ public partial class MonsterControllerTest {
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var problem = await DeserializeAsync<ProblemDetails>(response);
 
 		// Assert
@@ -112,13 +115,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.FormUrlEncoded)]
 	public async Task PostFormAsync_Ok(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster/form") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -132,13 +136,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonString)]
 	public async Task PostFormAsync_BadRequest(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster/form") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var problem = await DeserializeAsync<ProblemDetails>(response);
 
 		// Assert
@@ -155,13 +160,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonString)]
 	public async Task PostBodyAsync_Ok(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster/body") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var responseMonster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -179,13 +185,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonStringTextPlain)]
 	public async Task PostBodyAsync_UnsupportedMediaType(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster/body") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var problem = await DeserializeAsync<ProblemDetails>(response);
 
 		// Assert
@@ -200,13 +207,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonString)]
 	public async Task PostBodyJsonAsync_Ok(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster/body/json") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var responseMonster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -224,13 +232,14 @@ public partial class MonsterControllerTest {
 	[InlineData(PostContentType.JsonStringTextPlain)]
 	public async Task PostBodyJsonAsync_UnsupportedMediaType(PostContentType contentType) {
 		// Arrange
+		var client = CreateClient();
 		using var content = GetPostContent(contentType, _slime);
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/api/monster/body/json") {
 			Content = content,
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var responseText = await response.Content.ReadAsStringAsync();
 
 		// Assert
@@ -241,3 +250,4 @@ public partial class MonsterControllerTest {
 	}
 	#endregion
 }
+

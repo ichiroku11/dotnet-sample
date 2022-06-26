@@ -12,10 +12,11 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task GetAsync_Ok() {
 		// Arrange
+		var client = CreateClient();
 		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster");
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monsters = await DeserializeAsync<IList<Monster>>(response);
 
 		// Assert
@@ -28,10 +29,11 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task GetByIdAsync_Ok() {
 		// Arrange
+		var client = CreateClient();
 		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster/1");
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -43,10 +45,11 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task GetByIdAsync_NotFound() {
 		// Arrange
+		var client = CreateClient();
 		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/monster/0");
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		// エラーの場合は、ProblemDetails型（RFC7807）のJSONが返ってくる
 		var problem = await DeserializeAsync<ProblemDetails>(response);
 
@@ -60,11 +63,12 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task GetQueryAsync_Ok() {
 		// Arrange
+		var client = CreateClient();
 		var url = $"/api/monster/query?id={_slime.Id}&name={_slime.Name}";
 		using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -77,11 +81,12 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task GetRouteAsync_Ok() {
 		// Arrange
+		var client = CreateClient();
 		var url = $"/api/monster/route/{_slime.Id}/{_slime.Name}";
 		using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monster = await DeserializeAsync<Monster>(response);
 
 		// Assert
@@ -93,11 +98,12 @@ public partial class MonsterControllerTest {
 	[Fact]
 	public async Task GetRouteAsync_Query文字列はバインドされない() {
 		// Arrange
+		var client = CreateClient();
 		var url = $"/api/monster/route/2/ドラキー?id={_slime.Id}&name={_slime.Name}";
 		using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var monster = await DeserializeAsync<Monster>(response);
 
 		// Assert
