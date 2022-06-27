@@ -1,10 +1,12 @@
-
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
 var services = builder.Services;
 
+services
+	.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer();
 services.AddControllersWithViews();
 
 services.Configure<RouteOptions>(options => {
@@ -20,10 +22,8 @@ if (env.IsDevelopment()) {
 
 app.UseRouting();
 
-/*
 app.UseAuthentication();
 app.UseAuthorization();
-*/
 
 app.UseEndpoints(endpoints => {
 	endpoints.MapControllerRoute(
