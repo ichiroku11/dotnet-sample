@@ -1,6 +1,13 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
@@ -39,6 +46,22 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		return _factory.CreateDefaultClient(new LoggingHandler(_output));
 	}
 
+	protected HttpClient CreateClientWithTestAuth() {
+		var client = _factory
+			// https://docs.microsoft.com/ja-jp/aspnet/core/test/integration-tests?view=aspnetcore-6.0
+			.WithWebHostBuilder(builder => {
+				builder.ConfigureServices(services => {
+					services
+						.AddAuthentication(_testAuthScheme)
+						.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(_testAuthScheme, _ => { }); ;
+				});
+			})
+			.CreateDefaultClient(new LoggingHandler(_output));
+		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_testAuthScheme);
+
+		return client;
+	}
+
 	private class LoggingHandler : DelegatingHandler {
 		private readonly ITestOutputHelper _output;
 
@@ -60,6 +83,30 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 			}
 			return response;
 
+		}
+	}
+
+	private const string _testAuthScheme = "Test";
+
+	private class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions> {
+		public TestAuthHandler(
+			IOptionsMonitor<AuthenticationSchemeOptions> options,
+			ILoggerFactory logger,
+			UrlEncoder encoder,
+			ISystemClock clock)
+			: base(options, logger, encoder, clock) {
+		}
+
+		protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
+			var claims = new[] {
+				new Claim(ClaimTypes.NameIdentifier, "x"),
+				new Claim(ClaimTypes.Name, "xx"),
+			};
+			var identity = new ClaimsIdentity(claims, _testAuthScheme);
+			var principal = new ClaimsPrincipal(identity);
+			var ticket = new AuthenticationTicket(principal, _testAuthScheme);
+			var result = AuthenticateResult.Success(ticket);
+			return Task.FromResult(result);
 		}
 	}
 }

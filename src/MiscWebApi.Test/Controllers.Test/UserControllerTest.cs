@@ -24,11 +24,10 @@ public class UserControllerTest : ControllerTestBase {
 		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 	}
 
-	/*
 	[Fact]
 	public async Task UserMeResponse_Ok() {
 		// Arrange
-		var client = CreateClient();
+		var client = CreateClientWithTestAuth();
 		using var request = new HttpRequestMessage(HttpMethod.Get, "/api/user/me");
 
 		// Act
@@ -40,6 +39,5 @@ public class UserControllerTest : ControllerTestBase {
 		Assert.Equal("x", me?.Id);
 		Assert.Equal("xx", me?.Name);
 	}
-	*/
 }
 
