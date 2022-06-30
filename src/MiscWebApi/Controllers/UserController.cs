@@ -11,6 +11,6 @@ namespace MiscWebApi.Controllers;
 [Authorize]
 public class UserController : ControllerBase {
 	[HttpGet("me")]
-	public UserMeResponse Me() => new UserMeResponse("x", "xx");
+	public UserMeResponse Me() => User.ToUserMeResponse();
 
 }

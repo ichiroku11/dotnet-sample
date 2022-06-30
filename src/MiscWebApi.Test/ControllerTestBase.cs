@@ -46,6 +46,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		return _factory.CreateDefaultClient(new LoggingHandler(_output));
 	}
 
+	// テスト用のユーザーで認証する
 	protected HttpClient CreateClientWithTestAuth() {
 		var client = _factory
 			// https://docs.microsoft.com/ja-jp/aspnet/core/test/integration-tests?view=aspnetcore-6.0
@@ -98,8 +99,9 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		}
 
 		protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
+			// テスト用のユーザーでログインしたことにする
 			var claims = new[] {
-				new Claim(ClaimTypes.NameIdentifier, "x"),
+				new Claim(ClaimTypes.NameIdentifier, "11"),
 				new Claim(ClaimTypes.Name, "xx"),
 			};
 			var identity = new ClaimsIdentity(claims, _testAuthScheme);

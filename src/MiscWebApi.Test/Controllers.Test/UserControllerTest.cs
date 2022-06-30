@@ -11,6 +11,7 @@ public class UserControllerTest : ControllerTestBase {
 		: base(output, factory) {
 	}
 
+	// 認証されていないのでUnauthorized
 	[Fact]
 	public async Task UserMeResponse_Unauthorized() {
 		// Arrange
@@ -24,6 +25,7 @@ public class UserControllerTest : ControllerTestBase {
 		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 	}
 
+	// 認証をエミュレートしているのでOKレスポンス
 	[Fact]
 	public async Task UserMeResponse_Ok() {
 		// Arrange
@@ -36,7 +38,7 @@ public class UserControllerTest : ControllerTestBase {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal("x", me?.Id);
+		Assert.Equal("11", me?.Id);
 		Assert.Equal("xx", me?.Name);
 	}
 }
