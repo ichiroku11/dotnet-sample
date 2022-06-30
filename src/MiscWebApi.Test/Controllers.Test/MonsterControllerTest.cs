@@ -10,7 +10,7 @@ public partial class MonsterControllerTest : ControllerTestBase {
 		Name = "スライム",
 	};
 
-	public MonsterControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public MonsterControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 }

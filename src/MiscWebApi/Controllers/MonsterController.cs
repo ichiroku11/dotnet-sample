@@ -17,8 +17,8 @@ namespace MiscWebApi.Controllers;
 public class MonsterController : ControllerBase {
 	private static readonly Dictionary<int, Monster> _monsters
 		= new[] {
-				new Monster { Id = 1, Name = "スライム" },
-				new Monster { Id = 2, Name = "ドラキー" },
+			new Monster { Id = 1, Name = "スライム" },
+			new Monster { Id = 2, Name = "ドラキー" },
 		}.ToDictionary(monster => monster.Id);
 
 
