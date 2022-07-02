@@ -17,6 +17,7 @@
       "src\\DistributedCacheWebApp\\DistributedCacheWebApp.csproj",
       "src\\EndpointWebApp\\EndpointWebApp.csproj",
       "src\\FallbackRouteWebApp\\FallbackRouteWebApp.csproj",
+      "src\\FeatureFlagWebApp\\FeatureFlagWebApp.csproj",
       "src\\HostedServiceWebApp\\HostedServiceWebApp.csproj",
       "src\\MiddlewareWebApp\\MiddlewareWebApp.csproj",
       "src\\MinimalWebApi\\MinimalWebApi.csproj",
