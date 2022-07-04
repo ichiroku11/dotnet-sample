@@ -11,13 +11,16 @@ public class HomeController : Controller {
 		_featureManager = featureManager;
 	}
 
+	public IActionResult Index() => View();
+
 	// 機能フラグの確認
-	public async Task<IActionResult> IndexAsync()
+	public async Task<IActionResult> JsonAsync()
 		=> Json(new {
 			featureA = await _featureManager.IsEnabledAsync(FeatureFlags.FeatureA),
 			featureB = await _featureManager.IsEnabledAsync(FeatureFlags.FeatureB),
 			featureC = await _featureManager.IsEnabledAsync(FeatureFlags.FeatureC),
 		});
+
 
 	// 機能フラグによるフィルター
 	// 機能フラグが無効の場合、既定では404

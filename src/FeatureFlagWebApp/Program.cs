@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 services.AddFeatureManagement();
-services.AddControllers();
+services.AddControllersWithViews();
 
 var app = builder.Build();
 
