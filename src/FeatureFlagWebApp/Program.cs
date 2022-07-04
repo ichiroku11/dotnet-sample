@@ -13,6 +13,4 @@ app.UseEndpoints(endpoints => {
 	endpoints.MapDefaultControllerRoute();
 });
 
-// https://docs.microsoft.com/ja-jp/azure/azure-app-configuration/use-feature-flags-dotnet-core?tabs=core5x
-
 app.Run();
