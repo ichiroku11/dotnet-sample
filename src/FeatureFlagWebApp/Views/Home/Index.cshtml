@@ -7,3 +7,12 @@
 <feature name="FeatureC">
 	<p>@nameof(FeatureFlags.FeatureC)</p>
 </feature>
+<hr />
+@* AとBどちらも設定されている必要がある *@
+<feature name="FeatureA, FeatureB" requirement="All">
+	<p>@nameof(FeatureFlags.FeatureA) and @nameof(FeatureFlags.FeatureB)</p>
+</feature>
+@* AとBどちらかが設定されていればOK *@
+<feature name="FeatureA, FeatureB" requirement="Any">
+	<p>@nameof(FeatureFlags.FeatureA) and @nameof(FeatureFlags.FeatureB)</p>
+</feature>
