@@ -22,6 +22,33 @@ public class JsonSerializerOptionsTest {
 		});
 	}
 
+	private record Sample(int Value = default, string? Text = default);
+
+	public static TheoryData<JsonIgnoreCondition, string> GetTheoryDataForDefaultIgnoreCondition() {
+		return new() {
+			// デフォルト値もnullも出力される
+			{ JsonIgnoreCondition.Never, @"{""value"":0,""text"":null}" },
+			// デフォルト値は出力されるが、nullは出力されない
+			{ JsonIgnoreCondition.WhenWritingNull, @"{""value"":0}" },
+			// デフォルト値もnullも出力されない
+			{ JsonIgnoreCondition.WhenWritingDefault, @"{}" },
+		};
+	}
+
+	[Theory, MemberData(nameof(GetTheoryDataForDefaultIgnoreCondition))]
+	public void DefaultIgnoreCondition_シリアライズするときのデフォルト値やnullの扱いを確認する(JsonIgnoreCondition condition, string expected) {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			DefaultIgnoreCondition = condition,
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		};
+
+		// Act
+		var actual = JsonSerializer.Serialize(new Sample(), options);
+
+		Assert.Equal(expected, actual);
+	}
+
 	[Fact]
 	public void DictionaryKeyPolicy_違いを確認する() {
 		var model = new {
