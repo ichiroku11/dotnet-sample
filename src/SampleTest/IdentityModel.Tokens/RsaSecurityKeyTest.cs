@@ -19,4 +19,15 @@ public class RsaSecurityKeyTest {
 		// 念のためRSAパラメーターが同じことを確認
 		Assert.StrictEqual(parameters, key.Parameters);
 	}
+
+	[Fact]
+	public void Prameters_RSAでインスタンスを生成するとプロパティはデフォルト値になる() {
+		// Arrange
+		using var rsa = RSA.Create();
+		var key = new RsaSecurityKey(rsa);
+
+		// Act
+		// Assert
+		Assert.StrictEqual(default, key.Parameters);
+	}
 }
