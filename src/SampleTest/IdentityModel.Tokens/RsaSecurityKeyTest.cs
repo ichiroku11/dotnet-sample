@@ -44,4 +44,15 @@ public class RsaSecurityKeyTest {
 		// Assert
 		Assert.StrictEqual(expected, key.PrivateKeyStatus);
 	}
+
+	[Fact]
+	public void KeyId_指定しない場合デフォルトではnull() {
+		// Arrange
+		using var rsa = RSA.Create();
+		var key = new RsaSecurityKey(rsa);
+
+		// Act
+		// Assert
+		Assert.Null(key.KeyId);
+	}
 }
