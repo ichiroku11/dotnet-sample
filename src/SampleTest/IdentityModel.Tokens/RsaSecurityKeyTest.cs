@@ -30,4 +30,18 @@ public class RsaSecurityKeyTest {
 		// Assert
 		Assert.StrictEqual(default, key.Parameters);
 	}
+
+	[Theory]
+	[InlineData(true, PrivateKeyStatus.Exists)]
+	[InlineData(false, PrivateKeyStatus.DoesNotExist)]
+
+	public void PrivateKeyStatus_秘密鍵の有無を確認する(bool includePrivateParameters, PrivateKeyStatus expected) {
+		// Arrange
+		using var rsa = RSA.Create();
+		var key = new RsaSecurityKey(rsa.ExportParameters(includePrivateParameters));
+
+		// Act
+		// Assert
+		Assert.StrictEqual(expected, key.PrivateKeyStatus);
+	}
 }
