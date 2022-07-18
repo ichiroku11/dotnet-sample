@@ -2,14 +2,15 @@ using Microsoft.IdentityModel.Tokens;
 using SampleLib.AspNetCore;
 using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
 public class JwtSecurityTokenHandlerTest {
-	private static readonly SymmetricSecurityKey _key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
-	private static readonly SymmetricSecurityKey _key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+	private static readonly SymmetricSecurityKey _key1 = new(Encoding.UTF8.GetBytes("0123456789abcd-1"));
+	private static readonly SymmetricSecurityKey _key2 = new(Encoding.UTF8.GetBytes("0123456789abcd-2"));
 
 	private readonly ITestOutputHelper _output;
 
@@ -112,6 +113,42 @@ public class JwtSecurityTokenHandlerTest {
 		_output.WriteLine(exception.Message);
 	}
 
+	private class RsaSecurityKeyHelper {
+		private readonly RsaSecurityKey _privateKey;
+		private readonly RsaSecurityKey _publicKey;
+		private readonly JsonWebKey _jwk;
+
+		public RsaSecurityKeyHelper(RSA rsa) {
+			// 秘密パラメーターを含む
+			_privateKey = new RsaSecurityKey(rsa.ExportParameters(true));
+
+			// 秘密パラメーターを含まない
+			_publicKey = new RsaSecurityKey(rsa.ExportParameters(false));
+
+			// JWK Thumbprintを鍵のIDにする
+			_jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(_publicKey);
+			_jwk.KeyId = Base64UrlEncoder.Encode(_jwk.ComputeJwkThumbprint());
+			_jwk.Use = JsonWebKeyUseNames.Sig;
+
+			_privateKey.KeyId = _jwk.KeyId;
+			_publicKey.KeyId = _jwk.KeyId;
+		}
+
+		public string JwkThumbprint => _jwk.Kid;
+
+		public SigningCredentials GetSigningCredentials()
+			=> new SigningCredentials(_privateKey, SecurityAlgorithms.RsaSha256);
+
+		private JsonWebKeySet GetValidationJsonWebKeySet() {
+			var jwks = new JsonWebKeySet();
+			jwks.Keys.Add(_jwk);
+			return jwks;
+		}
+
+		public string GetValidationJsonWebKeySetAsJson()
+			=> JsonExtensions.SerializeToJson(GetValidationJsonWebKeySet());
+	}
+
 	public class TestDataForValidateToken : IEnumerable<object[]>, IDisposable {
 		private X509Certificate2? _certificate;
 
@@ -127,15 +164,43 @@ public class JwtSecurityTokenHandlerTest {
 		public IEnumerator<object[]> GetEnumerator() {
 			// HS256
 			yield return new object[] {
-					new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256),
-					_key1,
-				};
+				new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256),
+				_key1,
+			};
 
 			// RS256
+			// X.509証明書で署名
 			yield return new object[] {
-					new X509SigningCredentials(_certificate),
-					new X509SecurityKey(_certificate?.RemovePrivateKey()),
+				new X509SigningCredentials(_certificate),
+				new X509SecurityKey(_certificate?.RemovePrivateKey()),
+			};
+
+			// RS256
+			// RsaSecurityKeyで署名
+			// RsaSecurityKeyをJWKとして公開し、JsonWebKeyを使って署名を検証する運用を想定
+			{
+				using var rsa = RSA.Create();
+				var keyHelper = new RsaSecurityKeyHelper(rsa);
+
+				// 署名のクレデンシャル
+				var signingCredentials = keyHelper.GetSigningCredentials();
+
+				// 署名を検証する鍵
+				var jwksAsJson = keyHelper.GetValidationJsonWebKeySetAsJson();
+				var jwks = new JsonWebKeySet(jwksAsJson);
+
+				yield return new object[] {
+					signingCredentials,
+					// JsonWebKeyをRsaSecurityKeyに変換しているような気がする
+					jwks.GetSigningKeys().First(key => key.KeyId == keyHelper.JwkThumbprint),
 				};
+
+				// JsonWebKeyとして検証してみる
+				yield return new object[] {
+					signingCredentials,
+					jwks.Keys.First(key => key.KeyId == keyHelper.JwkThumbprint),
+				};
+			}
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -148,6 +213,10 @@ public class JwtSecurityTokenHandlerTest {
 		SigningCredentials signingCredentials,
 		// 検証用のキー
 		SecurityKey validationKey) {
+
+		_output.WriteLine(signingCredentials.Key.KeyId ?? "");
+		_output.WriteLine(validationKey.KeyId ?? "");
+
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
