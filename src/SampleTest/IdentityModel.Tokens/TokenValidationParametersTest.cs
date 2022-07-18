@@ -10,6 +10,11 @@ public class TokenValidationParametersTest {
 		var parameters = new TokenValidationParameters();
 
 		// Assert
+		Assert.True(parameters.RequireExpirationTime);
+		Assert.True(parameters.RequireSignedTokens);
+		Assert.True(parameters.RequireAudience);
+		Assert.False(parameters.SaveSigninToken);
+		Assert.True(parameters.TryAllIssuerSigningKeys);
 		Assert.False(parameters.ValidateActor);
 		Assert.True(parameters.ValidateAudience);
 		Assert.True(parameters.ValidateIssuer);
