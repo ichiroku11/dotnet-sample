@@ -9,9 +9,6 @@ using System.Text;
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
 public class JwtSecurityTokenHandlerTest {
-	private static readonly SymmetricSecurityKey _key1 = new(Encoding.UTF8.GetBytes("0123456789abcd-1"));
-	private static readonly SymmetricSecurityKey _key2 = new(Encoding.UTF8.GetBytes("0123456789abcd-2"));
-
 	private readonly ITestOutputHelper _output;
 
 	public JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
@@ -163,10 +160,14 @@ public class JwtSecurityTokenHandlerTest {
 
 		public IEnumerator<object[]> GetEnumerator() {
 			// HS256
-			yield return new object[] {
-				new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256),
-				_key1,
-			};
+			{
+
+				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+				yield return new object[] {
+					new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
+					key,
+				};
+			}
 
 			// RS256
 			// X.509証明書で署名
@@ -262,6 +263,11 @@ public class JwtSecurityTokenHandlerTest {
 	[Fact]
 	public void ValidateToken_署名と検証でキーが異なると例外がスローされる() {
 		// Arrange
+		// 署名の鍵
+		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
+		// 検証の鍵
+		var key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
 		};
@@ -269,13 +275,14 @@ public class JwtSecurityTokenHandlerTest {
 		var token = handler.CreateJwtSecurityToken(
 			issuer: "i",
 			audience: "a",
-			signingCredentials: new SigningCredentials(_key1, SecurityAlgorithms.HmacSha256));
+			signingCredentials: new SigningCredentials(key1, SecurityAlgorithms.HmacSha256));
 		var jwt = handler.WriteToken(token);
 
 		// Act
+		// Assert
 		var parameters = new TokenValidationParameters {
 			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = _key2,
+			IssuerSigningKey = key2,
 
 			ValidateLifetime = false,
 			ValidIssuer = "i",
@@ -301,9 +308,11 @@ public class JwtSecurityTokenHandlerTest {
 		var jwt = handler.WriteToken(token);
 
 		// Act
+		// Assert
 		var parameters = new TokenValidationParameters {
+			// 署名があるものとして検証する
 			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = _key1,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef")),
 
 			ValidateLifetime = false,
 			ValidIssuer = "i",
