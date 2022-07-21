@@ -25,5 +25,28 @@ public class JsonWebKeyTest {
 		// Act
 		// Assert
 		Assert.Null(key.KeyId);
+		Assert.Null(key.Kid);
+	}
+
+	public static TheoryData<JsonWebKey, string?> GetTheoryDataForKty() {
+		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+
+		using var rsa = RSA.Create();
+		var key2 = new RsaSecurityKey(rsa.ExportParameters(false));
+
+		return new() {
+			{ new JsonWebKey(), null },
+			{ JsonWebKeyConverter.ConvertFromSymmetricSecurityKey(key1), "oct" },
+			{ JsonWebKeyConverter.ConvertFromRSASecurityKey(key2), "RSA" },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryDataForKty))]
+	public void Kty_KeyTypeを確認する(JsonWebKey key, string? expected) {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Equal(expected, key.Kty);
 	}
 }
