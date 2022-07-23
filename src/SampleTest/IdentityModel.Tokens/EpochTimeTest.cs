@@ -22,6 +22,8 @@ public class EpochTimeTest {
 
 		// Assert
 		Assert.Equal(expected, actual);
+
+		// UTCになることもついでに確認
 		Assert.Equal(DateTimeKind.Utc, actual.Kind);
 	}
 }
