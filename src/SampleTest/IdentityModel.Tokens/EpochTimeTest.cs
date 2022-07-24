@@ -26,4 +26,29 @@ public class EpochTimeTest {
 		// UTCになることもついでに確認
 		Assert.Equal(DateTimeKind.Utc, actual.Kind);
 	}
+
+	public static TheoryData<DateTime, long> GetTheoryDataForGetIntDate() {
+		return new() {
+			{ EpochTime.UnixEpoch, 0L },
+			{ EpochTime.UnixEpoch.AddSeconds(1), 1L },
+
+			// EpochTimeより過去は0になる
+			{ EpochTime.UnixEpoch.AddSeconds(-1), 0L },
+
+			// DateTimeKind.LocalのDateTimeをテスト
+			// EpochTimeにUTCからの時差を加えて現地時間にして秒数が0になる
+			{ new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local).Add(TimeZoneInfo.Local.BaseUtcOffset), 0L },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryDataForGetIntDate))]
+	public void GetIntDate_DateTimeをEpochTimeからの経過時間に変換する(DateTime time, long expected) {
+		// Arrange
+		// Act
+		var actual = EpochTime.GetIntDate(time);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
