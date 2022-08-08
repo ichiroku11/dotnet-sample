@@ -1,3 +1,4 @@
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -13,9 +14,13 @@ public class CosmosSqlApiSample {
 		_logger = logger;
 	}
 
-	public Task RunAsync() {
+	public async Task RunAsync() {
 		_logger.LogInformation(_connectionString);
 
-		return Task.CompletedTask;
+		using var client = new CosmosClient(_connectionString);
+
+		var database = (Database)await client.CreateDatabaseIfNotExistsAsync("Test");
+
+		_logger.LogInformation(database.Id);
 	}
 }
