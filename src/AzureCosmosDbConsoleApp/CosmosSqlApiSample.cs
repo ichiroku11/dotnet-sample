@@ -25,7 +25,7 @@ public class CosmosSqlApiSample {
 		using var iterator = database.GetContainerQueryIterator<ContainerProperties>();
 
 		var containerIds = new StringBuilder();
-		while(iterator.HasMoreResults) {
+		while (iterator.HasMoreResults) {
 			foreach (var container in await iterator.ReadNextAsync()) {
 				containerIds.AppendLine(container.Id);
 			}
@@ -42,6 +42,47 @@ public class CosmosSqlApiSample {
 	private Task DeleteContainerAsync(Database database)
 		=> database.GetContainer(_containerId).DeleteContainerAsync();
 
+	private static IEnumerable<Order> GetOrders() {
+		yield return new Order(
+			Guid.NewGuid().ToString(),
+			"x",
+			DateTime.Now,
+			new List<OrderDetail> {
+				new ("純けい", 360m, 3),
+				new ("しろ", 330m, 2),
+				new ("若皮", 360m, 3),
+			});
+
+		yield return new Order(
+			Guid.NewGuid().ToString(),
+			"y",
+			DateTime.Now,
+			new List<OrderDetail> {
+				new ("純けい", 360m, 5),
+				new ("しろ", 330m, 4),
+				new ("若皮", 360m, 3),
+			});
+
+		yield return new Order(
+			Guid.NewGuid().ToString(),
+			"y",
+			DateTime.Now,
+			new List<OrderDetail> {
+				new ("純けい", 360m, 3),
+				new ("若皮", 360m, 3),
+			});
+
+		yield return new Order(
+			Guid.NewGuid().ToString(),
+			"x",
+			DateTime.Now,
+			new List<OrderDetail> {
+				new("純けい", 360m, 1),
+				new("しろ", 330m, 2),
+			});
+	}
+
+
 	public async Task RunAsync() {
 		_logger.LogInformation(_connectionString);
 
@@ -56,5 +97,7 @@ public class CosmosSqlApiSample {
 		// コンテナーの削除と作成
 		await DeleteContainerAsync(database);
 		await CreateContainerAsync(database);
+
+		var orders = GetOrders();
 	}
 }
