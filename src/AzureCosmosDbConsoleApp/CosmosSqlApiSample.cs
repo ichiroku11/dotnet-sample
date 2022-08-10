@@ -109,5 +109,12 @@ public class CosmosSqlApiSample {
 			var response = await container.CreateItemAsync(orderToAdd);
 			_logger.LogInformation(((Order)response).Id);
 		}
+
+		// アイテムをIDで取得
+		{
+			var id = orders.First().Id;
+			var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
+			_logger.LogInformation(((Order)response).Id);
+		}
 	}
 }
