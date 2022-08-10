@@ -1,4 +1,5 @@
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Text;
@@ -33,11 +34,10 @@ public class CosmosSqlApiSample {
 
 		_logger.LogInformation(containerIds.ToString());
 	}
-
-	private Task CreateContainerAsync(Database database)
-		=> database.CreateContainerAsync(
-			id: _containerId,
-			partitionKeyPath: _partitionKeyPath);
+	private async Task<Container> CreateContainerAsync(Database database)
+	=> await database.CreateContainerAsync(
+		id: _containerId,
+		partitionKeyPath: _partitionKeyPath);
 
 	private Task DeleteContainerAsync(Database database)
 		=> database.GetContainer(_containerId).DeleteContainerAsync();
@@ -86,7 +86,11 @@ public class CosmosSqlApiSample {
 	public async Task RunAsync() {
 		_logger.LogInformation(_connectionString);
 
-		using var client = new CosmosClient(_connectionString);
+		using var client = new CosmosClientBuilder(_connectionString)
+			.WithSerializerOptions(new CosmosSerializationOptions {
+				PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
+			})
+			.Build();
 
 		// databaseはDatabaseResponse型
 		var database = await client.CreateDatabaseIfNotExistsAsync(_databaseId);
@@ -96,8 +100,14 @@ public class CosmosSqlApiSample {
 
 		// コンテナーの削除と作成
 		await DeleteContainerAsync(database);
-		await CreateContainerAsync(database);
+		var container = await CreateContainerAsync(database);
 
 		var orders = GetOrders();
+
+		// アイテムの追加
+		foreach (var orderToAdd in orders) {
+			var response = await container.CreateItemAsync(orderToAdd);
+			_logger.LogInformation(((Order)response).Id);
+		}
 	}
 }
