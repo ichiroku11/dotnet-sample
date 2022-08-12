@@ -43,43 +43,42 @@ public class CosmosSqlApiSample {
 		=> database.GetContainer(_containerId).DeleteContainerAsync();
 
 	private static IEnumerable<Order> GetOrders() {
-		yield return new Order(
-			Guid.NewGuid().ToString(),
-			"x",
-			DateTime.Now,
-			new List<OrderDetail> {
-				new ("純けい", 360m, 3),
-				new ("しろ", 330m, 2),
-				new ("若皮", 360m, 3),
-			});
-
-		yield return new Order(
-			Guid.NewGuid().ToString(),
-			"y",
-			DateTime.Now,
-			new List<OrderDetail> {
-				new ("純けい", 360m, 5),
-				new ("しろ", 330m, 4),
-				new ("若皮", 360m, 3),
-			});
-
-		yield return new Order(
-			Guid.NewGuid().ToString(),
-			"y",
-			DateTime.Now,
-			new List<OrderDetail> {
-				new ("純けい", 360m, 3),
-				new ("若皮", 360m, 3),
-			});
-
-		yield return new Order(
-			Guid.NewGuid().ToString(),
-			"x",
-			DateTime.Now,
-			new List<OrderDetail> {
-				new("純けい", 360m, 1),
-				new("しろ", 330m, 2),
-			});
+		return new[] {
+			new Order(
+				Guid.NewGuid().ToString(),
+				"x",
+				DateTime.Now,
+				new List<OrderDetail> {
+					new ("純けい", 360m, 3),
+					new ("しろ", 330m, 2),
+					new ("若皮", 360m, 3),
+				}),
+			new Order(
+				Guid.NewGuid().ToString(),
+				"y",
+				DateTime.Now,
+				new List<OrderDetail> {
+					new ("純けい", 360m, 5),
+					new ("しろ", 330m, 4),
+					new ("若皮", 360m, 3),
+				}),
+			new Order(
+				Guid.NewGuid().ToString(),
+				"y",
+				DateTime.Now,
+				new List<OrderDetail> {
+					new ("純けい", 360m, 3),
+					new ("若皮", 360m, 3),
+				}),
+			new Order(
+				Guid.NewGuid().ToString(),
+				"x",
+				DateTime.Now,
+				new List<OrderDetail> {
+					new("純けい", 360m, 1),
+					new("しろ", 330m, 2),
+				}),
+		};
 	}
 
 
@@ -115,6 +114,17 @@ public class CosmosSqlApiSample {
 			var id = orders.First().Id;
 			var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
 			_logger.LogInformation(((Order)response).Id);
+		}
+
+		// 複数のアイテムをIDで取得
+		{
+			var items = orders.Take(2)
+				.Select(order => (order.Id, new PartitionKey(order.Id)))
+				.ToList();
+			var response = await container.ReadManyItemsAsync<Order>(items);
+			foreach (var order in response) {
+				_logger.LogInformation(order.Id);
+			}
 		}
 	}
 }
