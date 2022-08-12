@@ -34,6 +34,7 @@ public class CosmosSqlApiSample {
 
 		_logger.LogInformation(containerIds.ToString());
 	}
+
 	private async Task<Container> CreateContainerAsync(Database database)
 	=> await database.CreateContainerAsync(
 		id: _containerId,
@@ -83,8 +84,6 @@ public class CosmosSqlApiSample {
 
 
 	public async Task RunAsync() {
-		_logger.LogInformation(_connectionString);
-
 		using var client = new CosmosClientBuilder(_connectionString)
 			.WithSerializerOptions(new CosmosSerializationOptions {
 				PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
@@ -106,6 +105,7 @@ public class CosmosSqlApiSample {
 		// アイテムの追加
 		foreach (var orderToAdd in orders) {
 			var response = await container.CreateItemAsync(orderToAdd);
+			//_logger.LogInformation(response.Diagnostics.ToString());
 			_logger.LogInformation(((Order)response).Id);
 		}
 
@@ -113,6 +113,7 @@ public class CosmosSqlApiSample {
 		{
 			var id = orders.First().Id;
 			var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
+			//_logger.LogInformation(response.Diagnostics.ToString());
 			_logger.LogInformation(((Order)response).Id);
 		}
 
@@ -122,6 +123,7 @@ public class CosmosSqlApiSample {
 				.Select(order => (order.Id, new PartitionKey(order.Id)))
 				.ToList();
 			var response = await container.ReadManyItemsAsync<Order>(items);
+			//_logger.LogInformation(response.Diagnostics.ToString());
 			foreach (var order in response) {
 				_logger.LogInformation(order.Id);
 			}
