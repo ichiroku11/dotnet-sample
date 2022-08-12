@@ -105,7 +105,7 @@ public class CosmosSqlApiSample {
 		// アイテムの追加
 		foreach (var orderToAdd in orders) {
 			var response = await container.CreateItemAsync(orderToAdd);
-			//_logger.LogInformation(response.Diagnostics.ToString());
+			_logger.LogInformation(response.RequestCharge.ToString());
 			_logger.LogInformation(((Order)response).Id);
 		}
 
@@ -113,7 +113,7 @@ public class CosmosSqlApiSample {
 		{
 			var id = orders.First().Id;
 			var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
-			//_logger.LogInformation(response.Diagnostics.ToString());
+			_logger.LogInformation(response.RequestCharge.ToString());
 			_logger.LogInformation(((Order)response).Id);
 		}
 
@@ -123,7 +123,7 @@ public class CosmosSqlApiSample {
 				.Select(order => (order.Id, new PartitionKey(order.Id)))
 				.ToList();
 			var response = await container.ReadManyItemsAsync<Order>(items);
-			//_logger.LogInformation(response.Diagnostics.ToString());
+			_logger.LogInformation(response.RequestCharge.ToString());
 			foreach (var order in response) {
 				_logger.LogInformation(order.Id);
 			}
