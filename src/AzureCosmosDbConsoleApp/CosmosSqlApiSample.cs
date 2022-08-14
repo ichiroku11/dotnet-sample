@@ -145,11 +145,24 @@ public class CosmosSqlApiSample {
 			}
 		}
 
-		// OrderDetailの部分だけをクエリで取得
+		// OrderDetail部分だけをクエリで取得
 		// 結果はOrderDetail配列の配列になる
 		{
 			var query = new QueryDefinition("select * from c.details");
 			using var iterator = container.GetItemQueryIterator<IEnumerable<OrderDetail>>(query);
+
+			while (iterator.HasMoreResults) {
+				var response = await iterator.ReadNextAsync();
+				_logger.LogInformation(response.RequestCharge.ToString());
+				_logger.LogInformation(response.ToJson());
+			}
+		}
+
+		// OrderDetail部分だけをinキーワードを使ったクエリで取得
+		// 結果は平坦化されたOrderDetail配列になる
+		{
+			var query = new QueryDefinition("select * from c in c.details");
+			using var iterator = container.GetItemQueryIterator<OrderDetail>(query);
 
 			while (iterator.HasMoreResults) {
 				var response = await iterator.ReadNextAsync();
