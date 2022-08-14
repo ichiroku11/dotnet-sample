@@ -107,7 +107,7 @@ public class CosmosSqlApiSample {
 		foreach (var orderToAdd in orders) {
 			var response = await container.CreateItemAsync(orderToAdd);
 			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(((Order)response).Id);
+			_logger.LogInformation(response.ToJson());
 		}
 
 		// アイテムをIDで取得
@@ -116,7 +116,7 @@ public class CosmosSqlApiSample {
 			var id = orders.First().Id;
 			var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
 			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(((Order)response).Id);
+			_logger.LogInformation(response.ToJson());
 		}
 
 		// 複数のアイテムをIDで取得
@@ -127,12 +127,11 @@ public class CosmosSqlApiSample {
 				.ToList();
 			var response = await container.ReadManyItemsAsync<Order>(items);
 			_logger.LogInformation(response.RequestCharge.ToString());
-			foreach (var order in response) {
-				_logger.LogInformation(order.Id);
-			}
+			_logger.LogInformation(response.ToJson());
 		}
 
-		// アイテムを取得
+		// Orderをクエリで取得
+		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
 		{
 			var query = new QueryDefinition("select * from c where c.customerId = @customerId")
 				.WithParameter("@customerId", "x");
@@ -141,9 +140,7 @@ public class CosmosSqlApiSample {
 			while (iterator.HasMoreResults) {
 				var response = await iterator.ReadNextAsync();
 				_logger.LogInformation(response.RequestCharge.ToString());
-				foreach (var order in response) {
-					_logger.LogInformation(order.Id);
-				}
+				_logger.LogInformation(response.ToJson());
 			}
 		}
 	}
