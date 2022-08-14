@@ -82,7 +82,6 @@ public class CosmosSqlApiSample {
 		};
 	}
 
-
 	public async Task RunAsync() {
 		using var client = new CosmosClientBuilder(_connectionString)
 			.WithSerializerOptions(new CosmosSerializationOptions {
@@ -110,6 +109,7 @@ public class CosmosSqlApiSample {
 			_logger.LogInformation(response.ToJson());
 		}
 
+		/*
 		// アイテムをIDで取得
 		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
 		{
@@ -129,6 +129,7 @@ public class CosmosSqlApiSample {
 			_logger.LogInformation(response.RequestCharge.ToString());
 			_logger.LogInformation(response.ToJson());
 		}
+		*/
 
 		// Orderをクエリで取得
 		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
@@ -136,6 +137,19 @@ public class CosmosSqlApiSample {
 			var query = new QueryDefinition("select * from c where c.customerId = @customerId")
 				.WithParameter("@customerId", "x");
 			using var iterator = container.GetItemQueryIterator<Order>(query);
+
+			while (iterator.HasMoreResults) {
+				var response = await iterator.ReadNextAsync();
+				_logger.LogInformation(response.RequestCharge.ToString());
+				_logger.LogInformation(response.ToJson());
+			}
+		}
+
+		// OrderDetailの部分だけをクエリで取得
+		// 結果はOrderDetail配列の配列になる
+		{
+			var query = new QueryDefinition("select * from c.details");
+			using var iterator = container.GetItemQueryIterator<IEnumerable<OrderDetail>>(query);
 
 			while (iterator.HasMoreResults) {
 				var response = await iterator.ReadNextAsync();

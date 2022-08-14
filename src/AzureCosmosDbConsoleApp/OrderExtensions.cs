@@ -18,4 +18,5 @@ public static class OrderExtensions {
 
 	public static string ToJson(this IEnumerable<OrderDetail> details) => JsonSerializer.Serialize(details, _options);
 
+	public static string ToJson(this IEnumerable<IEnumerable<OrderDetail>> details) => JsonSerializer.Serialize(details, _options);
 }
