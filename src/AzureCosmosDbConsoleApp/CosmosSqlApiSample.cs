@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Text;
@@ -138,6 +139,19 @@ public class CosmosSqlApiSample {
 				.WithParameter("@customerId", "x");
 			using var iterator = container.GetItemQueryIterator<Order>(query);
 
+			while (iterator.HasMoreResults) {
+				var response = await iterator.ReadNextAsync();
+				_logger.LogInformation(response.RequestCharge.ToString());
+				_logger.LogInformation(response.ToJson());
+			}
+		}
+
+		// OrderをLINQで取得
+		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-linq-asynchronously
+		{
+			using var iterator = container.GetItemLinqQueryable<Order>()
+				.Where(order => order.CustomerId == "x")
+				.ToFeedIterator();
 			while (iterator.HasMoreResults) {
 				var response = await iterator.ReadNextAsync();
 				_logger.LogInformation(response.RequestCharge.ToString());
