@@ -9,6 +9,7 @@ namespace AzureCosmosDbConsoleApp;
 
 // 参考
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ContainerManagement/Program.cs
+// https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ItemManagement/Program.cs
 public class CosmosSqlApiSample {
 	private readonly string _connectionString;
 	private readonly ILogger _logger;
