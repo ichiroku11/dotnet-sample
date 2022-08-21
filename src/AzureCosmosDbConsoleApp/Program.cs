@@ -10,6 +10,8 @@ await Host
 	.ConfigureServices(services => {
 		services
 			.AddHostedService<SampleService>()
-			.AddTransient<CosmosSqlApiSample>();
+			.AddTransient<CosmosSqlApiSample>()
+			.AddDbContext<CosmosDbContext>()
+			.AddTransient<CosmosEfCoreSample>();
 	})
 	.RunConsoleAsync();

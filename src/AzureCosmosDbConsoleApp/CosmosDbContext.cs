@@ -5,6 +5,7 @@ namespace AzureCosmosDbConsoleApp;
 
 // 参考
 // https://docs.microsoft.com/ja-jp/ef/core/providers/cosmos/?tabs=dotnet-core-cli
+// https://github.com/dotnet/EntityFramework.Docs/blob/main/samples/core/Cosmos/ModelBuilding/OrderContext.cs
 public class CosmosDbContext : DbContext {
 	private readonly string _connectionString;
 
@@ -16,6 +17,11 @@ public class CosmosDbContext : DbContext {
 		=> optionsBuilder.UseCosmos(
 			connectionString: _connectionString,
 			databaseName: "Test");
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder) {
+		// todo:
+		base.OnModelCreating(modelBuilder);
+	}
 
 	public DbSet<Order> Orders => Set<Order>();
 }
