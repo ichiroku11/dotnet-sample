@@ -14,12 +14,8 @@ public class CosmosSqlApiSample {
 	private readonly string _connectionString;
 	private readonly ILogger _logger;
 
-	private const string _databaseId = "Test";
-	private const string _containerId = "Order";
-	private const string _partitionKeyPath = "/id";
-
 	public CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
-		_connectionString = config.GetConnectionString("Cosmos");
+		_connectionString = config.GetConnectionString(Constants.ConnectionStringName);
 		_logger = logger;
 	}
 
@@ -39,11 +35,11 @@ public class CosmosSqlApiSample {
 
 	private async Task<Container> CreateContainerAsync(Database database)
 	=> await database.CreateContainerAsync(
-		id: _containerId,
-		partitionKeyPath: _partitionKeyPath);
+		id: Constants.OrderContainer.Id,
+		partitionKeyPath: Constants.OrderContainer.PartitionKeyPath);
 
 	private Task DeleteContainerAsync(Database database)
-		=> database.GetContainer(_containerId).DeleteContainerAsync();
+		=> database.GetContainer(Constants.OrderContainer.Id).DeleteContainerAsync();
 
 	private static IEnumerable<Order> GetOrders() {
 		return new[] {
@@ -92,7 +88,7 @@ public class CosmosSqlApiSample {
 			.Build();
 
 		// databaseはDatabaseResponse型
-		var database = await client.CreateDatabaseIfNotExistsAsync(_databaseId);
+		var database = await client.CreateDatabaseIfNotExistsAsync(Constants.TestDatabase.Id);
 
 		// DatabaseResponse型はDatabase型に暗黙的にキャストできる
 		await ListContainerAsync(database);
