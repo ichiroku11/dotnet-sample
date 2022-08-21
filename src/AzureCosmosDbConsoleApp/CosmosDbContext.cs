@@ -10,17 +10,18 @@ public class CosmosDbContext : DbContext {
 	private readonly string _connectionString;
 
 	public CosmosDbContext(IConfiguration config) {
-		_connectionString = config.GetConnectionString("Cosmos");
+		_connectionString = config.GetConnectionString(Constants.ConnectionStringName);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		=> optionsBuilder.UseCosmos(
 			connectionString: _connectionString,
-			databaseName: "Test");
+			databaseName: Constants.TestDatabase.Id);
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		// todo:
-		base.OnModelCreating(modelBuilder);
+		modelBuilder.HasDefaultContainer(Constants.OrderContainer.Id);
+
 	}
 
 	public DbSet<Order> Orders => Set<Order>();
