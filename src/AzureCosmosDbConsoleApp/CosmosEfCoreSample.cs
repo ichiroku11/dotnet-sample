@@ -15,12 +15,10 @@ public class CosmosEfCoreSample {
 	public async Task RunAsync() {
 		await Task.CompletedTask;
 
-		// todo: error
-		/*
+		// todo: 取得できない
 		var orders = await _context.Orders.ToListAsync();
 		foreach (var order in orders) {
 			_logger.LogInformation(order.ToString());
 		}
-		*/
 	}
 }
