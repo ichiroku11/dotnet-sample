@@ -3,8 +3,6 @@ using AzureCosmosDbConsoleApp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-Console.WriteLine("Hello, World!");
-
 await Host
 	.CreateDefaultBuilder(args)
 	.ConfigureServices(services => {
