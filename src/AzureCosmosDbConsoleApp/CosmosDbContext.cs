@@ -10,7 +10,7 @@ namespace AzureCosmosDbConsoleApp;
 public class CosmosDbContext : DbContext {
 	private static readonly ILoggerFactory _loggerFactory = LoggerFactory.Create(builder => {
 		builder
-			.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
+			.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name)
 			.AddConsole()
 			.AddDebug();
 	});
@@ -30,8 +30,27 @@ public class CosmosDbContext : DbContext {
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
-		modelBuilder.HasDefaultContainer(Constants.OrderContainer.Id);
+		// うまくいかない
+		/*
+		modelBuilder.Entity<Order>(entityBuilder => {
+			entityBuilder.ToContainer(Constants.OrderContainer.Id);
+			entityBuilder.HasNoDiscriminator();
 
+			entityBuilder.Property(order => order.Id).ToJsonProperty("id");
+			entityBuilder.Property(order => order.CustomerId).ToJsonProperty("customerId");
+			entityBuilder.Property(order => order.OrderedAt).ToJsonProperty("orderedAt");
+
+			entityBuilder.OwnsMany(
+				order => order.Details,
+				navigationBuilder => {
+					navigationBuilder.ToJsonProperty("details");
+
+					navigationBuilder.Property(detail => detail.Menu).ToJsonProperty("menu");
+					navigationBuilder.Property(detail => detail.Price).ToJsonProperty("price");
+					navigationBuilder.Property(detail => detail.Quantity).ToJsonProperty("Quantity");
+				});
+		});
+		*/
 	}
 
 	public DbSet<Order> Orders => Set<Order>();
