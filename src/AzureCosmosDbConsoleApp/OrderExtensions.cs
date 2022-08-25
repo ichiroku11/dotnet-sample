@@ -5,7 +5,7 @@ namespace AzureCosmosDbConsoleApp;
 
 public static class OrderExtensions {
 	private static readonly JsonSerializerOptions _options
-		= new() {
+		= new JsonSerializerOptions {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 			WriteIndented = true,
 		};
