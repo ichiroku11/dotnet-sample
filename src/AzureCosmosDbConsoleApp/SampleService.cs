@@ -10,7 +10,7 @@ public class SampleService : OnceHostedService {
 		: base(host, lifetime, logger) {
 	}
 
-	protected override Task RunAsync(IServiceProvider services) {
+	protected override async Task RunAsync(IServiceProvider services) {
 		/*
 		return services.GetRequiredService<CosmosSqlApiSample>().RunAsync();
 		*/
@@ -18,6 +18,6 @@ public class SampleService : OnceHostedService {
 		// DBコンテキストにはスコープが必要っぽい
 		// （AddDbContextメソッドを呼び出すときに調整することもできそう）
 		using var scope = services.CreateScope();
-		return scope.ServiceProvider.GetRequiredService<CosmosEfCoreSample>().RunAsync();
+		await scope.ServiceProvider.GetRequiredService<CosmosEfCoreSample>().RunAsync();
 	}
 }
