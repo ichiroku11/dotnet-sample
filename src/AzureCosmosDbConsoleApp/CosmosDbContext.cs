@@ -30,6 +30,7 @@ public class CosmosDbContext : DbContext {
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
+		// Order
 		modelBuilder.Entity<Order>(entityBuilder => {
 			entityBuilder
 				.ToContainer(Constants.OrderContainer.Id)
@@ -39,19 +40,16 @@ public class CosmosDbContext : DbContext {
 			entityBuilder.Property(order => order.CustomerId).ToJsonProperty("customerId");
 			entityBuilder.Property(order => order.OrderedAt).ToJsonProperty("orderedAt");
 
-			// todo: detailsが取得できない
-			/*
+			// OrderDetail
 			entityBuilder.OwnsMany(
 				order => order.Details,
 				navigationBuilder => {
-					navigationBuilder
-						.ToJsonProperty("details");
+					navigationBuilder.ToJsonProperty("details");
 
 					navigationBuilder.Property(detail => detail.Menu).ToJsonProperty("menu");
 					navigationBuilder.Property(detail => detail.Price).ToJsonProperty("price");
-					navigationBuilder.Property(detail => detail.Quantity).ToJsonProperty("Quantity");
+					navigationBuilder.Property(detail => detail.Quantity).ToJsonProperty("quantity");
 				});
-			*/
 		});
 	}
 
