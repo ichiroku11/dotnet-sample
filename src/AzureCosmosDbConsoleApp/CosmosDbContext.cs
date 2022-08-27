@@ -22,35 +22,37 @@ public class CosmosDbContext : DbContext {
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-		optionsBuilder.UseLoggerFactory(_loggerFactory);
-
-		optionsBuilder.UseCosmos(
-			connectionString: _connectionString,
-			databaseName: Constants.TestDatabase.Id);
+		optionsBuilder
+			.UseLoggerFactory(_loggerFactory)
+			.UseCosmos(
+				connectionString: _connectionString,
+				databaseName: Constants.TestDatabase.Id);
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
-		// うまくいかない
-		/*
 		modelBuilder.Entity<Order>(entityBuilder => {
-			entityBuilder.ToContainer(Constants.OrderContainer.Id);
-			entityBuilder.HasNoDiscriminator();
+			entityBuilder
+				.ToContainer(Constants.OrderContainer.Id)
+				.HasNoDiscriminator();
 
 			entityBuilder.Property(order => order.Id).ToJsonProperty("id");
 			entityBuilder.Property(order => order.CustomerId).ToJsonProperty("customerId");
 			entityBuilder.Property(order => order.OrderedAt).ToJsonProperty("orderedAt");
 
+			// todo: detailsが取得できない
+			/*
 			entityBuilder.OwnsMany(
 				order => order.Details,
 				navigationBuilder => {
-					navigationBuilder.ToJsonProperty("details");
+					navigationBuilder
+						.ToJsonProperty("details");
 
 					navigationBuilder.Property(detail => detail.Menu).ToJsonProperty("menu");
 					navigationBuilder.Property(detail => detail.Price).ToJsonProperty("price");
 					navigationBuilder.Property(detail => detail.Quantity).ToJsonProperty("Quantity");
 				});
+			*/
 		});
-		*/
 	}
 
 	public DbSet<Order> Orders => Set<Order>();
