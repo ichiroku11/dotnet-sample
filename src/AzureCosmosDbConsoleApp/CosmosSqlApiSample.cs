@@ -51,7 +51,7 @@ public class CosmosSqlApiSample {
 		}
 	}
 
-	// アイテムをIDで取得
+	// OrderをIDで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
 	public async Task<Order> GetOrderById(Container container, string id) {
 		var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
@@ -61,7 +61,7 @@ public class CosmosSqlApiSample {
 		return response;
 	}
 
-	// 複数のアイテムをIDで取得
+	// 複数のOrderをIDで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-multiple-items-asynchronously
 	public async Task<IEnumerable<Order>> GetOrdersByIds(Container container, IEnumerable<string> ids) {
 		var items = ids
@@ -72,6 +72,26 @@ public class CosmosSqlApiSample {
 		_logger.LogInformation(response.ToJson());
 
 		return response;
+	}
+
+	// Orderをクエリで取得
+	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
+	public async Task<IEnumerable<Order>> GetOrdersByCustomerId(Container container, string customerId)	{
+		var query = new QueryDefinition("select * from c where c.customerId = @customerId")
+			.WithParameter("@customerId", customerId);
+		using var iterator = container.GetItemQueryIterator<Order>(query);
+
+		var results = new List<Order>();
+
+		while (iterator.HasMoreResults) {
+			var response = await iterator.ReadNextAsync();
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+
+			results.AddRange(response);
+		}
+
+		return results;
 	}
 
 	public async Task RunAsync() {
@@ -101,18 +121,7 @@ public class CosmosSqlApiSample {
 		await GetOrdersByIds(container, orders.Take(2).Select(order => order.Id));
 
 		// Orderをクエリで取得
-		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
-		{
-			var query = new QueryDefinition("select * from c where c.customerId = @customerId")
-				.WithParameter("@customerId", "x");
-			using var iterator = container.GetItemQueryIterator<Order>(query);
-
-			while (iterator.HasMoreResults) {
-				var response = await iterator.ReadNextAsync();
-				_logger.LogInformation(response.RequestCharge.ToString());
-				_logger.LogInformation(response.ToJson());
-			}
-		}
+		await GetOrdersByCustomerId(container, "x");
 
 		// OrderをLINQで取得
 		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-linq-asynchronously
