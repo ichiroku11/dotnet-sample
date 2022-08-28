@@ -41,6 +41,39 @@ public class CosmosSqlApiSample {
 	private Task DeleteContainerAsync(Database database)
 		=> database.GetContainer(Constants.OrderContainer.Id).DeleteContainerAsync();
 
+	// アイテムの追加
+	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-create-item#create-an-item-asynchronously
+	private async Task AddOrders(Container container, IEnumerable<Order> orders) {
+		foreach (var orderToAdd in orders) {
+			var response = await container.CreateItemAsync(orderToAdd);
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+		}
+	}
+
+	// アイテムをIDで取得
+	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
+	public async Task<Order> GetOrderById(Container container, string id) {
+		var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
+		_logger.LogInformation(response.RequestCharge.ToString());
+		_logger.LogInformation(response.ToJson());
+
+		return response;
+	}
+
+	// 複数のアイテムをIDで取得
+	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-multiple-items-asynchronously
+	public async Task<IEnumerable<Order>> GetOrdersByIds(Container container, IEnumerable<string> ids) {
+		var items = ids
+			.Select(id => (id, new PartitionKey(id)))
+			.ToList();
+		var response = await container.ReadManyItemsAsync<Order>(items);
+		_logger.LogInformation(response.RequestCharge.ToString());
+		_logger.LogInformation(response.ToJson());
+
+		return response;
+	}
+
 	public async Task RunAsync() {
 		using var client = new CosmosClientBuilder(_connectionString)
 			.WithSerializerOptions(new CosmosSerializationOptions {
@@ -60,35 +93,12 @@ public class CosmosSqlApiSample {
 
 		var orders = OrderProvider.GetOrders();
 
-		// アイテムの追加
-		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-create-item#create-an-item-asynchronously
-		foreach (var orderToAdd in orders) {
-			var response = await container.CreateItemAsync(orderToAdd);
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
-		}
+		// Orderの追加
+		await AddOrders(container, orders);
 
-		/*
-		// アイテムをIDで取得
-		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
-		{
-			var id = orders.First().Id;
-			var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
-		}
-
-		// 複数のアイテムをIDで取得
-		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-multiple-items-asynchronously
-		{
-			var items = orders.Take(2)
-				.Select(order => (order.Id, new PartitionKey(order.Id)))
-				.ToList();
-			var response = await container.ReadManyItemsAsync<Order>(items);
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
-		}
-		*/
+		// OrderをIDで取得
+		await GetOrderById(container, orders.First().Id);
+		await GetOrdersByIds(container, orders.Take(2).Select(order => order.Id));
 
 		// Orderをクエリで取得
 		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
