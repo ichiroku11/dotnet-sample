@@ -94,6 +94,26 @@ public class CosmosSqlApiSample {
 		return results;
 	}
 
+	// OrderをLINQで取得
+	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-linq-asynchronously
+	public async Task<IEnumerable<Order>> GetOrdersByCustomerIdUsingLinq(Container container, string customerId) {
+		using var iterator = container.GetItemLinqQueryable<Order>()
+			.Where(order => order.CustomerId == customerId)
+			.ToFeedIterator();
+
+		var results = new List<Order>();
+
+		while (iterator.HasMoreResults) {
+			var response = await iterator.ReadNextAsync();
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+
+			results.AddRange(response);
+		}
+
+		return results;
+	}
+
 	public async Task RunAsync() {
 		using var client = new CosmosClientBuilder(_connectionString)
 			.WithSerializerOptions(new CosmosSerializationOptions {
@@ -124,17 +144,7 @@ public class CosmosSqlApiSample {
 		await GetOrdersByCustomerId(container, "x");
 
 		// OrderをLINQで取得
-		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-linq-asynchronously
-		{
-			using var iterator = container.GetItemLinqQueryable<Order>()
-				.Where(order => order.CustomerId == "x")
-				.ToFeedIterator();
-			while (iterator.HasMoreResults) {
-				var response = await iterator.ReadNextAsync();
-				_logger.LogInformation(response.RequestCharge.ToString());
-				_logger.LogInformation(response.ToJson());
-			}
-		}
+		await GetOrdersByCustomerIdUsingLinq(container, "x");
 
 		// OrderDetail部分だけをクエリで取得
 		// 結果はOrderDetail配列の配列になる
