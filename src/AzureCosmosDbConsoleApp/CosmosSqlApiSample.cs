@@ -41,49 +41,6 @@ public class CosmosSqlApiSample {
 	private Task DeleteContainerAsync(Database database)
 		=> database.GetContainer(Constants.OrderContainer.Id).DeleteContainerAsync();
 
-	private static IEnumerable<Order> GetOrders() {
-		return new[] {
-			new Order {
-				Id = Guid.NewGuid().ToString(),
-				CustomerId = "x",
-				OrderedAt = DateTime.Now,
-				Details = new List<OrderDetail> {
-					new ("純けい", 360m, 3),
-					new ("しろ", 330m, 2),
-					new ("若皮", 360m, 3),
-				}
-			},
-			new Order {
-				Id = Guid.NewGuid().ToString(),
-				CustomerId = "y",
-				OrderedAt = DateTime.Now,
-				Details = new List<OrderDetail> {
-					new ("純けい", 360m, 5),
-					new ("しろ", 330m, 4),
-					new ("若皮", 360m, 3),
-				}
-			},
-			new Order {
-				Id = Guid.NewGuid().ToString(),
-				CustomerId = "y",
-				OrderedAt = DateTime.Now,
-				Details = new List<OrderDetail> {
-					new ("純けい", 360m, 3),
-					new ("若皮", 360m, 3),
-				}
-			},
-			new Order {
-				Id = Guid.NewGuid().ToString(),
-				CustomerId = "x",
-				OrderedAt = DateTime.Now,
-				Details = new List<OrderDetail> {
-					new("純けい", 360m, 1),
-					new("しろ", 330m, 2),
-				},
-			}
-		};
-	}
-
 	public async Task RunAsync() {
 		using var client = new CosmosClientBuilder(_connectionString)
 			.WithSerializerOptions(new CosmosSerializationOptions {
@@ -101,7 +58,7 @@ public class CosmosSqlApiSample {
 		await DeleteContainerAsync(database);
 		var container = await CreateContainerAsync(database);
 
-		var orders = GetOrders();
+		var orders = OrderProvider.GetOrders();
 
 		// アイテムの追加
 		// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-create-item#create-an-item-asynchronously
