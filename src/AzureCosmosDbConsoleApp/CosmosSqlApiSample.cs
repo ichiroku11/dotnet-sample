@@ -53,65 +53,75 @@ public class CosmosSqlApiSample {
 
 	// OrderをIDで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
-	public async Task<Order> GetOrderById(Container container, string id) {
+	public async Task GetOrderById(Container container, string id) {
 		var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
 		_logger.LogInformation(response.RequestCharge.ToString());
 		_logger.LogInformation(response.ToJson());
-
-		return response;
 	}
 
 	// 複数のOrderをIDで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-multiple-items-asynchronously
-	public async Task<IEnumerable<Order>> GetOrdersByIds(Container container, IEnumerable<string> ids) {
+	public async Task GetOrdersByIds(Container container, IEnumerable<string> ids) {
 		var items = ids
 			.Select(id => (id, new PartitionKey(id)))
 			.ToList();
 		var response = await container.ReadManyItemsAsync<Order>(items);
 		_logger.LogInformation(response.RequestCharge.ToString());
 		_logger.LogInformation(response.ToJson());
-
-		return response;
 	}
 
 	// Orderをクエリで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
-	public async Task<IEnumerable<Order>> GetOrdersByCustomerId(Container container, string customerId)	{
+	public async Task GetOrdersByCustomerId(Container container, string customerId)	{
 		var query = new QueryDefinition("select * from c where c.customerId = @customerId")
 			.WithParameter("@customerId", customerId);
 		using var iterator = container.GetItemQueryIterator<Order>(query);
 
-		var results = new List<Order>();
-
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
 			_logger.LogInformation(response.RequestCharge.ToString());
 			_logger.LogInformation(response.ToJson());
-
-			results.AddRange(response);
 		}
-
-		return results;
 	}
 
 	// OrderをLINQで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-linq-asynchronously
-	public async Task<IEnumerable<Order>> GetOrdersByCustomerIdUsingLinq(Container container, string customerId) {
+	public async Task GetOrdersByCustomerIdUsingLinq(Container container, string customerId) {
 		using var iterator = container.GetItemLinqQueryable<Order>()
 			.Where(order => order.CustomerId == customerId)
 			.ToFeedIterator();
-
-		var results = new List<Order>();
 
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
 			_logger.LogInformation(response.RequestCharge.ToString());
 			_logger.LogInformation(response.ToJson());
-
-			results.AddRange(response);
 		}
+	}
 
-		return results;
+	// OrderDetail部分だけをクエリで取得
+	public async Task GetOrderDetailParts(Container container) {
+		// 結果はOrderDetail配列の配列になる
+		var query = new QueryDefinition("select * from c.details");
+		using var iterator = container.GetItemQueryIterator<IEnumerable<OrderDetail>>(query);
+
+		while (iterator.HasMoreResults) {
+			var response = await iterator.ReadNextAsync();
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+		}
+	}
+
+	// OrderDetail部分だけをinキーワードを使ったクエリで取得
+	public async Task GetOrderDetails(Container container) {
+		// 結果は平坦化されたOrderDetail配列になる
+		var query = new QueryDefinition("select * from c in c.details");
+		using var iterator = container.GetItemQueryIterator<OrderDetail>(query);
+
+		while (iterator.HasMoreResults) {
+			var response = await iterator.ReadNextAsync();
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+		}
 	}
 
 	public async Task RunAsync() {
@@ -147,29 +157,9 @@ public class CosmosSqlApiSample {
 		await GetOrdersByCustomerIdUsingLinq(container, "x");
 
 		// OrderDetail部分だけをクエリで取得
-		// 結果はOrderDetail配列の配列になる
-		{
-			var query = new QueryDefinition("select * from c.details");
-			using var iterator = container.GetItemQueryIterator<IEnumerable<OrderDetail>>(query);
-
-			while (iterator.HasMoreResults) {
-				var response = await iterator.ReadNextAsync();
-				_logger.LogInformation(response.RequestCharge.ToString());
-				_logger.LogInformation(response.ToJson());
-			}
-		}
+		await GetOrderDetailParts(container);
 
 		// OrderDetail部分だけをinキーワードを使ったクエリで取得
-		// 結果は平坦化されたOrderDetail配列になる
-		{
-			var query = new QueryDefinition("select * from c in c.details");
-			using var iterator = container.GetItemQueryIterator<OrderDetail>(query);
-
-			while (iterator.HasMoreResults) {
-				var response = await iterator.ReadNextAsync();
-				_logger.LogInformation(response.RequestCharge.ToString());
-				_logger.LogInformation(response.ToJson());
-			}
-		}
+		await GetOrderDetails(container);
 	}
 }
