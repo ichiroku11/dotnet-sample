@@ -43,7 +43,7 @@ public class CosmosSqlApiSample {
 
 	// アイテムの追加
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-create-item#create-an-item-asynchronously
-	private async Task AddOrders(Container container, IEnumerable<Order> orders) {
+	private async Task AddOrdersAsync(Container container, IEnumerable<Order> orders) {
 		foreach (var orderToAdd in orders) {
 			var response = await container.CreateItemAsync(orderToAdd);
 			_logger.LogInformation(response.RequestCharge.ToString());
@@ -53,7 +53,7 @@ public class CosmosSqlApiSample {
 
 	// OrderをIDで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
-	private async Task GetOrderById(Container container, string id) {
+	private async Task GetOrderByIdAsync(Container container, string id) {
 		var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
 		_logger.LogInformation(response.RequestCharge.ToString());
 		_logger.LogInformation(response.ToJson());
@@ -61,7 +61,7 @@ public class CosmosSqlApiSample {
 
 	// 複数のOrderをIDで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-multiple-items-asynchronously
-	private async Task GetOrdersByIds(Container container, IEnumerable<string> ids) {
+	private async Task GetOrdersByIdsAsync(Container container, IEnumerable<string> ids) {
 		var items = ids
 			.Select(id => (id, new PartitionKey(id)))
 			.ToList();
@@ -72,7 +72,7 @@ public class CosmosSqlApiSample {
 
 	// Orderをクエリで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
-	private async Task GetOrdersByCustomerId(Container container, string customerId)	{
+	private async Task GetOrdersByCustomerIdAsync(Container container, string customerId)	{
 		var query = new QueryDefinition("select * from c where c.customerId = @customerId")
 			.WithParameter("@customerId", customerId);
 		using var iterator = container.GetItemQueryIterator<Order>(query);
@@ -86,7 +86,7 @@ public class CosmosSqlApiSample {
 
 	// OrderをLINQで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-linq-asynchronously
-	private async Task GetOrdersByCustomerIdUsingLinq(Container container, string customerId) {
+	private async Task GetOrdersByCustomerIdUsingLinqAsync(Container container, string customerId) {
 		using var iterator = container.GetItemLinqQueryable<Order>()
 			.Where(order => order.CustomerId == customerId)
 			.ToFeedIterator();
@@ -99,7 +99,7 @@ public class CosmosSqlApiSample {
 	}
 
 	// OrderDetail部分だけをクエリで取得
-	private async Task GetOrderDetailParts(Container container) {
+	private async Task GetOrderDetailPartsAsync(Container container) {
 		// 結果はOrderDetail配列の配列になる
 		var query = new QueryDefinition("select * from c.details");
 		using var iterator = container.GetItemQueryIterator<IEnumerable<OrderDetail>>(query);
@@ -112,7 +112,7 @@ public class CosmosSqlApiSample {
 	}
 
 	// OrderDetail部分だけをinキーワードを使ったクエリで取得
-	private async Task GetOrderDetails(Container container) {
+	private async Task GetOrderDetailsAsync(Container container) {
 		// 結果は平坦化されたOrderDetail配列になる
 		var query = new QueryDefinition("select * from c in c.details");
 		using var iterator = container.GetItemQueryIterator<OrderDetail>(query);
@@ -144,22 +144,22 @@ public class CosmosSqlApiSample {
 		var orders = OrderProvider.GetOrders();
 
 		// Orderの追加
-		await AddOrders(container, orders);
+		await AddOrdersAsync(container, orders);
 
 		// OrderをIDで取得
-		await GetOrderById(container, orders.First().Id);
-		await GetOrdersByIds(container, orders.Take(2).Select(order => order.Id));
+		await GetOrderByIdAsync(container, orders.First().Id);
+		await GetOrdersByIdsAsync(container, orders.Take(2).Select(order => order.Id));
 
 		// Orderをクエリで取得
-		await GetOrdersByCustomerId(container, "x");
+		await GetOrdersByCustomerIdAsync(container, "x");
 
 		// OrderをLINQで取得
-		await GetOrdersByCustomerIdUsingLinq(container, "x");
+		await GetOrdersByCustomerIdUsingLinqAsync(container, "x");
 
 		// OrderDetail部分だけをクエリで取得
-		await GetOrderDetailParts(container);
+		await GetOrderDetailPartsAsync(container);
 
 		// OrderDetail部分だけをinキーワードを使ったクエリで取得
-		await GetOrderDetails(container);
+		await GetOrderDetailsAsync(container);
 	}
 }
