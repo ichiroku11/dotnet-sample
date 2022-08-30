@@ -12,10 +12,39 @@ public class CosmosEfCoreSample {
 		_logger = logger;
 	}
 
-	public async Task RunAsync() {
+	// Orderを削除
+	private async Task DeleteOrdersAsync() {
 		var orders = await _context.Orders.ToListAsync();
+		if (orders.Any()) {
+			_logger.LogInformation(orders.ToJson());
+			_context.Orders.RemoveRange(orders);
+			await _context.SaveChangesAsync();
+		}
+	}
+
+	// Orderを追加
+	private async Task AddOrdersAsync(IEnumerable<Order> orders) {
 		foreach (var order in orders) {
 			_logger.LogInformation(order.ToJson());
 		}
+		_context.AddRange(orders);
+		await _context.SaveChangesAsync();
+	}
+
+	public async Task RunAsync() {
+		await _context.Database.EnsureCreatedAsync();
+
+		// EF Coreではコンテナーの追加・削除はできない？
+
+		// todo: 削除でエラー
+		/*
+		// 既存のOrderをすべて削除
+		await DeleteOrdersAsync();
+
+		var orders = OrderProvider.GetOrders();
+
+		// Orderを追加
+		await AddOrdersAsync(orders);
+		*/
 	}
 }
