@@ -34,7 +34,11 @@ public class CosmosDbContext : DbContext {
 		modelBuilder.Entity<Order>(entityBuilder => {
 			entityBuilder
 				.ToContainer(Constants.OrderContainer.Id)
-				.HasNoDiscriminator();
+				.HasNoDiscriminator()
+				// パーティションキーを指定しない場合、
+				// エンティティを削除するとDbUpdateExceptionが発生していた
+				// HTTPレスポンスはNotFound(404)だった
+				.HasPartitionKey(order => order.Id);
 
 			entityBuilder.Property(order => order.Id).ToJsonProperty("id");
 			entityBuilder.Property(order => order.CustomerId).ToJsonProperty("customerId");

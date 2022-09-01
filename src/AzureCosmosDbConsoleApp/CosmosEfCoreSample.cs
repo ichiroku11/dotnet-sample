@@ -36,19 +36,11 @@ public class CosmosEfCoreSample {
 
 		// EF Coreではコンテナーの追加・削除はできない？
 
-		// todo: 単体削除でもエラーNotFound(404)
-		/*
-		var order = await _context.Orders.FirstAsync();
-		_logger.LogInformation(order.ToJson());
-		_context.Orders.Remove(order);
-		await _context.SaveChangesAsync();
-		*/
 
-		// todo: 削除でエラーNotFound(404)
-		/*
 		// 既存のOrderをすべて削除
 		await DeleteOrdersAsync();
 
+		/*
 		var orders = OrderProvider.GetOrders();
 
 		// Orderを追加
