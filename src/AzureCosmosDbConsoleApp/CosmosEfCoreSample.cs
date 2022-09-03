@@ -29,6 +29,12 @@ public class CosmosEfCoreSample {
 		await _context.SaveChangesAsync();
 	}
 
+	// OrderをIDで取得
+	private async Task GetOrderByIdAsync(string id) {
+		var order = await _context.Orders.FirstOrDefaultAsync(order => order.Id == id);
+		_logger.LogInformation(order?.ToJson());
+	}
+
 	public async Task RunAsync() {
 		await _context.Database.EnsureCreatedAsync();
 
@@ -42,6 +48,7 @@ public class CosmosEfCoreSample {
 		// Orderを追加
 		await AddOrdersAsync(orders);
 
-
+		// OrderをIDで取得
+		await GetOrderByIdAsync(orders.First().Id);
 	}
 }
