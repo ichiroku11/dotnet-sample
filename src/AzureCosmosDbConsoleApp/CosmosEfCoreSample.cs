@@ -24,9 +24,7 @@ public class CosmosEfCoreSample {
 
 	// Orderを追加
 	private async Task AddOrdersAsync(IEnumerable<Order> orders) {
-		foreach (var order in orders) {
-			_logger.LogInformation(order.ToJson());
-		}
+		_logger.LogInformation(orders.ToJson());
 		_context.AddRange(orders);
 		await _context.SaveChangesAsync();
 	}
@@ -36,15 +34,14 @@ public class CosmosEfCoreSample {
 
 		// EF Coreではコンテナーの追加・削除はできない？
 
-
 		// 既存のOrderをすべて削除
 		await DeleteOrdersAsync();
 
-		/*
 		var orders = OrderProvider.GetOrders();
 
 		// Orderを追加
 		await AddOrdersAsync(orders);
-		*/
+
+
 	}
 }
