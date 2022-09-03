@@ -35,6 +35,14 @@ public class CosmosEfCoreSample {
 		_logger.LogInformation(order?.ToJson());
 	}
 
+	// 複数のOrderをIDで取得
+	private async Task GetOrdersByIdsAsync(IEnumerable<string> ids) {
+		var orders = await _context.Orders
+			.Where(order => ids.Contains(order.Id))
+			.ToListAsync();
+		_logger.LogInformation(orders.ToJson());
+	}
+
 	public async Task RunAsync() {
 		await _context.Database.EnsureCreatedAsync();
 
@@ -50,5 +58,6 @@ public class CosmosEfCoreSample {
 
 		// OrderをIDで取得
 		await GetOrderByIdAsync(orders.First().Id);
+		await GetOrdersByIdsAsync(orders.Take(2).Select(order => order.Id));
 	}
 }
