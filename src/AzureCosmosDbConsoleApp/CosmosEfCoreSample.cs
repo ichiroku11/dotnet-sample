@@ -43,6 +43,18 @@ public class CosmosEfCoreSample {
 		_logger.LogInformation(orders.ToJson());
 	}
 
+	// OrderをLINQで取得
+	private async Task GetOrdersByCustomerIdAsync(string customerId) {
+		var orders = await _context.Orders
+			.Where(order => order.CustomerId == customerId)
+			.ToListAsync();
+		// 実行されるクエリ
+		// SELECT c
+		// FROM root c
+		// WHERE(c["customerId"] = @__customerId_0)
+		_logger.LogInformation(orders.ToJson());
+	}
+
 	public async Task RunAsync() {
 		await _context.Database.EnsureCreatedAsync();
 
@@ -59,5 +71,8 @@ public class CosmosEfCoreSample {
 		// OrderをIDで取得
 		await GetOrderByIdAsync(orders.First().Id);
 		await GetOrdersByIdsAsync(orders.Take(2).Select(order => order.Id));
+
+		// OrderをLINQで取得
+		await GetOrdersByCustomerIdAsync("x");
 	}
 }
