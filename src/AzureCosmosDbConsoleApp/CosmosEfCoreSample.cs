@@ -73,6 +73,32 @@ public class CosmosEfCoreSample {
 		_logger.LogInformation(orders.ToJson());
 	}
 
+	// OrderDetailの配列の配列を取得
+	// todo:
+
+	// OrderDetailを平坦化して取得
+	private async Task GetOrderDetailsAsync() {
+		// SelectManyはクエリに変換できなさそうで例外が発生した
+		/*
+		System.InvalidOperationException: The LINQ expression 'DbSet<Order>()
+		.SelectMany(
+			collectionSelector: o => EF.Property<ICollection<OrderDetail>>(o, "Details")
+				.AsQueryable(), 
+			resultSelector: (o, c) => new TransparentIdentifier<Order, OrderDetail>(
+				Outer = o, 
+				Inner = c
+			))' could not be translated.
+			Either rewrite the query in a form that can be translated,
+			or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'.
+			See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+		*/
+		var details = await _context.Orders
+			.SelectMany(order => order.Details)
+			.ToListAsync();
+		_logger.LogInformation(details.ToJson());
+	}
+
+
 	public async Task RunAsync() {
 		await _context.Database.EnsureCreatedAsync();
 
@@ -95,5 +121,8 @@ public class CosmosEfCoreSample {
 
 		// Orderをクエリで取得
 		await GetOrdersByCustomerIdUsingFromSqlRawAsync("x");
+
+		// OrderDetailを平坦化して取得
+		//await GetOrderDetailsAsync();
 	}
 }
