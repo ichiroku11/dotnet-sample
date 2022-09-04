@@ -80,20 +80,38 @@ public class CosmosEfCoreSample {
 	private async Task GetOrderDetailsAsync() {
 		// SelectManyはクエリに変換できなさそうで例外が発生した
 		/*
-		System.InvalidOperationException: The LINQ expression 'DbSet<Order>()
-		.SelectMany(
+		System.InvalidOperationException:
+		The LINQ expression 'DbSet<Order>().SelectMany(
 			collectionSelector: o => EF.Property<ICollection<OrderDetail>>(o, "Details")
 				.AsQueryable(), 
 			resultSelector: (o, c) => new TransparentIdentifier<Order, OrderDetail>(
 				Outer = o, 
 				Inner = c
 			))' could not be translated.
-			Either rewrite the query in a form that can be translated,
-			or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'.
-			See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
-		*/
+		Either rewrite the query in a form that can be translated,
+		or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'.
+		See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
 		var details = await _context.Orders
 			.SelectMany(order => order.Details)
+			.ToListAsync();
+		_logger.LogInformation(details.ToJson());
+		*/
+
+		// 所有エンティティ型だけで射影するには、AsNoTrackingが必要
+		/*
+		System.InvalidOperationException:
+		A tracking query is attempting to project an owned entity without a corresponding owner in its result,
+		but owned entities cannot be tracked without their owner.
+		Either include the owner entity in the result or make the query non - tracking using 'AsNoTracking'.
+		*/
+		/*
+		var details = await _context.Orders
+			.Select(order => order.Details)
+			.ToListAsync();
+		*/
+
+		var details = await _context.Orders.AsNoTracking()
+			.Select(order => order.Details)
 			.ToListAsync();
 		_logger.LogInformation(details.ToJson());
 	}
@@ -123,6 +141,6 @@ public class CosmosEfCoreSample {
 		await GetOrdersByCustomerIdUsingFromSqlRawAsync("x");
 
 		// OrderDetailを平坦化して取得
-		//await GetOrderDetailsAsync();
+		await GetOrderDetailsAsync();
 	}
 }
