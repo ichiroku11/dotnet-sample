@@ -40,6 +40,10 @@ public class CosmosEfCoreSample {
 		var orders = await _context.Orders
 			.Where(order => ids.Contains(order.Id))
 			.ToListAsync();
+		// 実行されるクエリ
+		// SELECT c
+		// FROM root c
+		// WHERE c["id"] IN("{guid}", "{guid}")
 		_logger.LogInformation(orders.ToJson());
 	}
 
