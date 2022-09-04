@@ -59,6 +59,20 @@ public class CosmosEfCoreSample {
 		_logger.LogInformation(orders.ToJson());
 	}
 
+	// OrderをSQLクエリで取得
+	private async Task GetOrdersByCustomerIdUsingFromSqlRawAsync(string customerId) {
+		var orders = await _context.Orders
+			// クエリはパラメタライズされる
+			.FromSqlRaw("select * from c where c.customerId = {0}", customerId)
+			.ToListAsync();
+		// 実行されるクエリ
+		// SELECT c
+		// FROM (
+		//     select * from c where c.customerId = @p0
+		// ) c
+		_logger.LogInformation(orders.ToJson());
+	}
+
 	public async Task RunAsync() {
 		await _context.Database.EnsureCreatedAsync();
 
@@ -78,5 +92,8 @@ public class CosmosEfCoreSample {
 
 		// OrderをLINQで取得
 		await GetOrdersByCustomerIdAsync("x");
+
+		// Orderをクエリで取得
+		await GetOrdersByCustomerIdUsingFromSqlRawAsync("x");
 	}
 }
