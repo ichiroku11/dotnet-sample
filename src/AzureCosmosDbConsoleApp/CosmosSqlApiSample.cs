@@ -124,6 +124,18 @@ public class CosmosSqlApiSample {
 		}
 	}
 
+	// OrderDetail部分だけをLINQ（SelectMany）で取得
+	private async Task GetOrderDetailsUsingLinqAsync(Container container) {
+		using var iterator = container.GetItemLinqQueryable<Order>()
+			.SelectMany(order => order.Details)
+			.ToFeedIterator();
+		while (iterator.HasMoreResults) {
+			var response = await iterator.ReadNextAsync();
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+		}
+	}
+
 	public async Task RunAsync() {
 		using var client = new CosmosClientBuilder(_connectionString)
 			.WithSerializerOptions(new CosmosSerializationOptions {
@@ -161,5 +173,8 @@ public class CosmosSqlApiSample {
 
 		// OrderDetail部分だけをinキーワードを使ったクエリで取得
 		await GetOrderDetailsAsync(container);
+
+		// OrderDetail部分だけをLINQ（SelectMany）で取得
+		await GetOrderDetailsUsingLinqAsync(container);
 	}
 }
