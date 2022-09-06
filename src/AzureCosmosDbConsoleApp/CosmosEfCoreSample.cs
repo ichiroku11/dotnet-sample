@@ -118,8 +118,7 @@ public class CosmosEfCoreSample {
 		// EF Coreでは平坦化して取得できなさそうなので、
 		// CosmosClientを使って取得する（取得したCosmosClientはusing不要な気がする）
 		var client = _context.Database.GetCosmosClient();
-		var database = client.GetDatabase(Constants.TestDatabase.Id);
-		var container = database.GetContainer(Constants.OrderContainer.Id);
+		var container = client.GetContainer(Constants.TestDatabase.Id, Constants.OrderContainer.Id);
 
 		using var iterator = container.GetItemLinqQueryable<Order>()
 			// todo: Orderは取得できるかOrderDetailが取得できない
