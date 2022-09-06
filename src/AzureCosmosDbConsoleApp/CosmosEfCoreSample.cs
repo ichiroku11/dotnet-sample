@@ -1,3 +1,4 @@
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -73,10 +74,8 @@ public class CosmosEfCoreSample {
 		_logger.LogInformation(orders.ToJson());
 	}
 
-	// OrderDetailの配列の配列を取得
-	// todo:
-
-	// OrderDetailを平坦化して取得
+	// OrderDetailを平坦化して取得したかったができなさそう
+	// 配列の配列を取得
 	private async Task GetOrderDetailsAsync() {
 		// SelectManyはクエリに変換できなさそうで例外が発生した
 		/*
@@ -103,8 +102,6 @@ public class CosmosEfCoreSample {
 		A tracking query is attempting to project an owned entity without a corresponding owner in its result,
 		but owned entities cannot be tracked without their owner.
 		Either include the owner entity in the result or make the query non - tracking using 'AsNoTracking'.
-		*/
-		/*
 		var details = await _context.Orders
 			.Select(order => order.Details)
 			.ToListAsync();
@@ -116,6 +113,24 @@ public class CosmosEfCoreSample {
 		_logger.LogInformation(details.ToJson());
 	}
 
+	// OrderDetailを平坦化して取得
+	private async Task GetOrderDetailsUsingCosmosClientAsync() {
+		// EF Coreでは平坦化して取得できなさそうなので、
+		// CosmosClientを使って取得する（取得したCosmosClientはusing不要な気がする）
+		var client = _context.Database.GetCosmosClient();
+		var database = client.GetDatabase(Constants.TestDatabase.Id);
+		var container = database.GetContainer(Constants.OrderContainer.Id);
+
+		using var iterator = container.GetItemLinqQueryable<Order>()
+			// todo: Orderは取得できるかOrderDetailが取得できない
+			//.SelectMany(order => order.Details)
+			.ToFeedIterator();
+		while (iterator.HasMoreResults) {
+			var response = await iterator.ReadNextAsync();
+			_logger.LogInformation(response.RequestCharge.ToString());
+			_logger.LogInformation(response.ToJson());
+		}
+	}
 
 	public async Task RunAsync() {
 		await _context.Database.EnsureCreatedAsync();
@@ -140,7 +155,10 @@ public class CosmosEfCoreSample {
 		// Orderをクエリで取得
 		await GetOrdersByCustomerIdUsingFromSqlRawAsync("x");
 
-		// OrderDetailを平坦化して取得
+		// OrderDetailの配列の配列を取得
 		await GetOrderDetailsAsync();
+
+		// OrderDetailを平坦化して取得
+		await GetOrderDetailsUsingCosmosClientAsync();
 	}
 }
