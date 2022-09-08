@@ -1,3 +1,4 @@
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -120,10 +121,24 @@ public class CosmosEfCoreSample {
 		var client = _context.Database.GetCosmosClient();
 		var container = client.GetContainer(Constants.TestDatabase.Id, Constants.OrderContainer.Id);
 
+		// Orderは取得できる
+		/*
 		using var iterator = container.GetItemLinqQueryable<Order>()
-			// todo: Orderは取得できるかOrderDetailが取得できない
-			//.SelectMany(order => order.Details)
+			.SelectMany(order => order.Details)
 			.ToFeedIterator();
+		*/
+
+		// SelectManyでOrderDetailは取得できない？なぜ
+		/*
+		using var iterator = container.GetItemLinqQueryable<Order>()
+			.SelectMany(order => order.Details)
+			.ToFeedIterator();
+		*/
+
+		// 生クエリでOrderDetailは取得できる
+		var query = new QueryDefinition("select * from c in c.details");
+		using var iterator = container.GetItemQueryIterator<OrderDetail>(query);
+
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
 			_logger.LogInformation(response.RequestCharge.ToString());
