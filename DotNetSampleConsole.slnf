@@ -5,6 +5,7 @@
       "src\\AzureAdB2cMsalConsoleApp\\AzureAdB2cMsalConsoleApp.csproj",
       "src\\AzureAdB2cUserManagementConsoleApp\\AzureAdB2cUserManagementConsoleApp.csproj",
       "src\\AzureCacheForRedisConsoleApp\\AzureCacheForRedisConsoleApp.csproj",
+      "src\\AzureCosmosDbConsoleApp\\AzureCosmosDbConsoleApp.csproj",
       "src\\AzureStorageConsoleApp\\AzureStorageConsoleApp.csproj",
       "src\\DigitalSignatureConsoleApp\\DigitalSignatureConsoleApp.csproj",
       "src\\GenericHostConsoleApp\\GenericHostConsoleApp.csproj",
