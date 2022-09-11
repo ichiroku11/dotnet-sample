@@ -14,4 +14,19 @@ public class EnumerableOrderByTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	// nullとnot nullを並び替えると
+	// null => not nullという並び順になる
+	[Fact]
+	public void OrderBy_nullとintの並び順を確認する() {
+		// Arrange
+		var source = new int?[] { int.MinValue, null };
+
+		// Act
+		var actual = source.OrderBy(value => value);
+
+		// Assert
+		var expected = new int?[] { null, int.MinValue };
+		Assert.Equal(expected, actual);
+	}
 }
