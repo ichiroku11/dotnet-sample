@@ -109,4 +109,18 @@ public class UriTest {
 		// Assert
 		Assert.Equal(query, uri.Query);
 	}
+
+	[Theory]
+	[InlineData("", UriHostNameType.Unknown)]
+	[InlineData(default(string), UriHostNameType.Unknown)]
+	[InlineData("localhost", UriHostNameType.Dns)]
+	[InlineData("www.example.jp", UriHostNameType.Dns)]
+	public void CheckHostName_取得できるUriHostNameTypeを確認する(string name, UriHostNameType expected) {
+		// Arrange
+		// Act
+		var actual = Uri.CheckHostName(name);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
