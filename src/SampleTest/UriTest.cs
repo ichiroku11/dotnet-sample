@@ -123,4 +123,17 @@ public class UriTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData("", false)]
+	[InlineData(default(string), false)]
+	[InlineData("https", true)]
+	public void CheckSchemeName_取得できる値を確認する(string name, bool expected) {
+		// Arrange
+		// Act
+		var actual = Uri.CheckSchemeName(name);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
