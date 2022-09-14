@@ -136,4 +136,12 @@ public class UriTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Fact]
+	public void UriSchemeHttps_値を確認する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Equal("https", Uri.UriSchemeHttps);
+	}
 }
