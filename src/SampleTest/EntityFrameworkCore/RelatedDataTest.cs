@@ -380,11 +380,8 @@ delete from dbo.MonsterCategory;";
 		// Arrange
 		await InitAsync();
 
-		// カテゴリを追加
 		_context.MonsterCategories.AddRange(_monsterCategories.Values);
-		// アイテムを追加
 		_context.Items.AddRange(_items.Values);
-		// モンスターとモンスターアイテムを追加
 		var monsters = GetMonsters();
 		_context.Monsters.AddRange(monsters);
 
@@ -392,13 +389,13 @@ delete from dbo.MonsterCategory;";
 		Assert.Equal(_monsterCategories.Count + _items.Count + monsters.Count() + _monsterItems.Count, rows);
 
 		// Act
-		// Assert
 		// IncludeするItemを「スライムゼリー」だけフィルターする
 		var actual = await _context.Monsters
 			.Include(monster => monster.Items!.Where(item => item.ItemId == 2))
 			.OrderBy(monster => monster.Id)
 			.ToListAsync();
 
+		// Assert
 		// 発行されるSQLはleft joinのようでMonster自体はフィルターされない
 		Assert.Equal(monsters, actual, _monsterComparer);
 
@@ -416,5 +413,42 @@ delete from dbo.MonsterCategory;";
 				Assert.Equal(2, monster.Id);
 				Assert.Empty(monster.Items);
 			});
+
+		Assert.Single(actual);
+	}
+
+	// Includeでフィルターし、フィルターされた子要素だけを持つ要素に絞り込む
+	[Fact]
+	public async Task Include_Filtered2() {
+		// Arrange
+		await InitAsync();
+
+		_context.MonsterCategories.AddRange(_monsterCategories.Values);
+		_context.Items.AddRange(_items.Values);
+		var monsters = GetMonsters();
+		_context.Monsters.AddRange(GetMonsters());
+
+		var rows = await _context.SaveChangesAsync();
+		Assert.Equal(_monsterCategories.Count + _items.Count + monsters.Count() + _monsterItems.Count, rows);
+
+		// Act
+		// IncludeするItemを「スライムゼリー」だけにフィルターし、
+		// さらに「スライムゼリー」を持つMonsterだけに絞り込む
+		var actual = await _context.Monsters
+			.Include(monster => monster.Items!.Where(item => item.ItemId == 2))
+			.Where(monster => monster.Items!.Any(item => item.ItemId == 2))
+			.OrderBy(monster => monster.Id)
+			.ToListAsync();
+
+		// Assert
+		// スライムだけを取得できる
+		Assert.Single(actual);
+
+		var monster = actual.First();
+		Assert.Equal(1, monster.Id);
+		Assert.Single(monster.Items);
+
+		var monsterItem = monster.Items!.First();
+		Assert.Equal(2, monsterItem.ItemId);
 	}
 }
