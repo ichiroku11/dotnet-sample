@@ -170,6 +170,17 @@ delete from dbo.MonsterCategory;";
 		return _context.Database.ExecuteSqlRawAsync(sql);
 	}
 
+	private IEnumerable<Monster> GetMonsters()
+		=> _monsters
+			.Select(monster => new Monster {
+				Id = monster.Id,
+				CategoryId = monster.CategoryId,
+				Name = monster.Name,
+				// ナビゲーションプロパティにMonsterItemを設定
+				Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
+			})
+			.OrderBy(monster => monster.Id);
+
 	[Fact]
 	public async Task モンスターカテゴリを追加して取得できる() {
 		// Arrange
@@ -289,15 +300,7 @@ delete from dbo.MonsterCategory;";
 		// アイテムを追加
 		_context.Items.AddRange(_items.Values);
 		// モンスターとモンスターアイテムを追加
-		var expected = _monsters
-			.Select(monster => new Monster {
-				Id = monster.Id,
-				CategoryId = monster.CategoryId,
-				Name = monster.Name,
-				// ナビゲーションプロパティにMonsterItemを設定
-				Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
-			})
-			.OrderBy(monster => monster.Id);
+		var expected = GetMonsters();
 		_context.Monsters.AddRange(expected);
 
 		var rows = await _context.SaveChangesAsync();
@@ -339,15 +342,7 @@ delete from dbo.MonsterCategory;";
 		// アイテムを追加
 		_context.Items.AddRange(_items.Values);
 		// モンスターとモンスターアイテムを追加
-		var expected = _monsters
-			.Select(monster => new Monster {
-				Id = monster.Id,
-				CategoryId = monster.CategoryId,
-				Name = monster.Name,
-				// ナビゲーションプロパティにMonsterItemを設定
-				Items = _monsterItems.Where(item => item.MonsterId == monster.Id).ToList(),
-			})
-			.OrderBy(monster => monster.Id);
+		var expected = GetMonsters();
 		_context.Monsters.AddRange(expected);
 
 		var rows = await _context.SaveChangesAsync();
