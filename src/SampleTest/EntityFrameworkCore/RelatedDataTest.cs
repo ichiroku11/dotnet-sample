@@ -413,8 +413,6 @@ delete from dbo.MonsterCategory;";
 				Assert.Equal(2, monster.Id);
 				Assert.Empty(monster.Items);
 			});
-
-		Assert.Single(actual);
 	}
 
 	// Includeでフィルターし、フィルターされた子要素だけを持つ要素に絞り込む
