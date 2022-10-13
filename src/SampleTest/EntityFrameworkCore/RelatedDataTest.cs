@@ -262,7 +262,7 @@ delete from dbo.MonsterCategory;";
 		_context.Monsters.AddRange(expected);
 
 		var rows = await _context.SaveChangesAsync();
-		Assert.Equal(expected.Count() + _monsterCategories.Count(), rows);
+		Assert.Equal(expected.Count() + _monsterCategories.Count, rows);
 
 		// Act
 		// Assert
@@ -304,7 +304,7 @@ delete from dbo.MonsterCategory;";
 		_context.Monsters.AddRange(expected);
 
 		var rows = await _context.SaveChangesAsync();
-		Assert.Equal(_monsterCategories.Count() + _items.Count() + expected.Count() + _monsterItems.Count(), rows);
+		Assert.Equal(_monsterCategories.Count + _items.Count + expected.Count() + _monsterItems.Count, rows);
 
 		// Act
 		// Assert
@@ -346,7 +346,7 @@ delete from dbo.MonsterCategory;";
 		_context.Monsters.AddRange(expected);
 
 		var rows = await _context.SaveChangesAsync();
-		Assert.Equal(_monsterCategories.Count() + _items.Count() + expected.Count() + _monsterItems.Count(), rows);
+		Assert.Equal(_monsterCategories.Count + _items.Count + expected.Count() + _monsterItems.Count, rows);
 
 		// Act
 		// IncludeとThenIncludeを使ってモンスター一覧とアイテム一覧、アイテムをあわせて取得
