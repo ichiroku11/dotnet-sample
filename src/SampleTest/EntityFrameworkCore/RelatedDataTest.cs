@@ -349,13 +349,14 @@ delete from dbo.MonsterCategory;";
 		Assert.Equal(_monsterCategories.Count() + _items.Count() + expected.Count() + _monsterItems.Count(), rows);
 
 		// Act
-		// Assert
 		// IncludeとThenIncludeを使ってモンスター一覧とアイテム一覧、アイテムをあわせて取得
 		var actual = await _context.Monsters
 			.Include(monster => monster.Items!)
 				.ThenInclude(monsterItem => monsterItem.Item)
 			.OrderBy(monster => monster.Id)
 			.ToListAsync();
+
+		// Assert
 		Assert.Equal(expected, actual, _monsterComparer);
 		// Itemsプロパティが設定されている
 		Assert.All(
@@ -371,5 +372,49 @@ delete from dbo.MonsterCategory;";
 				_items[actual.ItemId],
 				actual.Item!,
 				_itemComparer));
+	}
+
+	// Includeでフィルターする
+	[Fact]
+	public async Task Include_Filtered() {
+		// Arrange
+		await InitAsync();
+
+		// カテゴリを追加
+		_context.MonsterCategories.AddRange(_monsterCategories.Values);
+		// アイテムを追加
+		_context.Items.AddRange(_items.Values);
+		// モンスターとモンスターアイテムを追加
+		var monsters = GetMonsters();
+		_context.Monsters.AddRange(monsters);
+
+		var rows = await _context.SaveChangesAsync();
+		Assert.Equal(_monsterCategories.Count + _items.Count + monsters.Count() + _monsterItems.Count, rows);
+
+		// Act
+		// Assert
+		// IncludeするItemを「スライムゼリー」だけフィルターする
+		var actual = await _context.Monsters
+			.Include(monster => monster.Items!.Where(item => item.ItemId == 2))
+			.OrderBy(monster => monster.Id)
+			.ToListAsync();
+
+		// 発行されるSQLはleft joinのようでMonster自体はフィルターされない
+		Assert.Equal(monsters, actual, _monsterComparer);
+
+		// Itemsプロパティはフィルターされる
+		Assert.Collection(actual,
+			monster => {
+				// スライム
+				Assert.Equal(1, monster.Id);
+				Assert.Single(monster.Items);
+				var monsterItem = monster.Items!.First();
+				Assert.Equal(2, monsterItem.ItemId);
+			},
+			monster => {
+				// ドラキー
+				Assert.Equal(2, monster.Id);
+				Assert.Empty(monster.Items);
+			});
 	}
 }
