@@ -27,11 +27,18 @@ public class TimeOnlyTest {
 		Assert.Equal(999, time.Millisecond);
 	}
 
-
 	public static TheoryData<TimeOnly, TimeOnly, TimeOnly, bool> GetTheoryDataForIsBetween() {
 		return new TheoryData<TimeOnly, TimeOnly, TimeOnly, bool> {
 			// 10:00は、09:59～10:01の範囲内
 			{ new TimeOnly(10, 0), new TimeOnly(9, 59), new TimeOnly(10, 1), true },
+
+			// 10:00は、10:00～10:01の範囲内
+			// 対象時刻が開始時刻と等しい場合はtrue
+			{ new TimeOnly(10, 0), new TimeOnly(10, 0), new TimeOnly(10, 1), true },
+
+			// 10:00は、09:59～10:00の範囲内ではない
+			// 対象時刻が終了時刻と等しい場合はfalse
+			{ new TimeOnly(10, 0), new TimeOnly(9, 59), new TimeOnly(10, 0), false },
 		};
 	}
 
