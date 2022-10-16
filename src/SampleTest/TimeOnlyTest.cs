@@ -45,6 +45,9 @@ public class TimeOnlyTest {
 
 			// 00:00は、23:59～00:01の範囲内
 			{ new TimeOnly(0, 0), new TimeOnly(23, 59), new TimeOnly(0, 1), true },
+
+			// 開始時刻と終了時刻が等しい場合はfalse
+			{ new TimeOnly(0, 0), new TimeOnly(0, 0), new TimeOnly(0, 0), false },
 		};
 	}
 
