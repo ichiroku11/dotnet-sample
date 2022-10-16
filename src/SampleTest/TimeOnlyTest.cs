@@ -28,6 +28,9 @@ public class TimeOnlyTest {
 	}
 
 	public static TheoryData<TimeOnly, TimeOnly, TimeOnly, bool> GetTheoryDataForIsBetween() {
+		// 参考
+		// https://learn.microsoft.com/ja-jp/dotnet/api/system.timeonly.isbetween?view=net-6.0
+
 		return new TheoryData<TimeOnly, TimeOnly, TimeOnly, bool> {
 			// 10:00は、09:59～10:01の範囲内
 			{ new TimeOnly(10, 0), new TimeOnly(9, 59), new TimeOnly(10, 1), true },
@@ -39,6 +42,9 @@ public class TimeOnlyTest {
 			// 10:00は、09:59～10:00の範囲内ではない
 			// 対象時刻が終了時刻と等しい場合はfalse
 			{ new TimeOnly(10, 0), new TimeOnly(9, 59), new TimeOnly(10, 0), false },
+
+			// 00:00は、23:59～00:01の範囲内
+			{ new TimeOnly(0, 0), new TimeOnly(23, 59), new TimeOnly(0, 1), true },
 		};
 	}
 
