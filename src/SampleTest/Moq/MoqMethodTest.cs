@@ -14,8 +14,7 @@ public class MoqMethodTest {
 		var mock = new Mock<ITestTarget>();
 
 		// 非同期メソッドは固定値を返す
-		mock.Setup(target => target.GetValueAsync())
-			.ReturnsAsync(1);
+		mock.Setup(target => target.GetValueAsync()).ReturnsAsync(1);
 
 		var target = mock.Object;
 
