@@ -5,7 +5,26 @@ namespace SampleTest.Moq;
 public class MoqMethodTest {
 	// テスト対象
 	public interface ITestTarget {
+		int GetValue();
+
 		Task<int> GetValueAsync();
+	}
+
+	[Fact]
+	public void 固定値を返すメソッドをテストする() {
+		// Arrange
+		var mock = new Mock<ITestTarget>();
+
+		// メソッドは固定値を返す
+		mock.Setup(target => target.GetValue()).Returns(1);
+
+		var target = mock.Object;
+
+		// Act
+		var actual = target.GetValue();
+
+		// Assert
+		Assert.Equal(1, actual);
 	}
 
 	[Fact]
@@ -13,7 +32,6 @@ public class MoqMethodTest {
 		// Arrange
 		var mock = new Mock<ITestTarget>();
 
-		// 非同期メソッドは固定値を返す
 		mock.Setup(target => target.GetValueAsync()).ReturnsAsync(1);
 
 		var target = mock.Object;
