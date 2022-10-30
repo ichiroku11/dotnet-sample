@@ -6,6 +6,19 @@ public class MoqPropertyTest {
 	// テスト対象
 	public interface ITestTarget {
 		int Value { get; set; }
+		IList<int> Values { get; set; }
+	}
+
+	[Fact]
+	public void Setupしていないプロパティは初期値を返す様子() {
+		// Arrange
+		var mock = new Mock<ITestTarget>();
+		var target = mock.Object;
+
+		// Act
+		// Assert
+		Assert.Equal(0, target.Value);
+		Assert.Null(target.Values);
 	}
 
 	[Fact]
