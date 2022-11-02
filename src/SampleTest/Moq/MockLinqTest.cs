@@ -2,6 +2,7 @@ using Moq;
 
 namespace SampleTest.Moq;
 
+// 参考
 // https://github.com/Moq/moq4/wiki/Quickstart#linq-to-mocks
 public class MockLinqTest {
 	// テスト対象

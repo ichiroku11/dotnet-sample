@@ -2,6 +2,8 @@ using Moq;
 
 namespace SampleTest.Moq;
 
+// 参考
+// https://github.com/Moq/moq4/wiki/Quickstart#properties
 public class MoqPropertyTest {
 	// テスト対象
 	public interface ITestTarget {
