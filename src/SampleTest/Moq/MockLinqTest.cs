@@ -21,4 +21,20 @@ public class MockLinqTest {
 		// Assert
 		Assert.Equal(1, actual);
 	}
+
+	[Fact]
+	public void Get_Mockを取得する() {
+		// Arrange
+		var target = Mock.Of<ITestTarget>(target => target.GetValue() == 1);
+
+		// モックオブジェクトを取得して再設定（上書き）してみる
+		var mock = Mock.Get(target);
+		mock.Setup(target => target.GetValue()).Returns(2);
+
+		// Act
+		var actual = target.GetValue();
+
+		// Assert
+		Assert.Equal(2, actual);
+	}
 }
