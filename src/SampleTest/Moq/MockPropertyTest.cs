@@ -4,7 +4,7 @@ namespace SampleTest.Moq;
 
 // 参考
 // https://github.com/Moq/moq4/wiki/Quickstart#properties
-public class MoqPropertyTest {
+public class MockPropertyTest {
 	// テスト対象
 	public interface ITestTarget {
 		int Value { get; set; }

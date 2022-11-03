@@ -4,7 +4,7 @@ namespace SampleTest.Moq;
 
 // 参考
 // https://github.com/Moq/moq4/wiki/Quickstart#methods
-public class MoqMethodTest {
+public class MockMethodTest {
 	// テスト対象
 	public interface ITestTarget {
 		int GetValue();
