@@ -9,7 +9,7 @@ app.UseRouting();
 app.UseEndpoints(endpoints => {
 	endpoints.MapControllerRoute(
 		"default",
-		"{controller=Home}/{action=Index}/{id?}");
+		"{controller=Default}/{action=Index}/{id?}");
 });
 
 app.Run();
