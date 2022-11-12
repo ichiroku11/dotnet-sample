@@ -1,7 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
-services.AddControllersWithViews();
+services.AddControllers();
+
+services.Configure<RouteOptions>(options => {
+	options.LowercaseUrls = true;
+	options.LowercaseQueryStrings = true;
+});
 
 var app = builder.Build();
 
