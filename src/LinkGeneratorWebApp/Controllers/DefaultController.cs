@@ -4,7 +4,6 @@ using System.Text;
 namespace LinkGeneratorWebApp.Controllers;
 
 public class DefaultController : Controller {
-
 	private readonly LinkGenerator _linkGenerator;
 
 	public DefaultController(LinkGenerator linkGenerator) {
