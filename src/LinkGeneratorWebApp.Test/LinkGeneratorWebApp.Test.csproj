@@ -8,7 +8,7 @@
 
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
 
-    <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <RootNamespace>LinkGeneratorWebApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
