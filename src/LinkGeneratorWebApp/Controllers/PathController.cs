@@ -10,21 +10,26 @@ public class PathController : Controller {
 	}
 
 	public IActionResult Self() {
-		// HttpContextを指定
 		// このアクションへのURLを生成する
 		var path = _linkGenerator.GetPathByAction(HttpContext);
 		return Content(path ?? "");
 	}
 
 	public IActionResult OtherAction() {
-		// HttpContextを指定
 		// このアクションとは別のアクションへのURLを生成する
+		// controllerは指定していないのでHttpContextから補完される様子
 		var path = _linkGenerator.GetPathByAction(HttpContext, action: "Other");
 		return Content(path ?? "");
 	}
 
+	public IActionResult OtherController() {
+		// このアクションとは別のコントローラーへのURLを生成する
+		// actionは指定していないのでHttpContextから補完される様子
+		var path = _linkGenerator.GetPathByAction(HttpContext, controller: "Other");
+		return Content(path ?? "");
+	}
+
 	public IActionResult OtherControllerAction() {
-		// HttpContextを指定
 		// このアクションとは別のコントローラーへのURLを生成する
 		var path = _linkGenerator.GetPathByAction(HttpContext, action: "Index", controller: "Other");
 		return Content(path ?? "");
