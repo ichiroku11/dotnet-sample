@@ -25,4 +25,32 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Equal("/path/self", content);
 	}
+
+	[Fact]
+	public async Task OtherAction_GetPathByActionの引数にHttpContextとactionを指定して絶対パスを生成する() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response = await client.GetAsync("/path/otheraction");
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("/path/other", content);
+	}
+
+	[Fact]
+	public async Task OtherControllerAction_GetPathByActionの引数にHttpContextとactionとcontrollerを指定して絶対パスを生成する() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response = await client.GetAsync("/path/othercontrolleraction");
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("/other", content);
+	}
 }
