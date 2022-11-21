@@ -15,30 +15,30 @@ public class PathController : Controller {
 		return Content(path ?? "");
 	}
 
-	public IActionResult OtherAction() {
+	public IActionResult AnotherAction() {
 		// このアクションとは別のアクションへのURLを生成する
 		// controllerは指定していないのでHttpContextから補完される様子
 		var path = _linkGenerator.GetPathByAction(
 			HttpContext,
-			action: "Other");
+			action: "Another");
 		return Content(path ?? "");
 	}
 
-	public IActionResult OtherController() {
+	public IActionResult AnotherController() {
 		// このアクションとは別のコントローラーへのURLを生成する
 		// actionは指定していないのでHttpContextから補完される様子
 		var path = _linkGenerator.GetPathByAction(
 			HttpContext,
-			controller: "Other");
+			controller: "Another");
 		return Content(path ?? "");
 	}
 
-	public IActionResult OtherControllerAction() {
+	public IActionResult AnotherControllerAction() {
 		// このアクションとは別のコントローラーへのURLを生成する
 		var path = _linkGenerator.GetPathByAction(
 			HttpContext,
 			action: "Index",
-			controller: "Other");
+			controller: "Another");
 		return Content(path ?? "");
 	}
 }
