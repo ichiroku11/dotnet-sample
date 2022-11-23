@@ -28,6 +28,19 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 	}
 
 	[Fact]
+	public async Task SelfWithoutHttpContext_GetPathByActionの引数にHttpContextを指定せずに絶対パスを生成する() {
+		// Arrange
+
+		// Act
+		var response = await _client.GetAsync("/path/selfwithouthttpcontext");
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("/path/selfwithouthttpcontext", content);
+	}
+
+	[Fact]
 	public async Task AnotherAction_GetPathByActionの引数にHttpContextとactionを指定して絶対パスを生成する() {
 		// Arrange
 

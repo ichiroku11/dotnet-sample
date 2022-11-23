@@ -15,6 +15,14 @@ public class PathController : Controller {
 		return Content(path ?? "");
 	}
 
+	public IActionResult SelfWithoutHttpContext() {
+		// HttpContextを使わずにこのアクションへのURLを生成する
+		var path = _linkGenerator.GetPathByAction(
+			action: nameof(SelfWithoutHttpContext),
+			controller: "Path");
+		return Content(path ?? "");
+	}
+
 	public IActionResult AnotherAction() {
 		// このアクションとは別のアクションへのURLを生成する
 		// controllerは指定していないのでHttpContextから補完される様子
