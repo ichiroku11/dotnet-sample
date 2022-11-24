@@ -78,4 +78,18 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Equal("/another", content);
 	}
+
+	[Fact]
+	public async Task AnotherControllerActionWithoutHttpContext_GetPathByActionの引数にHttpContextを指定せずにactionとcontrollerを指定して絶対パスを生成する() {
+		// Arrange
+
+		// Act
+		var response = await _client.GetAsync("/path/anothercontrolleractionwithouthttpcontext");
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("/another", content);
+	}
+
 }

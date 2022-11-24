@@ -49,4 +49,12 @@ public class PathController : Controller {
 			controller: "Another");
 		return Content(path ?? "");
 	}
+
+	public IActionResult AnotherControllerActionWithoutHttpContext() {
+		// このアクションとは別のコントローラーへのURLを生成する
+		var path = _linkGenerator.GetPathByAction(
+			action: "Index",
+			controller: "Another");
+		return Content(path ?? "");
+	}
 }
