@@ -26,4 +26,18 @@ public class UriControllerTest : IClassFixture<WebApplicationFactory<Program>> {
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Equal("http://localhost/uri/self", content);
 	}
+
+	[Fact]
+	public async Task AnotherControllerAction_GetUriByActionの引数にHttpContextを指定せず絶対パスを生成する() {
+		// Arrange
+
+		// Act
+		var response = await _client.GetAsync("/uri/anothercontrolleraction");
+		var content = await response.Content.ReadAsStringAsync();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("https://localhost/another", content);
+	}
+
 }

@@ -13,4 +13,15 @@ public class UriController : Controller {
 		var path = _linkGenerator.GetUriByAction(HttpContext);
 		return Content(path ?? "");
 	}
+
+	public IActionResult AnotherControllerAction() {
+		// このアクションとは別のコントローラーへのURLを生成する
+		var path = _linkGenerator.GetUriByAction(
+			action: "Index",
+			controller: "Another",
+			values: default,
+			scheme: "https",
+			host: new HostString("localhost"));
+		return Content(path ?? "");
+	}
 }
