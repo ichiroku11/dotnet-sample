@@ -41,6 +41,12 @@ public class LinkGeneratorTest {
 		return services.GetRequiredService<LinkGenerator>();
 	}
 
+	private readonly ITestOutputHelper _output;
+
+	public LinkGeneratorTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
 	[Fact]
 	public void GetPathByAction_絶対パスを確認する() {
 		// Arrange
@@ -70,5 +76,39 @@ public class LinkGeneratorTest {
 		Assert.Equal("https://localhost/", actual);
 	}
 
-	// todo: スキーマやホストを指定しないと例外？
+	[Fact]
+	public void GetUriByAction_schemeパラメーターがdefaultだとArgumentException() {
+		// Arrange
+		var linkGenerator = CreateLinkGenerator();
+
+		// Act
+		// Assert
+		var exception = Assert.Throws<ArgumentException>(() => {
+			linkGenerator.GetUriByAction(
+				action: "Index",
+				controller: "Default",
+				values: default,
+				scheme: default,
+				host: new HostString("localhost"));
+		});
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public void GetUriByAction_hostパラメーターがdefaultだとArgumentException() {
+		// Arrange
+		var linkGenerator = CreateLinkGenerator();
+
+		// Act
+		// Assert
+		var exception = Assert.Throws<ArgumentException>(() => {
+			linkGenerator.GetUriByAction(
+				action: "Index",
+				controller: "Default",
+				values: default,
+				scheme: "https",
+				host: default);
+		});
+		_output.WriteLine(exception.Message);
+	}
 }
