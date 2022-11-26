@@ -52,4 +52,23 @@ public class LinkGeneratorTest {
 		// Assert
 		Assert.Equal("/", actual);
 	}
+
+	[Fact]
+	public void GetUriByAction_絶対URLを確認する() {
+		// Arrange
+		var linkGenerator = CreateLinkGenerator();
+
+		// Act
+		var actual = linkGenerator.GetUriByAction(
+			action: "Index",
+			controller: "Default",
+			values: default,
+			scheme: "https",
+			host: new HostString("localhost"));
+
+		// Assert
+		Assert.Equal("https://localhost/", actual);
+	}
+
+	// todo: スキーマやホストを指定しないと例外？
 }
