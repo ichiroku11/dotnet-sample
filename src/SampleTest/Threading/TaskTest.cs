@@ -13,13 +13,13 @@ public class TaskTest {
 	}
 
 	[Fact]
-	public void FromCanceled_キャンセルされていないCancellationTokenを渡すとArgumentOutOfRangeException() {
+	public async Task FromCanceled_キャンセルされていないCancellationTokenを渡すとArgumentOutOfRangeException() {
 		// Arrange
 		// Act
 		// Assert
-		Assert.Throws<ArgumentOutOfRangeException>(() => {
+		await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => {
 			// キャンセルされていないCancellationTokenを渡すと例外
-			Task.FromCanceled(new CancellationToken(false));
+			return Task.FromCanceled(new CancellationToken(false));
 		});
 	}
 
