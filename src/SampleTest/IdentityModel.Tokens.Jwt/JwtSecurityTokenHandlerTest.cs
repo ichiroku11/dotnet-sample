@@ -2,6 +2,7 @@ using Microsoft.IdentityModel.Tokens;
 using SampleLib.AspNetCore;
 using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -85,6 +86,25 @@ public class JwtSecurityTokenHandlerTest {
 
 		// Assert
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""iss"":""i"",""aud"":""a""}", token.ToString());
+	}
+
+	[Fact]
+	public void CreateJwtToken_数値の配列を含んだトークンを生成する() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+		var claims = new[] {
+			new Claim("values", "1", ClaimValueTypes.Integer),
+			new Claim("values", "2", ClaimValueTypes.Integer),
+		};
+		var identity = new ClaimsIdentity(claims);
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(subject: identity);
+
+		// Assert
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""values"":[1,2]}", token.ToString());
 	}
 
 	[Fact]
