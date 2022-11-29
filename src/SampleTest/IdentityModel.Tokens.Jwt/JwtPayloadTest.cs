@@ -98,6 +98,30 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
+	public void Constructor_claimsCollectionで配列を指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new[] { 1, 2 },
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+		var claim = claims.Single(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+
+		// Assert
+		Assert.Single(claims);
+		Assert.Equal("[1,2]", claim.Value);
+		// JSONには配列が出力される
+		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
+	}
+
+	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 		// Arrange
 		var payload = new JwtPayload {
