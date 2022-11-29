@@ -89,7 +89,7 @@ public class JwtSecurityTokenHandlerTest {
 	}
 
 	[Fact]
-	public void CreateJwtToken_数値の配列を含んだトークンを生成する() {
+	public void CreateJwtSecurityToken_数値の配列を含んだトークンを生成する() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
@@ -105,6 +105,25 @@ public class JwtSecurityTokenHandlerTest {
 
 		// Assert
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""values"":[1,2]}", token.ToString());
+	}
+
+	[Fact]
+	public void CreateJwtSecurityToken_文字列の配列を含んだトークンを生成する() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+		var claims = new[] {
+			new Claim("values", "x"),
+			new Claim("values", "y"),
+		};
+		var identity = new ClaimsIdentity(claims);
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(subject: identity);
+
+		// Assert
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""values"":[""x"",""y""]}", token.ToString());
 	}
 
 	[Fact]
