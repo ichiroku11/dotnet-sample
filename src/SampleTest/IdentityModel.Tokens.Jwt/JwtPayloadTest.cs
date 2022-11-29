@@ -145,6 +145,7 @@ public class JwtPayloadTest {
 		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
 	}
 
+	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 		// Arrange
 		var payload = new JwtPayload {
