@@ -122,6 +122,29 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
+	public void Constructor_claimsCollectionでオブジェクトを指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new { x = 1 },
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+		var claim = claims.Single(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+
+		// Assert
+		Assert.Single(claims);
+		Assert.Equal(@"{""x"":1}", claim.Value);
+		// JSONにはオブジェクトが出力される
+		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
+	}
+
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 		// Arrange
 		var payload = new JwtPayload {
