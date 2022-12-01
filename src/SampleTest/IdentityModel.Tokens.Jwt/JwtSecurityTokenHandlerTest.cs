@@ -104,6 +104,7 @@ public class JwtSecurityTokenHandlerTest {
 		var token = handler.CreateJwtSecurityToken(subject: identity);
 
 		// Assert
+		// 想定した結果（"values"の値が数値の配列）になる
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""values"":[1,2]}", token.ToString());
 	}
 
@@ -123,6 +124,7 @@ public class JwtSecurityTokenHandlerTest {
 		var token = handler.CreateJwtSecurityToken(subject: identity);
 
 		// Assert
+		// 想定した結果（"values"の値が文字列の配列）になる
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""values"":[""x"",""y""]}", token.ToString());
 	}
 
