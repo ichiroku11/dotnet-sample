@@ -125,7 +125,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	}
 
 	[Fact]
-	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを格納する() {
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
@@ -143,6 +143,30 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 
 		// Assert
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
+	}
+
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含める() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにオブジェクトの配列を追加する
+			Claims = new Dictionary<string, object> {
+				["test"] = new[] {
+					new { x = 1 },
+					new { x = 2 },
+				},
+			}
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[{""x"":1},{""x"":2}]}", token.ToString());
 	}
 
 	[Fact]
