@@ -81,6 +81,28 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""values"":[""x"",""y""]}", token.ToString());
 	}
 
+	// クレームにJSONオブジェクトを格納したいがJSON文字列ではダメだった
+	[Fact]
+	public void CreateJwtSecurityToken_クレームにオブジェクトのJSON文字列を含めても文字列のままになる() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var json = JsonSerializer.Serialize(new { x = 1 });
+		var claims = new[] {
+			new Claim("obj", json),
+		};
+		var identity = new ClaimsIdentity(claims);
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(subject: identity);
+
+		// Assert
+		// JSON文字列のまま格納されてしまう・・・
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""obj"":""{\""x\"":1}""}", token.ToString());
+	}
+
 	[Fact]
 	public void CreateJwtSecurityToken_キーが短いとHS256で署名するときに例外が発生する() {
 		// Arrange
