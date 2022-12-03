@@ -125,6 +125,27 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	}
 
 	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを格納する() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにオブジェクトを追加する
+			Claims = new Dictionary<string, object> {
+				["test"] = new { x = 1 },
+			}
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
+	}
+
+	[Fact]
 	public void CreateJwtSecurityToken_キーが短いとHS256で署名するときに例外が発生する() {
 		// Arrange
 		// 文字列ベースでもう1文字いる様子
