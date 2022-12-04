@@ -82,15 +82,7 @@ public class JwtSecurityTokenHandlerTest {
 
 		// Assert
 		Assert.Equal(2, claims.Count());
-		Assert.Single(claims,
-			claim =>
-				string.Equals(claim.Type, "test", StringComparison.Ordinal) &&
-				string.Equals(claim.Value, @"{""x"":1}", StringComparison.Ordinal) &&
-				string.Equals(claim.ValueType, JsonClaimValueTypes.Json, StringComparison.Ordinal));
-		Assert.Single(claims,
-			claim =>
-				string.Equals(claim.Type, "test", StringComparison.Ordinal) &&
-				string.Equals(claim.Value, @"{""x"":2}", StringComparison.Ordinal) &&
-				string.Equals(claim.ValueType, JsonClaimValueTypes.Json, StringComparison.Ordinal));
+		AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}", JsonClaimValueTypes.Json);
+		AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}", JsonClaimValueTypes.Json);
 	}
 }
