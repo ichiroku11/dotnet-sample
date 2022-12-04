@@ -1,8 +1,16 @@
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
 public class JwtSecurityTokenHandlerTest {
+	private readonly ITestOutputHelper _output;
+
+	public JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
+
 	[Fact]
 	public void CanValidateToken_trueを返す() {
 		// Arrange
@@ -47,4 +55,42 @@ public class JwtSecurityTokenHandlerTest {
 		Assert.Equal(expected, actual);
 	}
 
+	[Fact]
+	public void ReadJwtToken_トークンに含まれたオブジェクトの配列を取り出す() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにオブジェクトの配列を追加する
+			Claims = new Dictionary<string, object> {
+				["test"] = new[] {
+					new { x = 1 },
+					new { x = 2 },
+				},
+			}
+		};
+
+		var tokenToWrite = handler.CreateJwtSecurityToken(descriptor);
+		var jwt = handler.WriteToken(tokenToWrite);
+		_output.WriteLine(tokenToWrite.ToString());
+
+		// Act
+		var token = handler.ReadJwtToken(jwt);
+		var claims = token.Claims.Where(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+
+		// Assert
+		Assert.Equal(2, claims.Count());
+		Assert.Single(claims,
+			claim =>
+				string.Equals(claim.Type, "test", StringComparison.Ordinal) &&
+				string.Equals(claim.Value, @"{""x"":1}", StringComparison.Ordinal) &&
+				string.Equals(claim.ValueType, JsonClaimValueTypes.Json, StringComparison.Ordinal));
+		Assert.Single(claims,
+			claim =>
+				string.Equals(claim.Type, "test", StringComparison.Ordinal) &&
+				string.Equals(claim.Value, @"{""x"":2}", StringComparison.Ordinal) &&
+				string.Equals(claim.ValueType, JsonClaimValueTypes.Json, StringComparison.Ordinal));
+	}
 }
