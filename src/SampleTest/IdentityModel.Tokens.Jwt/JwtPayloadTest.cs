@@ -166,14 +166,13 @@ public class JwtPayloadTest {
 
 		// Assert
 		Assert.Equal(2, claims.Count());
-		Assert.Single(claims,
-			claim =>
-				string.Equals(claim.Type, "test", StringComparison.Ordinal) &&
-				string.Equals(claim.Value, @"{""x"":1}", StringComparison.Ordinal));
-		Assert.Single(claims,
-			claim =>
-				string.Equals(claim.Type, "test", StringComparison.Ordinal) &&
-				string.Equals(claim.Value, @"{""x"":2}", StringComparison.Ordinal));
+
+		// ValueTypeの値は、JsonClaimValueTypes.Jsonではなく、匿名型の型名のような文字列？
+		var claim = AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}");
+		_output.WriteLine(claim.ValueType);
+		claim = AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}");
+		_output.WriteLine(claim.ValueType);
+
 		// JSONにはオブジェクトが出力される
 		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
 	}
