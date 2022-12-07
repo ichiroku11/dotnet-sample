@@ -230,4 +230,56 @@ public class JwtSecurityTokenHandlerValidateTokenTest {
 		});
 		_output.WriteLine(exception.Message);
 	}
+
+	[Fact]
+	public async Task ValidateTokenAsync_トークンに含まれたオブジェクトの配列を取り出す() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにオブジェクトの配列を追加する
+			Claims = new Dictionary<string, object> {
+				["test"] = new[] {
+					new { x = 1 },
+					new { x = 2 },
+				},
+			}
+		};
+
+		var tokenToWrite = handler.CreateJwtSecurityToken(descriptor);
+		var jwt = handler.WriteToken(tokenToWrite);
+		_output.WriteLine(tokenToWrite.ToString());
+
+		// Act
+		var parameters = new TokenValidationParameters {
+			ValidateAudience = false,
+			ValidateIssuer = false,
+			ValidateIssuerSigningKey = false,
+			ValidateLifetime = false,
+			// 未署名
+			RequireSignedTokens = false,
+		};
+
+		// Act
+		var result = await handler.ValidateTokenAsync(jwt, parameters);
+
+		// Assert
+		{
+			var claims = result.ClaimsIdentity.Claims.Where(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+			Assert.Equal(2, claims.Count());
+			AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}", JsonClaimValueTypes.Json);
+			AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}", JsonClaimValueTypes.Json);
+		}
+
+		// todo:
+		{
+			var claims = result.Claims;
+
+			Assert.Single(claims);
+			var claim = claims.First();
+		}
+	}
+
 }
