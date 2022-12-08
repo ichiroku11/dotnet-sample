@@ -272,14 +272,24 @@ public class JwtSecurityTokenHandlerValidateTokenTest {
 			AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}", JsonClaimValueTypes.Json);
 			AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}", JsonClaimValueTypes.Json);
 		}
-
-		// todo:
 		{
 			var claims = result.Claims;
-
 			Assert.Single(claims);
-			var claim = claims.First();
+
+			var (key, value) = claims.First();
+			Assert.Equal("test", key);
+
+			// valueはIList<object>
+			Assert.IsAssignableFrom<IList<object>>(value);
+			_output.WriteLine(key);
+			_output.WriteLine(value.ToString());
+
+			// dynamic型に変換して"x"プロパティの値を確認
+			var values = value as IList<object>;
+			Assert.NotNull(values);
+			Assert.Equal(2, values.Count);
+			Assert.Contains(values, value => ((dynamic)value).x == 1);
+			Assert.Contains(values, value => ((dynamic)value).x == 2);
 		}
 	}
-
 }
