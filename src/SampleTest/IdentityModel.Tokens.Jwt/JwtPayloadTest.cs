@@ -98,6 +98,86 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
+	public void Constructor_claimsCollectionで配列を指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new[] { 1, 2 },
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+		var claim = claims.Single(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+
+		// Assert
+		Assert.Single(claims);
+		Assert.Equal("[1,2]", claim.Value);
+		// JSONには配列が出力される
+		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
+	}
+
+	[Fact]
+	public void Constructor_claimsCollectionでオブジェクトを指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new { x = 1 },
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+		var claim = claims.Single(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+
+		// Assert
+		Assert.Single(claims);
+		Assert.Equal(@"{""x"":1}", claim.Value);
+		// JSONにはオブジェクトが出力される
+		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
+	}
+
+	[Fact]
+	public void Constructor_claimsCollectionでオブジェクトの配列を指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new[] {
+					new { x = 1 },
+					new { x = 2 },
+				}
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+
+		// Assert
+		Assert.Equal(2, claims.Count());
+
+		// ValueTypeの値は、JsonClaimValueTypes.Jsonではなく、匿名型の型名のような文字列？
+		var claim = AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}");
+		_output.WriteLine(claim.ValueType);
+		claim = AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}");
+		_output.WriteLine(claim.ValueType);
+
+		// JSONにはオブジェクトが出力される
+		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
+	}
+
+	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
 		// Arrange
 		var payload = new JwtPayload {
