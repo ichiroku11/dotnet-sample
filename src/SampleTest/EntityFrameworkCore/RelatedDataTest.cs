@@ -26,7 +26,7 @@ public class RelatedDataTest : IDisposable {
 
 		// Navigation
 		public MonsterCategory? Category { get; init; }
-		public List<MonsterItem>? Items { get; init; }
+		public List<MonsterItem> Items { get; init; } = new();
 	}
 
 	private class Item {
@@ -313,8 +313,8 @@ delete from dbo.MonsterCategory;";
 			.OrderBy(monster => monster.Id)
 			.ToListAsync();
 		Assert.Equal(expected, actual, _monsterComparer);
-		// Itemsプロパティはすべてnull
-		Assert.All(actual, monster => Assert.Null(monster.Items));
+		// Itemsプロパティはすべて空
+		Assert.All(actual, monster => Assert.Empty(monster.Items));
 
 		// Includeを使ってモンスター一覧とアイテム一覧をあわせて取得
 		actual = await _context.Monsters
@@ -326,7 +326,7 @@ delete from dbo.MonsterCategory;";
 		Assert.All(
 			actual,
 			actual => Assert.Equal(
-				expected.FirstOrDefault(monster => monster.Id == actual.Id)?.Items,
+				expected.First(monster => monster.Id == actual.Id).Items,
 				actual.Items,
 				_monsterItemComparer));
 	}
@@ -362,7 +362,7 @@ delete from dbo.MonsterCategory;";
 		Assert.All(
 			actual,
 			actual => Assert.Equal(
-				expected.FirstOrDefault(monster => monster.Id == actual.Id)?.Items,
+				expected.First(monster => monster.Id == actual.Id).Items,
 				actual.Items,
 				_monsterItemComparer));
 		// ItemプロパティのItemが正しい
