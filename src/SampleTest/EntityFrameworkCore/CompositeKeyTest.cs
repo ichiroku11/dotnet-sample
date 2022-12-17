@@ -11,7 +11,7 @@ public class CompositeKeyTest : IDisposable {
 		public int Id1 { get; init; }
 		public int Id2 { get; init; }
 		public string Value { get; init; } = "";
-		public List<SampleDetail>? Details { get; init; }
+		public List<SampleDetail> Details { get; init; } = new();
 	}
 
 	private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
@@ -84,13 +84,13 @@ drop table if exists dbo.Sample;";
 		// Arrange
 		// Act
 		var sample = await _context.Samples
-			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
+			.FirstAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
 		// Assert
-		Assert.Equal(1, sample?.Id1);
-		Assert.Equal(2, sample?.Id2);
-		Assert.Equal("a", sample?.Value);
-		Assert.Null(sample?.Details);
+		Assert.Equal(1, sample.Id1);
+		Assert.Equal(2, sample.Id2);
+		Assert.Equal("a", sample.Value);
+		Assert.Empty(sample.Details);
 	}
 
 	[Fact]
@@ -99,15 +99,15 @@ drop table if exists dbo.Sample;";
 		// Act
 		var sample = await _context.Samples
 			.Include(sample => sample.Details)
-			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
+			.FirstAsync(sample => sample.Id1 == 1 && sample.Id2 == 2);
 
 		// Assert
-		Assert.Equal(1, sample?.Id1);
-		Assert.Equal(2, sample?.Id2);
-		Assert.Equal("a", sample?.Value);
-		Assert.Equal(2, sample?.Details?.Count);
-		Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample?.Details);
-		Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample?.Details);
+		Assert.Equal(1, sample.Id1);
+		Assert.Equal(2, sample.Id2);
+		Assert.Equal("a", sample.Value);
+		Assert.Equal(2, sample.Details.Count);
+		Assert.Contains(new SampleDetail(1, 2, 1, "a-1"), sample.Details);
+		Assert.Contains(new SampleDetail(1, 2, 2, "a-2"), sample.Details);
 	}
 
 	[Fact]
@@ -129,14 +129,16 @@ drop table if exists dbo.Sample;";
 
 		var actual = await _context.Samples
 			.Include(sample => sample.Details)
-			.FirstOrDefaultAsync(sample => sample.Id1 == 1 && sample.Id2 == 3);
+			.FirstAsync(sample => sample.Id1 == 1 && sample.Id2 == 3);
 
 		// Assert
 		Assert.Equal(3, rows);
 
-		Assert.Equal(expected.Id1, actual?.Id1);
-		Assert.Equal(expected.Id2, actual?.Id2);
-		Assert.Equal(expected.Value, actual?.Value);
-		Assert.Equal(expected.Details.OrderBy(detail => detail.DetailNo), actual?.Details?.OrderBy(detail => detail.DetailNo));
+		Assert.Equal(expected.Id1, actual.Id1);
+		Assert.Equal(expected.Id2, actual.Id2);
+		Assert.Equal(expected.Value, actual.Value);
+		Assert.Equal(
+			expected.Details.OrderBy(detail => detail.DetailNo),
+			actual.Details.OrderBy(detail => detail.DetailNo));
 	}
 }
