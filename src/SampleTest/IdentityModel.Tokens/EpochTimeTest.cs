@@ -1,11 +1,11 @@
 using Microsoft.IdentityModel.Tokens;
+using SampleLib;
 
 namespace SampleTest.IdentityModel.Tokens;
 
 public class EpochTimeTest {
 	public static TheoryData<long, DateTime> GetTheoryDataForDateTime() {
-		return new()
-		{
+		return new() {
 			{ 0L, EpochTime.UnixEpoch },
 			{ 1L, EpochTime.UnixEpoch.AddSeconds(1) },
 			// 負の値を指定した場合、Unix EpochTimeになる
@@ -13,8 +13,7 @@ public class EpochTimeTest {
 		};
 	}
 
-	[Theory]
-	[MemberData(nameof(GetTheoryDataForDateTime))]
+	[Theory, MemberData(nameof(GetTheoryDataForDateTime))]
 	public void DateTime_秒数をDateTimeに変換する(long second, DateTime expected) {
 		// Arrange
 		// Act
@@ -41,12 +40,27 @@ public class EpochTimeTest {
 		};
 	}
 
-	[Theory]
-	[MemberData(nameof(GetTheoryDataForGetIntDate))]
+	[Theory, MemberData(nameof(GetTheoryDataForGetIntDate))]
 	public void GetIntDate_DateTimeをEpochTimeからの経過時間に変換する(DateTime time, long expected) {
 		// Arrange
 		// Act
 		var actual = EpochTime.GetIntDate(time);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Fact]
+
+	public void GetIntDate_DateTimeをEpochTimeからの経過時間に変換するとミリ秒以下が切り捨て足られる() {
+		// Arrange
+		var now = DateTime.UtcNow;
+		var expected = EpochTime.GetIntDate(
+			// ミリ秒部分を切り捨てた日時
+			now.TruncateMilliseconds());
+
+		// Act
+		var actual = EpochTime.GetIntDate(now);
 
 		// Assert
 		Assert.Equal(expected, actual);
