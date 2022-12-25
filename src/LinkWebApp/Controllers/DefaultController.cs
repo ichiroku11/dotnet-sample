@@ -10,7 +10,7 @@ public class DefaultController : Controller {
 		_linkGenerator = linkGenerator;
 	}
 
-	public IActionResult Index() {
+	public IActionResult Generator() {
 		// 参考
 		// https://learn.microsoft.com/ja-jp/aspnet/core/fundamentals/routing?view=aspnetcore-7.0#url-generation-concepts
 		// todo: それぞれoverloadを試す

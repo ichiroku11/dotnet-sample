@@ -13,12 +13,12 @@ public class DefaultControllerTest : IClassFixture<WebApplicationFactory<Program
 	}
 
 	[Fact]
-	public async Task Index() {
+	public async Task Generator() {
 		// Arrange
 		var client = _factory.CreateClient();
 
 		// Act
-		var response = await client.GetAsync("/");
+		var response = await client.GetAsync("/default/generator");
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
