@@ -5,9 +5,11 @@ namespace LinkWebApp.Controllers;
 
 public class DefaultController : Controller {
 	private readonly LinkGenerator _linkGenerator;
+	private readonly LinkParser _linkParser;
 
-	public DefaultController(LinkGenerator linkGenerator) {
+	public DefaultController(LinkGenerator linkGenerator, LinkParser linkParser) {
 		_linkGenerator = linkGenerator;
+		_linkParser = linkParser;
 	}
 
 	public IActionResult Generator() {
@@ -33,5 +35,11 @@ public class DefaultController : Controller {
 			.AppendLine(_linkGenerator.GetUriByAction(HttpContext, "Index", "Sample"))
 			.ToString();
 		return Content(content);
+	}
+
+	public IActionResult Parser() {
+		var values = _linkParser.ParsePathByEndpointName("default", "/sample");
+
+		return Json(values);
 	}
 }
