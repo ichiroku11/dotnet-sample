@@ -21,9 +21,11 @@ public class DefaultControllerTest : IClassFixture<WebApplicationFactory<Program
 
 		// Act
 		var response = await client.GetAsync("/default/generator");
+		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("/sample", content);
 	}
 
 	[Fact]
