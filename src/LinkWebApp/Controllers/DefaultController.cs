@@ -16,8 +16,8 @@ public class DefaultController : Controller {
 		// 参考
 		// https://learn.microsoft.com/ja-jp/aspnet/core/fundamentals/routing?view=aspnetcore-7.0#url-generation-concepts
 		var content = _linkGenerator.GetPathByAction(HttpContext,
-				action: "Index",
-				controller: "Sample") ?? "";
+			action: "Index",
+			controller: "Sample") ?? "";
 
 		return Content(content);
 	}
