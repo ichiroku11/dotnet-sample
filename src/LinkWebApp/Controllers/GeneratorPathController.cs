@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LinkGeneratorWebApp.Controllers;
+namespace LinkWebApp.Controllers;
 
 public class GeneratorPathController : Controller {
 	private readonly LinkGenerator _linkGenerator;

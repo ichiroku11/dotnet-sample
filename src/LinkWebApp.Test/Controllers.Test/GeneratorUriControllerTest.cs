@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using Xunit;
 
-namespace LinkGeneratorWebApp.Controllers.Test;
+namespace LinkWebApp.Controllers.Test;
 
 public class GeneratorUriControllerTest : IClassFixture<WebApplicationFactory<Program>> {
 
