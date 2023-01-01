@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LinkGeneratorWebApp.Controllers;
+namespace LinkWebApp.Controllers;
 
-public class PathController : Controller {
+public class GeneratorPathController : Controller {
 	private readonly LinkGenerator _linkGenerator;
 
-	public PathController(LinkGenerator linkGenerator) {
+	public GeneratorPathController(LinkGenerator linkGenerator) {
 		_linkGenerator = linkGenerator;
 	}
 
@@ -19,7 +19,7 @@ public class PathController : Controller {
 		// HttpContextを使わずにこのアクションへのURLを生成する
 		var path = _linkGenerator.GetPathByAction(
 			action: nameof(SelfWithoutHttpContext),
-			controller: "Path");
+			controller: "GeneratorPath");
 		return Content(path ?? "");
 	}
 

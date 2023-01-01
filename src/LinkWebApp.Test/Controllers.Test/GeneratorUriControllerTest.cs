@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using Xunit;
 
-namespace LinkGeneratorWebApp.Controllers.Test;
+namespace LinkWebApp.Controllers.Test;
 
-public class UriControllerTest : IClassFixture<WebApplicationFactory<Program>> {
+public class GeneratorUriControllerTest : IClassFixture<WebApplicationFactory<Program>> {
 
 	private readonly WebApplicationFactory<Program> _factory;
 	private readonly HttpClient _client;
 
-	public UriControllerTest(WebApplicationFactory<Program> factory) {
+	public GeneratorUriControllerTest(WebApplicationFactory<Program> factory) {
 		_factory = factory;
 		_client = _factory.CreateClient();
 	}
@@ -19,12 +19,12 @@ public class UriControllerTest : IClassFixture<WebApplicationFactory<Program>> {
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/uri/self");
+		var response = await _client.GetAsync("/generatoruri/self");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal("http://localhost/uri/self", content);
+		Assert.Equal("http://localhost/generatoruri/self", content);
 	}
 
 	[Fact]
@@ -32,7 +32,7 @@ public class UriControllerTest : IClassFixture<WebApplicationFactory<Program>> {
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/uri/anothercontrolleraction");
+		var response = await _client.GetAsync("/generatoruri/anothercontrolleraction");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert

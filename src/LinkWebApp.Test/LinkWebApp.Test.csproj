@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,9 +6,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-
-    <RootNamespace>LinkGeneratorWebApp</RootNamespace>
+    <RootNamespace>LinkWebApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LinkGeneratorWebApp\LinkGeneratorWebApp.csproj" />
+    <ProjectReference Include="..\LinkWebApp\LinkWebApp.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LinkGeneratorWebApp.Controllers;
-public class UriController : Controller {
+namespace LinkWebApp.Controllers;
+public class GeneratorUriController : Controller {
 	private readonly LinkGenerator _linkGenerator;
 
-	public UriController(LinkGenerator linkGenerator) {
+	public GeneratorUriController(LinkGenerator linkGenerator) {
 		_linkGenerator = linkGenerator;
 	}
 

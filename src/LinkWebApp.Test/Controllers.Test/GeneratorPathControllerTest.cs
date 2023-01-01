@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using Xunit;
 
-namespace LinkGeneratorWebApp.Controllers.Test;
+namespace LinkWebApp.Controllers.Test;
 
-public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> {
+public class GeneratorPathControllerTest : IClassFixture<WebApplicationFactory<Program>> {
 
 	private readonly WebApplicationFactory<Program> _factory;
 	private readonly HttpClient _client;
 
-	public PathControllerTest(WebApplicationFactory<Program> factory) {
+	public GeneratorPathControllerTest(WebApplicationFactory<Program> factory) {
 		_factory = factory;
 		_client = _factory.CreateClient();
 	}
@@ -19,12 +19,12 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/path/self");
+		var response = await _client.GetAsync("/generatorpath/self");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal("/path/self", content);
+		Assert.Equal("/generatorpath/self", content);
 	}
 
 	[Fact]
@@ -32,12 +32,12 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/path/selfwithouthttpcontext");
+		var response = await _client.GetAsync("/generatorpath/selfwithouthttpcontext");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal("/path/selfwithouthttpcontext", content);
+		Assert.Equal("/generatorpath/selfwithouthttpcontext", content);
 	}
 
 	[Fact]
@@ -45,12 +45,12 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/path/anotheraction");
+		var response = await _client.GetAsync("/generatorpath/anotheraction");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal("/path/another", content);
+		Assert.Equal("/generatorpath/another", content);
 	}
 
 	[Fact]
@@ -58,7 +58,7 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/path/anothercontroller");
+		var response = await _client.GetAsync("/generatorpath/anothercontroller");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
@@ -71,7 +71,7 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/path/anothercontrolleraction");
+		var response = await _client.GetAsync("/generatorpath/anothercontrolleraction");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
@@ -84,7 +84,7 @@ public class PathControllerTest : IClassFixture<WebApplicationFactory<Program>> 
 		// Arrange
 
 		// Act
-		var response = await _client.GetAsync("/path/anothercontrolleractionwithouthttpcontext");
+		var response = await _client.GetAsync("/generatorpath/anothercontrolleractionwithouthttpcontext");
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert

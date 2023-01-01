@@ -13,8 +13,8 @@ var app = builder.Build();
 app.UseRouting();
 app.UseEndpoints(endpoints => {
 	endpoints.MapControllerRoute(
-		"default",
-		"{controller=Default}/{action=Index}/{id?}");
+		name: "default",
+		pattern: "{controller=Default}/{action=Index}/{id?}");
 });
 
 app.Run();
