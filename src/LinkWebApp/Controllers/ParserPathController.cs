@@ -23,6 +23,7 @@ public class ParserPathController : Controller {
 		return Json(values);
 	}
 
+	// AnotherRouteアクション内においてParsePathByEndpointNameで指定するアクション（エンドポイント）
 	[Route("~/another/{x}-{y}-{z}", Name = "another")]
 	public IActionResult Another() {
 		return new EmptyResult();
