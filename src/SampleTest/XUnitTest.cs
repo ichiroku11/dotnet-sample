@@ -87,13 +87,6 @@ public class XUnitTest : IDisposable {
 		});
 	}
 
-	/*
-	[Fact]
-	public void Equal_文字列の比較は大文字小文字を区別する() {
-		Assert.Equal("x", "X");
-	}
-	*/
-
 	[Fact]
 	public void NotEqual_文字列の比較は大文字小文字を区別する() {
 		Assert.NotEqual("x", "X");
