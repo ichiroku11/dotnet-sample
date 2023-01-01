@@ -45,7 +45,7 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 	}
 
 	[Fact]
-	public async Task Anothert_ParsePathByEndpointNameでRoute指定したルートでパースする() {
+	public async Task Another_ParsePathByEndpointNameでRoute指定したルートでパースする() {
 		// Arrange
 
 		// Act
