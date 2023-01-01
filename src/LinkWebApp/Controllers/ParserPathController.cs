@@ -9,10 +9,22 @@ public class ParserPathController : Controller {
 		_linkParser = linkParser;
 	}
 
+	// defaultのルートでパースする
 	public IActionResult Default() {
-		// defaultのルート
 		var values = _linkParser.ParsePathByEndpointName("default", "/sample/index/1");
 
 		return Json(values);
+	}
+
+	// Route属性で指定したルートでパースする
+	public IActionResult AnotherRoute() {
+		var values = _linkParser.ParsePathByEndpointName("another", "/another/a-b-c");
+
+		return Json(values);
+	}
+
+	[Route("~/another/{x}-{y}-{z}", Name = "another")]
+	public IActionResult Another() {
+		return new EmptyResult();
 	}
 }
