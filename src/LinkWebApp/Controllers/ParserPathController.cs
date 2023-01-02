@@ -16,6 +16,14 @@ public class ParserPathController : Controller {
 		return Json(values);
 	}
 
+	// defaultのルートでパースする
+	// actionとidを省略
+	public IActionResult DefaultShort() {
+		var values = _linkParser.ParsePathByEndpointName("default", "/sample");
+
+		return Json(values);
+	}
+
 	// Route属性で指定したルートでパースする
 	public IActionResult AnotherRoute() {
 		var values = _linkParser.ParsePathByEndpointName("another", "/another/a-b-c");

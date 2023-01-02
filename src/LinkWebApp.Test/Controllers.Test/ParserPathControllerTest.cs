@@ -45,6 +45,32 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 	}
 
 	[Fact]
+	public async Task DefaultShort_ParsePathByEndpointNameでデフォルトのルートでパースする() {
+		// Arrange
+
+		// Act
+		var response = await _client.GetAsync("/parserpath/defaultshort");
+		var json = await response.Content.ReadFromJsonAsync<IDictionary<string, string>>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+		Assert.NotNull(json);
+		Assert.Collection(
+			json?.OrderBy(item => item.Key),
+			// actionは補完されるが、
+			// idは省略可能なので含まれない
+			item => {
+				Assert.Equal("action", item.Key);
+				Assert.Equal("index", item.Value, StringComparer.OrdinalIgnoreCase);
+			},
+			item => {
+				Assert.Equal("controller", item.Key);
+				Assert.Equal("sample", item.Value, StringComparer.OrdinalIgnoreCase);
+			});
+	}
+
+	[Fact]
 	public async Task Another_ParsePathByEndpointNameでRoute指定したルートでパースする() {
 		// Arrange
 
