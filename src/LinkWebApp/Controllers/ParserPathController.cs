@@ -36,4 +36,13 @@ public class ParserPathController : Controller {
 	public IActionResult Another() {
 		return new EmptyResult();
 	}
+
+	// ルートが見つからない場合、LinkParser.ParsePathByEndpointNameはnullを返す
+	public IActionResult MissingRoute() {
+		var values = _linkParser.ParsePathByEndpointName("missing", "/sample/index/1");
+
+		return values is null
+			? NoContent()
+			: Ok();
+	}
 }

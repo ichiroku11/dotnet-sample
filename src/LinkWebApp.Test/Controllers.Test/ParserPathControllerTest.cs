@@ -105,4 +105,15 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 				Assert.Equal("c", item.Value, StringComparer.Ordinal);
 			});
 	}
+
+	[Fact]
+	public async Task MissingRoute_ParsePathByEndpointNameはnullを返す() {
+		// Arrange
+
+		// Act
+		var response = await _client.GetAsync("/parserpath/missingroute");
+
+		// Assert
+		Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+	}
 }
