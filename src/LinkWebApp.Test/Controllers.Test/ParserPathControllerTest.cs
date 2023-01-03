@@ -107,7 +107,7 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 	}
 
 	[Fact]
-	public async Task MissingRoute_ParsePathByEndpointNameはnullを返す() {
+	public async Task MissingRoute_ParsePathByEndpointNameはルートが見つからないとnullを返す() {
 		// Arrange
 
 		// Act
