@@ -8,12 +8,14 @@ var services = builder.Services;
 
 // AddCheckでCheckを追加しない場合はHealthyだった
 services.AddHealthChecks()
-	.AddCheck<AlwaysHealthyHealthCheck>("AlwaysHealthy");
+	.AddCheck<AlwaysHealthyHealthCheck>("AlwaysHealthy")
+	.AddCheck<AlwaysUnhealthyHealthCheck>("AlwaysUnhealthy");
 
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
+// 常にHealthyと常にUnhealthyのチェックでは、常にUnhealthyになる様子
 app.MapHealthChecks("/health");
 
 app.Run();
