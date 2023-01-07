@@ -15,7 +15,7 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
-// 常にHealthyと常にUnhealthyのチェックでは、常にUnhealthyになる様子
+// 複数のヘルスチェックがある場合、最も悪いステータスになる
 app.MapHealthChecks("/health");
 
 app.Run();
