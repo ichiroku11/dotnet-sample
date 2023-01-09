@@ -8,11 +8,11 @@ namespace ModelBindingWebApp.Controllers;
 // https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-7.0#required-validation-on-the-server
 // A non-nullable field is always valid, and the [Required] attribute's error message is never displayed.
 // NULLでないフィールドは常に有効であり、[Required]属性のエラーメッセージが表示されることはない。
-[Route("api/[controller]")]
+[Route("api/validation/required/[action]")]
 [ApiController]
 public class ValidationRequiredController : ControllerBase {
 	// 値型のプロパティを持つモデル
-	// 値が送信されなくてもバリデーションエラーは表示されないはず
+	// 値が送信されなくてもバリデーションエラーにならない
 	public record ValueTypeModel([Required] int Value);
 
 	[HttpPost]
@@ -27,7 +27,7 @@ public class ValidationRequiredController : ControllerBase {
 
 
 	// 参照型のプロパティを持つモデル
-	public record ReferenceTypeModel([Required] string Value);
+	public record ReferenceTypeModel([Required] string Value = "");
 
 	[HttpPost]
 	public IActionResult ReferenceType(ReferenceTypeModel model) => Ok(model);
