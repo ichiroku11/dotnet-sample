@@ -49,12 +49,14 @@ public class DictionaryControllerTest : ControllerTestBase {
 	[MemberData(nameof(GetTheoryDataSimpleValues))]
 	public async Task PostAsync_BindToStringInt32Dictionary(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
+		var client = CreateClient();
+
 		using var request = new HttpRequestMessage(HttpMethod.Post, "api/dictionary") {
 			Content = new FormUrlEncodedContent(formValues),
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var json = await response.Content.ReadAsStringAsync();
 		var values = JsonSerializer.Deserialize<IDictionary<string, int>>(json, _jsonSerializerOptions)!;
 
@@ -89,12 +91,14 @@ public class DictionaryControllerTest : ControllerTestBase {
 	[MemberData(nameof(GetTheoryDataComplexValues))]
 	public async Task PostAsync_BindToComplexModelDictionary(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
+		var client = CreateClient();
+
 		using var request = new HttpRequestMessage(HttpMethod.Post, "api/dictionary/complex") {
 			Content = new FormUrlEncodedContent(formValues),
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var json = await response.Content.ReadAsStringAsync();
 		var values = JsonSerializer.Deserialize<IDictionary<string, Sample>>(json, _jsonSerializerOptions)!;
 

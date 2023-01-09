@@ -57,12 +57,14 @@ public class CollectionControllerTest : ControllerTestBase {
 	[MemberData(nameof(GetTheoryDataSimpleValues))]
 	public async Task PostAsync_BindToInt32Enumerable(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
+		var client = CreateClient();
+
 		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection") {
 			Content = new FormUrlEncodedContent(formValues),
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var json = await response.Content.ReadAsStringAsync();
 		var values = JsonSerializer.Deserialize<IEnumerable<int>>(json, _jsonSerializerOptions);
 
@@ -85,12 +87,14 @@ public class CollectionControllerTest : ControllerTestBase {
 	[MemberData(nameof(GetTheoryDataComplexValues))]
 	public async Task PostAsync_BindToComplexModelEnumerable(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
+		var client = CreateClient();
+
 		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection/complex") {
 			Content = new FormUrlEncodedContent(formValues),
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var json = await response.Content.ReadAsStringAsync();
 		var values = JsonSerializer.Deserialize<IEnumerable<Sample>>(json, _jsonSerializerOptions);
 
