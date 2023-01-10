@@ -20,6 +20,7 @@ public class ValidationRequiredController : ControllerBase {
 
 
 	// null許容値型のプロパティを持つモデル
+	// 値が送信されないとバリデーションエラーになる
 	public record NullableValueTypeModel([Required] int? Value);
 
 	[HttpPost]
@@ -27,6 +28,7 @@ public class ValidationRequiredController : ControllerBase {
 
 
 	// 参照型のプロパティを持つモデル
+	// 値が送信されないとバリデーションエラーになる
 	public record ReferenceTypeModel([Required] string Value = "");
 
 	[HttpPost]
@@ -34,6 +36,7 @@ public class ValidationRequiredController : ControllerBase {
 
 
 	// null許容参照型のプロパティを持つモデル
+	// 値が送信されないとバリデーションエラーになる
 	public record NullableReferenceTypeModel([Required] string? Value);
 
 	[HttpPost]
