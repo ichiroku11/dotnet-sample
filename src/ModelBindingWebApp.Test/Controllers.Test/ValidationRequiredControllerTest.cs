@@ -90,4 +90,35 @@ public class ValidationRequiredControllerTest : ControllerTestBase {
 				}
 			});
 	}
+
+	// 試しところ、Required属性に関係ないバリデーションエラーになる様子
+	// intに変換できない文字列を送信する
+	[Fact]
+	public async Task ValueType_値型のプロパティに変換できない値を送信するとバリデーションエラーになる() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.PostAsJsonAsync("/api/validation/required/valuetype", new { value = "x" });
+		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+		Assert.Collection(
+			problem!.Errors.OrderBy(error => error.Key),
+			entry => {
+				Assert.Equal("$.value", entry.Key);
+				// The JSON value could not be converted to ModelBindingWebApp.Controllers.ValidationRequiredController + ValueTypeModel.Path: $.value | LineNumber: 0 | BytePositionInLine: 12.
+				foreach (var message in entry.Value) {
+					WriteLine(message);
+				}
+			},
+			entry => {
+				Assert.Equal("model", entry.Key);
+				// The model field is required.
+				foreach (var message in entry.Value) {
+					WriteLine(message);
+				}
+			});
+	}
 }
