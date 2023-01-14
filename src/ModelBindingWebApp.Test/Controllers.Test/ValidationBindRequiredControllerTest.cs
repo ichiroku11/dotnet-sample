@@ -26,7 +26,7 @@ public class ValidationBindRequiredControllerTest : ControllerTestBase {
 
 	// null許容値型
 	[Fact]
-	public async Task NullableValueType_BindRequired属性が指定された値型のプロパティは値が送信されてなくもバリデーションエラーにならない() {
+	public async Task NullableValueType_BindRequired属性が指定されたnull許容値型のプロパティは値が送信されてなくもバリデーションエラーにならない() {
 		// Arrange
 		var client = CreateClient();
 
@@ -38,8 +38,28 @@ public class ValidationBindRequiredControllerTest : ControllerTestBase {
 	}
 
 	// 参照型
-	// todo:
+	[Fact]
+	public async Task ReferenceType_BindRequired属性が指定された参照型のプロパティは値が送信されてなくもバリデーションエラーにならない() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.PostAsJsonAsync("/api/validation/bindrequired/referencetype", new { });
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+	}
 
 	// null許容参照型
-	// todo:
+	[Fact]
+	public async Task NullableReferenceType_BindRequired属性が指定されたnull許容参照型のプロパティは値が送信されてなくもバリデーションエラーにならない() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.PostAsJsonAsync("/api/validation/bindrequired/nullablereferencetype", new { });
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+	}
 }
