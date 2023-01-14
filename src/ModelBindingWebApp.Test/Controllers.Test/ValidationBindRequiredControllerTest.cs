@@ -25,7 +25,17 @@ public class ValidationBindRequiredControllerTest : ControllerTestBase {
 	}
 
 	// null許容値型
-	// todo:
+	[Fact]
+	public async Task NullableValueType_BindRequired属性が指定された値型のプロパティは値が送信されてなくもバリデーションエラーにならない() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.PostAsJsonAsync("/api/validation/bindrequired/nullablevaluetype", new { });
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+	}
 
 	// 参照型
 	// todo:
