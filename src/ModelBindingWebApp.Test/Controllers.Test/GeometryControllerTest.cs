@@ -14,9 +14,7 @@ public class GeometryControllerTest : ControllerTestBase {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
-	public GeometryControllerTest(
-		ITestOutputHelper output,
-		WebApplicationFactory<Startup> factory)
+	public GeometryControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
 		: base(output, factory) {
 	}
 
@@ -104,12 +102,14 @@ public class GeometryControllerTest : ControllerTestBase {
 	[MemberData(nameof(GetTheoryData))]
 	public async Task Save_サブクラスをバインドできる(GeometryModel expected) {
 		// Arrange
+		var client = CreateClient();
+
 		using var request = new HttpRequestMessage(HttpMethod.Post, "/geometry/save") {
 			Content = GetContent(expected)
 		};
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var content = await response.Content.ReadAsStringAsync();
 		var actual = JsonSerializer.Deserialize(content, expected.GetType(), _jsonSerializerOptions) as GeometryModel
 			?? throw new ArgumentException("", nameof(expected));

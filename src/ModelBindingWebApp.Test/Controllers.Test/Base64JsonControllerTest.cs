@@ -21,6 +21,8 @@ public class Base64JsonControllerTest : ControllerTestBase {
 	[Fact]
 	public async Task PostAsync_Base64にエンコードしたJSON文字列をモデルにバインドできる() {
 		// Arrange
+		var client = CreateClient();
+
 		var expected = new Sample { Id = 1, Name = "a" };
 		var json = JsonSerializer.Serialize(expected, _jsonSerializerOptions);
 		var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
@@ -30,7 +32,7 @@ public class Base64JsonControllerTest : ControllerTestBase {
 		};
 
 		// Act
-		var response = await SendAsync(request);
+		var response = await client.SendAsync(request);
 		var actual = JsonSerializer.Deserialize<Sample>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions);
 
 		// Assert

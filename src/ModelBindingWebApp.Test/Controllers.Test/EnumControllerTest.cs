@@ -15,10 +15,12 @@ public class EnumControllerTest : ControllerTestBase {
 	[InlineData("Apple")]
 	public async Task Get_Enumにバインドできる(string fruit) {
 		// Arrange
+		var client = CreateClient();
+
 		using var request = new HttpRequestMessage(HttpMethod.Get, $"/api/enum/{fruit}");
 
 		// Act
-		using var response = await SendAsync(request);
+		using var response = await client.SendAsync(request);
 		var content = await response.Content.ReadAsStringAsync();
 
 		// Assert
