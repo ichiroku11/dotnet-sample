@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "DotNetSample.sln",
+    "projects": [
+      "src\\SampleLib.Test\\SampleLib.Test.csproj",
+      "src\\SampleLib\\SampleLib.csproj",
+      "src\\SampleTest\\SampleTest.csproj"
+    ]
+  }
+}
