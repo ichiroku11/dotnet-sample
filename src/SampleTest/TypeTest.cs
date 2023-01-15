@@ -12,21 +12,17 @@ public class TypeTest {
 
 	[Fact]
 	public void IsAssignableFrom() {
-		var baseType = typeof(Base);
-		var derivedType = typeof(Derived);
-		var interfaceType = typeof(IInterface);
-
 		// Base型の変数に、Derived型のインスタンスを割り当てることができる
-		Assert.True(baseType.IsAssignableFrom(derivedType));
+		Assert.True(typeof(Base).IsAssignableFrom(typeof(Derived)));
 
 		// Derived型の変数に、Base型のインスタンスを割り当てることができない
-		Assert.False(derivedType.IsAssignableFrom(baseType));
+		Assert.False(typeof(Derived).IsAssignableFrom(typeof(Base)));
 
 		// Base型の変数に、Base型のインスタンスを割り当てることができる
-		Assert.True(baseType.IsAssignableFrom(baseType));
+		Assert.True(typeof(Base).IsAssignableFrom(typeof(Base)));
 
 		// IInterface型の変数に、Derived型のインスタンスを割り当てることができる
-		Assert.True(interfaceType.IsAssignableFrom(derivedType));
+		Assert.True(typeof(IInterface).IsAssignableFrom(typeof(Derived)));
 	}
 
 	[Fact]
@@ -51,18 +47,14 @@ public class TypeTest {
 
 	[Fact]
 	public void IsSubclassOf() {
-		var baseType = typeof(Base);
-		var derivedType = typeof(Derived);
-		var interfaceType = typeof(IInterface);
-
 		// BaseはDerivedのサブクラスではない
-		Assert.False(baseType.IsSubclassOf(derivedType));
+		Assert.False(typeof(Base).IsSubclassOf(typeof(Derived)));
 
 		// DerivedはBaseのサブクラスである
-		Assert.True(derivedType.IsSubclassOf(baseType));
+		Assert.True(typeof(Derived).IsSubclassOf(typeof(Base)));
 
 		// Derived（インターフェイスの実装）はIInterfaceのサブクラスではない
-		Assert.False(derivedType.IsSubclassOf(interfaceType));
+		Assert.False(typeof(Derived).IsSubclassOf(typeof(IInterface)));
 	}
 
 	// リフレクションではないけど
