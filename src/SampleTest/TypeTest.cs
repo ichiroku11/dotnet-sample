@@ -30,6 +30,26 @@ public class TypeTest {
 	}
 
 	[Fact]
+	public void IsAssignableTo() {
+		// Base型は、Derived型に割り当てることができない
+		Assert.False(typeof(Base).IsAssignableTo(typeof(Derived)));
+
+		// Derived型は、Base型に割り当てることができる
+		Assert.True(typeof(Derived).IsAssignableTo(typeof(Base)));
+
+		// IInterface型は、Derived型に割り当てることができない
+		Assert.False(typeof(IInterface).IsAssignableTo(typeof(Derived)));
+
+		// Derived型は、IInterface型に割り当てることができる
+		Assert.True(typeof(Derived).IsAssignableTo(typeof(IInterface)));
+
+		// 同じ型は割り当てることができる
+		Assert.True(typeof(Base).IsAssignableTo(typeof(Base)));
+		Assert.True(typeof(Derived).IsAssignableTo(typeof(Derived)));
+		Assert.True(typeof(IInterface).IsAssignableTo(typeof(IInterface)));
+	}
+
+	[Fact]
 	public void IsSubclassOf() {
 		var baseType = typeof(Base);
 		var derivedType = typeof(Derived);
