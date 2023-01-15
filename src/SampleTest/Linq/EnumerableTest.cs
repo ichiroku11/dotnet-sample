@@ -29,6 +29,23 @@ public class EnumerableTest {
 	}
 
 	[Fact]
+	public void OfType_castできる要素にフィルターする() {
+		// Arrange
+		var values = new object[] {
+			new Sample(),
+			new { },
+		};
+
+		// Act
+		var actual = values.OfType<ISample>();
+
+		// Assert
+		// 変換できる（castできる）要素のみにフィルターされる
+		var sample = Assert.Single(actual);
+		Assert.IsType<Sample>(sample);
+	}
+
+	[Fact]
 	public void Prepend_シーケンスの最初に要素を追加する() {
 		// Arrange
 		var source = new[] { 2, 3, 4 };
