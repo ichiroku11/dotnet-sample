@@ -7,12 +7,21 @@ using System.Net.Http.Headers;
 
 namespace MiscWebApi.Controllers.Test;
 
+// 参考
+// https://learn.microsoft.com/ja-jp/aspnet/core/web-api/?view=aspnetcore-7.0#define-supported-request-content-types-with-the-consumes-attribute-1
 public class ConsumeControllerTest : ControllerTestBase {
 	public ConsumeControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
-	[Fact]
-	public async Task Default_() {
+	[Theory]
+	// Consumes属性がない場合
+	// "application/json"、"text/json"を受け入れる
+	[InlineData("application/json", HttpStatusCode.OK)]
+	[InlineData("text/json", HttpStatusCode.OK)]
+	// "text/plain"は受け入れない
+	// 受け入れない場合は415のステータスコードが返る
+	[InlineData("text/plain", HttpStatusCode.UnsupportedMediaType)]
+	public async Task Default_Consumes属性を指定しない場合の動きを確認する(string mediaType, HttpStatusCode expected) {
 		// Arrange
 		var client = CreateClient();
 
@@ -21,9 +30,9 @@ public class ConsumeControllerTest : ControllerTestBase {
 			"/api/consume/default",
 			JsonContent.Create(
 				new { value = "x" },
-				new MediaTypeHeaderValue("application/json") { CharSet = "utf-8" }));
+				new MediaTypeHeaderValue(mediaType) { CharSet = "utf-8" }));
 
 		// Assert
-		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal(expected, response.StatusCode);
 	}
 }
