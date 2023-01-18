@@ -35,4 +35,26 @@ public class ConsumeControllerTest : ControllerTestBase {
 		// Assert
 		Assert.Equal(expected, response.StatusCode);
 	}
+
+
+	[Theory]
+	// Consumes属性で指定した"application/json"のみ受け入れる
+	[InlineData("application/json", HttpStatusCode.OK)]
+	[InlineData("text/json", HttpStatusCode.UnsupportedMediaType)]
+	[InlineData("text/plain", HttpStatusCode.UnsupportedMediaType)]
+	public async Task ApplicationJson_Consumes属性を指定した場合の動きを確認する(string mediaType, HttpStatusCode expected) {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.PostAsync(
+			"/api/consume/applicationjson",
+			JsonContent.Create(
+				new { value = "x" },
+				new MediaTypeHeaderValue(mediaType) { CharSet = "utf-8" }));
+
+		// Assert
+		Assert.Equal(expected, response.StatusCode);
+	}
+
 }
