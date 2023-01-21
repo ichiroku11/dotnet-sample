@@ -6,5 +6,5 @@ namespace MiscWebApi.Controllers;
 [ApiController]
 public class ProduceController : ControllerBase {
 	[HttpGet]
-	public IActionResult Default() => Ok();
+	public IActionResult Default() => Ok(new { });
 }
