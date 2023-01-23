@@ -22,4 +22,18 @@ public class ProduceControllerTest : ControllerTestBase {
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
 	}
+
+	// Produces属性で"text/json"を指定した場合
+	[Fact]
+	public async Task Default_Produces属性を指定した場合の動きを確認する() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.GetAsync("/api/produce/textjson");
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("text/json", response.Content.Headers.ContentType?.MediaType);
+	}
 }
