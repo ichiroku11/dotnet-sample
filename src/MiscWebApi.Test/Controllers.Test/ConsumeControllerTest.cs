@@ -13,8 +13,8 @@ public class ConsumeControllerTest : ControllerTestBase {
 	public ConsumeControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
-	[Theory]
 	// Consumes属性がない場合
+	[Theory]
 	// "application/json"、"text/json"を受け入れる
 	[InlineData("application/json", HttpStatusCode.OK)]
 	[InlineData("text/json", HttpStatusCode.OK)]
@@ -36,9 +36,8 @@ public class ConsumeControllerTest : ControllerTestBase {
 		Assert.Equal(expected, response.StatusCode);
 	}
 
-
-	[Theory]
 	// Consumes属性で指定した"application/json"のみ受け入れる
+	[Theory]
 	[InlineData("application/json", HttpStatusCode.OK)]
 	[InlineData("text/json", HttpStatusCode.UnsupportedMediaType)]
 	[InlineData("text/plain", HttpStatusCode.UnsupportedMediaType)]

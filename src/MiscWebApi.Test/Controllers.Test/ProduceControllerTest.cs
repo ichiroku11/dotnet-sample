@@ -9,7 +9,7 @@ public class ProduceControllerTest : ControllerTestBase {
 	public ProduceControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
-	// Produces属性がない場合、"application/json"になる
+	// Produces属性がない場合、レスポンスのContentTypeは"application/json"になる
 	[Fact]
 	public async Task Default_Produces属性を指定しない場合の動きを確認する() {
 		// Arrange
@@ -23,9 +23,9 @@ public class ProduceControllerTest : ControllerTestBase {
 		Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
 	}
 
-	// Produces属性で"text/json"を指定した場合
+	// Produces属性で"text/json"を指定した場合、レスポンスのContentTypeは"text/json"になる
 	[Fact]
-	public async Task Default_Produces属性を指定した場合の動きを確認する() {
+	public async Task TextJson_Produces属性を指定した場合の動きを確認する() {
 		// Arrange
 		var client = CreateClient();
 
