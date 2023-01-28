@@ -19,6 +19,7 @@ public class ECDiffieHellmanTest {
 
 		// Assert
 		Assert.Equal("ECDiffieHellman", ecdh.KeyExchangeAlgorithm);
+		// 521？
 		Assert.Equal(521, ecdh.KeySize);
 		Assert.Null(ecdh.SignatureAlgorithm);
 
