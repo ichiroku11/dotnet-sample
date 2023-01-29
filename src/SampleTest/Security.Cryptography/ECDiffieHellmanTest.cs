@@ -29,4 +29,22 @@ public class ECDiffieHellmanTest {
 			_output.WriteLine($"{nameof(keySize.MinSize)}={keySize.MinSize}, {nameof(keySize.MaxSize)}={keySize.MaxSize}, {nameof(keySize.SkipSize)}={keySize.SkipSize}");
 		}
 	}
+
+	[Fact]
+	public void DeriveKeyMaterial_キーマテリアルを導出する() {
+		// Arrange
+		var alice = ECDiffieHellman.Create();
+		var bob = ECDiffieHellman.Create();
+
+		// Act
+		// DeriveKeyMaterialの引数には相手の公開鍵を指定する
+		// キーマテリアルとは？
+		var derivedKey1 = alice.DeriveKeyMaterial(bob.PublicKey);
+		var derivedKey2 = bob.DeriveKeyMaterial(alice.PublicKey);
+		_output.WriteLine(derivedKey1.ToHexString());
+
+		// Assert
+		// キーマテリアルは一致する
+		Assert.True(derivedKey1.SequenceEqual(derivedKey2));
+	}
 }
