@@ -47,4 +47,17 @@ public class ECDiffieHellmanTest {
 		// キーマテリアルは一致する
 		Assert.True(derivedKey1.SequenceEqual(derivedKey2));
 	}
+
+	[Fact]
+	public void ExportSubjectPublicKeyInfo_公開鍵のエクスポートを試す() {
+		// Arrange
+		var ecdh = ECDiffieHellman.Create();
+
+		// Act
+		var publicKey1 = ecdh.ExportSubjectPublicKeyInfo();
+		var PublicKey2 = ecdh.PublicKey.ExportSubjectPublicKeyInfo();
+
+		// Assert
+		Assert.True(publicKey1.SequenceEqual(PublicKey2));
+	}
 }
