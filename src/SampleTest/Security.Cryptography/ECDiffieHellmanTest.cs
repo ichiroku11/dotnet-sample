@@ -54,7 +54,7 @@ public class ECDiffieHellmanTest {
 		var ecdh = ECDiffieHellman.Create();
 
 		// Act
-		// 2つのエクスポートは同じ
+		// 2つのエクスポートは同じ結果になる様子
 		var publicKey1 = ecdh.ExportSubjectPublicKeyInfo();
 		var PublicKey2 = ecdh.PublicKey.ExportSubjectPublicKeyInfo();
 
