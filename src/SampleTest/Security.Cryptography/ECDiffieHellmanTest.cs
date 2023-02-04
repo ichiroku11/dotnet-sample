@@ -31,6 +31,20 @@ public class ECDiffieHellmanTest {
 	}
 
 	[Fact]
+	public void Create_生成したインスタンスごとにパラメーターが異なる() {
+		// Arrange
+		// Act
+		var key1 = ECDiffieHellman.Create().PublicKey.ExportSubjectPublicKeyInfo();
+		var key2 = ECDiffieHellman.Create().PublicKey.ExportSubjectPublicKeyInfo();
+
+		_output.WriteLine(Convert.ToHexString(key1));
+		_output.WriteLine(Convert.ToHexString(key2));
+
+		// Assert
+		Assert.False(key1.SequenceEqual(key2));
+	}
+
+	[Fact]
 	public void DeriveKeyMaterial_キーマテリアルを導出する() {
 		// Arrange
 		var alice = ECDiffieHellman.Create();
@@ -62,8 +76,6 @@ public class ECDiffieHellmanTest {
 		Assert.True(publicKey1.SequenceEqual(PublicKey2));
 	}
 
-	// X.509 SubjectPublicKeyInfoフォーマットでエクスポートした公開鍵を別のインスタンスでインポートする
-	// サーバーとクライアントなど別のプログラムで公開鍵をやりとりする方法はこれかな・・・
 	[Fact]
 	public void ImportSubjectPublicKeyInfo_SubjectPublicKeyInfo形式でエクスポートした公開鍵をインポートする() {
 		// Arrange
