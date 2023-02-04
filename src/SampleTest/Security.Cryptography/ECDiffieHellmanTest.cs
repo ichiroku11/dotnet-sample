@@ -60,4 +60,28 @@ public class ECDiffieHellmanTest {
 		// Assert
 		Assert.True(publicKey1.SequenceEqual(PublicKey2));
 	}
+
+	// X.509 SubjectPublicKeyInfoフォーマットでエクスポートした公開鍵を別のインスタンスでインポートする
+	// サーバーとクライアントなど別のプログラムで公開鍵をやりとりする方法はこれかな・・・
+	[Fact]
+	public void ImportSubjectPublicKeyInfo_SubjectPublicKeyInfo形式でエクスポートした公開鍵をインポートする() {
+		// Arrange
+		var alice = ECDiffieHellman.Create();
+		var bob = ECDiffieHellman.Create();
+
+		// 公開鍵のエクスポート
+		// PublicKey.ToByteArrayはObsoleteになった様子
+		// https://learn.microsoft.com/ja-jp/dotnet/api/system.security.cryptography.ecdiffiehellmanpublickey.tobytearray?view=net-7.0
+		// ECDiffieHellmanPublicKey.ToByteArray() and the associated constructor do not have a consistent and interoperable implementation on all platforms.
+		// Use ECDiffieHellmanPublicKey.ExportSubjectPublicKeyInfo() instead.
+		var expected = alice.ExportSubjectPublicKeyInfo();
+
+		// Act
+		// 公開鍵のインポート
+		bob.ImportSubjectPublicKeyInfo(expected, out _);
+		var actual = bob.ExportSubjectPublicKeyInfo();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
