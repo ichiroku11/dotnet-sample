@@ -1,3 +1,4 @@
+using SampleLib.Security;
 using System.Security.Cryptography;
 
 namespace HybridCryptoConsoleApp;
