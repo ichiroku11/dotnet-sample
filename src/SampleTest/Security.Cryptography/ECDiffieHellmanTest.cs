@@ -63,6 +63,20 @@ public class ECDiffieHellmanTest {
 	}
 
 	[Fact]
+	public void DeriveKeyFromHash_SHA256を指定するとDeriveKeyMaterialと同じ結果になる様子() {
+		// Arrange
+		using var alice = ECDiffieHellman.Create();
+		using var bob = ECDiffieHellman.Create();
+
+		// Act
+		var key1 = alice.DeriveKeyFromHash(bob.PublicKey, HashAlgorithmName.SHA256);
+		var key2 = alice.DeriveKeyMaterial(bob.PublicKey);
+
+		// Assert
+		Assert.True(key1.SequenceEqual(key2));
+	}
+
+	[Fact]
 	public void ExportSubjectPublicKeyInfo_公開鍵のエクスポートを試す() {
 		// Arrange
 		var ecdh = ECDiffieHellman.Create();
