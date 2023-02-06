@@ -1,6 +1,17 @@
 namespace SampleTest;
 
 public class ConvertTest {
+
+	[Fact]
+	public void ToHexString_バイト配列を大文字の16進数文字列に変換できる() {
+		// Arrange
+		// Act
+		var actual = Convert.ToHexString(new byte[] { 0b_1010_1011 });
+
+		// Assert
+		Assert.Equal("AB", actual);
+	}
+
 	[Theory]
 	[InlineData("1", 1)]
 	[InlineData("0001", 1)] // 先頭に0があっても大丈夫
@@ -82,4 +93,5 @@ public class ConvertTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
 }
