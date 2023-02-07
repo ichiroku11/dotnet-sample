@@ -10,14 +10,18 @@ public static class DatabaseExtensions {
 			PropertyNameCaseInsensitive = true,
 		};
 
-	public static async Task<string> ExecutePingAsync(this IDatabase database) {
+	public static async Task<string?> ExecutePingAsync(this IDatabase database) {
 		var result = await database.ExecuteAsync("PING");
 
-		return (string)result;
+		return (string?)result;
 	}
 
 	public static async Task<TValue?> GetAsync<TValue>(this IDatabase database, string key) {
-		var json = await database.StringGetAsync(key);
+		var value = await database.StringGetAsync(key);
+		var json = (string?)value;
+		if (json is null) {
+			return default;
+		}
 
 		return JsonSerializer.Deserialize<TValue>(json, _options);
 	}
