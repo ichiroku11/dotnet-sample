@@ -1,6 +1,18 @@
 namespace SampleTest;
 
 public class ConvertTest {
+	[Theory]
+	// 大文字・小文字どちらでもバイト配列に変換できる
+	[InlineData("AB", new byte[] { 0b_1010_1011 })]
+	[InlineData("ab", new byte[] { 0b_1010_1011 })]
+	public void FromHexString_16進数文字列をバイト配列に変換できる(string hexString, byte[] expected) {
+		// Arrange
+		// Act
+		var actual = Convert.FromHexString(hexString);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 
 	[Fact]
 	public void ToHexString_バイト配列を大文字の16進数文字列に変換できる() {
