@@ -1,6 +1,27 @@
 namespace SampleTest;
 
 public class ConvertTest {
+	// 参考
+	// https://www.rfc-editor.org/rfc/rfc4648
+	[Fact]
+	public void ToBase64String_変換を確認する() {
+		// Arrange
+		var bytes = new byte[] {
+			0b_1111_1000
+		};
+
+		// Act
+		var actual = Convert.ToBase64String(bytes);
+
+		// Assert
+		// https://www.rfc-editor.org/rfc/rfc4648#section-4
+		// 6ビットずつに分割（足りない場合は0を追加）
+		// 111010(62) => "+"
+		// 000000(0) => "A"
+		// 4文字に足りない => "=="を追加
+		Assert.Equal("+A==", actual);
+	}
+
 	[Theory]
 	// 大文字・小文字どちらでもバイト配列に変換できる
 	[InlineData("AB", new byte[] { 0b_1010_1011 })]
@@ -23,6 +44,7 @@ public class ConvertTest {
 		// Assert
 		Assert.Equal("AB", actual);
 	}
+
 
 	[Theory]
 	[InlineData("1", 1)]
