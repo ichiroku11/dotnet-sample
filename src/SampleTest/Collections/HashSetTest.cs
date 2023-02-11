@@ -106,8 +106,26 @@ public class HashSetTest {
 	}
 
 	[Theory]
+	[InlineData(new[] { 1 }, true)]
+	[InlineData(new[] { 0, 1 }, true)]
+	[InlineData(new[] { 0, 3 }, true)]
+	public void Overlaps_otherと共通の要素が存在するかを判定する(IEnumerable<int> other, bool expected) {
+		// Arrange
+		var set = new HashSet<int> { 0, 1, 2 };
+
+		// Act
+		var actual = set.Overlaps(other);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	// まったく同じ要素
 	[InlineData(new[] { 0, 1, 2, 3, 4 }, true)]
+	// otherの要素が足りない
 	[InlineData(new[] { 0, 1, 2, 3 }, false)]
+	// otherの要素が多い
 	[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
 	public void SetEquals_otherが同じ要素を含んでいるかどうかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
