@@ -18,6 +18,7 @@ public class JwtHeaderTest {
 		var header = new JwtHeader();
 
 		// Assert
+		Assert.Empty(header);
 		Assert.Null(header.Typ);
 		Assert.Null(header.Alg);
 
@@ -31,7 +32,8 @@ public class JwtHeaderTest {
 		var header = new JwtHeader(signingCredentials: null);
 
 		// Assert
-		Assert.Equal("JWT", header.Typ);
+		Assert.Equal(2, header.Count);
+		Assert.Equal(JwtConstants.HeaderType, header.Typ);
 		Assert.Equal("none", header.Alg);
 
 		_output.WriteLine(header.SerializeToJson());
@@ -41,15 +43,15 @@ public class JwtHeaderTest {
 	public void Constructor_HS256署名付きのヘッダーを生成する() {
 		// Arrange
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x"));
-		var algorithm = SecurityAlgorithms.HmacSha256;
-		var credentials = new SigningCredentials(key, algorithm);
+		var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 		// Act
 		var header = new JwtHeader(credentials);
 
 		// Assert
-		Assert.Equal("JWT", header.Typ);
-		Assert.Equal("HS256", header.Alg);
+		Assert.Equal(2, header.Count);
+		Assert.Equal(JwtConstants.HeaderType, header.Typ);
+		Assert.Equal(SecurityAlgorithms.HmacSha256, header.Alg);
 
 		_output.WriteLine(header.SerializeToJson());
 	}
