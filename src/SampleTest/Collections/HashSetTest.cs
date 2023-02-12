@@ -40,15 +40,15 @@ public class HashSetTest {
 	}
 
 	[Theory]
-	[InlineData(new[] { 0, 1, 2, 3, 4 }, true)]
-	[InlineData(new[] { 0, 1, 2, 3 }, false)]
-	[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, true)]
+	[InlineData(new[] { 0, 1, 2 }, true)]
+	[InlineData(new[] { 0, 1 }, false)]
+	[InlineData(new[] { 0, 1, 2, 3 }, true)]
 	public void IsSubsetOf_otherの部分集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
-		var set = new HashSet<int> { 0, 1, 2, 3, 4 };
+		var set = new HashSet<int> { 0, 1, 2 };
 
 		// Act
-		// 部分集合（＝サブセット）かどうか
+		// otherの部分集合（＝サブセット）かどうか
 		var actual = set.IsSubsetOf(other);
 
 		// Assert
@@ -57,16 +57,16 @@ public class HashSetTest {
 
 	[Theory]
 	// 真部分集合ではない
-	[InlineData(new[] { 0, 1, 2, 3, 4 }, false)]
-	[InlineData(new[] { 0, 1, 2, 3 }, false)]
+	[InlineData(new[] { 0, 1, 2 }, false)]
+	[InlineData(new[] { 0, 1 }, false)]
 	// 真部分集合である
-	[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, true)]
+	[InlineData(new[] { 0, 1, 2, 3 }, true)]
 	public void IsProperSubsetOf_otherの真部分集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
-		var set = new HashSet<int> { 0, 1, 2, 3, 4 };
+		var set = new HashSet<int> { 0, 1, 2 };
 
 		// Act
-		// 真部分集合かどうか
+		// otherの真部分集合かどうか
 		var actual = set.IsProperSubsetOf(other);
 
 		// Assert
@@ -74,15 +74,15 @@ public class HashSetTest {
 	}
 
 	[Theory]
-	[InlineData(new[] { 0, 1, 2, 3, 4 }, true)]
-	[InlineData(new[] { 0, 1, 2, 3 }, true)]
-	[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
+	[InlineData(new[] { 0, 1, 2 }, true)]
+	[InlineData(new[] { 0, 1 }, true)]
+	[InlineData(new[] { 0, 1, 2, 3 }, false)]
 	public void IsSupersetOf_otherの上位集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
-		var set = new HashSet<int> { 0, 1, 2, 3, 4 };
+		var set = new HashSet<int> { 0, 1, 2 };
 
 		// Act
-		// 上位集合（＝スーパーセット）かどうか
+		// otherの上位集合（＝スーパーセット）かどうか
 		var actual = set.IsSupersetOf(other);
 
 		// Assert
@@ -90,15 +90,15 @@ public class HashSetTest {
 	}
 
 	[Theory]
-	[InlineData(new[] { 0, 1, 2, 3, 4 }, false)]
-	[InlineData(new[] { 0, 1, 2, 3 }, true)]
-	[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
+	[InlineData(new[] { 0, 1, 2 }, false)]
+	[InlineData(new[] { 0, 1 }, true)]
+	[InlineData(new[] { 0, 1, 2, 3 }, false)]
 	public void IsProperSupersetOf_otherの真上位集合かどうかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
-		var set = new HashSet<int> { 0, 1, 2, 3, 4 };
+		var set = new HashSet<int> { 0, 1, 2 };
 
 		// Act
-		// 真上位集合かどうか
+		// otherの真上位集合かどうか
 		var actual = set.IsProperSupersetOf(other);
 
 		// Assert
@@ -109,6 +109,7 @@ public class HashSetTest {
 	[InlineData(new[] { 1 }, true)]
 	[InlineData(new[] { 0, 1 }, true)]
 	[InlineData(new[] { 0, 3 }, true)]
+	[InlineData(new[] { 3 }, false)]
 	public void Overlaps_otherと共通の要素が存在するかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
 		var set = new HashSet<int> { 0, 1, 2 };
@@ -122,14 +123,14 @@ public class HashSetTest {
 
 	[Theory]
 	// まったく同じ要素
-	[InlineData(new[] { 0, 1, 2, 3, 4 }, true)]
+	[InlineData(new[] { 0, 1, 2 }, true)]
 	// otherの要素が足りない
-	[InlineData(new[] { 0, 1, 2, 3 }, false)]
+	[InlineData(new[] { 0, 1 }, false)]
 	// otherの要素が多い
-	[InlineData(new[] { 0, 1, 2, 3, 4, 5 }, false)]
+	[InlineData(new[] { 0, 1, 2, 3 }, false)]
 	public void SetEquals_otherが同じ要素を含んでいるかどうかを判定する(IEnumerable<int> other, bool expected) {
 		// Arrange
-		var set = new HashSet<int> { 0, 1, 2, 3, 4, };
+		var set = new HashSet<int> { 0, 1, 2 };
 
 		// Act
 		var actual = set.SetEquals(other);
