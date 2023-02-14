@@ -73,8 +73,9 @@ public class JwtSecurityTokenHandlerTest {
 		};
 
 		var tokenToWrite = handler.CreateJwtSecurityToken(descriptor);
-		var jwt = handler.WriteToken(tokenToWrite);
 		_output.WriteLine(tokenToWrite.ToString());
+
+		var jwt = tokenToWrite.RawData;
 
 		// Act
 		var token = handler.ReadJwtToken(jwt);

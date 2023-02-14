@@ -135,7 +135,7 @@ public class JwtSecurityTokenHandlerValidateTokenTest {
 			signingCredentials: signingCredentials);
 		_output.WriteLine(token.ToString());
 
-		var jwt = handler.WriteToken(token);
+		var jwt = token.RawData;
 		_output.WriteLine(jwt);
 
 		// Act
@@ -181,7 +181,7 @@ public class JwtSecurityTokenHandlerValidateTokenTest {
 			issuer: "i",
 			audience: "a",
 			signingCredentials: new SigningCredentials(key1, SecurityAlgorithms.HmacSha256));
-		var jwt = handler.WriteToken(token);
+		var jwt = token.RawData;
 
 		// Act
 		// Assert
@@ -210,7 +210,7 @@ public class JwtSecurityTokenHandlerValidateTokenTest {
 
 		// 署名なしトークンを生成
 		var token = handler.CreateJwtSecurityToken(issuer: "i", audience: "a");
-		var jwt = handler.WriteToken(token);
+		var jwt = token.RawData;
 
 		// Act
 		// Assert
@@ -249,8 +249,10 @@ public class JwtSecurityTokenHandlerValidateTokenTest {
 		};
 
 		var tokenToWrite = handler.CreateJwtSecurityToken(descriptor);
-		var jwt = handler.WriteToken(tokenToWrite);
 		_output.WriteLine(tokenToWrite.ToString());
+
+		var jwt = tokenToWrite.RawData;
+		_output.WriteLine(jwt);
 
 		// Act
 		var parameters = new TokenValidationParameters {
