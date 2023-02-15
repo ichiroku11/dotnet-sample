@@ -38,4 +38,26 @@ public class ECDsaTest {
 		_output.WriteLine(exception.GetType().FullName);
 		_output.WriteLine(exception.Message);
 	}
+
+	[Fact]
+	public void VerifyData_署名を検証する() {
+		// Arrange
+		// 署名用のECDsa
+		using var signer = ECDsa.Create();
+		// 検証用のECDsa
+		using var verifier = ECDsa.Create(signer.ExportParameters(false));
+
+		var data = Encoding.UTF8.GetBytes("あいうえお");
+		var hashAlgorithm = HashAlgorithmName.SHA256;
+
+		// 署名する
+		var signature = signer.SignData(data, hashAlgorithm);
+
+		// Act
+		// 署名を検証する
+		var actual = verifier.VerifyData(data, signature, hashAlgorithm);
+
+		// Assert
+		Assert.True(actual);
+	}
 }
