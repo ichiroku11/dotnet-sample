@@ -14,7 +14,6 @@ public class JwtSecurityTokenTest {
 		_output = output;
 	}
 
-
 	// 署名付きのJwtSecurityTokenを生成するSecurityTokenDescriptor
 	private static SecurityTokenDescriptor CreateSecurityTokenDescriptor() {
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
@@ -49,7 +48,7 @@ public class JwtSecurityTokenTest {
 
 		// Assert
 		// わざわざWriteTokenしなくても、RawDataからシリアライズしたJWTが取得できる
-		Assert.Equal(token.RawData, serializedToken);
+		Assert.True(string.Equals(token.RawData, serializedToken, StringComparison.Ordinal));
 	}
 
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
