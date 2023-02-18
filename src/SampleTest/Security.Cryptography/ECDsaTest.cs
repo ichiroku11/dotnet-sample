@@ -85,4 +85,25 @@ public class ECDsaTest {
 		// Assert
 		Assert.True(actual);
 	}
+
+	[Fact]
+	public void VerifyData_署名の検証に失敗することを確認にする() {
+		// Arrange
+		using var signer = ECDsa.Create();
+		using var verifier = ECDsa.Create(signer.ExportParameters(false));
+
+		var data = Encoding.UTF8.GetBytes("あいうえお");
+		var hashAlgorithm = HashAlgorithmName.SHA256;
+
+		var signature = signer.SignData(data, hashAlgorithm);
+
+		// 最後の1バイトを書き換えてみる
+		signature[^1]--;
+
+		// Act
+		var actual = verifier.VerifyData(data, signature, hashAlgorithm);
+
+		// Assert
+		Assert.False(actual);
+	}
 }
