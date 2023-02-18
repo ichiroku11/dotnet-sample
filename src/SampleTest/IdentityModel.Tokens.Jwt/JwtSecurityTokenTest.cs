@@ -14,10 +14,9 @@ public class JwtSecurityTokenTest {
 		_output = output;
 	}
 
-	// WriteTokenしなくてもよかった
-	[Fact]
-	public void RawData_シリアライズしたJWTが取得できる() {
-		// Arrange
+
+	// 署名付きのJwtSecurityTokenを生成するSecurityTokenDescriptor
+	private static SecurityTokenDescriptor CreateSecurityTokenDescriptor() {
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
 		var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 		var descriptor = new SecurityTokenDescriptor {
@@ -29,6 +28,14 @@ public class JwtSecurityTokenTest {
 			},
 		};
 
+		return descriptor;
+	}
+
+	// WriteTokenしなくてもよかった
+	[Fact]
+	public void RawData_シリアライズしたJWTが取得できる() {
+		// Arrange
+		var descriptor = CreateSecurityTokenDescriptor();
 		var handler = new JwtSecurityTokenHandler {
 		};
 
