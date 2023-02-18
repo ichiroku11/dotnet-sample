@@ -14,6 +14,37 @@ public class JwtSecurityTokenTest {
 		_output = output;
 	}
 
+	// WriteTokenしなくてもよかった
+	[Fact]
+	public void RawData_シリアライズしたJWTが取得できる() {
+		// Arrange
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+		var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+		var descriptor = new SecurityTokenDescriptor {
+			Audience = "audience",
+			Issuer = "issuer",
+			SigningCredentials = signingCredentials,
+			Claims = new Dictionary<string, object> {
+				["claim-key"] = "claim-value"
+			},
+		};
+
+		var handler = new JwtSecurityTokenHandler {
+		};
+
+		// Act
+		// 署名付きのトークンを生成する
+		var token = handler.CreateJwtSecurityToken(descriptor);
+		// トークンをシリアライズする
+		var serializedToken = handler.WriteToken(token);
+		_output.WriteLine(token.RawData);
+		_output.WriteLine(serializedToken);
+
+		// Assert
+		// わざわざWriteTokenしなくても、RawDataからシリアライズしたJWTが取得できる
+		Assert.Equal(token.RawData, serializedToken);
+	}
+
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
 		private X509Certificate2? _certificate;
 
