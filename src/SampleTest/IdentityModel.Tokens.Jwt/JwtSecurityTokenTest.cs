@@ -14,34 +14,6 @@ public class JwtSecurityTokenTest {
 		_output = output;
 	}
 
-	public static TheoryData<JwtSecurityToken, string> GetTheoryDataForToString() {
-		return new() {
-			{
-				new JwtSecurityToken(),
-				@"{""alg"":""none"",""typ"":""JWT""}.{}"
-			},
-			{
-				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
-				@"{}.{}"
-			},
-			{
-				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
-				@"{""alg"":""none"",""typ"":""JWT""}.{}"
-			},
-		};
-	}
-
-	[Theory]
-	[MemberData(nameof(GetTheoryDataForToString))]
-	public void ToString_トークンの文字列表現を確認する(JwtSecurityToken token, string expected) {
-		// Arrange
-		// Act
-		var actual = token.ToString();
-
-		// Assert
-		Assert.Equal(expected, actual);
-	}
-
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
 		private X509Certificate2? _certificate;
 
@@ -100,6 +72,34 @@ public class JwtSecurityTokenTest {
 		// Arrange
 		// Act
 		var actual = token.SignatureAlgorithm;
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	public static TheoryData<JwtSecurityToken, string> GetTheoryDataForToString() {
+		return new() {
+			{
+				new JwtSecurityToken(),
+				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+			},
+			{
+				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
+				@"{}.{}"
+			},
+			{
+				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
+				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryDataForToString))]
+	public void ToString_トークンの文字列表現を確認する(JwtSecurityToken token, string expected) {
+		// Arrange
+		// Act
+		var actual = token.ToString();
 
 		// Assert
 		Assert.Equal(expected, actual);
