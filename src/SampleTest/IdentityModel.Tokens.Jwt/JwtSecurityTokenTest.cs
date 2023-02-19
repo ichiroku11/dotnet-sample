@@ -38,7 +38,6 @@ public class JwtSecurityTokenTest {
 		var handler = new JwtSecurityTokenHandler {
 		};
 
-		// Act
 		// 署名付きのトークンを生成する
 		var token = handler.CreateJwtSecurityToken(descriptor);
 		// トークンをシリアライズする
@@ -46,9 +45,32 @@ public class JwtSecurityTokenTest {
 		_output.WriteLine(token.RawData);
 		_output.WriteLine(serializedToken);
 
+		// Act
 		// Assert
 		// わざわざWriteTokenしなくても、RawDataからシリアライズしたJWTが取得できる
 		Assert.True(string.Equals(token.RawData, serializedToken, StringComparison.Ordinal));
+	}
+
+	[Fact]
+	public void RawHeader_EncodedHeaderと同じ値() {
+		// Arrange
+		var descriptor = CreateSecurityTokenDescriptor();
+		var token = new JwtSecurityTokenHandler().CreateJwtSecurityToken(descriptor);
+
+		// Act
+		// Assert
+		Assert.True(string.Equals(token.RawHeader, token.EncodedHeader, StringComparison.Ordinal));
+	}
+
+	[Fact]
+	public void RawPayload_EncodedPayloadと同じ値() {
+		// Arrange
+		var descriptor = CreateSecurityTokenDescriptor();
+		var token = new JwtSecurityTokenHandler().CreateJwtSecurityToken(descriptor);
+
+		// Act
+		// Assert
+		Assert.True(string.Equals(token.RawPayload, token.EncodedPayload, StringComparison.Ordinal));
 	}
 
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
