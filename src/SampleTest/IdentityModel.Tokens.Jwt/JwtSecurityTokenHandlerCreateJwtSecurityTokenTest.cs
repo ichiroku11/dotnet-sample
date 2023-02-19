@@ -191,4 +191,69 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		});
 		_output.WriteLine(exception.Message);
 	}
+
+	[Fact]
+	public void CreateJwtSecurityToken_SymmetricSecurityKeyで暗号化したトークンを生成する() {
+		// Arrange
+		var secret = Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef");
+		var descriptor = new SecurityTokenDescriptor {
+			EncryptingCredentials = new EncryptingCredentials(
+				new SymmetricSecurityKey(secret),
+				// コンテンツを暗号化する鍵（CEK）の暗号化アルゴリズム
+				JwtConstants.DirectKeyUseAlg,
+				// コンテンツの暗号化アルゴリズム
+				SecurityAlgorithms.Aes128CbcHmacSha256),
+		};
+
+		var handler = new JwtSecurityTokenHandler {
+			// とりあえずnbf、exp、iatを含めない
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		// トークン
+		{
+			_output.WriteLine(token.ToString());
+			_output.WriteLine(token.RawData);
+			// シリアラズした結果はJWE（暗号化された）フォーマットになる
+			Assert.Matches(JwtConstants.JweCompactSerializationRegex, token.RawData);
+
+			// ヘッダー
+			Assert.Equal(4, token.Header.Count);
+			Assert.Equal(JwtConstants.DirectKeyUseAlg, token.Header.Alg);
+			Assert.Equal(SecurityAlgorithms.Aes128CbcHmacSha256, token.Header.Enc);
+			Assert.Equal(JwtConstants.HeaderType, token.Header.Typ);
+			Assert.Equal(JwtConstants.HeaderType, token.Header.Cty);
+
+			// ペイロードは空
+			Assert.Empty(token.Payload);
+
+			// この暗号化の指定では、CEKは含まれていない
+			Assert.Equal("", token.RawEncryptedKey);
+		}
+
+		// インナートークン
+		{
+			_output.WriteLine(token.InnerToken.ToString());
+			_output.WriteLine(token.InnerToken.RawData);
+			Assert.NotNull(token.InnerToken);
+
+			// シリアラズした結果はJWSフォーマットになる
+			Assert.Matches(JwtConstants.JsonCompactSerializationRegex, token.InnerToken.RawData);
+
+			// ヘッダー
+			Assert.Equal(2, token.InnerToken.Header.Count);
+			Assert.Equal("none", token.InnerToken.Header.Alg);
+			Assert.Equal(JwtConstants.HeaderType, token.InnerToken.Header.Typ);
+
+			// ペイロードは空
+			Assert.Empty(token.InnerToken.Payload);
+
+			// 署名はしていないので空
+			Assert.Equal("", token.InnerToken.RawSignature);
+		}
+	}
 }
