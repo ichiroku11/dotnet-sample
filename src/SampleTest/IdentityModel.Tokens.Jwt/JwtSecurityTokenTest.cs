@@ -14,32 +14,63 @@ public class JwtSecurityTokenTest {
 		_output = output;
 	}
 
-	public static TheoryData<JwtSecurityToken, string> GetTheoryDataForToString() {
-		return new() {
-			{
-				new JwtSecurityToken(),
-				@"{""alg"":""none"",""typ"":""JWT""}.{}"
-			},
-			{
-				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
-				@"{}.{}"
-			},
-			{
-				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
-				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+	// 署名付きのJwtSecurityTokenを生成するSecurityTokenDescriptor
+	private static SecurityTokenDescriptor CreateSecurityTokenDescriptor() {
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+		var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+		var descriptor = new SecurityTokenDescriptor {
+			Audience = "audience",
+			Issuer = "issuer",
+			SigningCredentials = signingCredentials,
+			Claims = new Dictionary<string, object> {
+				["claim-key"] = "claim-value"
 			},
 		};
+
+		return descriptor;
 	}
 
-	[Theory]
-	[MemberData(nameof(GetTheoryDataForToString))]
-	public void ToString_トークンの文字列表現を確認する(JwtSecurityToken token, string expected) {
+	// WriteTokenしなくてもよかった
+	[Fact]
+	public void RawData_シリアライズしたJWTが取得できる() {
 		// Arrange
-		// Act
-		var actual = token.ToString();
+		var descriptor = CreateSecurityTokenDescriptor();
+		var handler = new JwtSecurityTokenHandler {
+		};
 
+		// 署名付きのトークンを生成する
+		var token = handler.CreateJwtSecurityToken(descriptor);
+		// トークンをシリアライズする
+		var serializedToken = handler.WriteToken(token);
+		_output.WriteLine(token.RawData);
+		_output.WriteLine(serializedToken);
+
+		// Act
 		// Assert
-		Assert.Equal(expected, actual);
+		// わざわざWriteTokenしなくても、RawDataからシリアライズしたJWTが取得できる
+		Assert.True(string.Equals(token.RawData, serializedToken, StringComparison.Ordinal));
+	}
+
+	[Fact]
+	public void RawHeader_EncodedHeaderと同じ値() {
+		// Arrange
+		var descriptor = CreateSecurityTokenDescriptor();
+		var token = new JwtSecurityTokenHandler().CreateJwtSecurityToken(descriptor);
+
+		// Act
+		// Assert
+		Assert.True(string.Equals(token.RawHeader, token.EncodedHeader, StringComparison.Ordinal));
+	}
+
+	[Fact]
+	public void RawPayload_EncodedPayloadと同じ値() {
+		// Arrange
+		var descriptor = CreateSecurityTokenDescriptor();
+		var token = new JwtSecurityTokenHandler().CreateJwtSecurityToken(descriptor);
+
+		// Act
+		// Assert
+		Assert.True(string.Equals(token.RawPayload, token.EncodedPayload, StringComparison.Ordinal));
 	}
 
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
@@ -100,6 +131,34 @@ public class JwtSecurityTokenTest {
 		// Arrange
 		// Act
 		var actual = token.SignatureAlgorithm;
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	public static TheoryData<JwtSecurityToken, string> GetTheoryDataForToString() {
+		return new() {
+			{
+				new JwtSecurityToken(),
+				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+			},
+			{
+				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
+				@"{}.{}"
+			},
+			{
+				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
+				@"{""alg"":""none"",""typ"":""JWT""}.{}"
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryDataForToString))]
+	public void ToString_トークンの文字列表現を確認する(JwtSecurityToken token, string expected) {
+		// Arrange
+		// Act
+		var actual = token.ToString();
 
 		// Assert
 		Assert.Equal(expected, actual);

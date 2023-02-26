@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
@@ -190,5 +191,162 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 			handler.CreateJwtSecurityToken(issuer: "i", audience: "a", signingCredentials: credentials);
 		});
 		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public void CreateJwtSecurityToken_対称鍵で暗号化したトークンを生成する() {
+		// Arrange
+		var secret = Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef");
+		var descriptor = new SecurityTokenDescriptor {
+			EncryptingCredentials = new EncryptingCredentials(
+				new SymmetricSecurityKey(secret),
+				// コンテンツを暗号化する鍵（CEK）の暗号化アルゴリズム
+				JwtConstants.DirectKeyUseAlg,
+				// コンテンツの暗号化アルゴリズム
+				SecurityAlgorithms.Aes128CbcHmacSha256),
+		};
+
+		var handler = new JwtSecurityTokenHandler {
+			// とりあえずnbf、exp、iatを含めない
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		// トークン
+		{
+			_output.WriteLine(token.ToString());
+			_output.WriteLine(token.RawData);
+			// シリアラズした結果はJWE（暗号化された）フォーマットになる
+			Assert.Matches(JwtConstants.JweCompactSerializationRegex, token.RawData);
+
+			// ヘッダー
+			Assert.Equal(4, token.Header.Count);
+			Assert.Equal(JwtConstants.DirectKeyUseAlg, token.Header.Alg);
+			Assert.Equal(SecurityAlgorithms.Aes128CbcHmacSha256, token.Header.Enc);
+			Assert.Equal(JwtConstants.HeaderType, token.Header.Typ);
+			Assert.Equal(JwtConstants.HeaderType, token.Header.Cty);
+
+			// ペイロードは空
+			Assert.Empty(token.Payload);
+
+			// この暗号化の指定では、CEKは含まれていない
+			Assert.Equal("", token.RawEncryptedKey);
+		}
+
+		// インナートークン
+		{
+			_output.WriteLine(token.InnerToken.ToString());
+			_output.WriteLine(token.InnerToken.RawData);
+			Assert.NotNull(token.InnerToken);
+
+			// シリアラズした結果はJWSフォーマットになる
+			Assert.Matches(JwtConstants.JsonCompactSerializationRegex, token.InnerToken.RawData);
+
+			// ヘッダー
+			Assert.Equal(2, token.InnerToken.Header.Count);
+			Assert.Equal("none", token.InnerToken.Header.Alg);
+			Assert.Equal(JwtConstants.HeaderType, token.InnerToken.Header.Typ);
+
+			// ペイロードは空
+			Assert.Empty(token.InnerToken.Payload);
+
+			// 署名はしていないので空
+			Assert.Equal("", token.InnerToken.RawSignature);
+		}
+	}
+
+	// ECDHによる鍵交換
+	[Fact]
+	public void CreateJwtSecurityToken_非対称鍵で暗号化したトークンを生成する() {
+		// Arrange
+		// 暗号化する側
+		using var encryptor = ECDsa.Create();
+		using var encryptorPublic = ECDsa.Create(encryptor.ExportParameters(false));
+		// 復号する側
+		using var decryptor = ECDsa.Create();
+		using var decryptorPublic = ECDsa.Create(decryptor.ExportParameters(false));
+
+		var descriptor = new SecurityTokenDescriptor {
+			EncryptingCredentials = new EncryptingCredentials(
+				// 暗号化する秘密鍵
+				new ECDsaSecurityKey(encryptor),
+				// CEKの暗号化アルゴリズム
+				SecurityAlgorithms.EcdhEsA128kw,
+				// コンテンツの暗号化アルゴリズム
+				SecurityAlgorithms.Aes128CbcHmacSha256) {
+				// 復号する側の公開鍵
+				KeyExchangePublicKey = new ECDsaSecurityKey(decryptorPublic),
+			},
+			AdditionalHeaderClaims = new Dictionary<string, object> {
+				// 暗号化する側の公開鍵をトークンに含める（復号する側に伝える）
+				[JwtHeaderParameterNames.Epk] = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+			},
+		};
+		var handler = new JwtSecurityTokenHandler {
+			// nbf、exp、iatを含めない
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		// トークン
+		{
+			_output.WriteLine(token.ToString());
+			_output.WriteLine(token.RawData);
+			// シリアラズした結果はJWE（暗号化された）フォーマットになる
+			Assert.Matches(JwtConstants.JweCompactSerializationRegex, token.RawData);
+
+			// ヘッダー
+			Assert.Equal(5, token.Header.Count);
+			Assert.Equal(SecurityAlgorithms.EcdhEsA128kw, token.Header.Alg);
+			Assert.Equal(SecurityAlgorithms.Aes128CbcHmacSha256, token.Header.Enc);
+			Assert.Equal(JwtConstants.HeaderType, token.Header.Typ);
+			Assert.Equal(JwtConstants.HeaderType, token.Header.Cty);
+
+			// 公開鍵"epk"クレームが含まれている
+			Assert.True(token.Header.ContainsKey(JwtHeaderParameterNames.Epk));
+
+			// "epk"クレームの値はJsonWebKey
+			var jwk = token.Header[JwtHeaderParameterNames.Epk] as JsonWebKey;
+			Assert.NotNull(jwk);
+			Assert.Equal(JsonWebAlgorithmsKeyTypes.EllipticCurve, jwk.Kty);
+			Assert.Equal(JsonWebKeyECTypes.P521, jwk.Crv);
+			Assert.NotEmpty(jwk.X);
+			Assert.NotEmpty(jwk.Y);
+			// 秘密鍵は含まれていない
+			Assert.Null(jwk.D);
+
+			// ペイロードは空
+			Assert.Empty(token.Payload);
+
+			// CEKが含まれている
+			Assert.NotEmpty(token.RawEncryptedKey);
+		}
+
+		// インナートークン
+		{
+			_output.WriteLine(token.InnerToken.ToString());
+			_output.WriteLine(token.InnerToken.RawData);
+			Assert.NotNull(token.InnerToken);
+
+			// シリアラズした結果はJWSフォーマットになる
+			Assert.Matches(JwtConstants.JsonCompactSerializationRegex, token.InnerToken.RawData);
+
+			// ヘッダー
+			Assert.Equal(2, token.InnerToken.Header.Count);
+			Assert.Equal("none", token.InnerToken.Header.Alg);
+			Assert.Equal(JwtConstants.HeaderType, token.InnerToken.Header.Typ);
+
+			// ペイロードは空
+			Assert.Empty(token.InnerToken.Payload);
+
+			// 署名はしていないので空
+			Assert.Equal("", token.InnerToken.RawSignature);
+		}
 	}
 }
