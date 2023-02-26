@@ -1,4 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
+using SampleLib.IdentityModel.Tokens.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
@@ -106,34 +107,40 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 			RequireSignedTokens = false,
 			// 復号する鍵を解決する
 			TokenDecryptionKeyResolver = (encodedToken, securityToken, kid, validationParameters) => {
-				// 不具合か？
+				// 不具合か
 				// https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/1951
 
-				// todo: 暗号化する側の公開鍵は"epk"から取り出す必要がありそう
+				if (securityToken is not JwtSecurityToken token) {
+					// ありえるか
+					return null;
+				}
 
-				return null;
+				if (!token.Header.ContainsKey(JwtHeaderParameterNames.Epk)) {
+					// nullでいいか
+					return null;
+				}
+
+				// 暗号化する側の公開鍵は"epk"から取り出す
+				var epk = JsonExtensions.SerializeToJson(token.Header[JwtHeaderParameterNames.Epk]);
+				var jwk = JsonWebKey.Create(epk);
+				var ecParams = jwk.GetECParameters();
+
+				validationParameters.TokenDecryptionKey = new ECDsaSecurityKey(ECDsa.Create(ecParams));
+
+				// 復号する側の秘密鍵
+				return new[] { new ECDsaSecurityKey(decryptor) };
 			},
 		};
 
 		// Act
-		// todo:
-		//var principal = new JwtSecurityTokenHandler().ValidateToken(jwt, parameters, out var validatedToken);
+		var principal = new JwtSecurityTokenHandler().ValidateToken(jwt, parameters, out var validatedToken);
 
 		// Assert
-		// todo:
-		var exception = Assert.ThrowsAny<SecurityTokenException>(() => {
-			new JwtSecurityTokenHandler().ValidateToken(jwt, parameters, out var validatedToken);
-		});
-		_output.WriteLine(exception.Message);
-
-		// todo:
-		/*
 		Assert.NotNull(principal);
 		Assert.Single(principal.Claims,
 			claim =>
 				string.Equals(claim.Type, "protected-claim-key", StringComparison.OrdinalIgnoreCase) &&
 				string.Equals(claim.Value, "protected-claim-value", StringComparison.OrdinalIgnoreCase));
 		Assert.IsType<JwtSecurityToken>(validatedToken);
-		*/
 	}
 }
