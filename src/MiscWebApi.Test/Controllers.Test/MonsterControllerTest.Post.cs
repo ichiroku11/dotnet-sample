@@ -103,9 +103,9 @@ public partial class MonsterControllerTest {
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Equal((int)HttpStatusCode.BadRequest, problem?.Status);
+		Assert.Equal((int)HttpStatusCode.BadRequest, problem.Status);
 		// "errors"キーの値に、バリデーションエラーの内容が含まれている
-		Assert.Contains("errors", problem?.Extensions);
+		Assert.Contains("errors", problem.Extensions);
 	}
 	#endregion
 
