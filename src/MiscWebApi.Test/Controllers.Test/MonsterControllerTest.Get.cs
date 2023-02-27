@@ -21,7 +21,8 @@ public partial class MonsterControllerTest {
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.Equal(2, monsters?.Count);
+		Assert.NotNull(monsters);
+		Assert.Equal(2, monsters.Count);
 		Assert.Contains(monsters, monster => monster.Id == 1 && monster.Name == "スライム");
 		Assert.Contains(monsters, monster => monster.Id == 2 && monster.Name == "ドラキー");
 	}
