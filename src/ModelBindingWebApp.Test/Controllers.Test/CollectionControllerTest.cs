@@ -69,6 +69,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		var values = JsonSerializer.Deserialize<IEnumerable<int>>(json, _jsonSerializerOptions);
 
 		// Assert
+		Assert.NotNull(values);
 		Assert.Equal(new[] { 1, 2 }, values);
 	}
 
@@ -99,6 +100,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		var values = JsonSerializer.Deserialize<IEnumerable<Sample>>(json, _jsonSerializerOptions);
 
 		// Assert
+		Assert.NotNull(values);
 		Assert.Equal(new[] { new Sample { Id = 1, Name = "a" }, new Sample { Id = 2, Name = "b" } }, values);
 	}
 }
