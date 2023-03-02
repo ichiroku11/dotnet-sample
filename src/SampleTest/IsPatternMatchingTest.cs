@@ -130,4 +130,16 @@ public class IsPatternMatchingTest {
 		// Assert
 		Assert.True(date is { Year: 2022, Month: 1, Day: 9 });
 	}
+
+	[Fact]
+	public void Is_プロパティパターンではnullは一致しない() {
+		// Arrange
+		DateOnly? date = null;
+
+		// Act
+		var actual = date is { Year: 2023 };
+
+		// Assert
+		Assert.False(actual);
+	}
 }
