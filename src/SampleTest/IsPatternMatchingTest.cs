@@ -142,4 +142,20 @@ public class IsPatternMatchingTest {
 		// Assert
 		Assert.False(actual);
 	}
+
+	[Fact]
+	public void Is_プロパティパターンに変数は使えない() {
+		// Arrange
+		var date = new DateOnly(2023, 3, 1);
+
+		// Act
+		// プロパティパターンでは変数はコンパイルエラーになるが
+		//var year = date.Year;
+		// 定数はOK
+		const int year = 2023;
+		var actual = date is { Year: year };
+
+		// Assert
+		Assert.True(actual);
+	}
 }
