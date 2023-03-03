@@ -16,8 +16,8 @@ public class JsonWebKeyTest {
 
 		return new() {
 			{ new JsonWebKey() },
-			{ JsonWebKeyConverter.ConvertFromSymmetricSecurityKey(key1) },
-			{ JsonWebKeyConverter.ConvertFromRSASecurityKey(key2) },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1) },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2) },
 			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3) },
 		};
 	}
@@ -43,8 +43,8 @@ public class JsonWebKeyTest {
 
 		return new() {
 			{ new JsonWebKey(), null },
-			{ JsonWebKeyConverter.ConvertFromSymmetricSecurityKey(key1), "oct" },
-			{ JsonWebKeyConverter.ConvertFromRSASecurityKey(key2), "RSA" },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1), "oct" },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2), "RSA" },
 			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3), "EC" },
 		};
 	}
