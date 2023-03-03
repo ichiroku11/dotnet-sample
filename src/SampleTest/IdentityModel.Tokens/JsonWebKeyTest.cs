@@ -11,10 +11,14 @@ public class JsonWebKeyTest {
 		using var rsa = RSA.Create();
 		var key2 = new RsaSecurityKey(rsa.ExportParameters(false));
 
+		using var ecdsa = ECDsa.Create();
+		var key3 = new ECDsaSecurityKey(ecdsa);
+
 		return new() {
 			{ new JsonWebKey() },
 			{ JsonWebKeyConverter.ConvertFromSymmetricSecurityKey(key1) },
 			{ JsonWebKeyConverter.ConvertFromRSASecurityKey(key2) },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3) },
 		};
 	}
 
@@ -34,10 +38,14 @@ public class JsonWebKeyTest {
 		using var rsa = RSA.Create();
 		var key2 = new RsaSecurityKey(rsa.ExportParameters(false));
 
+		using var ecdsa = ECDsa.Create();
+		var key3 = new ECDsaSecurityKey(ecdsa);
+
 		return new() {
 			{ new JsonWebKey(), null },
 			{ JsonWebKeyConverter.ConvertFromSymmetricSecurityKey(key1), "oct" },
 			{ JsonWebKeyConverter.ConvertFromRSASecurityKey(key2), "RSA" },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3), "EC" },
 		};
 	}
 
