@@ -1,10 +1,17 @@
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace SampleTest.IdentityModel.Tokens;
 
 public class JsonWebKeyTest {
+	private readonly ITestOutputHelper _output;
+
+	public JsonWebKeyTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
 	public static TheoryData<JsonWebKey> GetTheoryDataForKeyIdIsNull() {
 		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
 
@@ -56,5 +63,27 @@ public class JsonWebKeyTest {
 		// Act
 		// Assert
 		Assert.Equal(expected, key.Kty);
+	}
+
+	[Fact]
+	public void Consttructor_JSONから生成したインスタンスを確認する() {
+		// Arrange
+		using var ecdsa = ECDsa.Create();
+		var key = new ECDsaSecurityKey(ecdsa);
+
+		var expected = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		var json = JsonExtensions.SerializeToJson(expected);
+		_output.WriteLine(expected.ToString());
+		_output.WriteLine(json);
+
+		// Act
+		var actual = new JsonWebKey(json);
+
+		// Assert
+		Assert.Equal(expected.Kty, actual.Kty);
+		Assert.Equal(expected.Crv, actual.Crv);
+		Assert.Equal(expected.D, actual.D);
+		Assert.Equal(expected.X, actual.X);
+		Assert.Equal(expected.Y, actual.Y);
 	}
 }
