@@ -66,7 +66,7 @@ public class JsonWebKeyTest {
 	}
 
 	[Fact]
-	public void Consttructor_JSONから生成したインスタンスを確認する() {
+	public void Constructor_JSONから生成したインスタンスを確認する() {
 		// Arrange
 		using var ecdsa = ECDsa.Create();
 		var key = new ECDsaSecurityKey(ecdsa);
