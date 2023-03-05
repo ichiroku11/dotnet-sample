@@ -113,7 +113,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkWebApp", "src\LinkWebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkWebApp.Test", "src\LinkWebApp.Test\LinkWebApp.Test.csproj", "{AB79EF86-3667-4831-825F-5AD2B3327C8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCheckWebApp", "src\HealthCheckWebApp\HealthCheckWebApp.csproj", "{324A0166-5FA6-4187-B587-BB51177D3815}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCheckWebApp", "src\HealthCheckWebApp\HealthCheckWebApp.csproj", "{324A0166-5FA6-4187-B587-BB51177D3815}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtBearerAuthnWebApp", "src\JwtBearerAuthnWebApp\JwtBearerAuthnWebApp.csproj", "{39511B3C-80D5-4A01-8268-C84E884EE17F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -325,6 +327,10 @@ Global
 		{324A0166-5FA6-4187-B587-BB51177D3815}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{324A0166-5FA6-4187-B587-BB51177D3815}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{324A0166-5FA6-4187-B587-BB51177D3815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39511B3C-80D5-4A01-8268-C84E884EE17F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39511B3C-80D5-4A01-8268-C84E884EE17F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39511B3C-80D5-4A01-8268-C84E884EE17F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39511B3C-80D5-4A01-8268-C84E884EE17F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -378,6 +384,7 @@ Global
 		{3D4CB016-A434-4DE1-98C6-337572A754C9} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{AB79EF86-3667-4831-825F-5AD2B3327C8A} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{324A0166-5FA6-4187-B587-BB51177D3815} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
+		{39511B3C-80D5-4A01-8268-C84E884EE17F} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}

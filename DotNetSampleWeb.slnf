@@ -20,6 +20,7 @@
       "src\\FeatureFlagWebApp\\FeatureFlagWebApp.csproj",
       "src\\HealthCheckWebApp\\HealthCheckWebApp.csproj",
       "src\\HostedServiceWebApp\\HostedServiceWebApp.csproj",
+      "src\\JwtBearerAuthnWebApp\\JwtBearerAuthnWebApp.csproj",
       "src\\LinkWebApp.Test\\LinkWebApp.Test.csproj",
       "src\\LinkWebApp\\LinkWebApp.csproj",
       "src\\LocalizationWebApp\\LocalizationWebApp.csproj",
