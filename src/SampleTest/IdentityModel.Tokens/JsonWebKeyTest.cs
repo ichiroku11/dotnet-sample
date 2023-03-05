@@ -113,4 +113,21 @@ public class JsonWebKeyTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Fact]
+	public void ComputeJwkThumbprint_秘密鍵の情報はThumbprintに含まれない() {
+		// Arrange
+		using var ecdsa1 = ECDsa.Create();
+		var jwk1 = JsonWebKeyConverter.ConvertFromSecurityKey(new ECDsaSecurityKey(ecdsa1));
+
+		using var ecdsa2 = ECDsa.Create(ecdsa1.ExportParameters(false));
+		var jwk2 = JsonWebKeyConverter.ConvertFromSecurityKey(new ECDsaSecurityKey(ecdsa1));
+
+		// Act
+		var thumbprint1 = jwk1.ComputeJwkThumbprint();
+		var thumbprint2 = jwk2.ComputeJwkThumbprint();
+
+		// Assert
+		Assert.True(thumbprint1.SequenceEqual(thumbprint2));
+	}
 }
