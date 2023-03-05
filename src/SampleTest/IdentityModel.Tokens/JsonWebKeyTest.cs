@@ -86,4 +86,31 @@ public class JsonWebKeyTest {
 		Assert.Equal(expected.X, actual.X);
 		Assert.Equal(expected.Y, actual.Y);
 	}
+
+	public static TheoryData<JsonWebKey, bool> GetTheoryDataForHasPrivateKey() {
+		using var ecdsa1 = ECDsa.Create();
+		var key1 = new ECDsaSecurityKey(ecdsa1);
+
+		// 秘密鍵を削除して鍵を生成
+		using var ecdsa2 = ECDsa.Create(ecdsa1.ExportParameters(false));
+		var key2 = new ECDsaSecurityKey(ecdsa2);
+
+		return new() {
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2), false },
+			{ new JsonWebKey(), false },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryDataForHasPrivateKey))]
+	public void HasPrivateKey_秘密鍵の有無を確認する(JsonWebKey jwk, bool expected) {
+		// Arrange
+
+		// Act
+		var actual = jwk.HasPrivateKey;
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
