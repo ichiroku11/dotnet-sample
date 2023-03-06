@@ -4,3 +4,6 @@
 
 ###
 GET {{host}}/
+
+###
+GET {{host}}/secret
