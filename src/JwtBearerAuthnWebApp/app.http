@@ -9,3 +9,7 @@ GET {{host}}/
 ###
 GET {{host}}/secret
 Authorization: Bearer {{token}}
+
+###
+GET {{host}}/secret2
+Authorization: Bearer {{token}}
