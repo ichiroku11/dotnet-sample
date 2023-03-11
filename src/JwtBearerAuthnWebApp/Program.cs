@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text;
 
 // 参考
 // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/jwt-authn?view=aspnetcore-7.0&tabs=windows
@@ -17,10 +18,23 @@ app.UseAuthorization();
 
 app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/secret", (ClaimsPrincipal user) => $"Hello {user.Identity?.Name}. My secret")
+app.MapGet("/secret", handler)
+	// 認証が必要
 	.RequireAuthorization();
 
-app.MapGet("/secret2", () => "This is a different secret!")
-	.RequireAuthorization(policyBuilder => policyBuilder.RequireClaim("scope", "myapi:secrets"));
+app.MapGet("/secret2", handler)
+	// 認証かつスコープが必要
+	.RequireAuthorization(policyBuilder => policyBuilder.RequireClaim("scope", "api:read", "api:write"));
 
 app.Run();
+
+
+static string handler(ClaimsPrincipal user) {
+	var content = new StringBuilder();
+
+	foreach (var claim in user.Claims) {
+		content.AppendLine($"{claim.Type}={claim.Value}");
+	}
+
+	return content.ToString();
+}
