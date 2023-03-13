@@ -44,6 +44,7 @@ public class JsonWebKeyTest {
 		// Arrange
 		// Act
 		var actual = new JsonWebKey();
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
 
 		// Assert
 		Assert.Null(actual.Kty);
@@ -56,9 +57,19 @@ public class JsonWebKeyTest {
 
 		// Act
 		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
 
 		// Assert
+		// "kty"と"k"が含まれる
 		Assert.Equal("oct", actual.Kty);
+		Assert.NotNull(actual.K);
+		// ECのパラメーターはnull
+		Assert.Null(actual.D);
+		Assert.Null(actual.Crv);
+		Assert.Null(actual.X);
+		Assert.Null(actual.Y);
+		// RSAのパラメーターもnull
+		Assert.Null(actual.N);
 	}
 
 	[Fact]
@@ -69,6 +80,7 @@ public class JsonWebKeyTest {
 
 		// Act
 		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
 
 		// Assert
 		Assert.Equal("RSA", actual.Kty);
@@ -82,6 +94,7 @@ public class JsonWebKeyTest {
 
 		// Act
 		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
 
 		// Assert
 		Assert.Equal("EC", actual.Kty);
@@ -95,7 +108,6 @@ public class JsonWebKeyTest {
 
 		var expected = JsonWebKeyConverter.ConvertFromSecurityKey(key);
 		var json = JsonExtensions.SerializeToJson(expected);
-		_output.WriteLine(expected.ToString());
 		_output.WriteLine(json);
 
 		// Act
