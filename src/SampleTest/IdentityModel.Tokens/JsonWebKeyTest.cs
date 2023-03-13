@@ -39,34 +39,56 @@ public class JsonWebKeyTest {
 		Assert.Null(key.Kid);
 	}
 
-	public static TheoryData<JsonWebKey, string?> GetTheoryDataForKty() {
-		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
-
-		using var rsa = RSA.Create();
-		var key2 = new RsaSecurityKey(rsa.ExportParameters(false));
-
-		using var ecdsa = ECDsa.Create();
-		var key3 = new ECDsaSecurityKey(ecdsa);
-
-		return new() {
-			{ new JsonWebKey(), null },
-			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1), "oct" },
-			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2), "RSA" },
-			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3), "EC" },
-		};
-	}
-
-	[Theory]
-	[MemberData(nameof(GetTheoryDataForKty))]
-	public void Kty_KeyTypeを確認する(JsonWebKey key, string? expected) {
+	[Fact]
+	public void Properties_コンストラクターで生成したJsonWebKeyのプロパティを確認する() {
 		// Arrange
 		// Act
+		var actual = new JsonWebKey();
+
 		// Assert
-		Assert.Equal(expected, key.Kty);
+		Assert.Null(actual.Kty);
 	}
 
 	[Fact]
-	public void Constructor_JSONから生成したインスタンスを確認する() {
+	public void Properties_SymmetricSecurityKeyから生成したJsonWebKeyのプロパティを確認する() {
+		// Arrange
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+
+		// Act
+		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+
+		// Assert
+		Assert.Equal("oct", actual.Kty);
+	}
+
+	[Fact]
+	public void Properties_RsaSecurityKeyから生成したJsonWebKeyのプロパティを確認する() {
+		// Arrange
+		using var rsa = RSA.Create();
+		var key = new RsaSecurityKey(rsa.ExportParameters(false));
+
+		// Act
+		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+
+		// Assert
+		Assert.Equal("RSA", actual.Kty);
+	}
+
+	[Fact]
+	public void Properties_ECDsaSecurityKeyから生成したJsonWebKeyのプロパティを確認する() {
+		// Arrange
+		using var ecdsa = ECDsa.Create();
+		var key = new ECDsaSecurityKey(ecdsa);
+
+		// Act
+		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+
+		// Assert
+		Assert.Equal("EC", actual.Kty);
+	}
+
+	[Fact]
+	public void Properties_JSONから生成したJsonWebKeyのプロパティを確認する() {
 		// Arrange
 		using var ecdsa = ECDsa.Create();
 		var key = new ECDsaSecurityKey(ecdsa);
