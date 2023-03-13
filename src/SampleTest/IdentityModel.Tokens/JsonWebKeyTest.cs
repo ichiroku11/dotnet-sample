@@ -69,6 +69,7 @@ public class JsonWebKeyTest {
 		Assert.Null(actual.X);
 		Assert.Null(actual.Y);
 		// RSAのパラメーターもnull
+		Assert.Null(actual.E);
 		Assert.Null(actual.N);
 	}
 
