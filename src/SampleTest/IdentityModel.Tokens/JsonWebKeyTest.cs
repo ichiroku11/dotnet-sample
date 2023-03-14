@@ -48,6 +48,13 @@ public class JsonWebKeyTest {
 
 		// Assert
 		Assert.Null(actual.Kty);
+		Assert.Null(actual.K);
+		Assert.Null(actual.D);
+		Assert.Null(actual.Crv);
+		Assert.Null(actual.X);
+		Assert.Null(actual.Y);
+		Assert.Null(actual.E);
+		Assert.Null(actual.N);
 	}
 
 	[Fact]
@@ -60,15 +67,16 @@ public class JsonWebKeyTest {
 		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
 
 		// Assert
-		// "kty"と"k"が含まれる
 		Assert.Equal("oct", actual.Kty);
+		// キー値"k"：not null
 		Assert.NotNull(actual.K);
-		// ECのパラメーターはnull
+		// 秘密鍵
 		Assert.Null(actual.D);
+		// EC
 		Assert.Null(actual.Crv);
 		Assert.Null(actual.X);
 		Assert.Null(actual.Y);
-		// RSAのパラメーターもnull
+		// RSA
 		Assert.Null(actual.E);
 		Assert.Null(actual.N);
 	}
@@ -85,6 +93,18 @@ public class JsonWebKeyTest {
 
 		// Assert
 		Assert.Equal("RSA", actual.Kty);
+		// "k"
+		Assert.Null(actual.K);
+		// 秘密鍵
+		Assert.Null(actual.D);
+		// EC
+		Assert.Null(actual.Crv);
+		Assert.Null(actual.X);
+		Assert.Null(actual.Y);
+		// RSA：not null
+		Assert.NotNull(actual.E);
+		Assert.NotNull(actual.N);
+
 	}
 
 	[Fact]
@@ -99,6 +119,17 @@ public class JsonWebKeyTest {
 
 		// Assert
 		Assert.Equal("EC", actual.Kty);
+		// "k"
+		Assert.Null(actual.K);
+		// ECの秘密鍵のパラメーターも含まれる
+		Assert.NotNull(actual.D);
+		// E：not null
+		Assert.Equal("P-521", actual.Crv);
+		Assert.NotNull(actual.X);
+		Assert.NotNull(actual.Y);
+		// RSA
+		Assert.Null(actual.E);
+		Assert.Null(actual.N);
 	}
 
 	[Fact]
