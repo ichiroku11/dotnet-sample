@@ -153,6 +153,46 @@ public class JsonWebKeyTest {
 		Assert.Equal(expected.Y, actual.Y);
 	}
 
+	public static TheoryData<JsonWebKey, bool> GetTheoryData_CanComputeJwkThumbprint() {
+		// 対称鍵
+		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+
+		// EC
+		using var ecdsa1 = ECDsa.Create();
+		// 秘密鍵を削除して鍵を生成
+		using var ecdsa2 = ECDsa.Create(ecdsa1.ExportParameters(false));
+		var key2 = new ECDsaSecurityKey(ecdsa1);
+		var key3 = new ECDsaSecurityKey(ecdsa2);
+
+		// RSA
+		using var rsa = RSA.Create();
+		var key4 = new RsaSecurityKey(rsa);
+		var key5 = new RsaSecurityKey(rsa.ExportParameters(false));
+
+		return new() {
+			// 対称鍵、非対称鍵はThumbprintを計算できる
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key4), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key5), true },
+			// 単純に生成したインスタンスはThumbprintを計算できない
+			{ new JsonWebKey(), false },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_CanComputeJwkThumbprint))]
+	public void CanComputeJwkThumbprint_計算できるかどうかを確認する(JsonWebKey jwk, bool expected) {
+		// Arrange
+
+		// Act
+		var actual = jwk.CanComputeJwkThumbprint();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	public static TheoryData<JsonWebKey, bool> GetTheoryDataForHasPrivateKey() {
 		using var ecdsa1 = ECDsa.Create();
 		var key1 = new ECDsaSecurityKey(ecdsa1);
