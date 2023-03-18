@@ -12,7 +12,7 @@ public class JsonWebKeyTest {
 		_output = output;
 	}
 
-	public static TheoryData<JsonWebKey> GetTheoryDataForKeyIdIsNull() {
+	public static TheoryData<JsonWebKey> GetTheoryData_KeyIdIsNull() {
 		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
 
 		using var rsa = RSA.Create();
@@ -30,7 +30,7 @@ public class JsonWebKeyTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForKeyIdIsNull))]
+	[MemberData(nameof(GetTheoryData_KeyIdIsNull))]
 	public void KeyId_指定しない場合デフォルトではnull(JsonWebKey key) {
 		// Arrange
 		// Act
@@ -39,41 +39,107 @@ public class JsonWebKeyTest {
 		Assert.Null(key.Kid);
 	}
 
-	public static TheoryData<JsonWebKey, string?> GetTheoryDataForKty() {
-		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
-
-		using var rsa = RSA.Create();
-		var key2 = new RsaSecurityKey(rsa.ExportParameters(false));
-
-		using var ecdsa = ECDsa.Create();
-		var key3 = new ECDsaSecurityKey(ecdsa);
-
-		return new() {
-			{ new JsonWebKey(), null },
-			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1), "oct" },
-			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2), "RSA" },
-			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3), "EC" },
-		};
-	}
-
-	[Theory]
-	[MemberData(nameof(GetTheoryDataForKty))]
-	public void Kty_KeyTypeを確認する(JsonWebKey key, string? expected) {
+	[Fact]
+	public void Properties_コンストラクターで生成したJsonWebKeyのプロパティを確認する() {
 		// Arrange
 		// Act
+		var actual = new JsonWebKey();
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+
 		// Assert
-		Assert.Equal(expected, key.Kty);
+		Assert.Null(actual.Kty);
+		Assert.Null(actual.K);
+		Assert.Null(actual.D);
+		Assert.Null(actual.Crv);
+		Assert.Null(actual.X);
+		Assert.Null(actual.Y);
+		Assert.Null(actual.E);
+		Assert.Null(actual.N);
 	}
 
 	[Fact]
-	public void Constructor_JSONから生成したインスタンスを確認する() {
+	public void Properties_SymmetricSecurityKeyから生成したJsonWebKeyのプロパティを確認する() {
+		// Arrange
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+
+		// Act
+		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+
+		// Assert
+		Assert.Equal("oct", actual.Kty);
+		// キー値"k"：not null
+		Assert.NotNull(actual.K);
+		// 秘密鍵
+		Assert.Null(actual.D);
+		// EC
+		Assert.Null(actual.Crv);
+		Assert.Null(actual.X);
+		Assert.Null(actual.Y);
+		// RSA
+		Assert.Null(actual.E);
+		Assert.Null(actual.N);
+	}
+
+	[Fact]
+	public void Properties_RsaSecurityKeyから生成したJsonWebKeyのプロパティを確認する() {
+		// Arrange
+		using var rsa = RSA.Create();
+		var key = new RsaSecurityKey(rsa.ExportParameters(false));
+
+		// Act
+		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+
+		// Assert
+		Assert.Equal("RSA", actual.Kty);
+		// "k"
+		Assert.Null(actual.K);
+		// 秘密鍵
+		Assert.Null(actual.D);
+		// EC
+		Assert.Null(actual.Crv);
+		Assert.Null(actual.X);
+		Assert.Null(actual.Y);
+		// RSA：not null
+		Assert.NotNull(actual.E);
+		Assert.NotNull(actual.N);
+
+	}
+
+	[Fact]
+	public void Properties_ECDsaSecurityKeyから生成したJsonWebKeyのプロパティを確認する() {
+		// Arrange
+		using var ecdsa = ECDsa.Create();
+		var key = new ECDsaSecurityKey(ecdsa);
+
+		// Act
+		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
+		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+
+		// Assert
+		Assert.Equal("EC", actual.Kty);
+		// "k"
+		Assert.Null(actual.K);
+		// ECの秘密鍵のパラメーターも含まれる
+		Assert.NotNull(actual.D);
+		// E：not null
+		Assert.Equal("P-521", actual.Crv);
+		Assert.NotNull(actual.X);
+		Assert.NotNull(actual.Y);
+		// RSA
+		Assert.Null(actual.E);
+		Assert.Null(actual.N);
+	}
+
+	[Fact]
+	public void Properties_JSONから生成したJsonWebKeyのプロパティを確認する() {
 		// Arrange
 		using var ecdsa = ECDsa.Create();
 		var key = new ECDsaSecurityKey(ecdsa);
 
 		var expected = JsonWebKeyConverter.ConvertFromSecurityKey(key);
 		var json = JsonExtensions.SerializeToJson(expected);
-		_output.WriteLine(expected.ToString());
 		_output.WriteLine(json);
 
 		// Act
@@ -87,7 +153,50 @@ public class JsonWebKeyTest {
 		Assert.Equal(expected.Y, actual.Y);
 	}
 
-	public static TheoryData<JsonWebKey, bool> GetTheoryDataForHasPrivateKey() {
+	public static TheoryData<JsonWebKey, bool> GetTheoryData_CanComputeJwkThumbprint() {
+		// 対称鍵
+		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+
+		// EC
+		using var ecdsa1 = ECDsa.Create();
+		var key2 = new ECDsaSecurityKey(ecdsa1);
+
+		// 秘密鍵を削除して鍵を生成
+		using var ecdsa2 = ECDsa.Create(ecdsa1.ExportParameters(false));
+		var key3 = new ECDsaSecurityKey(ecdsa2);
+
+		// RSA
+		using var rsa = RSA.Create();
+		var key4 = new RsaSecurityKey(rsa);
+
+		// 秘密鍵を削除して鍵を生成
+		var key5 = new RsaSecurityKey(rsa.ExportParameters(false));
+
+		return new() {
+			// 対称鍵、非対称鍵はThumbprintを計算できる
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key1), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key2), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key3), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key4), true },
+			{ JsonWebKeyConverter.ConvertFromSecurityKey(key5), true },
+			// 単純に生成したインスタンスはThumbprintを計算できない
+			{ new JsonWebKey(), false },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_CanComputeJwkThumbprint))]
+	public void CanComputeJwkThumbprint_計算できるかどうかを確認する(JsonWebKey jwk, bool expected) {
+		// Arrange
+
+		// Act
+		var actual = jwk.CanComputeJwkThumbprint();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	public static TheoryData<JsonWebKey, bool> GetTheoryData_HasPrivateKey() {
 		using var ecdsa1 = ECDsa.Create();
 		var key1 = new ECDsaSecurityKey(ecdsa1);
 
@@ -103,7 +212,7 @@ public class JsonWebKeyTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForHasPrivateKey))]
+	[MemberData(nameof(GetTheoryData_HasPrivateKey))]
 	public void HasPrivateKey_秘密鍵の有無を確認する(JsonWebKey jwk, bool expected) {
 		// Arrange
 
