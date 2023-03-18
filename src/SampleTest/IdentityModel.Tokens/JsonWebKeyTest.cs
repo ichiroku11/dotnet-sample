@@ -159,14 +159,17 @@ public class JsonWebKeyTest {
 
 		// EC
 		using var ecdsa1 = ECDsa.Create();
+		var key2 = new ECDsaSecurityKey(ecdsa1);
+
 		// 秘密鍵を削除して鍵を生成
 		using var ecdsa2 = ECDsa.Create(ecdsa1.ExportParameters(false));
-		var key2 = new ECDsaSecurityKey(ecdsa1);
 		var key3 = new ECDsaSecurityKey(ecdsa2);
 
 		// RSA
 		using var rsa = RSA.Create();
 		var key4 = new RsaSecurityKey(rsa);
+
+		// 秘密鍵を削除して鍵を生成
 		var key5 = new RsaSecurityKey(rsa.ExportParameters(false));
 
 		return new() {
