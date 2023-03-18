@@ -12,7 +12,7 @@ public class JsonWebKeyTest {
 		_output = output;
 	}
 
-	public static TheoryData<JsonWebKey> GetTheoryDataForKeyIdIsNull() {
+	public static TheoryData<JsonWebKey> GetTheoryData_KeyIdIsNull() {
 		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
 
 		using var rsa = RSA.Create();
@@ -30,7 +30,7 @@ public class JsonWebKeyTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForKeyIdIsNull))]
+	[MemberData(nameof(GetTheoryData_KeyIdIsNull))]
 	public void KeyId_指定しない場合デフォルトではnull(JsonWebKey key) {
 		// Arrange
 		// Act
@@ -193,7 +193,7 @@ public class JsonWebKeyTest {
 		Assert.Equal(expected, actual);
 	}
 
-	public static TheoryData<JsonWebKey, bool> GetTheoryDataForHasPrivateKey() {
+	public static TheoryData<JsonWebKey, bool> GetTheoryData_HasPrivateKey() {
 		using var ecdsa1 = ECDsa.Create();
 		var key1 = new ECDsaSecurityKey(ecdsa1);
 
@@ -209,7 +209,7 @@ public class JsonWebKeyTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForHasPrivateKey))]
+	[MemberData(nameof(GetTheoryData_HasPrivateKey))]
 	public void HasPrivateKey_秘密鍵の有無を確認する(JsonWebKey jwk, bool expected) {
 		// Arrange
 
