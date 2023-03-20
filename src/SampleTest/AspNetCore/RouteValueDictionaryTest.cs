@@ -28,4 +28,28 @@ public class RouteValueDictionaryTest {
 		// Assert
 		Assert.Null(values["key"]);
 	}
+
+	public static TheoryData<object> GetTheoryData_Constructor() {
+		return new() {
+			new Dictionary<string, object?>() {
+				["x"] = null,
+			},
+			new {
+				x = null as string,
+			}
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Constructor))]
+	public void Constructor_null値を格納できる(object source) {
+		// Arrange
+		// Act
+		var values = new RouteValueDictionary(source);
+
+		// Assert
+		Assert.Single(values);
+		Assert.True(values.ContainsKey("x"));
+		Assert.Null(values["x"]);
+	}
 }
