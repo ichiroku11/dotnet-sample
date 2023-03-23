@@ -11,51 +11,45 @@ public class ValidationNestedControllerTest : ControllerTestBase {
 	public ValidationNestedControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) : base(output, factory) {
 	}
 
-	[Fact]
-	public async Task Nested_空のJSONをPOSTするとInnerModel自体がバインドされない() {
-		// Arrange
-		var client = CreateClient();
-
-		// Act
-		// 空のJSONをPOSTする
-		var response = await client.PostAsJsonAsync("/api/validation/nested", new { });
-		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-
-		// Assert
-		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-		Assert.Collection(
-			problem!.Errors.OrderBy(error => error.Key),
-			entry => {
-				// OuterModel.Innerがnullになり、
-				// OuterModel.Innerに設定されたRequired属性のバリデーションエラーになる
-				Assert.Equal("Inner", entry.Key);
-				Assert.Single(entry.Value, "Inner is required.");
-				foreach (var message in entry.Value) {
-					WriteLine(message);
-				}
-			});
+	// POSTするJSON、バリデーションエラーのキーとメッセージ
+	public static TheoryData<object, string, string> GetTheoryData_Nested() {
+		return new() {
+			// 空のJSONをPOSTする
+			// OuterModel.Innerがnullになり、OuterModel.Innerに設定されたRequired属性のバリデーションエラーになる
+			{
+				new {},
+				"Inner",
+				"Inner is required."
+			},
+			// innerプロパティは存在するが中身は空のJSONをPOSTする
+			// OuterModel.Inner.Valueがnullになり、InnerModel.Valueに設定されたRequired属性のバリデーションエラーになる
+			{
+				new { inner = new { } },
+				"Inner.Value",
+				"Value is required."
+			},
+			// todo:
+			// inner.valueプロパティが空文字のJSONをPOSTする
+		};
 	}
 
-	[Fact]
-	public async Task Nested_innerプロパティが空のJSONをPOSTするとInnerModelはバインドされる() {
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Nested))]
+	public async Task Nested_ネストされたモデルのバリデーションエラーを確認する(object jsonToPost, string expectedErrorKey, string expectedErrorMessage) {
 		// Arrange
 		var client = CreateClient();
 
 		// Act
-		// innerプロパティは存在するが中身は空のJSONをPOSTする
-		var response = await client.PostAsJsonAsync("/api/validation/nested", new { inner = new { } });
+		var response = await client.PostAsJsonAsync("/api/validation/nested", jsonToPost);
 		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
 		Assert.Collection(
 			problem!.Errors.OrderBy(error => error.Key),
 			entry => {
-				// OuterModel.Inner.Valueがnullになり、
-				// InnerModel.Valueに設定されたRequired属性のバリデーションエラーになる
-				Assert.Equal("Inner.Value", entry.Key);
-				Assert.Single(entry.Value, "Value is required.");
+				Assert.Equal(expectedErrorKey, entry.Key);
+				Assert.Single(entry.Value, expectedErrorMessage);
 				foreach (var message in entry.Value) {
 					WriteLine(message);
 				}
