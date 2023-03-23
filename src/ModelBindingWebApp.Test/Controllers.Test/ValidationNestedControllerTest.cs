@@ -28,8 +28,13 @@ public class ValidationNestedControllerTest : ControllerTestBase {
 				"Inner.Value",
 				"Value is required."
 			},
-			// todo:
 			// inner.valueプロパティが空文字のJSONをPOSTする
+			// OuterModel.Inner.Valueが空文字になり、InnerModel.Valueに設定されたRequired属性のバリデーションエラーになる
+			{
+				new { inner = new { value = "" } },
+				"Inner.Value",
+				"Value is required."
+			},
 		};
 	}
 
