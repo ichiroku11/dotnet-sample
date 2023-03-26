@@ -3,20 +3,47 @@ using Polly;
 namespace SampleTest.Polly;
 
 public class RetryPolicyTest {
+	private class SampleException : Exception {
+	}
+
+
 	[Fact]
-	public void Execute_使い方を確認する() {
+	public void Execute_例外が発生するとリトライされる() {
 		// Arrange
-		var retry = Policy.Handle<Exception>().Retry();
+		// Retryの引数を省略すると1回リトライする
+		var policy = Policy.Handle<SampleException>().Retry();
+		var count = 0;
+
+		// Act
+		// 例外が発生するので1回リトライされる
+		// リトライされた後も例外が発生するので、Executeは例外が発生する
+		Assert.Throws<SampleException>(() => {
+			policy.Execute(() => {
+				count++;
+				throw new SampleException();
+			});
+		});
+
+		// Assert
+		Assert.Equal(2, count);
+	}
+
+	[Fact]
+	public void Execute_例外が発生しないとリトライされない() {
+		// Arrange
+		// Retryの引数を省略すると1回リトライする
+		var policy = Policy.Handle<SampleException>().Retry();
 		var count = 0;
 
 		// Act
 		// 例外が発生しないのでリトライされない
-		var result = retry.Execute(() => {
+		var result = policy.Execute(() => {
 			count++;
 			return -1;
 		});
 
 		// Assert
+		// 1度実行される
 		Assert.Equal(1, count);
 		Assert.Equal(-1, result);
 	}
