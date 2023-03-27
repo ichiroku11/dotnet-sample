@@ -7,7 +7,7 @@ public class RetryPolicyTest {
 	}
 
 	[Fact]
-	public void Execute_例外が発生するとリトライされる() {
+	public void Handle_例外が発生するとリトライされる() {
 		// Arrange
 		// Retryの引数を省略すると1回リトライする
 		var policy = Policy.Handle<SampleException>().Retry();
@@ -28,7 +28,7 @@ public class RetryPolicyTest {
 	}
 
 	[Fact]
-	public void Execute_例外が発生しないとリトライされない() {
+	public void Handle_例外が発生しないとリトライされない() {
 		// Arrange
 		// Retryの引数を省略すると1回リトライする
 		var policy = Policy.Handle<SampleException>().Retry();
@@ -48,7 +48,7 @@ public class RetryPolicyTest {
 	}
 
 	[Fact]
-	public void Execute_1回リトライすると成功する動きを確認する() {
+	public void Handle_例外が発生して1回リトライすると成功する動きを確認する() {
 		// Arrange
 		// Retryの引数を省略すると1回リトライする
 		var policy = Policy.Handle<SampleException>().Retry();
@@ -62,10 +62,11 @@ public class RetryPolicyTest {
 				throw new SampleException();
 			}
 
-			return count;
+			return -1;
 		});
 
 		// Assert
 		Assert.Equal(2, count);
+		Assert.Equal(-1, result);
 	}
 }
