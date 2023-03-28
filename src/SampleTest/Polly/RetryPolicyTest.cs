@@ -3,6 +3,12 @@ using Polly;
 namespace SampleTest.Polly;
 
 public class RetryPolicyTest {
+	private readonly ITestOutputHelper _output;
+
+	public RetryPolicyTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
 	private class SampleException : Exception {
 	}
 
@@ -19,6 +25,8 @@ public class RetryPolicyTest {
 		Assert.Throws<SampleException>(() => {
 			policy.Execute(() => {
 				count++;
+				_output.WriteLine($"Executed: {count}");
+
 				throw new SampleException();
 			});
 		});
@@ -30,7 +38,6 @@ public class RetryPolicyTest {
 	[Fact]
 	public void Handle_例外が発生しないとリトライされない() {
 		// Arrange
-		// Retryの引数を省略すると1回リトライする
 		var policy = Policy.Handle<SampleException>().Retry();
 		var count = 0;
 
@@ -38,6 +45,8 @@ public class RetryPolicyTest {
 		// 例外が発生しないのでリトライされない
 		var result = policy.Execute(() => {
 			count++;
+			_output.WriteLine($"Executed: {count}");
+
 			return -1;
 		});
 
@@ -50,7 +59,6 @@ public class RetryPolicyTest {
 	[Fact]
 	public void Handle_例外が発生して1回リトライすると成功する動きを確認する() {
 		// Arrange
-		// Retryの引数を省略すると1回リトライする
 		var policy = Policy.Handle<SampleException>().Retry();
 		var count = 0;
 
@@ -58,6 +66,8 @@ public class RetryPolicyTest {
 		// 1回リトライすると成功する
 		var result = policy.Execute(() => {
 			count++;
+			_output.WriteLine($"Executed: {count}");
+
 			if (count == 1) {
 				throw new SampleException();
 			}
@@ -68,5 +78,52 @@ public class RetryPolicyTest {
 		// Assert
 		Assert.Equal(2, count);
 		Assert.Equal(-1, result);
+	}
+
+	[Fact]
+	public void HandleResult_結果に基づいて2回リトライする動きを確認する() {
+		// Arrange
+		// 結果が負の数であれば2回までリトライする
+		var policy = Policy.HandleResult<int>(value => value < 0).Retry(2);
+		var count = 0;
+
+		// Act
+		var result = policy.Execute(() => {
+			count++;
+			_output.WriteLine($"Executed: {count}");
+
+			// 必ずリトライされるようにしてみる
+			return -1;
+		});
+
+		// Assert
+		Assert.Equal(3, count);
+		Assert.Equal(-1, result);
+	}
+
+	[Fact]
+	public void HandleResult_結果に基づいて1回リトライする動きを確認する() {
+		// Arrange
+		// 結果が負の数であれば2回までリトライする
+		var policy = Policy.HandleResult<int>(value => value < 0).Retry(2);
+		var count = 0;
+
+		// Act
+		var result = policy.Execute(() => {
+			count++;
+			_output.WriteLine($"Executed: {count}");
+
+			// 1回目はリトライされる
+			if (count == 1) {
+				return -1;
+			}
+
+			// 2回目以降は成功するのでリトライしない
+			return 1;
+		});
+
+		// Assert
+		Assert.Equal(2, count);
+		Assert.Equal(1, result);
 	}
 }
