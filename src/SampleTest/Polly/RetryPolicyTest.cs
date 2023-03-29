@@ -126,4 +126,31 @@ public class RetryPolicyTest {
 		Assert.Equal(3, count);
 		Assert.Equal(-1, result);
 	}
+
+	public static TheoryData<Exception?> GetTheoryData_HandleInner() {
+		return new() {
+			null,
+			new ArgumentOutOfRangeException(),
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_HandleInner))]
+	public void HandleInner_内部の例外が対象の例外と一致しない場合はリトライされない(Exception? innerException) {
+		// Arrange
+		var policy = Policy.HandleInner<SampleException>().Retry();
+		var count = 0;
+
+		// Act
+		Assert.Throws<Exception>(() => {
+			policy.Execute(() => {
+				count++;
+				throw new Exception(null, innerException);
+			});
+		});
+
+		// Assert
+		// リトライされない
+		Assert.Equal(1, count);
+	}
 }
