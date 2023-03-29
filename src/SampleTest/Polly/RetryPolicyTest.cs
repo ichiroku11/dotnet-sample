@@ -127,16 +127,18 @@ public class RetryPolicyTest {
 		Assert.Equal(-1, result);
 	}
 
-	public static TheoryData<Exception?> GetTheoryData_HandleInner() {
+	public static TheoryData<Exception?> GetTheoryData_HandleInner_NotRetry() {
 		return new() {
-			null,
-			new ArgumentOutOfRangeException(),
+			// 内部例外はnull
+			new Exception("", null),
+			// 内部の例外が対象の例外ではない
+			new Exception("", new ArgumentOutOfRangeException()),
 		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_HandleInner))]
-	public void HandleInner_内部の例外が対象の例外と一致しない場合はリトライされない(Exception? innerException) {
+	[MemberData(nameof(GetTheoryData_HandleInner_NotRetry))]
+	public void HandleInner_内部の例外が対象の例外と一致しない場合はリトライされない(Exception exception) {
 		// Arrange
 		var policy = Policy.HandleInner<SampleException>().Retry();
 		var count = 0;
@@ -145,7 +147,7 @@ public class RetryPolicyTest {
 		Assert.Throws<Exception>(() => {
 			policy.Execute(() => {
 				count++;
-				throw new Exception(null, innerException);
+				throw exception;
 			});
 		});
 
