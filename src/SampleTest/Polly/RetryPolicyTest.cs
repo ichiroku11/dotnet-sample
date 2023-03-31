@@ -127,7 +127,7 @@ public class RetryPolicyTest {
 		Assert.Equal(-1, result);
 	}
 
-	public static TheoryData<Exception?> GetTheoryData_HandleInner_NotRetry() {
+	public static TheoryData<Exception> GetTheoryData_HandleInner_NotRetry() {
 		return new() {
 			// 内部例外がnullだとリトライされない
 			new Exception("", null),
@@ -159,7 +159,7 @@ public class RetryPolicyTest {
 		Assert.Equal(1, count);
 	}
 
-	public static TheoryData<Exception?> GetTheoryData_HandleInner_Retry() {
+	public static TheoryData<Exception> GetTheoryData_HandleInner_Retry() {
 		return new() {
 			// 内部例外が対象の例外だとリトライされる
 			// 発生する例外はExceptionではなくSampleExceptionになる様子
