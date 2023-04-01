@@ -13,7 +13,6 @@ public class PolicyBuilderOrTest {
 	private class SampleException3 : Exception {
 	}
 
-
 	private readonly ITestOutputHelper _output;
 
 	public PolicyBuilderOrTest(ITestOutputHelper output) {
