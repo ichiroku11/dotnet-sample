@@ -14,15 +14,15 @@ public class PolicyHandleResultTest {
 		// Arrange
 		// 結果が負の数であれば2回までリトライする
 		var policy = Policy.HandleResult<int>(value => value < 0).Retry(2);
-		var count = 0;
+		var executedCount = 0;
 
 		// Act
 		var result = policy.Execute(() => {
-			count++;
-			_output.WriteLine($"Executed: {count}");
+			executedCount++;
+			_output.WriteLine($"Executed: {executedCount}");
 
 			// 1回目はリトライされる
-			if (count == 1) {
+			if (executedCount == 1) {
 				return -1;
 			}
 
@@ -31,7 +31,7 @@ public class PolicyHandleResultTest {
 		});
 
 		// Assert
-		Assert.Equal(2, count);
+		Assert.Equal(2, executedCount);
 		Assert.Equal(1, result);
 	}
 
@@ -40,19 +40,19 @@ public class PolicyHandleResultTest {
 		// Arrange
 		// 結果が負の数であれば2回までリトライする
 		var policy = Policy.HandleResult<int>(value => value < 0).Retry(2);
-		var count = 0;
+		var executedCount = 0;
 
 		// Act
 		var result = policy.Execute(() => {
-			count++;
-			_output.WriteLine($"Executed: {count}");
+			executedCount++;
+			_output.WriteLine($"Executed: {executedCount}");
 
 			// 必ずリトライされるようにしてみる
 			return -1;
 		});
 
 		// Assert
-		Assert.Equal(3, count);
+		Assert.Equal(3, executedCount);
 		Assert.Equal(-1, result);
 	}
 }

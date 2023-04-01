@@ -28,13 +28,13 @@ public class PolicyHandleInnerTest {
 	public void HandleInner_内部の例外が対象の例外と一致しない場合はリトライされない(Exception exception) {
 		// Arrange
 		var policy = Policy.HandleInner<SampleException>().Retry();
-		var count = 0;
+		var executedCount = 0;
 
 		// Act
 		Assert.Throws<Exception>(() => {
 			policy.Execute(() => {
-				count++;
-				_output.WriteLine($"Executed: {count}");
+				executedCount++;
+				_output.WriteLine($"Executed: {executedCount}");
 
 				throw exception;
 			});
@@ -42,7 +42,7 @@ public class PolicyHandleInnerTest {
 
 		// Assert
 		// リトライされない
-		Assert.Equal(1, count);
+		Assert.Equal(1, executedCount);
 	}
 
 	public static TheoryData<Exception> GetTheoryData_HandleInner_Retry() {
@@ -61,13 +61,13 @@ public class PolicyHandleInnerTest {
 	public void HandleInner_対象の例外と一致する場合はリトライする(Exception exception) {
 		// Arrange
 		var policy = Policy.HandleInner<SampleException>().Retry();
-		var count = 0;
+		var executedCount = 0;
 
 		// Act
 		Assert.Throws<SampleException>(() => {
 			policy.Execute(() => {
-				count++;
-				_output.WriteLine($"Executed: {count}");
+				executedCount++;
+				_output.WriteLine($"Executed: {executedCount}");
 
 				throw exception;
 			});
@@ -75,6 +75,6 @@ public class PolicyHandleInnerTest {
 
 		// Assert
 		// リトライされている
-		Assert.Equal(2, count);
+		Assert.Equal(2, executedCount);
 	}
 }
