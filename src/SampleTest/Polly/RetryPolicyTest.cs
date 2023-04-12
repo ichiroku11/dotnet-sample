@@ -28,6 +28,8 @@ public class RetryPolicyTest {
 		// Assert
 		// Executeメソッドは2回呼ばれる
 		Assert.Equal(2, retryCount);
+
+		Assert.Equal(-1, result);
 	}
 
 	[Fact]
@@ -51,6 +53,9 @@ public class RetryPolicyTest {
 		var result = policy.Execute(() => -1);
 
 		// Assert
+		// 1回リトライされる
 		Assert.Equal(1, retryCount);
+
+		Assert.Equal(-1, result);
 	}
 }
