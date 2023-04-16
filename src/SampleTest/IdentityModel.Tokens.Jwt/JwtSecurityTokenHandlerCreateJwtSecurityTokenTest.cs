@@ -194,41 +194,58 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	}
 
 	[Fact]
-	public void CreateJwtSecurityToken_HS256で署名するとき鍵IDを含める() {
+	public void CreateJwtSecurityToken_HS256で署名する() {
 		// Arrange
 		var secret = Encoding.UTF8.GetBytes("0123456789abcdef");
 		var key = new SymmetricSecurityKey(secret);
-		// 鍵IDを指定する
-		key.KeyId = Base64UrlEncoder.Encode(key.ComputeJwkThumbprint());
-		var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
 		};
 
 		// Act
-		var token = handler.CreateJwtSecurityToken(signingCredentials: credentials);
+		var token = handler.CreateJwtSecurityToken(signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
+		_output.WriteLine(token.ToString());
+		_output.WriteLine(token.RawData);
+
+		// Assert
+		// シリアラズした結果はJWSフォーマットになる
+		Assert.Matches(JwtConstants.JsonCompactSerializationRegex, token.RawData);
+
+		// ヘッダー
+		Assert.Equal(3, token.Header.Count);
+		Assert.Equal(SecurityAlgorithms.HmacSha256, token.Header.Alg);
+		Assert.Null(token.Header.Enc);
+		Assert.Equal(JwtConstants.HeaderType, token.Header.Typ);
+		Assert.Null(token.Header.Cty);
+
+		// ペイロードは空
+		Assert.Empty(token.Payload);
+
+		// 署名
+		Assert.NotEmpty(token.RawSignature);
+	}
+
+	[Fact]
+	public void CreateJwtSecurityToken_HS256で署名するときに鍵IDを含める() {
+		// Arrange
+		var secret = Encoding.UTF8.GetBytes("0123456789abcdef");
+		var key = new SymmetricSecurityKey(secret);
+		// 鍵IDを指定する
+		key.KeyId = Base64UrlEncoder.Encode(key.ComputeJwkThumbprint());
+
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 		_output.WriteLine(token.ToString());
 		_output.WriteLine(token.RawData);
 
 		// Assert
 		// 指定した鍵IDが含まれる
 		Assert.Equal(key.KeyId, token.Header.Kid);
-
-		// 以下おまけのテスト
-
-		// シリアラズした結果はJWSフォーマットになる
-		Assert.Matches(JwtConstants.JsonCompactSerializationRegex, token.RawData);
-		// 他のヘッダー
-		Assert.Equal(3, token.Header.Count);
-		Assert.Equal(SecurityAlgorithms.HmacSha256, token.Header.Alg);
-		Assert.Null(token.Header.Enc);
-		Assert.Equal(JwtConstants.HeaderType, token.Header.Typ);
-		Assert.Null(token.Header.Cty);
-		// ペイロードは空
-		Assert.Empty(token.Payload);
-		// 署名
-		Assert.NotEmpty(token.RawSignature);
 	}
 
 	[Fact]
