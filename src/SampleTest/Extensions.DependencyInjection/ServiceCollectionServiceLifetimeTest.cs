@@ -17,13 +17,11 @@ public class ServiceCollectionServiceLifetimeTest {
 		public Guid Value { get; }
 	}
 
-
 	private readonly ITestOutputHelper _output;
 
 	public ServiceCollectionServiceLifetimeTest(ITestOutputHelper output) {
 		_output = output;
 	}
-
 
 	[Fact]
 	public void AddTransient_サービスを要求されるたびに異なるインスタンスが生成される() {
