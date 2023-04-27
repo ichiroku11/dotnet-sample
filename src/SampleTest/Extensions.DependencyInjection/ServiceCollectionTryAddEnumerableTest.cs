@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
-// AddXxx/TryAddXxx/TryAddEnumerableの違いを確認する
+// AddXxx/TryAddXxx/TryAdd/TryAddEnumerableの違いを確認する
 public class ServiceCollectionTryAddEnumerableTest {
 	private interface ISampleService {
 	}
@@ -12,6 +12,18 @@ public class ServiceCollectionTryAddEnumerableTest {
 	}
 
 	private class SampleService2 : ISampleService {
+	}
+
+	private readonly ITestOutputHelper _output;
+
+	public ServiceCollectionTryAddEnumerableTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
+	private void WriteServices(ServiceCollection services) {
+		foreach (var service in services) {
+			_output.WriteLine(service.ImplementationType?.ToString());
+		}
 	}
 
 	[Fact]
@@ -26,6 +38,8 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Assert
 		Assert.Equal(2, services.Count);
+
+		WriteServices(services);
 	}
 
 	[Fact]
@@ -40,6 +54,8 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Assert
 		Assert.Equal(2, services.Count);
+
+		WriteServices(services);
 	}
 
 	[Fact]
@@ -55,6 +71,8 @@ public class ServiceCollectionTryAddEnumerableTest {
 		// Assert
 		var descriptor = Assert.Single(services);
 		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
+
+		WriteServices(services);
 	}
 
 	[Fact]
@@ -70,5 +88,7 @@ public class ServiceCollectionTryAddEnumerableTest {
 		// Assert
 		var descriptor = Assert.Single(services);
 		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
+
+		WriteServices(services);
 	}
 }
