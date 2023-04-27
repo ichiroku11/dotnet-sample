@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
@@ -39,5 +40,35 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Assert
 		Assert.Equal(2, services.Count);
+	}
+
+	[Fact]
+	public void TryAddScoped_同じ実装を複数追加できない() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<ISampleService, SampleService1>()
+			.TryAddScoped<ISampleService, SampleService1>();
+
+		// Assert
+		var descriptor = Assert.Single(services);
+		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
+	}
+
+	[Fact]
+	public void TryAddScoped_異なる実装を複数追加できない() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<ISampleService, SampleService1>()
+			.TryAddScoped<ISampleService, SampleService2>();
+
+		// Assert
+		var descriptor = Assert.Single(services);
+		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
 	}
 }
