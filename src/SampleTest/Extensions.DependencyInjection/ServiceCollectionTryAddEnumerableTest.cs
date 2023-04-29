@@ -91,4 +91,38 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		WriteServices(services);
 	}
+
+	[Fact]
+	public void TryAdd_同じ実装を複数追加できない() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<ISampleService, SampleService1>()
+			.TryAdd(ServiceDescriptor.Scoped<ISampleService, SampleService1>());
+
+		// Assert
+		var descriptor = Assert.Single(services);
+		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
+
+		WriteServices(services);
+	}
+
+	[Fact]
+	public void TryAdd_異なる実装を複数追加できない() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<ISampleService, SampleService1>()
+			.TryAdd(ServiceDescriptor.Scoped<ISampleService, SampleService2>());
+
+		// Assert
+		var descriptor = Assert.Single(services);
+		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
+
+		WriteServices(services);
+	}
 }
