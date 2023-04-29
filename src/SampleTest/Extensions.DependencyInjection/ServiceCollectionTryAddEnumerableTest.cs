@@ -125,4 +125,37 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		WriteServices(services);
 	}
+
+	[Fact]
+	public void TryAddEnumerable_同じ実装を複数追加できない() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<ISampleService, SampleService1>()
+			.TryAddEnumerable(ServiceDescriptor.Scoped<ISampleService, SampleService1>());
+
+		// Assert
+		var descriptor = Assert.Single(services);
+		Assert.Equal(typeof(SampleService1), descriptor.ImplementationType);
+
+		WriteServices(services);
+	}
+
+	[Fact]
+	public void TryAddEnumerable_異なる実装を複数追加できる() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<ISampleService, SampleService1>()
+			.TryAddEnumerable(ServiceDescriptor.Scoped<ISampleService, SampleService2>());
+
+		// Assert
+		Assert.Equal(2, services.Count);
+
+		WriteServices(services);
+	}
 }
