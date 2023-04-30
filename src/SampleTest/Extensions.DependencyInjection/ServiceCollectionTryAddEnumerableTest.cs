@@ -5,13 +5,13 @@ namespace SampleTest.Extensions.DependencyInjection;
 
 // AddXxx/TryAddXxx/TryAdd/TryAddEnumerableの違いを確認する
 public class ServiceCollectionTryAddEnumerableTest {
-	private interface ISampleService {
+	private interface IService {
 	}
 
-	private class SampleServiceA : ISampleService {
+	private class ServiceA : IService {
 	}
 
-	private class SampleServiceB : ISampleService {
+	private class ServiceB : IService {
 	}
 
 	private readonly ITestOutputHelper _output;
@@ -22,7 +22,7 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 	private void WriteServices(ServiceCollection services) {
 		foreach (var service in services) {
-			_output.WriteLine(service.ImplementationType?.ToString());
+			_output.WriteLine(service.ImplementationType?.Name);
 		}
 	}
 
@@ -33,8 +33,8 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.AddScoped<ISampleService, SampleServiceA>();
+			.AddScoped<IService, ServiceA>()
+			.AddScoped<IService, ServiceA>();
 
 		// Assert
 		Assert.Equal(2, services.Count);
@@ -49,8 +49,8 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.AddScoped<ISampleService, SampleServiceB>();
+			.AddScoped<IService, ServiceA>()
+			.AddScoped<IService, ServiceB>();
 
 		// Assert
 		Assert.Equal(2, services.Count);
@@ -65,12 +65,12 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.TryAddScoped<ISampleService, SampleServiceA>();
+			.AddScoped<IService, ServiceA>()
+			.TryAddScoped<IService, ServiceA>();
 
 		// Assert
 		var descriptor = Assert.Single(services);
-		Assert.Equal(typeof(SampleServiceA), descriptor.ImplementationType);
+		Assert.Equal(typeof(ServiceA), descriptor.ImplementationType);
 
 		WriteServices(services);
 	}
@@ -82,12 +82,12 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.TryAddScoped<ISampleService, SampleServiceB>();
+			.AddScoped<IService, ServiceA>()
+			.TryAddScoped<IService, ServiceB>();
 
 		// Assert
 		var descriptor = Assert.Single(services);
-		Assert.Equal(typeof(SampleServiceA), descriptor.ImplementationType);
+		Assert.Equal(typeof(ServiceA), descriptor.ImplementationType);
 
 		WriteServices(services);
 	}
@@ -99,12 +99,12 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.TryAdd(ServiceDescriptor.Scoped<ISampleService, SampleServiceA>());
+			.AddScoped<IService, ServiceA>()
+			.TryAdd(ServiceDescriptor.Scoped<IService, ServiceA>());
 
 		// Assert
 		var descriptor = Assert.Single(services);
-		Assert.Equal(typeof(SampleServiceA), descriptor.ImplementationType);
+		Assert.Equal(typeof(ServiceA), descriptor.ImplementationType);
 
 		WriteServices(services);
 	}
@@ -116,12 +116,12 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.TryAdd(ServiceDescriptor.Scoped<ISampleService, SampleServiceB>());
+			.AddScoped<IService, ServiceA>()
+			.TryAdd(ServiceDescriptor.Scoped<IService, ServiceB>());
 
 		// Assert
 		var descriptor = Assert.Single(services);
-		Assert.Equal(typeof(SampleServiceA), descriptor.ImplementationType);
+		Assert.Equal(typeof(ServiceA), descriptor.ImplementationType);
 
 		WriteServices(services);
 	}
@@ -133,12 +133,12 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.TryAddEnumerable(ServiceDescriptor.Scoped<ISampleService, SampleServiceA>());
+			.AddScoped<IService, ServiceA>()
+			.TryAddEnumerable(ServiceDescriptor.Scoped<IService, ServiceA>());
 
 		// Assert
 		var descriptor = Assert.Single(services);
-		Assert.Equal(typeof(SampleServiceA), descriptor.ImplementationType);
+		Assert.Equal(typeof(ServiceA), descriptor.ImplementationType);
 
 		WriteServices(services);
 	}
@@ -150,8 +150,8 @@ public class ServiceCollectionTryAddEnumerableTest {
 
 		// Act
 		services
-			.AddScoped<ISampleService, SampleServiceA>()
-			.TryAddEnumerable(ServiceDescriptor.Scoped<ISampleService, SampleServiceB>());
+			.AddScoped<IService, ServiceA>()
+			.TryAddEnumerable(ServiceDescriptor.Scoped<IService, ServiceB>());
 
 		// Assert
 		Assert.Equal(2, services.Count);
