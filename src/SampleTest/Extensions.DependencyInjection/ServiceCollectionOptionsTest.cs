@@ -28,6 +28,28 @@ public class ServiceCollectionOptionsTest {
 	}
 
 	[Fact]
+	public void Configure_OptionsFactory経由でオプションを生成するとConfigureは呼び出される() {
+		// Arrange
+		var services = new ServiceCollection();
+		var configured = false;
+		services
+			.AddOptions<SampleOptions>()
+			.Configure(options => {
+				configured = true;
+			});
+		var provider = services.BuildServiceProvider();
+		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
+
+		// Act
+		Assert.False(configured);
+		var options = factory.Create(Options.DefaultName);
+
+		// Assert
+		Assert.NotNull(options);
+		Assert.True(configured);
+	}
+
+	[Fact]
 	public void PostConfigure_IPostConfigureOptionsが登録されていることを確認する() {
 		// Arrange
 		var services = new ServiceCollection();
