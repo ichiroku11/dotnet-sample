@@ -50,6 +50,27 @@ public class ServiceCollectionOptionsTest {
 	}
 
 	[Fact]
+	public void Configure_GetRequiredServiceでオプションを取得してもConfigureは呼び出される() {
+		// Arrange
+		var services = new ServiceCollection();
+		var configured = false;
+		services
+			.AddOptions<SampleOptions>()
+			.Configure(options => {
+				configured = true;
+			});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		Assert.False(configured);
+		var options = provider.GetRequiredService<IOptions<SampleOptions>>();
+
+		// Assert
+		Assert.NotNull(options.Value);
+		Assert.True(configured);
+	}
+
+	[Fact]
 	public void PostConfigure_IPostConfigureOptionsが登録されていることを確認する() {
 		// Arrange
 		var services = new ServiceCollection();
