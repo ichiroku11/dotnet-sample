@@ -22,7 +22,7 @@ public class ServiceCollectionOptionsTest {
 
 		// Assert
 		// IConfigureOptionsが登録されるが
-		Assert.Contains(services, service => service.ServiceType == typeof(IConfigureOptions<SampleOptions>));
+		Assert.Single(services, service => service.ServiceType == typeof(IConfigureOptions<SampleOptions>));
 		// 登録しただけでは呼び出されない
 		Assert.False(configured);
 	}
@@ -85,7 +85,7 @@ public class ServiceCollectionOptionsTest {
 
 		// Assert
 		// IPostConfigureOptionsが登録されるが
-		Assert.Contains(services, service => service.ServiceType == typeof(IPostConfigureOptions<SampleOptions>));
+		Assert.Single(services, service => service.ServiceType == typeof(IPostConfigureOptions<SampleOptions>));
 		// 登録しただけでは呼び出されない
 		Assert.False(postConfigured);
 	}
