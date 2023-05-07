@@ -5,6 +5,7 @@ namespace SampleTest.Extensions.DependencyInjection;
 
 public class ServiceCollectionOptionsTest {
 	private class SampleOptions {
+		public int Value { get; set; }
 	}
 
 	private readonly ITestOutputHelper _output;
@@ -98,6 +99,30 @@ public class ServiceCollectionOptionsTest {
 		// Assert
 		Assert.NotNull(options.Value);
 		Assert.True(configured);
+	}
+
+	[Fact]
+	public void Configure_Configureが2回呼び出されて後がちでオプションが構成されることを確認する() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		services
+			.AddOptions<SampleOptions>()
+			.Configure(options => {
+				options.Value = -1;
+			})
+			.Configure(options => {
+				options.Value = 1;
+			});
+
+		var provider = services.BuildServiceProvider();
+		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
+
+		// Act
+		var options = factory.Create(Options.DefaultName);
+
+		// Assert
+		Assert.Equal(1, options.Value);
 	}
 
 	[Fact]
