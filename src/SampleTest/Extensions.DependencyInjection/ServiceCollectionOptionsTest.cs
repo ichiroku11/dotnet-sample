@@ -7,6 +7,12 @@ public class ServiceCollectionOptionsTest {
 	private class SampleOptions {
 	}
 
+	private readonly ITestOutputHelper _output;
+
+	public ServiceCollectionOptionsTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
 	[Fact]
 	public void Configure_IConfigureOptionsが登録されていることを確認する() {
 		// Arrange
@@ -35,6 +41,7 @@ public class ServiceCollectionOptionsTest {
 		services
 			.AddOptions<SampleOptions>()
 			.Configure(options => {
+				_output.WriteLine(nameof(configured));
 				configured = true;
 			});
 		var provider = services.BuildServiceProvider();
@@ -57,6 +64,7 @@ public class ServiceCollectionOptionsTest {
 		services
 			.AddOptions<SampleOptions>()
 			.Configure(options => {
+				_output.WriteLine(nameof(configured));
 				configured = true;
 			});
 		var provider = services.BuildServiceProvider();
