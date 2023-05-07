@@ -34,6 +34,28 @@ public class ServiceCollectionOptionsTest {
 	}
 
 	[Fact]
+	public void Configure_Configureを2回呼び出すとIConfigureOptionsが2つ登録されていることを確認する() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddOptions<SampleOptions>()
+			.Configure(options => {
+			})
+			.Configure(options => {
+			});
+
+		var actual = services.Where(service => service.ServiceType == typeof(IConfigureOptions<SampleOptions>));
+
+		// Assert
+		// 2つ登録されている
+		Assert.Equal(2, actual.Count());
+		// インスタンスも異なる
+		Assert.False(actual.First() == actual.Last());
+	}
+
+	[Fact]
 	public void Configure_OptionsFactory経由でオプションを生成するとConfigureは呼び出される() {
 		// Arrange
 		var services = new ServiceCollection();
