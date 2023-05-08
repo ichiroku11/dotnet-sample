@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
