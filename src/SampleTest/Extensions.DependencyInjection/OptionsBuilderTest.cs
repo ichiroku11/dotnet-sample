@@ -126,6 +126,31 @@ public class OptionsBuilderTest {
 	}
 
 	[Fact]
+	public void Configure_オプションが生成されるたびにConfigureが呼び出されることを確認する() {
+		// Arrange
+		var services = new ServiceCollection();
+		var count = 0;
+
+		services
+			.AddOptions<SampleOptions>()
+			.Configure(options => {
+				count++;
+			});
+		var provider = services.BuildServiceProvider();
+		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
+
+		// Act
+		// Assert
+		Assert.Equal(0, count);
+
+		var options = factory.Create(Options.DefaultName);
+		Assert.Equal(1, count);
+
+		options = factory.Create(Options.DefaultName);
+		Assert.Equal(2, count);
+	}
+
+	[Fact]
 	public void Configure_PostConfigure_呼び出される順番を確認する() {
 		// Arrange
 		var services = new ServiceCollection();
