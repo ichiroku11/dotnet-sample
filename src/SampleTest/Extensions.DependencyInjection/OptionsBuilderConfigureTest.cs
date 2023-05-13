@@ -3,14 +3,14 @@ using Microsoft.Extensions.Options;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
-public class OptionsBuilderTest {
+public class OptionsBuilderConfigureTest {
 	private class SampleOptions {
 		public int Value { get; set; }
 	}
 
 	private readonly ITestOutputHelper _output;
 
-	public OptionsBuilderTest(ITestOutputHelper output) {
+	public OptionsBuilderConfigureTest(ITestOutputHelper output) {
 		_output = output;
 	}
 
