@@ -8,6 +8,20 @@ public class OptionsBuilderConfigureTest {
 		public int Value { get; set; }
 	}
 
+	private interface ISampleService {
+		int GetValue();
+	}
+
+	private class SampleService : ISampleService {
+		private readonly SampleOptions _options;
+
+		public SampleService(IOptions<SampleOptions> options) {
+			_options = options.Value;
+		}
+
+		public int GetValue() => _options.Value;
+	}
+
 	private readonly ITestOutputHelper _output;
 
 	public OptionsBuilderConfigureTest(ITestOutputHelper output) {
@@ -99,6 +113,32 @@ public class OptionsBuilderConfigureTest {
 		// Assert
 		Assert.NotNull(options.Value);
 		Assert.True(configured);
+	}
+
+	[Fact]
+	public void Configure_DIで解決されるときにConfigureは呼び出される() {
+		// Arrange
+		var services = new ServiceCollection();
+		var configured = false;
+		services
+			.AddOptions<SampleOptions>()
+			.Configure(options => {
+				_output.WriteLine(nameof(configured));
+				configured = true;
+
+				options.Value = 1;
+			});
+		services.AddTransient<ISampleService, SampleService>();
+
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		Assert.False(configured);
+		var service = provider.GetRequiredService<ISampleService>();
+
+		// Assert
+		Assert.True(configured);
+		Assert.Equal(1, service.GetValue());
 	}
 
 	[Fact]
