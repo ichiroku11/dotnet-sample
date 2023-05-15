@@ -57,4 +57,25 @@ public class OptionsBuilderValidateTest {
 		Assert.NotNull(options);
 		Assert.True(validated);
 	}
+
+	[Fact]
+	public void Validate_オプションの検証エラーになるとOptionsValidationExceptionが発生する() {
+		var services = new ServiceCollection();
+		services
+			.AddOptions<SampleOptions>()
+			.Validate(options => {
+				// バリデーションエラーとする
+				return false;
+			});
+		var provider = services.BuildServiceProvider();
+		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
+
+		// Act
+		// Assert
+		var exception = Assert.Throws<OptionsValidationException>(() => {
+			factory.Create(Options.DefaultName);
+		});
+
+		_output.WriteLine(exception.Message);
+	}
 }
