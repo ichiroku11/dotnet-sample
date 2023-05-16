@@ -1,10 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
 public class OptionsBuilderValidateTest {
 	private class SampleOptions {
+		[Range(1, 10)]
 		public int Value { get; set; }
 	}
 
@@ -67,6 +69,24 @@ public class OptionsBuilderValidateTest {
 				// バリデーションエラーとする
 				return false;
 			});
+		var provider = services.BuildServiceProvider();
+		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
+
+		// Act
+		// Assert
+		var exception = Assert.Throws<OptionsValidationException>(() => {
+			factory.Create(Options.DefaultName);
+		});
+
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public void ValidateDataAnnotations_属性による検証エラーでOptionsValidationExceptionが発生する() {
+		var services = new ServiceCollection();
+		services
+			.AddOptions<SampleOptions>()
+			.ValidateDataAnnotations();
 		var provider = services.BuildServiceProvider();
 		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
 
