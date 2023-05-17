@@ -96,6 +96,11 @@ public class OptionsBuilderValidateTest {
 			factory.Create(Options.DefaultName);
 		});
 
-		_output.WriteLine(exception.Message);
+		// バリデーション失敗のメッセージ
+		var failure = Assert.Single(exception.Failures);
+		_output.WriteLine(failure);
+
+		Assert.Equal(Options.DefaultName, exception.OptionsName);
+		Assert.Equal(typeof(SampleOptions), exception.OptionsType);
 	}
 }
