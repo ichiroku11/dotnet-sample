@@ -4,7 +4,7 @@ using Microsoft.Graph;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
-// ユーザーのカスタム属性を更新
+// ユーザーを無効にする
 public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
 	public GraphUpdateUserAccountEnabledSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
 	}
