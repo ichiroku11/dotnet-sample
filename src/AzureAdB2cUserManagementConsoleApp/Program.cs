@@ -13,7 +13,8 @@ await Host
 			.AddTransient<GraphGetUserSample>()
 			.AddTransient<GraphUpdateUserAccountEnabledSample>()
 			.AddTransient<GraphUpdateUserCustomAttributeSample>()
-			.AddTransient<GraphUpdateUserForceChangePasswordSample>();
+			.AddTransient<GraphUpdateUserForceChangePasswordSample>()
+			.AddTransient<GraphUpdateUserSignInMailAddressSample>();
 	})
 	.RunConsoleAsync();
 
