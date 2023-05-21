@@ -10,15 +10,20 @@ public class SampleService : OnceHostedService {
 		: base(host, lifetime, logger) {
 	}
 
-	protected override Task RunAsync(IServiceProvider services) {
-		return services.GetRequiredService<GraphGetUserListSample>().RunAsync();
+	protected override async Task RunAsync(IServiceProvider services) {
+		// ユーザー一覧
+		await services.GetRequiredService<GraphGetUserListSample>().RunAsync();
+
 		// ユーザー作成
-		//return services.GetRequiredService<GraphCreateUserSample>().RunAsync();
+		//await services.GetRequiredService<GraphCreateUserSample>().RunAsync();
+
 		// ユーザー更新（アカウントの有効・無効）
-		//return services.GetRequiredService<GraphUpdateUserAccountEnabledSample>().RunAsync();
+		//await services.GetRequiredService<GraphUpdateUserAccountEnabledSample>().RunAsync();
+
 		// ユーザー更新（カスタム属性）
-		//return services.GetRequiredService<GraphUpdateUserCustomAttributeSample>().RunAsync();
+		//await services.GetRequiredService<GraphUpdateUserCustomAttributeSample>().RunAsync();
+
 		// ユーザー更新（パスワードリセット）
-		//return services.GetRequiredService<GraphUpdateUserForceChangePasswordSample>().RunAsync();
+		//await services.GetRequiredService<GraphUpdateUserForceChangePasswordSample>().RunAsync();
 	}
 }
