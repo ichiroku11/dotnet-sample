@@ -25,5 +25,8 @@ public class SampleService : OnceHostedService {
 
 		// ユーザー更新（パスワードリセット）
 		//await services.GetRequiredService<GraphUpdateUserForceChangePasswordSample>().RunAsync();
+
+		// ユーザー更新（サインインメールアドレス）
+		//await services.GetRequiredService<GraphUpdateUserSignInMailAddressSample>().RunAsync();
 	}
 }
