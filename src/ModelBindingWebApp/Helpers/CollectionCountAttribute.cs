@@ -4,24 +4,24 @@ using System.ComponentModel.DataAnnotations;
 namespace ModelBindingWebApp.Helpers;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-public class CollectionLengthAttribute : ValidationAttribute {
-	public CollectionLengthAttribute(int maxLength) {
-		MaxLength = maxLength;
+public class CollectionCountAttribute : ValidationAttribute {
+	public CollectionCountAttribute(int max) {
+		Max = max;
 	}
 
-	public int MinLength { get; init; }
+	public int Min { get; init; }
 
-	public int MaxLength { get; }
+	public int Max { get; }
 
 	public override bool IsValid(object? value) {
 		// todo:
-		// MinLengthとMaxLengthが正しいかチェックする
+		// MinとMaxが正しいかチェックする
 		// IEnumerableも対象とするか
 
 		if (value is not ICollection values) {
 			throw new InvalidOperationException();
 		}
 
-		return values.Count >= MinLength && values.Count <= MaxLength;
+		return values.Count >= Min && values.Count <= Max;
 	}
 }
