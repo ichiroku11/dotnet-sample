@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using ModelBindingWebApp.Models;
+using System.Net.Http.Json;
+using System.Net;
 using System.Text.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -71,6 +74,39 @@ public class CollectionControllerTest : ControllerTestBase {
 		// Assert
 		Assert.NotNull(values);
 		Assert.Equal(new[] { 1, 2 }, values);
+	}
+
+	[Theory]
+	[InlineData(null)]
+	[InlineData("")]
+	public async Task PostAsync_nullや空文字などintに変換できない値が含まれている場合はバリデーションエラーになる(string? value) {
+		// Arrange
+		var client = CreateClient();
+
+		var formValues = new Dictionary<string, string?> {
+			{ "values[0]", "1" },
+			{ "values[1]", value },
+		};
+
+		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection") {
+			Content = new FormUrlEncodedContent(formValues),
+		};
+
+		// Act
+		using var response = await client.SendAsync(request);
+		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+		Assert.NotNull(problem);
+		Assert.Collection(
+			problem.Errors.OrderBy(error => error.Key),
+			entry => {
+				Assert.Equal("values[1]", entry.Key);
+				foreach (var message in entry.Value) {
+					WriteLine(message);
+				}
+			});
 	}
 
 	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryDataComplexValues() {
