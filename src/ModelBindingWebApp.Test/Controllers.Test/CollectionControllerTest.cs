@@ -20,7 +20,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		: base(output, factory) {
 	}
 
-	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryDataSimpleValues() {
+	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_SimpleValues() {
 		return new() {
 			// values=1&values=2
 			new[] {
@@ -57,7 +57,7 @@ public class CollectionControllerTest : ControllerTestBase {
 	}
 
 	[Theory(DisplayName = "IEnumerable<int>型のvaluesにバインドできる")]
-	[MemberData(nameof(GetTheoryDataSimpleValues))]
+	[MemberData(nameof(GetTheoryData_SimpleValues))]
 	public async Task PostAsync_BindToInt32Enumerable(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
 		var client = CreateClient();
@@ -72,6 +72,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		var values = JsonSerializer.Deserialize<IEnumerable<int>>(json, _jsonSerializerOptions);
 
 		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.NotNull(values);
 		Assert.Equal(new[] { 1, 2 }, values);
 	}
@@ -109,7 +110,7 @@ public class CollectionControllerTest : ControllerTestBase {
 			});
 	}
 
-	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryDataComplexValues() {
+	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_ComplexValues() {
 		return new() {
 			new Dictionary<string, string>() {
 				{ "values[0].Id", "1" },
@@ -121,7 +122,7 @@ public class CollectionControllerTest : ControllerTestBase {
 	}
 
 	[Theory(DisplayName = "IEnumerable<Sample>型のvaluesにバインドできる")]
-	[MemberData(nameof(GetTheoryDataComplexValues))]
+	[MemberData(nameof(GetTheoryData_ComplexValues))]
 	public async Task PostAsync_BindToComplexModelEnumerable(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
 		var client = CreateClient();
@@ -136,6 +137,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		var values = JsonSerializer.Deserialize<IEnumerable<Sample>>(json, _jsonSerializerOptions);
 
 		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.NotNull(values);
 		Assert.Equal(new[] { new Sample { Id = 1, Name = "a" }, new Sample { Id = 2, Name = "b" } }, values);
 	}
