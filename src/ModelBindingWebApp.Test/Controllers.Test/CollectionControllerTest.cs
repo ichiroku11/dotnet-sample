@@ -78,9 +78,10 @@ public class CollectionControllerTest : ControllerTestBase {
 	}
 
 	[Theory]
-	[InlineData(null)]
 	[InlineData("")]
-	public async Task PostAsync_nullや空文字などintに変換できない値が含まれている場合はバリデーションエラーになる(string? value) {
+	[InlineData("a")]
+	[InlineData(null)]
+	public async Task PostAsync_intに変換できない文字列やnullが含まれている場合はバリデーションエラーになる(string? value) {
 		// Arrange
 		var client = CreateClient();
 
