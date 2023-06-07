@@ -111,7 +111,33 @@ public class CollectionControllerTest : ControllerTestBase {
 			});
 	}
 
-	// todo: Bind to IEnumerable<string>
+	[Theory(DisplayName = "空文字やnullもIEnumerable<string>型のvaluesにバインドできるがnullとして扱われる")]
+	[InlineData("")]
+	[InlineData(null)]
+	public async Task PostAsync_CanBindToStringValues(string? value) {
+		// Arrange
+		var client = CreateClient();
+
+		var formValues = new Dictionary<string, string?> {
+			{ "values[0]", "a" },
+			{ "values[1]", value },
+		};
+
+		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection/string") {
+			Content = new FormUrlEncodedContent(formValues),
+		};
+
+		// Act
+		using var response = await client.SendAsync(request);
+		var json = await response.Content.ReadAsStringAsync();
+		var values = JsonSerializer.Deserialize<IEnumerable<string>>(json, _jsonSerializerOptions);
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(values);
+		// 空文字もnullとして扱われる
+		Assert.Equal(new[] { "a", null }, values);
+	}
 
 	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_ComplexValues() {
 		return new() {

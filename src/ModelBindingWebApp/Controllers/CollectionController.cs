@@ -22,8 +22,6 @@ public class CollectionController : ControllerBase {
 		return values;
 	}
 
-	// todo:
-	/*
 	// ~/api/collection/string
 	[HttpPost("string")]
 	public async Task<IEnumerable<string>> PostAsync(
@@ -32,7 +30,6 @@ public class CollectionController : ControllerBase {
 
 		return values;
 	}
-	*/
 
 	// ~/api/collection/complex
 	[HttpPost("complex")]
