@@ -20,7 +20,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		: base(output, factory) {
 	}
 
-	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_SimpleValues() {
+	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_Int32Values() {
 		return new() {
 			// values=1&values=2
 			new[] {
@@ -57,12 +57,12 @@ public class CollectionControllerTest : ControllerTestBase {
 	}
 
 	[Theory(DisplayName = "IEnumerable<int>型のvaluesにバインドできる")]
-	[MemberData(nameof(GetTheoryData_SimpleValues))]
-	public async Task PostAsync_BindToInt32Enumerable(IEnumerable<KeyValuePair<string, string>> formValues) {
+	[MemberData(nameof(GetTheoryData_Int32Values))]
+	public async Task PostAsync_CanBindToInt32Values(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
 		var client = CreateClient();
 
-		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection") {
+		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection/int") {
 			Content = new FormUrlEncodedContent(formValues),
 		};
 
@@ -77,11 +77,11 @@ public class CollectionControllerTest : ControllerTestBase {
 		Assert.Equal(new[] { 1, 2 }, values);
 	}
 
-	[Theory]
+	[Theory(DisplayName = "intに変換できない文字列やnullが含まれている場合は、IEnumerable<int>型のvaluesにバインドできずバリデーションエラーになる")]
 	[InlineData("")]
 	[InlineData("a")]
 	[InlineData(null)]
-	public async Task PostAsync_intに変換できない文字列やnullが含まれている場合はバリデーションエラーになる(string? value) {
+	public async Task PostAsync_CanNotBindToInt32Values(string? value) {
 		// Arrange
 		var client = CreateClient();
 
@@ -90,7 +90,7 @@ public class CollectionControllerTest : ControllerTestBase {
 			{ "values[1]", value },
 		};
 
-		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection") {
+		using var request = new HttpRequestMessage(HttpMethod.Post, "api/collection/int") {
 			Content = new FormUrlEncodedContent(formValues),
 		};
 
@@ -111,6 +111,8 @@ public class CollectionControllerTest : ControllerTestBase {
 			});
 	}
 
+	// todo: Bind to IEnumerable<string>
+
 	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_ComplexValues() {
 		return new() {
 			new Dictionary<string, string>() {
@@ -124,7 +126,7 @@ public class CollectionControllerTest : ControllerTestBase {
 
 	[Theory(DisplayName = "IEnumerable<Sample>型のvaluesにバインドできる")]
 	[MemberData(nameof(GetTheoryData_ComplexValues))]
-	public async Task PostAsync_BindToComplexModelEnumerable(IEnumerable<KeyValuePair<string, string>> formValues) {
+	public async Task PostAsync_CanBindToComplexModels(IEnumerable<KeyValuePair<string, string>> formValues) {
 		// Arrange
 		var client = CreateClient();
 
