@@ -14,9 +14,12 @@ public class CollectionCountAttribute : ValidationAttribute {
 	public int Max { get; }
 
 	public override bool IsValid(object? value) {
-		// todo:
-		// MinとMaxが正しいかチェックする
-		// IEnumerableも対象とするか
+		if (Max < 0) {
+			throw new InvalidOperationException();
+		}
+		if (Max < Min) {
+			throw new InvalidOperationException();
+		}
 
 		if (value is not ICollection values) {
 			throw new InvalidOperationException();

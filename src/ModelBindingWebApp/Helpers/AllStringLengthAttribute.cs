@@ -12,21 +12,17 @@ public class AllStringLengthAttribute : ValidationAttribute {
 
 	public int Max { get; }
 
-
 	public override bool IsValid(object? value) {
-		// todo:
-		// MinとMaxが正しいかチェックする
+		if (Max < 0) {
+			throw new InvalidOperationException();
+		}
+		if (Max < Min) {
+			throw new InvalidOperationException();
+		}
 
 		if (value is not IEnumerable<string> values) {
 			throw new InvalidOperationException();
 		}
-
-		/*
-		// todo: 必要か？
-		if (values.Any(value => value is null)) {
-			throw new InvalidOperationException();
-		}
-		*/
 
 		return values.All(value => value.Length >= Min && value.Length <= Max);
 	}
