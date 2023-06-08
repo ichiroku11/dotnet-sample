@@ -27,7 +27,13 @@ public class ValidationCollectionCountControllerTest : ControllerTestBase {
 		Assert.Collection(
 			problem.Errors.OrderBy(error => error.Key),
 			entry => {
-				Assert.Equal("Values", entry.Key);
+				Assert.Equal("$", entry.Key);
+				foreach (var message in entry.Value) {
+					WriteLine(message);
+				}
+			},
+			entry => {
+				Assert.Equal("values", entry.Key);
 				foreach (var message in entry.Value) {
 					WriteLine(message);
 				}
@@ -42,7 +48,7 @@ public class ValidationCollectionCountControllerTest : ControllerTestBase {
 		var client = CreateClient();
 
 		// Act
-		var response = await client.PostAsJsonAsync("/api/validation/collectioncount", new { values });
+		var response = await client.PostAsJsonAsync("/api/validation/collectioncount", values);
 		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
 		// Assert
@@ -51,7 +57,7 @@ public class ValidationCollectionCountControllerTest : ControllerTestBase {
 		Assert.Collection(
 			problem.Errors.OrderBy(error => error.Key),
 			entry => {
-				Assert.Equal("Values", entry.Key);
+				Assert.Equal("", entry.Key);
 				foreach (var message in entry.Value) {
 					WriteLine(message);
 				}
@@ -66,10 +72,12 @@ public class ValidationCollectionCountControllerTest : ControllerTestBase {
 		var client = CreateClient();
 
 		// Act
-		var response = await client.PostAsJsonAsync("/api/validation/collectioncount", new { values });
-		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+		var response = await client.PostAsJsonAsync("/api/validation/collectioncount", values);
+		var actual = await response.Content.ReadFromJsonAsync<IEnumerable<int>>();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(actual);
+		Assert.Equal(values, actual);
 	}
 }

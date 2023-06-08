@@ -21,6 +21,11 @@ public class CollectionCountAttribute : ValidationAttribute {
 			throw new InvalidOperationException();
 		}
 
+		// nullについては別のバリデーションとする
+		if (value is null) {
+			return true;
+		}
+		
 		if (value is not ICollection values) {
 			throw new InvalidOperationException();
 		}
