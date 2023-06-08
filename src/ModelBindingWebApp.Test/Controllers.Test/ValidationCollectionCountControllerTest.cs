@@ -43,7 +43,7 @@ public class ValidationCollectionCountControllerTest : ControllerTestBase {
 	[Theory]
 	[InlineData(new[] { 1 })]
 	[InlineData(new[] { 1, 2, 3, 4 })]
-	public async Task Test_BadRequest_属性で指定した最大最小の範囲外(int[] values) {
+	public async Task Test_BadRequest_配列の要素数が属性で指定した最大最小の範囲外(int[] values) {
 		// Arrange
 		var client = CreateClient();
 
@@ -67,7 +67,7 @@ public class ValidationCollectionCountControllerTest : ControllerTestBase {
 	[Theory]
 	[InlineData(new[] { 1, 2 })]
 	[InlineData(new[] { 1, 2, 3 })]
-	public async Task Test_Ok_属性で指定した最大最小値内(int[] values) {
+	public async Task Test_Ok_配列の要素数が属性で指定した最大最小値内(int[] values) {
 		// Arrange
 		var client = CreateClient();
 
