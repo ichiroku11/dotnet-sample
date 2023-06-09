@@ -20,6 +20,11 @@ public class AllStringLengthAttribute : ValidationAttribute {
 			throw new InvalidOperationException();
 		}
 
+		// nullは別のバリデーションで
+		if (value is null) {
+			return true;
+		}
+
 		if (value is not IEnumerable<string> values) {
 			throw new InvalidOperationException();
 		}
