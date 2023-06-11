@@ -23,7 +23,7 @@ services
 		// todo:
 	})
 	.AddOpenIdConnect(options => {
-		config.GetSection("OpenIdConnect").Bind(options);
+		config.GetSection("Line").Bind(options);
 
 		if (string.IsNullOrWhiteSpace(options.ClientSecret)) {
 			throw new InvalidProgramException();
