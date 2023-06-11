@@ -12,11 +12,20 @@ public class CollectionController : ControllerBase {
 	// 何か時間がかかる処理
 	private Task ActionAsync() => Task.CompletedTask;
 
-	// ~/api/collection
-	[HttpPost]
+	// ~/api/collection/int
+	[HttpPost("int")]
 	public async Task<IEnumerable<int>> PostAsync(
 		// Formデータをバインドする
 		[FromForm] IEnumerable<int> values) {
+		await ActionAsync();
+
+		return values;
+	}
+
+	// ~/api/collection/string
+	[HttpPost("string")]
+	public async Task<IEnumerable<string>> PostAsync(
+		[FromForm] IEnumerable<string> values) {
 		await ActionAsync();
 
 		return values;
