@@ -13,7 +13,7 @@ public class ValidationAllStringLengthControllerTest : ControllerTestBase {
 
 	[Theory]
 	[InlineData("01234", "0123456789")]
-	public async Task Test_Ok_各文字列が属性で指定した最大最小値内の文字数(params string[] values) {
+	public async Task Test_Ok_各文字列が属性で指定した範囲内の文字数の文字列だけが含まれる(params string[] values) {
 		// Arrange
 		var client = CreateClient();
 
@@ -25,5 +25,28 @@ public class ValidationAllStringLengthControllerTest : ControllerTestBase {
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.NotNull(actual);
 		Assert.Equal(values, actual);
+	}
+
+	[Theory]
+	[InlineData("01234", "0123456789a")]
+	public async Task Test_BadRequest_属性で指定した範囲外の文字数の文字列が含まれる(params string[] values) {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		var response = await client.PostAsJsonAsync("/api/validation/allstringlength", values);
+		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+		Assert.NotNull(problem);
+		Assert.Collection(
+			problem.Errors.OrderBy(error => error.Key),
+			entry => {
+				Assert.Equal("", entry.Key);
+				foreach (var message in entry.Value) {
+					WriteLine(message);
+				}
+			});
 	}
 }
