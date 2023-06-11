@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Text;
 
 // 参考
 // https://github.com/dotnet/aspnetcore/blob/main/src/Security/Authentication/OpenIdConnect/samples/MinimalOpenIdConnectSample/Program.cs
@@ -23,6 +25,10 @@ services
 	.AddOpenIdConnect(options => {
 		config.GetSection("OpenIdConnect").Bind(options);
 
+		if (string.IsNullOrWhiteSpace(options.ClientSecret)) {
+			throw new InvalidProgramException();
+		}
+
 		// 下記より
 		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#signature
 		// OpenIDプロバイダーの情報
@@ -32,6 +38,16 @@ services
 		// response_typeはcode
 		// https://developers.line.biz/ja/docs/line-login/integrate-line-login/#applying-for-email-permission
 		options.ResponseType = OpenIdConnectResponseType.Code;
+
+		// 署名を検証する鍵はクライアントシークレット
+		options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.ClientSecret));
+
+		options.Events = new OpenIdConnectEvents {
+			OnTokenResponseReceived = async (context) => {
+				// todo:
+				await Task.CompletedTask;
+			}
+		};
 	});
 
 services.AddAuthorization();
