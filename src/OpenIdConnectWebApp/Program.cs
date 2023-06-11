@@ -40,6 +40,10 @@ services
 		options.ResponseType = OpenIdConnectResponseType.Code;
 
 		// 署名を検証する鍵はクライアントシークレット
+		// ウェブログインにおける署名はHS256で、鍵はチャネルシークレット
+		// 下記より
+		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#header
+		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#signature
 		options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.ClientSecret));
 
 		options.Events = new OpenIdConnectEvents {
