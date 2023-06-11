@@ -44,7 +44,7 @@ services
 		// 下記より
 		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#header
 		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#signature
-		options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.ClientSecret));
+		options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.ClientSecret));
 
 		options.Events = new OpenIdConnectEvents {
 			OnTokenResponseReceived = async (context) => {
