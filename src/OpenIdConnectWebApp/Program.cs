@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
+using OpenIdConnectWebApp.Line;
 using System.Security.Claims;
-using System.Text;
 
 // 参考
 // https://github.com/dotnet/aspnetcore/blob/main/src/Security/Authentication/OpenIdConnect/samples/MinimalOpenIdConnectSample/Program.cs
@@ -17,41 +16,21 @@ var config = builder.Configuration;
 services
 	.AddAuthentication(options => {
 		options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+		// todo: "Line"
 		options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 	})
 	.AddCookie(options => {
-		// todo:
 	})
 	.AddOpenIdConnect(options => {
 		config.GetSection("Line").Bind(options);
 
-		if (string.IsNullOrWhiteSpace(options.ClientSecret)) {
-			throw new InvalidProgramException();
-		}
-
-		// 下記より
-		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#signature
-		// OpenIDプロバイダーの情報
-		// todo: LineDefaultsか
-		options.MetadataAddress = "https://access.line.me/.well-known/openid-configuration";
+		options.MetadataAddress = LineDefaults.MetadataAddress;
 
 		// response_typeはcode
 		// https://developers.line.biz/ja/docs/line-login/integrate-line-login/#applying-for-email-permission
 		options.ResponseType = OpenIdConnectResponseType.Code;
 
-		// 署名を検証する鍵はクライアントシークレット
-		// ウェブログインにおける署名はHS256で、鍵はチャネルシークレット
-		// 下記より
-		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#header
-		// https://developers.line.biz/ja/docs/line-login/verify-id-token/#signature
-		options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.ClientSecret));
-
-		options.Events = new OpenIdConnectEvents {
-			OnTokenResponseReceived = async (context) => {
-				// todo:
-				await Task.CompletedTask;
-			}
-		};
+		options.TokenValidationParameters.IssuerSigningKey = options.CreateIssuerSigningKey();
 	});
 
 services.AddAuthorization();
