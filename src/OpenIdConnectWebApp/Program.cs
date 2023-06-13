@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using OpenIdConnectWebApp.Line;
 using System.Security.Claims;
 
@@ -16,22 +15,10 @@ var config = builder.Configuration;
 services
 	.AddAuthentication(options => {
 		options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-		// todo: "Line"
 		options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 	})
-	.AddCookie(options => {
-	})
-	.AddOpenIdConnect(options => {
-		config.GetSection("Line").Bind(options);
-
-		options.MetadataAddress = LineDefaults.MetadataAddress;
-
-		// response_typeはcode
-		// https://developers.line.biz/ja/docs/line-login/integrate-line-login/#applying-for-email-permission
-		options.ResponseType = OpenIdConnectResponseType.Code;
-
-		options.TokenValidationParameters.IssuerSigningKey = options.CreateIssuerSigningKey();
-	});
+	.AddCookie()
+	.AddOpenIdConnectLine(config);
 
 services.AddAuthorization();
 

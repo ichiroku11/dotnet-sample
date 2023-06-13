@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OpenIdConnectWebApp.Line;
 
-public static class OpenIdConnectOptionsExtensions {
+internal static class OpenIdConnectOptionsExtensions {
 	// 署名を検証する鍵を生成する
 	// ウェブログインにおける署名はHS256で、
 	// 署名鍵はチャネルシークレット（クライアントシークレット）
