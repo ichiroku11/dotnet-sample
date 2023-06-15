@@ -33,6 +33,7 @@
       "src\\ModelBindingWebApp.Test\\ModelBindingWebApp.Test.csproj",
       "src\\ModelBindingWebApp\\ModelBindingWebApp.csproj",
       "src\\OpenApiWebApi\\OpenApiWebApi.csproj",
+      "src\\OpenIdConnectWebApp\\OpenIdConnectWebApp.csproj",
       "src\\OptionPatternWebApp\\OptionPatternWebApp.csproj",
       "src\\PolicyAuthzWebApp\\PolicyAuthzWebApp.csproj",
       "src\\SampleLib.Test\\SampleLib.Test.csproj",
