@@ -18,6 +18,13 @@ public class LoggerMessageTest {
 			new EventId(2, nameof(_log2)),
 			"log message: arg='{arg}'");
 
+	// プレースホルダーに文字列のコレクションを指定したログメッセージ
+	private static readonly Action<ILogger, IEnumerable<string>, Exception?> _log3
+		= LoggerMessage.Define<IEnumerable<string>>(
+			LogLevel.Information,
+			new EventId(3, nameof(_log3)),
+			"log message: arg='{arg}'");
+
 	[Fact]
 	public void Define_ログメッセージの出力を確認する() {
 		// Arrange
@@ -42,5 +49,19 @@ public class LoggerMessageTest {
 		// Assert
 		Assert.Single(logger.Messages);
 		Assert.Equal("log message: arg='arg'", logger.Messages.First());
+	}
+
+	[Fact]
+	public void Define_プレースホルダーに文字列のコレクションを指定したログメッセージの出力を確認する() {
+		// Arrange
+		var logger = new TestLogger();
+
+		// Act
+		_log3(logger, new[] { "arg-1", "arg-2" }, null);
+
+		// Assert
+		Assert.Single(logger.Messages);
+		// 文字列のコレクションは、カンマ区切りの文字列に変換される
+		Assert.Equal("log message: arg='arg-1, arg-2'", logger.Messages.First());
 	}
 }
