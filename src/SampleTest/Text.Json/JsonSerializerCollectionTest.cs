@@ -11,6 +11,10 @@ public class JsonSerializerCollectionTest {
 		public IEnumerable<SampleItem> Items { get; init; } = Enumerable.Empty<SampleItem>();
 	}
 
+	private static readonly JsonSerializerOptions _options = new() {
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+	};
+
 	private readonly ITestOutputHelper _output;
 
 	public JsonSerializerCollectionTest(ITestOutputHelper output) {
@@ -20,9 +24,6 @@ public class JsonSerializerCollectionTest {
 	[Fact]
 	public void Serialize_IEnumerableを配列にシリアライズできる() {
 		// Arrange
-		var options = new JsonSerializerOptions {
-			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-		};
 
 		// Act
 		var sample = new SampleWithEnumerable {
@@ -30,7 +31,7 @@ public class JsonSerializerCollectionTest {
 					new SampleItem(1, "a"),
 				},
 		};
-		var actual = JsonSerializer.Serialize(sample, options);
+		var actual = JsonSerializer.Serialize(sample, _options);
 
 		// Assert
 		Assert.Equal(@"{""items"":[{""number"":1,""text"":""a""}]}", actual);
@@ -39,13 +40,10 @@ public class JsonSerializerCollectionTest {
 	[Fact]
 	public void Deserialize_配列をIEnumerableにデシリアライズできる() {
 		// Arrange
-		var options = new JsonSerializerOptions {
-			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-		};
 
 		// Act
 		var json = @"{""items"":[{""number"":1,""text"":""a""}]}";
-		var actual = JsonSerializer.Deserialize<SampleWithEnumerable>(json, options)!;
+		var actual = JsonSerializer.Deserialize<SampleWithEnumerable>(json, _options)!;
 
 		// Assert
 		Assert.Single(actual.Items);
@@ -56,10 +54,6 @@ public class JsonSerializerCollectionTest {
 				Assert.Equal("a", item.Text);
 			});
 	}
-
-	private static readonly JsonSerializerOptions _options = new() {
-		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-	};
 
 	[Fact(DisplayName = "Deserialize_nullが含まれる数値の配列をIEnumerable<int>にデシリアライズできない")]
 	public void Deserialize_NumberArrayWithNull_NotNullable_Failed() {
