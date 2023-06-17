@@ -11,6 +11,12 @@ public class JsonSerializerCollectionTest {
 		public IEnumerable<SampleItem> Items { get; init; } = Enumerable.Empty<SampleItem>();
 	}
 
+	private readonly ITestOutputHelper _output;
+
+	public JsonSerializerCollectionTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
 	[Fact]
 	public void Serialize_IEnumerableを配列にシリアライズできる() {
 		// Arrange
@@ -49,5 +55,22 @@ public class JsonSerializerCollectionTest {
 				Assert.Equal(1, item.Number);
 				Assert.Equal("a", item.Text);
 			});
+	}
+
+	private static readonly JsonSerializerOptions _options = new() {
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+	};
+
+	[Fact(DisplayName = "Deserialize_nullが含まれる数値の配列をIEnumerable<int>にデシリアライズできない")]
+	public void Deserialize_NumberArrayWithNull_NotNullable_Failed() {
+		// Arrange
+		var json = @"[1, null, 2]";
+
+		// Act
+		// Assert
+		var exeption = Assert.Throws<JsonException>(() => {
+			JsonSerializer.Deserialize<IEnumerable<int>>(json, _options);
+		});
+		_output.WriteLine(exeption.Message);
 	}
 }
