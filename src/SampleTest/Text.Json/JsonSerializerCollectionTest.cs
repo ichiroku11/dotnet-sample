@@ -67,4 +67,17 @@ public class JsonSerializerCollectionTest {
 		});
 		_output.WriteLine(exeption.Message);
 	}
+
+	[Fact(DisplayName = "Deserialize_nullが含まれる数値の配列をIEnumerable<int?>にデシリアライズできる")]
+	public void Deserialize_NumberArrayWithNull_Nullable_OK() {
+		// Arrange
+		var json = @"[1, null, 2]";
+
+		// Act
+		var actual = JsonSerializer.Deserialize<IEnumerable<int?>>(json, _options);
+
+		// Assert
+		Assert.NotNull(actual);
+		Assert.Equal(new int?[] { 1, null, 2 }, actual);
+	}
 }
