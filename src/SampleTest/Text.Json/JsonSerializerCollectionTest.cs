@@ -93,4 +93,17 @@ public class JsonSerializerCollectionTest {
 		Assert.NotNull(actual);
 		Assert.Equal(new string?[] { "a", null, "b" }, actual);
 	}
+
+	[Fact(DisplayName = "Deserialize_nullが含まれる文字列の配列をIEnumerable<string?>にデシリアライズできる")]
+	public void Deserialize_StringArrayWithNull_Nullable_OK() {
+		// Arrange
+		var json = @"[""a"", null, ""b""]";
+
+		// Act
+		var actual = JsonSerializer.Deserialize<IEnumerable<string?>>(json, _options);
+
+		// Assert
+		Assert.NotNull(actual);
+		Assert.Equal(new string?[] { "a", null, "b" }, actual);
+	}
 }
