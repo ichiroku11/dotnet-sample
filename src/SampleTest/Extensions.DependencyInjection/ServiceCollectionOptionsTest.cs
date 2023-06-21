@@ -6,11 +6,6 @@ namespace SampleTest.Extensions.DependencyInjection;
 public class ServiceCollectionOptionsTest {
 	private class SampleOptions {
 	}
-	private readonly ITestOutputHelper _output;
-
-	public ServiceCollectionOptionsTest(ITestOutputHelper output) {
-		_output = output;
-	}
 
 	[Fact]
 	public void Configure_IConfigureOptionsが登録されていることを確認する() {
