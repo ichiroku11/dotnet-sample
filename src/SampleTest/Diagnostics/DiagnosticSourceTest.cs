@@ -1,13 +1,15 @@
 using System.Diagnostics;
-using System.Reactive;
 
 namespace SampleTest.Diagnostics;
 
 public class DiagnosticSourceTest {
+	private static DiagnosticSource CreateDiagnosticSource(string name = "Test")
+		=> new DiagnosticListener(name);
+
 	[Fact]
-	public void IsEnabled_falseになる() {
+	public void IsEnabled_インスタンスを生成しただけではfalseになる() {
 		// Arrange
-		DiagnosticSource source = new DiagnosticListener("Test");
+		var source = CreateDiagnosticSource();
 
 		// Act
 		var actual = source.IsEnabled("e");
