@@ -34,4 +34,25 @@ public class DiagnosticSourceTest {
 		// Assert
 		Assert.False(actual);
 	}
+
+	[Fact]
+	public void IsEnabled_AllListenersのlistenerをSubscribeしるとtrueになる() {
+		// Arrange
+		var source = CreateDiagnosticSource();
+
+		using var subscriber = DiagnosticListener.AllListeners.Subscribe(listener => {
+			if (!string.Equals(listener.Name, _diagnosticSourceName, StringComparison.OrdinalIgnoreCase)) {
+				return;
+			}
+
+			listener.Subscribe(item => {
+			});
+		});
+
+		// Act
+		var actual = source.IsEnabled("e");
+
+		// Assert
+		Assert.True(actual);
+	}
 }
