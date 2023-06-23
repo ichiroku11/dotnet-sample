@@ -36,7 +36,7 @@ public class DiagnosticSourceTest {
 	}
 
 	[Fact]
-	public void IsEnabled_AllListenersのlistenerをSubscribeしるとtrueになる() {
+	public void IsEnabled_AllListenersのlistenerをSubscribeするとtrueになる() {
 		// Arrange
 		var source = CreateDiagnosticSource();
 
