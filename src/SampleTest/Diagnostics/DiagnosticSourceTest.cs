@@ -8,20 +8,24 @@ public class DiagnosticSourceTest {
 	private static DiagnosticSource CreateDiagnosticSource(string name = _diagnosticSourceName)
 		=> new DiagnosticListener(name);
 
-	[Fact]
-	public void IsEnabled_インスタンスを生成しただけではfalseになる() {
+	[Theory]
+	[InlineData("")]
+	[InlineData("e")]
+	public void IsEnabled_インスタンスを生成しただけではfalseになる(string eventName) {
 		// Arrange
 		var source = CreateDiagnosticSource();
 
 		// Act
-		var actual = source.IsEnabled("e");
+		var actual = source.IsEnabled(eventName);
 
 		// Assert
 		Assert.False(actual);
 	}
 
-	[Fact]
-	public void IsEnabled_AllListenersをSubscribeしてもfalseになる() {
+	[Theory]
+	[InlineData("")]
+	[InlineData("e")]
+	public void IsEnabled_AllListenersをSubscribeしてもfalseになる(string eventName) {
 		// Arrange
 		var source = CreateDiagnosticSource();
 
@@ -29,14 +33,16 @@ public class DiagnosticSourceTest {
 		});
 
 		// Act
-		var actual = source.IsEnabled("e");
+		var actual = source.IsEnabled(eventName);
 
 		// Assert
 		Assert.False(actual);
 	}
 
-	[Fact]
-	public void IsEnabled_AllListenersのlistenerをSubscribeするとtrueになる() {
+	[Theory]
+	[InlineData("")]
+	[InlineData("e")]
+	public void IsEnabled_AllListenersのlistenerをSubscribeするとtrueになる(string eventName) {
 		// Arrange
 		var source = CreateDiagnosticSource();
 
@@ -50,7 +56,7 @@ public class DiagnosticSourceTest {
 		});
 
 		// Act
-		var actual = source.IsEnabled("e");
+		var actual = source.IsEnabled(eventName);
 
 		// Assert
 		Assert.True(actual);
