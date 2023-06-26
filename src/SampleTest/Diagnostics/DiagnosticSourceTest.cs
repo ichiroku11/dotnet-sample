@@ -107,6 +107,7 @@ public class DiagnosticSourceTest {
 		// Act
 		source.Write("x", 1);
 		source.Write("y", 2);
+		source.Write("z", null);
 
 		// Assert
 		Assert.Collection(actual,
@@ -117,6 +118,10 @@ public class DiagnosticSourceTest {
 			item => {
 				Assert.Equal("y", item.Key);
 				Assert.Equal(2, item.Value);
+			},
+			item => {
+				Assert.Equal("z", item.Key);
+				Assert.Null(item.Value);
 			});
 	}
 }
