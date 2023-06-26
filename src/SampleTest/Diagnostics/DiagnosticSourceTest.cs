@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reactive;
 
 namespace SampleTest.Diagnostics;
 
@@ -60,6 +61,31 @@ public class DiagnosticSourceTest {
 
 		// Assert
 		Assert.True(actual);
+	}
+
+	[Theory]
+	[InlineData("", false)]
+	[InlineData("e", true)]
+	public void IsEnabled_AllListenersのlistenerをSubscribeするときにPredicateでフィルターする(string eventName, bool expected) {
+		// Arrange
+		var source = CreateDiagnosticSource();
+
+		using var subscriber = DiagnosticListener.AllListeners.Subscribe(listener => {
+			if (!string.Equals(listener.Name, _diagnosticSourceName, StringComparison.OrdinalIgnoreCase)) {
+				return;
+			}
+
+			listener.Subscribe(
+				new AnonymousObserver<KeyValuePair<string, object?>>(item => { }),
+				// イベント名によるフィルタを行う
+				name => name == "e");
+		});
+
+		// Act
+		var actual = source.IsEnabled(eventName);
+
+		// Assert
+		Assert.Equal(expected, actual);
 	}
 
 	[Fact]
