@@ -23,8 +23,4 @@ public class JsonDocumentTest {
 		// Assert
 		Assert.Equal(expected, document.RootElement.ValueKind);
 	}
-
-	// todo:
-	// JsonElement.EnumerateArray
-	// JsonElement.EnumerateObject
 }
