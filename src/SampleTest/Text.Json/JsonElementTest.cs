@@ -30,6 +30,19 @@ public class JsonElementTest {
 		Assert.Equal(new[] { 1, 2, 3 }, values);
 	}
 
-	// todo:
-	// JsonElement.EnumerateObject
+	[Fact]
+	public void EnumerateObject_オブジェクトのプロパティを列挙できる() {
+		// Arrange
+		using var document = JsonDocument.Parse(@"{""x"":1,""y"":2}");
+		var root = document.RootElement;
+
+		// Act
+		var values = root.EnumerateObject()
+			.ToDictionary(property => property.Name, property => property.Value.GetInt32());
+
+		// Assert
+		Assert.Equal(2, values.Count);
+		Assert.Equal(1, values["x"]);
+		Assert.Equal(2, values["y"]);
+	}
 }
