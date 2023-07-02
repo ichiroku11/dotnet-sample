@@ -4,11 +4,11 @@ using Xunit.Abstractions;
 
 namespace MiscWebApp.Test;
 
-public abstract class TestBase : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
-	private readonly WebApplicationFactory<Startup> _factory;
+public abstract class TestBase : IClassFixture<WebApplicationFactory<Program>>, IDisposable {
+	private readonly WebApplicationFactory<Program> _factory;
 	private HttpClient _client;
 
-	protected TestBase(ITestOutputHelper output, WebApplicationFactory<Startup> factory) {
+	protected TestBase(ITestOutputHelper output, WebApplicationFactory<Program> factory) {
 		Output = output;
 		_factory = factory;
 		_client = _factory.CreateClient();

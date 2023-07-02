@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 namespace MiscWebApp.Test;
 
 public class HeaderTest : TestBase {
-	public HeaderTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public HeaderTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 

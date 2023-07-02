@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 namespace MiscWebApp.Test;
 
 public class ContentTypeTest : TestBase {
-	public ContentTypeTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public ContentTypeTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 
