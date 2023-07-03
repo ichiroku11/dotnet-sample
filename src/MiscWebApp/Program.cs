@@ -69,6 +69,19 @@ app.UseEndpoints(endpoints => {
 		await context.Response.WriteAsJsonAsync(sample, JsonHelper.Options);
 	});
 
+	// HTTPボディを確認するEndpoint
+	endpoints.MapPost("/body", async context => {
+		// シークできない
+		var canSeek = context.Request.Body.CanSeek;
+		// 1回目は読み取れる
+		var first = await new StreamReader(context.Request.Body).ReadToEndAsync();
+		// 2回目は読み取れない
+		var second = await new StreamReader(context.Request.Body).ReadToEndAsync();
+
+		var json = JsonSerializer.Serialize(new { canSeek, first, second }, JsonHelper.Options);
+		await context.Response.WriteAsync(json);
+	});
+
 	// リクエストを確認するEndpoint
 	endpoints.MapGet("/request/{**path}", async context => {
 		var request = new {
