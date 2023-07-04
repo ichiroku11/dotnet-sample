@@ -74,9 +74,9 @@ app.UseEndpoints(endpoints => {
 		// シークできない
 		var canSeek = context.Request.Body.CanSeek;
 		// 1回目は読み取れる
-		var first = await new StreamReader(context.Request.Body).ReadToEndAsync();
+		var first = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
 		// 2回目は読み取れない
-		var second = await new StreamReader(context.Request.Body).ReadToEndAsync();
+		var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
 
 		var json = JsonSerializer.Serialize(new { canSeek, first, second }, JsonHelper.Options);
 		await context.Response.WriteAsync(json);
