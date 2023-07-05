@@ -14,6 +14,7 @@ public class BodyTest : TestBase {
 		public bool CanSeek { get; init; }
 		public string First { get; init; } = "";
 		public string Second { get; init; } = "";
+		public bool Thrown { get; set; }
 	}
 
 	[Fact]
@@ -33,5 +34,6 @@ public class BodyTest : TestBase {
 		Assert.False(actual.CanSeek);
 		Assert.Equal("content", actual.First);
 		Assert.Equal("", actual.Second);
+		Assert.True(actual.Thrown);
 	}
 }
