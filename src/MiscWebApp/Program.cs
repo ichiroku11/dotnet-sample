@@ -84,7 +84,7 @@ app.UseEndpoints(endpoints => {
 		var thrown = false;
 		try {
 			context.Request.Body.Position = 0;
-		} catch (NotSupportedException _) {
+		} catch (NotSupportedException) {
 			thrown = true;
 		}
 
