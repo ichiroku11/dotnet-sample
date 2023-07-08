@@ -48,4 +48,22 @@ public class RequestBodyControllerTest : ControllerTestBase {
 		Assert.Equal(@"{""value"":""abc""}", actual.Body);
 		Assert.Empty(actual.Value);
 	}
+
+	[Fact]
+	public async Task FormWithBind_モデルにバインド済みなのでRequestBodyの中身は空文字() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		using var response = await client.PostAsync(
+			"/api/requestbody/formwithbind",
+			new FormUrlEncodedContent(new[] { KeyValuePair.Create("value", "abc") }));
+		var actual = await response.Content.ReadFromJsonAsync<Result>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(actual);
+		Assert.Empty(actual.Body);
+		Assert.Equal("abc", actual.Value);
+	}
 }

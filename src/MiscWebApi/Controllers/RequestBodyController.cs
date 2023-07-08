@@ -32,5 +32,13 @@ public class RequestBodyController : ControllerBase {
 		return Ok(new { body });
 	}
 
-	// todo: form
+	// モデルにバインド済みなのでRequest.Bodyの中身は空文字
+	[HttpPost]
+	public async Task<IActionResult> FormWithBind([FromForm] Sample model) {
+		// bodyは空文字
+		using var reader = new StreamReader(Request.Body);
+		var body = await reader.ReadToEndAsync();
+
+		return Ok(new { value = model.Value, body });
+	}
 }
