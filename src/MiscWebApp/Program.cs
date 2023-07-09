@@ -71,22 +71,24 @@ app.UseEndpoints(endpoints => {
 
 	// HTTPボディを確認するEndpoint
 	endpoints.MapPost("/body", async context => {
-		// シークできない
+		if (context.Request.Query.TryGetValue("buffering", out var value) &&
+			bool.TryParse(value, out var enabled) &&
+			enabled) {
+			context.Request.EnableBuffering();
+		}
+
 		var canSeek = context.Request.Body.CanSeek;
 
-		// 1回目は読み取れる
 		var first = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
 
-		// 2回目は読み取れない
-		var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
-
-		// ポジションを操作できない
 		var thrown = false;
 		try {
 			context.Request.Body.Position = 0;
 		} catch (NotSupportedException) {
 			thrown = true;
 		}
+
+		var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
 
 		var json = JsonSerializer.Serialize(new { canSeek, first, second, thrown }, JsonHelper.Options);
 		await context.Response.WriteAsync(json);
