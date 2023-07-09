@@ -41,4 +41,13 @@ public class RequestBodyController : ControllerBase {
 
 		return Ok(new { value = model.Value, body });
 	}
+
+	// モデルにバインドしていないのでRequest.Bodyから読み取れる
+	[HttpPost]
+	public async Task<IActionResult> FormWithoutBind() {
+		using var reader = new StreamReader(Request.Body);
+		var body = await reader.ReadToEndAsync();
+
+		return Ok(new { body });
+	}
 }

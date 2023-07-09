@@ -66,4 +66,22 @@ public class RequestBodyControllerTest : ControllerTestBase {
 		Assert.Empty(actual.Body);
 		Assert.Equal("abc", actual.Value);
 	}
+
+	[Fact]
+	public async Task FormWithoutBind_モデルにバインドしていないのでRequestBodyから読み取れる() {
+		// Arrange
+		var client = CreateClient();
+
+		// Act
+		using var response = await client.PostAsync(
+			"/api/requestbody/formwithoutbind",
+			new FormUrlEncodedContent(new[] { KeyValuePair.Create("value", "abc") }));
+		var actual = await response.Content.ReadFromJsonAsync<Result>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(actual);
+		Assert.Equal(@"value=abc", actual.Body);
+		Assert.Empty(actual.Value);
+	}
 }
