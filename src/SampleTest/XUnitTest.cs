@@ -38,7 +38,7 @@ public class XUnitTest : IDisposable {
 
 	// テストデータを生成するプロパティ
 	public static TheoryData<int> EvenNumbers => new() { 2, 4 };
-		
+
 	[Theory]
 	// プロパティからテストデータを取得する
 	[MemberData(nameof(EvenNumbers))]
@@ -79,12 +79,21 @@ public class XUnitTest : IDisposable {
 	}
 
 	[Fact]
-	public void 例外が発生するテスト() {
+	public void Throwsで例外の発生をテストする() {
 		static void action() => throw new InvalidOperationException();
 
 		Assert.Throws<InvalidOperationException>(() => {
 			action();
 		});
+	}
+
+	[Fact]
+	public void Recordで例外の発生を記録する() {
+		static void action() => throw new InvalidOperationException();
+
+		var exception = Record.Exception(() => action());
+
+		Assert.IsType<InvalidOperationException>(exception);
 	}
 
 	[Fact]
