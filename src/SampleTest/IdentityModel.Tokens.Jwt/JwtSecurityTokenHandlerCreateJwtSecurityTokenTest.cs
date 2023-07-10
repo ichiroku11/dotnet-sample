@@ -213,7 +213,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Matches(JwtConstants.JsonCompactSerializationRegex, token.RawData);
 
 		// ヘッダー
-		Assert.Equal(3, token.Header.Count);
+		Assert.Equal(2, token.Header.Count);
 		Assert.Equal(SecurityAlgorithms.HmacSha256, token.Header.Alg);
 		Assert.Null(token.Header.Enc);
 		Assert.Equal(JwtConstants.HeaderType, token.Header.Typ);
