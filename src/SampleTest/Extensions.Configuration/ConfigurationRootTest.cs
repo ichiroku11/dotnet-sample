@@ -25,4 +25,17 @@ public class ConfigurationRootTest {
 		// Assert
 		Assert.Single(config.Providers);
 	}
+
+	[Fact]
+	public void Providers_ソースを2つ追加する() {
+		// Arrange
+		var config = new ConfigurationBuilder()
+			.AddInMemoryCollection()
+			.AddInMemoryCollection()
+			.Build();
+
+		// Act
+		// Assert
+		Assert.Equal(2, config.Providers.Count());
+	}
 }
