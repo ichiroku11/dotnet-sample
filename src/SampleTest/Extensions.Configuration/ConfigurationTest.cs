@@ -46,9 +46,11 @@ public class ConfigurationTest {
 			.Build();
 
 		// Act
+		var children = root.GetChildren();
+
 		// Assert
 		Assert.Collection(
-			root.GetChildren().OrderBy(child => child.Key),
+			children.OrderBy(child => child.Key),
 			child => {
 				Assert.Equal("x", child.Key);
 				Assert.Equal("x", child.Path);
