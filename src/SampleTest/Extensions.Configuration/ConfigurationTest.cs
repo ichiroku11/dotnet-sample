@@ -17,7 +17,7 @@ public class ConfigurationTest {
 	}
 
 	[Fact]
-	public void GetChildren_サブセクションが1つ() {
+	public void GetChildren_サブセクションが1つある() {
 		// Arrange
 		var root = new ConfigurationBuilder()
 			.AddInMemoryCollection(new Dictionary<string, string?>{
@@ -33,5 +33,31 @@ public class ConfigurationTest {
 		Assert.Equal("x", child.Key);
 		Assert.Equal("x", child.Path);
 		Assert.Equal("1", child.Value);
+	}
+
+	[Fact]
+	public void GetChildren_サブセクションが2つある() {
+		// Arrange
+		var root = new ConfigurationBuilder()
+			.AddInMemoryCollection(new Dictionary<string, string?>{
+				{ "x", "1" },
+				{ "y", "2" },
+			})
+			.Build();
+
+		// Act
+		// Assert
+		Assert.Collection(
+			root.GetChildren().OrderBy(child => child.Key),
+			child => {
+				Assert.Equal("x", child.Key);
+				Assert.Equal("x", child.Path);
+				Assert.Equal("1", child.Value);
+			},
+			child => {
+				Assert.Equal("y", child.Key);
+				Assert.Equal("y", child.Path);
+				Assert.Equal("2", child.Value);
+			});
 	}
 }
