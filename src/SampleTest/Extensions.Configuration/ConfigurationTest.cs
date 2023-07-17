@@ -62,4 +62,18 @@ public class ConfigurationTest {
 				Assert.Equal("2", child.Value);
 			});
 	}
+
+	[Fact]
+	public void Indexer_サブセクションの値を取得できる() {
+		// Arrange
+		var root = new ConfigurationBuilder()
+			.AddInMemoryCollection(new Dictionary<string, string?>{
+				{ "x", "1" },
+			})
+			.Build();
+
+		// Act
+		// Assert
+		Assert.Equal("1", root["x"]);
+	}
 }
