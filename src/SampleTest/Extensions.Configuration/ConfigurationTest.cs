@@ -64,6 +64,24 @@ public class ConfigurationTest {
 	}
 
 	[Fact]
+	public void GetSection_セクションを取得できる() {
+		// Arrange
+		var root = new ConfigurationBuilder()
+			.AddInMemoryCollection(new Dictionary<string, string?>{
+				{ "x", "1" },
+			})
+			.Build();
+
+		// Act
+		var section = root.GetSection("x");
+
+		// Assert
+		Assert.Equal("x", section.Key);
+		Assert.Equal("x", section.Path);
+		Assert.Equal("1", section.Value);
+	}
+
+	[Fact]
 	public void Indexer_サブセクションの値を取得できる() {
 		// Arrange
 		var root = new ConfigurationBuilder()
