@@ -64,7 +64,7 @@ public class ConfigurationTest {
 	}
 
 	[Fact]
-	public void GetSection_セクションを取得できる() {
+	public void GetSection_サブセクションを取得できる() {
 		// Arrange
 		var root = new ConfigurationBuilder()
 			.AddInMemoryCollection(new Dictionary<string, string?>{
@@ -79,6 +79,22 @@ public class ConfigurationTest {
 		Assert.Equal("x", section.Key);
 		Assert.Equal("x", section.Path);
 		Assert.Equal("1", section.Value);
+	}
+
+	[Fact]
+	public void GetSection_サブセクションがなくても戻り値はnullにならずValueがnullになる() {
+		// Arrange
+		var root = new ConfigurationBuilder()
+			.AddInMemoryCollection()
+			.Build();
+
+		// Act
+		var section = root.GetSection("x");
+
+		// Assert
+		Assert.Equal("x", section.Key);
+		Assert.Equal("x", section.Path);
+		Assert.Null(section.Value);
 	}
 
 	[Fact]
