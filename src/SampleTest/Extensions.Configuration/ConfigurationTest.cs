@@ -98,6 +98,19 @@ public class ConfigurationTest {
 	}
 
 	[Fact]
+	public void GetRequiredSection_存在しないサブセクションを取得しようとするとInvalidOperationException() {
+		// Arrange
+		var config = new ConfigurationBuilder()
+			.Build();
+
+		// Act
+		var exception = Record.Exception(() => config.GetRequiredSection("not-exist-key"));
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+	}
+
+	[Fact]
 	public void Indexer_サブセクションの値を取得できる() {
 		// Arrange
 		var root = new ConfigurationBuilder()
