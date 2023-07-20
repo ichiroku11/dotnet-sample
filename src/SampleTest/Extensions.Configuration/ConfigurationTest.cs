@@ -64,6 +64,24 @@ public class ConfigurationTest {
 	}
 
 	[Fact]
+	public void GetValue_boolやintを取得できる() {
+		// Arrange
+		var config = new ConfigurationBuilder()
+			.AddInMemoryCollection(new Dictionary<string, string?>{
+				{ "t", "true" },
+				{ "f", "false" },
+				{ "n", "1" },
+			})
+			.Build();
+
+		// Act
+		// Assert
+		Assert.True(config.GetValue<bool>("t"));
+		Assert.False(config.GetValue<bool>("f"));
+		Assert.Equal(1, config.GetValue<int>("n"));
+	}
+
+	[Fact]
 	public void GetSection_サブセクションを取得できる() {
 		// Arrange
 		var root = new ConfigurationBuilder()
