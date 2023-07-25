@@ -9,6 +9,23 @@ public class ConfigurationBinderTest {
 	}
 
 	[Fact]
+	public void Bind_複合型にバインドする() {
+		// Arrange
+		var root = new ConfigurationBuilder()
+			.AddInMemoryCollection(new Dictionary<string, string?> {
+				{ "x:value", "1" },
+			})
+			.Build();
+		var options = new SampleOptions();
+
+		// Act
+		root.GetSection("x").Bind(options);
+
+		// Assert
+		Assert.Equal(1, options.Value);
+	}
+
+	[Fact]
 	public void Get_複合型として取得する() {
 		// Arrange
 		var root = new ConfigurationBuilder()
