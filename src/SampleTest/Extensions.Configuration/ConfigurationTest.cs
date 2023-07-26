@@ -141,4 +141,21 @@ public class ConfigurationTest {
 		// Assert
 		Assert.Equal("1", root["x"]);
 	}
+
+	[Fact]
+	public void Indexer_値が上書きされることを確認する() {
+		// Arrange
+		var root = new ConfigurationBuilder()
+			.AddInMemoryCollection(new Dictionary<string, string?>{
+				{ "x", "1" },
+			})
+			.AddInMemoryCollection(new Dictionary<string, string?>{
+				{ "x", "2" },
+			})
+			.Build();
+
+		// Act
+		// Assert
+		Assert.Equal("2", root["x"]);
+	}
 }
