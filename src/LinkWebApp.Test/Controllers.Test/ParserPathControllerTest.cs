@@ -29,7 +29,7 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 
 		Assert.NotNull(json);
 		Assert.Collection(
-			json?.OrderBy(item => item.Key),
+			json.OrderBy(item => item.Key),
 			item => {
 				Assert.Equal("action", item.Key);
 				Assert.Equal("index", item.Value, StringComparer.OrdinalIgnoreCase);
@@ -57,7 +57,7 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 
 		Assert.NotNull(json);
 		Assert.Collection(
-			json?.OrderBy(item => item.Key),
+			json.OrderBy(item => item.Key),
 			// actionは補完されるが、
 			// idは省略可能なので含まれない
 			item => {
@@ -83,7 +83,7 @@ public class ParserPathControllerTest : IClassFixture<WebApplicationFactory<Prog
 
 		Assert.NotNull(json);
 		Assert.Collection(
-			json?.OrderBy(item => item.Key),
+			json.OrderBy(item => item.Key),
 			item => {
 				Assert.Equal("action", item.Key);
 				Assert.Equal("another", item.Value, StringComparer.OrdinalIgnoreCase);

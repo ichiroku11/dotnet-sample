@@ -15,7 +15,7 @@ public class CosmosSqlApiSample {
 	private readonly ILogger _logger;
 
 	public CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
-		_connectionString = config.GetConnectionString(Constants.ConnectionStringName);
+		_connectionString = config.GetConnectionString(Constants.ConnectionStringName) ?? throw new InvalidOperationException();
 		_logger = logger;
 	}
 

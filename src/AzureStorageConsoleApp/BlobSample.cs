@@ -9,7 +9,7 @@ public class BlobSample {
 	private readonly ILogger _logger;
 
 	public BlobSample(IConfiguration config, ILogger<BlobSample> logger) {
-		_connectionString = config.GetConnectionString("Storage");
+		_connectionString = config.GetConnectionString("Storage") ?? throw new InvalidOperationException();
 		_logger = logger;
 	}
 

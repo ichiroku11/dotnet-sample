@@ -9,8 +9,6 @@ services.AddControllersWithViews();
 var app = builder.Build();
 
 app.UseRouting();
-app.UseEndpoints(endpoints => {
-	endpoints.MapDefaultControllerRoute();
-});
+app.MapDefaultControllerRoute();
 
 app.Run();

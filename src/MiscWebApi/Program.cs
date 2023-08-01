@@ -25,12 +25,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => {
-	endpoints.MapControllerRoute(
-		"default",
-		"{controller=Default}/{action=Index}/{id?}");
-});
-
+app.MapControllerRoute(
+	"default",
+	"{controller=Default}/{action=Index}/{id?}");
 
 app.Run();
 

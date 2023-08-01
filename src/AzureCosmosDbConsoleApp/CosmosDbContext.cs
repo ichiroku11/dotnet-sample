@@ -18,7 +18,7 @@ public class CosmosDbContext : DbContext {
 	private readonly string _connectionString;
 
 	public CosmosDbContext(IConfiguration config) {
-		_connectionString = config.GetConnectionString(Constants.ConnectionStringName);
+		_connectionString = config.GetConnectionString(Constants.ConnectionStringName) ?? throw new InvalidOperationException();
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

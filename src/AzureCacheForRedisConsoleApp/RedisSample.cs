@@ -14,7 +14,7 @@ public class RedisSample {
 	private readonly ILogger _logger;
 
 	public RedisSample(IConfiguration config, ILogger<RedisSample> logger) {
-		_connectionString = config.GetConnectionString("Redis");
+		_connectionString = config.GetConnectionString("Redis") ?? throw new InvalidOperationException();
 		_logger = logger;
 	}
 
