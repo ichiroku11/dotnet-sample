@@ -28,7 +28,7 @@ internal class GraphUpdateUserSignInMailAddressSample : GraphSampleBase {
 			},
 		};
 
-		Logger.LogInformation(mail);
+		Logger.LogInformation("{mail}", mail);
 
 		await client.Users[id]
 			.Request()
