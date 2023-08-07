@@ -16,7 +16,7 @@ public class SampleHostedService : IHostedService, IDisposable {
 	private void Action(object? state) {
 		var count = Interlocked.Increment(ref _count);
 
-		_logger.LogInformation($"{nameof(Action)} {nameof(count)} = {count}");
+		_logger.LogInformation("{name} {count}", nameof(Action), count);
 
 		// Timerコールバック内で例外が発生しても、次のコールバックは呼び出される
 		/*

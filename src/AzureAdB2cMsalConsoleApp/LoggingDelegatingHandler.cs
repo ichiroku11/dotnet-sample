@@ -10,16 +10,16 @@ public class LoggingDelegatingHandler : DelegatingHandler {
 	}
 
 	protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
-		_logger.LogInformation(request.ToString());
+		_logger.LogInformation("{request}", request);
 		if (request.Content != null) {
-			_logger.LogInformation(await request.Content.ReadAsStringAsync());
+			_logger.LogInformation("{content}", await request.Content.ReadAsStringAsync());
 		}
 
 		var response = await base.SendAsync(request, cancellationToken);
 
-		_logger.LogInformation(response.ToString());
+		_logger.LogInformation("{response}", response);
 		if (response.Content != null) {
-			_logger.LogInformation(await response.Content.ReadAsStringAsync());
+			_logger.LogInformation("{content}", await response.Content.ReadAsStringAsync());
 		}
 		return response;
 	}

@@ -18,7 +18,7 @@ public class CosmosEfCoreSample {
 	private async Task DeleteOrdersAsync() {
 		var orders = await _context.Orders.ToListAsync();
 		if (orders.Any()) {
-			_logger.LogInformation(orders.ToJson());
+			_logger.LogInformation("{orders}", orders.ToJson());
 			_context.Orders.RemoveRange(orders);
 			await _context.SaveChangesAsync();
 		}
@@ -26,7 +26,7 @@ public class CosmosEfCoreSample {
 
 	// Orderを追加
 	private async Task AddOrdersAsync(IEnumerable<Order> orders) {
-		_logger.LogInformation(orders.ToJson());
+		_logger.LogInformation("{orders}", orders.ToJson());
 		_context.AddRange(orders);
 		await _context.SaveChangesAsync();
 	}
@@ -34,7 +34,7 @@ public class CosmosEfCoreSample {
 	// OrderをIDで取得
 	private async Task GetOrderByIdAsync(string id) {
 		var order = await _context.Orders.FirstOrDefaultAsync(order => order.Id == id);
-		_logger.LogInformation(order?.ToJson());
+		_logger.LogInformation("{order}", order?.ToJson());
 	}
 
 	// 複数のOrderをIDで取得
@@ -46,7 +46,7 @@ public class CosmosEfCoreSample {
 		// SELECT c
 		// FROM root c
 		// WHERE c["id"] IN("{guid}", "{guid}")
-		_logger.LogInformation(orders.ToJson());
+		_logger.LogInformation("{orders}", orders.ToJson());
 	}
 
 	// OrderをLINQで取得
@@ -58,7 +58,7 @@ public class CosmosEfCoreSample {
 		// SELECT c
 		// FROM root c
 		// WHERE(c["customerId"] = @__customerId_0)
-		_logger.LogInformation(orders.ToJson());
+		_logger.LogInformation("{orders}", orders.ToJson());
 	}
 
 	// OrderをSQLクエリで取得
@@ -72,7 +72,7 @@ public class CosmosEfCoreSample {
 		// FROM (
 		//     select * from c where c.customerId = @p0
 		// ) c
-		_logger.LogInformation(orders.ToJson());
+		_logger.LogInformation("{orders}", orders.ToJson());
 	}
 
 	// OrderDetailを平坦化して取得したかったができなさそう
@@ -94,7 +94,7 @@ public class CosmosEfCoreSample {
 		var details = await _context.Orders
 			.SelectMany(order => order.Details)
 			.ToListAsync();
-		_logger.LogInformation(details.ToJson());
+		_logger.LogInformation("{details}", details.ToJson());
 		*/
 
 		// 所有エンティティ型だけで射影するには、AsNoTrackingが必要
@@ -111,7 +111,7 @@ public class CosmosEfCoreSample {
 		var details = await _context.Orders.AsNoTracking()
 			.Select(order => order.Details)
 			.ToListAsync();
-		_logger.LogInformation(details.ToJson());
+		_logger.LogInformation("{details}", details.ToJson());
 	}
 
 	// OrderDetailを平坦化して取得
@@ -141,8 +141,8 @@ public class CosmosEfCoreSample {
 
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge.ToString());
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 
