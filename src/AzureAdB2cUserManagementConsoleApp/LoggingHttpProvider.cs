@@ -28,11 +28,11 @@ public class LoggingHttpProvider : IHttpProvider {
 	}
 
 	public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken) {
-		_logger.LogInformation(request.ToString());
+		_logger.LogInformation("{request}", request);
 
 		var response = await _provider.SendAsync(request, completionOption, cancellationToken);
 
-		_logger.LogInformation(response.ToString());
+		_logger.LogInformation("{response}", response);
 		return response;
 	}
 }

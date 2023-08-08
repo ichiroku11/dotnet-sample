@@ -52,8 +52,8 @@ public class GraphCreateUserSample : GraphSampleBase {
 			},
 		};
 
-		Logger.LogInformation(mail);
-		Logger.LogInformation(password);
+		Logger.LogInformation("{mail}", mail);
+		Logger.LogInformation("{password}", password);
 
 		var userAdded = await client.Users
 			.Request()

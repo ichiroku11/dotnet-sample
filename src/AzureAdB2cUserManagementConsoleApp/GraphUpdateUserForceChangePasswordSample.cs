@@ -32,7 +32,7 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 			.Request()
 			.UpdateAsync(userToUpdate);
 
-		Logger.LogInformation(password);
+		Logger.LogInformation("{password}", password);
 
 		// 取得して確認
 		var userUpdated = await client.Users[id]
