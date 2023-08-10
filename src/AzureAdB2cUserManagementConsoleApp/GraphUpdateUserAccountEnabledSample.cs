@@ -10,6 +10,10 @@ public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		// todo:
 		var id = "{id}";
 
@@ -28,5 +32,6 @@ public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
 			.Select("accountEnabled")
 			.GetAsync();
 		ShowUser(userUpdated);
+#endif
 	}
 }

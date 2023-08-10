@@ -10,6 +10,10 @@ public class GraphGetUserSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		// IDを指定
 		var id = "{id}";
 
@@ -38,5 +42,6 @@ public class GraphGetUserSample : GraphSampleBase {
 			.GetAsync();
 
 		ShowUser(user);
+#endif
 	}
 }

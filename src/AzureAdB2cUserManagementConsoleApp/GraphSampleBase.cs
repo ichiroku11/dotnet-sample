@@ -2,6 +2,9 @@ using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Authentication;
+using Microsoft.Graph.Models;
+using Microsoft.Kiota.Abstractions.Authentication;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -29,13 +32,13 @@ public abstract class GraphSampleBase {
 		_config = config;
 		_logger = logger;
 
-		_customAttributeHelper = new CustomAttributeHelper(_config["ExtensionAppClientId"]);
+		_customAttributeHelper = new CustomAttributeHelper(_config["ExtensionAppClientId"] ?? throw new InvalidOperationException());
 	}
 
 	protected ILogger Logger => _logger;
 
 	// テナントID（作成時に必要）
-	protected string TenantId => _config["TenantId"];
+	protected string TenantId => _config["TenantId"] ?? throw new InvalidOperationException();
 
 	// カスタム属性の名前を取得
 	protected string GetCustomAttributeFullName(string attributeName) => _customAttributeHelper.GetFullName(attributeName);
@@ -46,8 +49,15 @@ public abstract class GraphSampleBase {
 	// サンプルの実行
 	protected abstract Task RunCoreAsync(GraphServiceClient client);
 
-	// サンプルの実行
-	public async Task RunAsync() {
+	private HttpClient CreateHttpClient() {
+		var handlers = GraphClientFactory.CreateDefaultHandlers();
+
+		handlers.Add(new LoggingHandler(_logger));
+
+		return GraphClientFactory.Create(handlers);
+	}
+
+	private IAuthenticationProvider CreateAuthenticationProvider() {
 		// クレデンシャル
 		var credential = new ClientSecretCredential(
 			tenantId: TenantId,
@@ -60,11 +70,13 @@ public abstract class GraphSampleBase {
 		// スコープ
 		var scopes = new[] { "https://graph.microsoft.com/.default" };
 
-		// HTTPプロバイダー
-		using var httpProvider = new LoggingHttpProvider(new HttpProvider(), _logger);
+		return new AzureIdentityAuthenticationProvider(credential: credential, scopes: scopes);
+	}
 
+	// サンプルの実行
+	public async Task RunAsync() {
 		// Graph APIを呼び出すクライアント
-		var client = new GraphServiceClient(credential, scopes, httpProvider);
+		var client = new GraphServiceClient(CreateHttpClient(), CreateAuthenticationProvider());
 
 		await RunCoreAsync(client);
 	}

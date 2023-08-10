@@ -10,6 +10,10 @@ public class GraphCreateUserSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		var random = new Random();
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
@@ -60,5 +64,6 @@ public class GraphCreateUserSample : GraphSampleBase {
 			.AddAsync(userToAdd);
 
 		ShowUser(userAdded);
+#endif
 	}
 }

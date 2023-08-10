@@ -12,6 +12,10 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		// todo:
 		var id = "{id}";
 
@@ -40,5 +44,6 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 			// todo:
 			.GetAsync();
 		ShowUser(userUpdated);
+#endif
 	}
 }

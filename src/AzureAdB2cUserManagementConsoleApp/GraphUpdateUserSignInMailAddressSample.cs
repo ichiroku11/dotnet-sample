@@ -11,6 +11,10 @@ internal class GraphUpdateUserSignInMailAddressSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		// todo:
 		var id = "{id}";
 		var mail = "{mail}";
@@ -40,5 +44,6 @@ internal class GraphUpdateUserSignInMailAddressSample : GraphSampleBase {
 			.Select("identities")
 			.GetAsync();
 		ShowUser(userUpdated);
+#endif
 	}
 }

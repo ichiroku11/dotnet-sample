@@ -10,6 +10,10 @@ public class GraphUpdateUserCustomAttributeSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		// todo:
 		var id = "{id}";
 
@@ -32,5 +36,6 @@ public class GraphUpdateUserCustomAttributeSample : GraphSampleBase {
 			.Select(attributeName)
 			.GetAsync();
 		ShowUser(userUpdated);
+#endif
 	}
 }

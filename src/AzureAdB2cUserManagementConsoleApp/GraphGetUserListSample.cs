@@ -16,6 +16,10 @@ public class GraphGetUserListSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		await Task.CompletedTask;
+
+		// todo:
+#if false
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		var select = string.Join(',', new[] {
@@ -73,5 +77,6 @@ public class GraphGetUserListSample : GraphSampleBase {
 		foreach (var user in result.CurrentPage) {
 			ShowUser(user);
 		}
+#endif
 	}
 }
