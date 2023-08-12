@@ -10,38 +10,24 @@ public class GraphGetUserSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		await Task.CompletedTask;
-
-		// todo:
-#if false
 		// IDを指定
 		var id = "{id}";
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
-		var select = string.Join(',', new[] {
+		// ユーザーをID指定で取得
+		var user = await client.Users[id].GetAsync(config => {
+			config.QueryParameters.Select = new[] {
 				"id",
 				"surname",
 				"givenName",
 				"identities",
 				attributeName,
-			});
-		// ユーザーをID指定で取得
-		var user = await client.Users[id]
-			.Request()
-			.Select(select)
-			/*
-			// 取得するデータを式でも表現できるが、カスタム属性は取得できないのかも
-			.Select(user => new {
-				user.Id,
-				user.Surname,
-				user.GivenName,
-				user.Identities,
-			})
-			*/
-			.GetAsync();
+			};
+		});
 
-		ShowUser(user);
-#endif
+		if (user is not null) {
+			ShowUser(user);
+		}
 	}
 }
