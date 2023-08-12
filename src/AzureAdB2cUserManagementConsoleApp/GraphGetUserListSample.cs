@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
@@ -16,67 +17,61 @@ public class GraphGetUserListSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		await Task.CompletedTask;
-
-		// todo:
-#if false
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
-		var select = string.Join(',', new[] {
-			// アカウントが有効かどうか
-			"accountEnabled",
-			// 作成日時
-			"createdDateTime",
-			// 表示名
-			"displayName",
-			// 名
-			"givenName",
-			// ID（GUID）
-			"id",
-			// ログインのメールアドレスが含まれる
-			"identities",
-			// 最後にパスワードを変更した日時またはパスワードが生成された日時
-			"lastPasswordChangeDateTime",
-			// メールのエイリアス
-			"mailNickname",
-			// パスワードプロファイル（forceChangePasswordNextSignInなどが含まれる）
-			"passwordProfile",
-			// 性
-			"surname",
-			// ユーザープリンシパル名（UPN）
-			"userPrincipalName",
-			// カスタム属性
-			attributeName,
+		// ユーザー一覧を取得
+		var response = await client.Users.GetAsync(config => {
+			config.QueryParameters.Select = new[] {
+				// アカウントが有効かどうか
+				"accountEnabled",
+				// 作成日時
+				"createdDateTime",
+				// 表示名
+				"displayName",
+				// 名
+				"givenName",
+				// ID（GUID）
+				"id",
+				// ログインのメールアドレスが含まれる
+				"identities",
+				// 最後にパスワードを変更した日時またはパスワードが生成された日時
+				"lastPasswordChangeDateTime",
+				// メールのエイリアス
+				"mailNickname",
+				// パスワードプロファイル（forceChangePasswordNextSignInなどが含まれる）
+				"passwordProfile",
+				// 性
+				"surname",
+				// ユーザープリンシパル名（UPN）
+				"userPrincipalName",
+				// カスタム属性
+				attributeName,
+			};
+
+			// 以下、フィルターのサンプル
+
+			// idが指定した値のどれか
+			//config.QueryParameters.Filter = "id in ('{id1}', '{id2}')";
+
+			// surNameが指定した値ではじまる
+			//config.QueryParameters.Filter = "startsWith(surName, '{keyword}')";
+
+			// エラー
+			// surNameのcontainsどうもサポートしていない？
+			//config.QueryParameters.Filter = "contains(surName, '{keyword}')";
+
+			// 指定したサインイン名でフィルター
+			// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http#example-2-get-a-user-account-using-a-sign-in-name
+			//config.QueryParameters.Filter = "identities/any(c:c/issuerAssignedId eq '{signInName}' and c/issuer eq '{tenant}')";
+			// エラー
+			// issuerとissuerAssignedIdどちらも指定する必要があるためか
+			//config.QueryParameters.Filter = "identities/any(c:c/issuerAssignedId eq '{signInName}')";
+			// エラー
+			//config.QueryParameters.Filter = "identities/any(c:startsWith(c/issuerAssignedId, '{signInName}') and c/issuer eq '{tenant}')";
 		});
 
-		// ユーザー一覧を取得
-		var result = await client.Users
-			.Request()
-			.Select(select)
-			.GetAsync();
-
-		// 以下フィルタのサンプル（SelectとGetAsyncの間で呼び出す）
-		// idが指定した値のどれか
-		//.Filter("id in ('{id1}', '{id2}')")
-
-		// surNameが指定した値ではじまる
-		//.Filter("startsWith(surName, '{keyword}')")
-
-		// surNameのcontainsどうもサポートしていない？
-		//.Filter("contains(surName, '{keyword}')")
-
-		// 指定したサインイン名でフィルタ
-		// https://docs.microsoft.com/ja-jp/graph/api/user-list?view=graph-rest-1.0&tabs=http#example-2-get-a-user-account-using-a-sign-in-name
-		//.Filter("identities/any(c:c/issuerAssignedId eq '{signInName}' and c/issuer eq '{tenant}')")
-		// issuerとissuerAssignedIdどちらも指定する必要があるため、以下はエラー
-		//.Filter("identities/any(c:c/issuerAssignedId eq '{signInName}')")
-
-		// エラーになる
-		//.Filter("identities/any(c:startsWith(c/issuerAssignedId, '{signInName}') and c/issuer eq '{tenant}')")
-
-		foreach (var user in result.CurrentPage) {
+		foreach (var user in response?.Value ?? Enumerable.Empty<User>()) {
 			ShowUser(user);
 		}
-#endif
 	}
 }
