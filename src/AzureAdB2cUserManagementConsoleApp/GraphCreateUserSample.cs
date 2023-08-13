@@ -56,8 +56,7 @@ public class GraphCreateUserSample : GraphSampleBase {
 		Logger.LogInformation("{mail}", mail);
 		Logger.LogInformation("{password}", password);
 
-		var userAdded = await client.Users
-			.PostAsync(userToAdd);
+		var userAdded = await client.Users.PostAsync(userToAdd);
 
 		if (userAdded is not null) {
 			ShowUser(userAdded);
