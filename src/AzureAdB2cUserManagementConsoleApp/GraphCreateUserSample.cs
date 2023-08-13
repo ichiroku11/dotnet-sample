@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
@@ -10,10 +11,6 @@ public class GraphCreateUserSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		await Task.CompletedTask;
-
-		// todo:
-#if false
 		var random = new Random();
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
@@ -38,7 +35,7 @@ public class GraphCreateUserSample : GraphSampleBase {
 			AdditionalData = new Dictionary<string, object> {
 				[attributeName] = attributeValue,
 			},
-			Identities = new[] {
+			Identities = new List<ObjectIdentity> {
 				// サインインするための情報
 				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
 				new ObjectIdentity {
@@ -60,10 +57,10 @@ public class GraphCreateUserSample : GraphSampleBase {
 		Logger.LogInformation("{password}", password);
 
 		var userAdded = await client.Users
-			.Request()
-			.AddAsync(userToAdd);
+			.PostAsync(userToAdd);
 
-		ShowUser(userAdded);
-#endif
+		if (userAdded is not null) {
+			ShowUser(userAdded);
+		}
 	}
 }
