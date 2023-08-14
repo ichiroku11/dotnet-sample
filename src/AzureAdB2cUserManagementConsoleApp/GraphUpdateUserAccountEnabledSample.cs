@@ -11,7 +11,7 @@ public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		// todo:
+		// IDを指定
 		var id = "{id}";
 
 		// 更新
