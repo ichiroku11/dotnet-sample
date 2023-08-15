@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
@@ -12,11 +13,6 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		await Task.CompletedTask;
-
-		// todo:
-#if false
-		// todo:
 		var id = "{id}";
 
 		var password = PasswordHelper.Generate(6, 6, 4);
@@ -32,18 +28,14 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 				Password = password,
 			},
 		};
-		await client.Users[id]
-			.Request()
-			.UpdateAsync(userToUpdate);
+		await client.Users[id].PatchAsync(userToUpdate);
 
 		Logger.LogInformation("{password}", password);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id]
-			.Request()
-			// todo:
-			.GetAsync();
-		ShowUser(userUpdated);
-#endif
+		var userUpdated = await client.Users[id].GetAsync();
+		if (userUpdated is not null) {
+			ShowUser(userUpdated);
+		}
 	}
 }
