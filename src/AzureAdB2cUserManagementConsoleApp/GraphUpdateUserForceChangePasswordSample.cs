@@ -13,6 +13,7 @@ internal class GraphUpdateUserForceChangePasswordSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
+		// IDを指定
 		var id = "{id}";
 
 		var password = PasswordHelper.Generate(6, 6, 4);
