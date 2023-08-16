@@ -47,7 +47,7 @@ public class AcquireTokenSample {
 			.WithDefaultRedirectUri()
 			.WithLogging((level, message, containsPii) => {
 				// ログ
-				//_logger.LogInformation($"{nameof(LogCallback)}: {message}");
+				//_logger.LogInformation("{name}: {message}", nameof(LogCallback), message);
 			});
 		var app = builder.Build();
 
