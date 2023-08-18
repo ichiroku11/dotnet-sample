@@ -6,12 +6,13 @@ namespace SampleTest;
 /// 
 /// </summary>
 public static class AssertHelper {
+	// todo: delete
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="message"></param>
 	public static void Fail(string? message = null) {
-		Assert.True(false, message ?? "Never be called.");
+		Assert.Fail(message ?? "Never be called.");
 	}
 
 	/// <summary>
