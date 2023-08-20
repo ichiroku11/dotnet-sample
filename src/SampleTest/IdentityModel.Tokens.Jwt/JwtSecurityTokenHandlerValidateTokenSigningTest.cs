@@ -66,8 +66,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 		public IEnumerator<object[]> GetEnumerator() {
 			// HS256
 			{
-
-				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef"));
+				var key = new SymmetricSecurityKey(TestSecrets.Default());
 				yield return new object[] {
 					new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
 					key,

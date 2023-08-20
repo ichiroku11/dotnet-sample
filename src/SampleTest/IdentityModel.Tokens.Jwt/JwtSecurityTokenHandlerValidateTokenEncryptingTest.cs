@@ -16,8 +16,6 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 	[Fact]
 	public void CreateJwtSecurityToken_対称鍵で暗号化したトークンを復号する() {
 		// Arrange
-		var secret = Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef");
-
 		// JWTの生成
 		string createJwt() {
 			var descriptor = new SecurityTokenDescriptor {
@@ -25,7 +23,7 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 				Issuer = "issuer",
 				EncryptingCredentials = new EncryptingCredentials(
 					// 暗号化する共通鍵
-					new SymmetricSecurityKey(secret),
+					new SymmetricSecurityKey(TestSecrets.Default()),
 					JwtConstants.DirectKeyUseAlg,
 					SecurityAlgorithms.Aes128CbcHmacSha256),
 				Claims = new Dictionary<string, object> {
@@ -45,7 +43,7 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 			ValidIssuer = "issuer",
 			RequireSignedTokens = false,
 			// 復号する共通鍵
-			TokenDecryptionKey = new SymmetricSecurityKey(secret),
+			TokenDecryptionKey = new SymmetricSecurityKey(TestSecrets.Default()),
 		};
 
 		// Act

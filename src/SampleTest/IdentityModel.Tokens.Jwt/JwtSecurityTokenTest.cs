@@ -16,7 +16,7 @@ public class JwtSecurityTokenTest {
 
 	// 署名付きのJwtSecurityTokenを生成するSecurityTokenDescriptor
 	private static SecurityTokenDescriptor CreateSecurityTokenDescriptor() {
-		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef"));
+		var key = new SymmetricSecurityKey(TestSecrets.Default());
 		var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 		var descriptor = new SecurityTokenDescriptor {
 			Audience = "audience",
