@@ -196,7 +196,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	[Fact]
 	public void CreateJwtSecurityToken_HS256で署名する() {
 		// Arrange
-		var secret = Encoding.UTF8.GetBytes("0123456789abcdef");
+		var secret = Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef");
 		var key = new SymmetricSecurityKey(secret);
 
 		var handler = new JwtSecurityTokenHandler {
@@ -229,7 +229,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	[Fact]
 	public void CreateJwtSecurityToken_HS256で署名するときに鍵IDを含める() {
 		// Arrange
-		var secret = Encoding.UTF8.GetBytes("0123456789abcdef");
+		var secret = Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef");
 		var key = new SymmetricSecurityKey(secret);
 		// 鍵IDを指定する
 		key.KeyId = Base64UrlEncoder.Encode(key.ComputeJwkThumbprint());

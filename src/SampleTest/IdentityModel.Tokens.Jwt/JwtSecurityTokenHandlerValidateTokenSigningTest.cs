@@ -67,7 +67,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 			// HS256
 			{
 
-				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcdef"));
 				yield return new object[] {
 					new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
 					key,
@@ -169,9 +169,9 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 	public void ValidateToken_署名と検証でキーが異なると例外がスローされる() {
 		// Arrange
 		// 署名の鍵
-		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
+		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcd-1"));
 		// 検証の鍵
-		var key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+		var key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcd-2"));
 
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
