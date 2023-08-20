@@ -28,16 +28,16 @@ public class ArrayTest {
 		var numbers = "0123456789".ToCharArray();
 
 		// すべて
-		Assert.Equal("0123456789", numbers[..]);
+		Assert.Equal("0123456789".ToCharArray(), numbers[..]);
 
 		// 1番目からnumbers.Length-1番目
-		Assert.Equal("12345678", numbers[1..^1]);
+		Assert.Equal("12345678".ToCharArray(), numbers[1..^1]);
 
 		// 最後の2つ
-		Assert.Equal("89", numbers[^2..]);
+		Assert.Equal("89".ToCharArray(), numbers[^2..]);
 
 		// 変数で範囲を宣言する
 		var range = 2..4;
-		Assert.Equal("23", numbers[range]);
+		Assert.Equal("23".ToCharArray(), numbers[range]);
 	}
 }
