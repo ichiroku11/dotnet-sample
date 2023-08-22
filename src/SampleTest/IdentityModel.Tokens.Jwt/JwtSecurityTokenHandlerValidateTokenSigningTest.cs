@@ -38,8 +38,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 
 		public string JwkThumbprint => _jwk.Kid;
 
-		public SigningCredentials GetSigningCredentials()
-			=> new SigningCredentials(_privateKey, SecurityAlgorithms.RsaSha256);
+		public SigningCredentials GetSigningCredentials() => new(_privateKey, SecurityAlgorithms.RsaSha256);
 
 		private JsonWebKeySet GetValidationJsonWebKeySet() {
 			var jwks = new JsonWebKeySet();
