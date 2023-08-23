@@ -48,7 +48,7 @@ public class JwtSecurityTokenTest {
 		// Act
 		// Assert
 		// わざわざWriteTokenしなくても、RawDataからシリアライズしたJWTが取得できる
-		Assert.True(string.Equals(token.RawData, serializedToken, StringComparison.Ordinal));
+		Assert.Equal(serializedToken, token.RawData);
 	}
 
 	[Fact]
@@ -59,7 +59,7 @@ public class JwtSecurityTokenTest {
 
 		// Act
 		// Assert
-		Assert.True(string.Equals(token.RawHeader, token.EncodedHeader, StringComparison.Ordinal));
+		Assert.Equal(token.EncodedHeader, token.RawHeader);
 	}
 
 	[Fact]
@@ -70,7 +70,7 @@ public class JwtSecurityTokenTest {
 
 		// Act
 		// Assert
-		Assert.True(string.Equals(token.RawPayload, token.EncodedPayload, StringComparison.Ordinal));
+		Assert.Equal(token.EncodedPayload, token.RawPayload);
 	}
 
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
