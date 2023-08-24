@@ -60,6 +60,8 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 		public void Dispose() {
 			_certificate?.Dispose();
 			_certificate = null;
+
+			GC.SuppressFinalize(this);
 		}
 
 		public IEnumerator<object[]> GetEnumerator() {
