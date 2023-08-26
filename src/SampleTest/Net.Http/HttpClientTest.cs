@@ -22,10 +22,10 @@ public class HttpClientTest : IDisposable {
 			});
 		}
 
-		public void ConfigureServices(IServiceCollection services) {
+		public void ConfigureServices(IServiceCollection _) {
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment _) {
 			app.Map("/query", ConfigureQueryTest);
 			app.Map("/form", ConfigureFormTest);
 
@@ -48,6 +48,8 @@ public class HttpClientTest : IDisposable {
 	public void Dispose() {
 		_client.Dispose();
 		_server.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	[Fact]
