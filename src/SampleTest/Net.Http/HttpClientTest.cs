@@ -11,14 +11,14 @@ public class HttpClientTest : IDisposable {
 		private static void ConfigureQueryTest(IApplicationBuilder app) {
 			app.Run(async context => {
 				context.Response.ContentType = "text/plain";
-				await context.Response.WriteAsync(context.Request.Query["test"]);
+				await context.Response.WriteAsync(context.Request.Query["test"].ToString());
 			});
 		}
 
 		private static void ConfigureFormTest(IApplicationBuilder app) {
 			app.Run(async context => {
 				context.Response.ContentType = "text/plain";
-				await context.Response.WriteAsync(context.Request.Form["test"]);
+				await context.Response.WriteAsync(context.Request.Form["test"].ToString());
 			});
 		}
 
