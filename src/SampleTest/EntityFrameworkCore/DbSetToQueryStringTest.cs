@@ -31,6 +31,8 @@ public class DbSetToQueryStringTest : IDisposable {
 		DropTable();
 
 		_context.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	private void InitTable() {
