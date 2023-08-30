@@ -11,7 +11,7 @@ public class SwitchPatternMatchingTest {
 				Assert.Null(value);
 				break;
 			case int:
-				AssertHelper.Fail();
+				Assert.Fail();
 				break;
 		}
 	}
@@ -21,7 +21,7 @@ public class SwitchPatternMatchingTest {
 		int? value = 0;
 		switch (value) {
 			case null:
-				AssertHelper.Fail();
+				Assert.Fail();
 				break;
 			case int value2:
 				Assert.Equal(0, value2);
@@ -38,7 +38,7 @@ public class SwitchPatternMatchingTest {
 				break;
 			case int value2 when value2 % 2 == 0:
 				// when句の条件が成り立たないので呼ばれない
-				AssertHelper.Fail();
+				Assert.Fail();
 				break;
 		}
 	}
@@ -49,7 +49,7 @@ public class SwitchPatternMatchingTest {
 		switch (value) {
 			case int value2 when value2 % 2 == 1:
 				// when句の条件が成り立たないので呼ばれない
-				AssertHelper.Fail();
+				Assert.Fail();
 				break;
 			case int value2 when value2 % 2 == 0:
 				Assert.Equal(2, value2);

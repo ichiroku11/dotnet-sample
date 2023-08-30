@@ -13,7 +13,7 @@ public class IsPatternMatchingTest {
 		if (value is null) {
 			Assert.Null(value);
 		} else {
-			AssertHelper.Fail();
+			Assert.Fail();
 		}
 	}
 
@@ -25,7 +25,7 @@ public class IsPatternMatchingTest {
 		// Assert
 		int? value = 0;
 		if (value is null) {
-			AssertHelper.Fail();
+			Assert.Fail();
 		} else if (value is int value2) {
 			// int? value => int value2
 			Assert.Equal(0, value2);
@@ -42,7 +42,7 @@ public class IsPatternMatchingTest {
 		// Assert
 		int? value = null;
 		if (value is not null) {
-			AssertHelper.Fail();
+			Assert.Fail();
 			return;
 		}
 

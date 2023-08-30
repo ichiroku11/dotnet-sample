@@ -127,7 +127,7 @@ drop table if exists dbo.MonsterCategory;";
 			Assert.Null(monster.Category);
 		} catch (Exception exception) {
 			_output.WriteLine(exception.ToString());
-			AssertHelper.Fail();
+			Assert.Fail();
 		} finally {
 			await DropTableAsync(context);
 		}
@@ -155,7 +155,7 @@ drop table if exists dbo.MonsterCategory;";
 			Assert.Equal("鳥系", monster.Category?.Name);
 		} catch (Exception exception) {
 			_output.WriteLine(exception.ToString());
-			AssertHelper.Fail();
+			Assert.Fail();
 		} finally {
 			await DropTableAsync(context);
 		}

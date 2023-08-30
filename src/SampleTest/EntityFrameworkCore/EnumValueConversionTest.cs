@@ -152,7 +152,7 @@ create table dbo.Monster(
 			Assert.Equal(expected2.Name, actual2.Name);
 			Assert.Equal(expected2.Category, actual2.Category);
 		} catch (Exception) {
-			AssertHelper.Fail();
+			Assert.Fail();
 		} finally {
 			await DropTableAsync(context);
 		}

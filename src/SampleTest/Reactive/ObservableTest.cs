@@ -22,8 +22,8 @@ public class ObservableTest {
 
 		// Act
 		var disposable = observable.Subscribe(
-			onNext: _ => AssertHelper.Fail(),
-			onError: _ => AssertHelper.Fail(),
+			onNext: _ => Assert.Fail(),
+			onError: _ => Assert.Fail(),
 			onCompleted: () => {
 				completed = true;
 			});
