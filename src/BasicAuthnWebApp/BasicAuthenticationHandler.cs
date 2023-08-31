@@ -24,7 +24,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticat
 	protected override Task<object> CreateEventsAsync() => Task.FromResult<object>(new BasicAuthenticationEvents());
 
 	protected async override Task<AuthenticateResult> HandleAuthenticateAsync() {
-		var headerValue = (string)Request.Headers[HeaderNames.Authorization];
+		var headerValue = (string?)Request.Headers[HeaderNames.Authorization];
 		if (string.IsNullOrEmpty(headerValue)) {
 			return AuthenticateResult.NoResult();
 		}

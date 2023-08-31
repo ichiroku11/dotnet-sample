@@ -15,7 +15,7 @@ public class CosmosSqlApiSample {
 	private readonly ILogger _logger;
 
 	public CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
-		_connectionString = config.GetConnectionString(Constants.ConnectionStringName);
+		_connectionString = config.GetConnectionString(Constants.ConnectionStringName) ?? throw new InvalidOperationException();
 		_logger = logger;
 	}
 
@@ -30,7 +30,7 @@ public class CosmosSqlApiSample {
 			}
 		}
 
-		_logger.LogInformation(containerIds.ToString());
+		_logger.LogInformation("{containerIds}", containerIds.ToString());
 	}
 
 	private async Task<Container> CreateContainerAsync(Database database)
@@ -46,8 +46,8 @@ public class CosmosSqlApiSample {
 	private async Task AddOrdersAsync(Container container, IEnumerable<Order> orders) {
 		foreach (var orderToAdd in orders) {
 			var response = await container.CreateItemAsync(orderToAdd);
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge);
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 
@@ -55,8 +55,8 @@ public class CosmosSqlApiSample {
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-read-item#read-an-item-asynchronously
 	private async Task GetOrderByIdAsync(Container container, string id) {
 		var response = await container.ReadItemAsync<Order>(id, new PartitionKey(id));
-		_logger.LogInformation(response.RequestCharge.ToString());
-		_logger.LogInformation(response.ToJson());
+		_logger.LogInformation("{requestCharge}", response.RequestCharge);
+		_logger.LogInformation("{response}", response.ToJson());
 	}
 
 	// 複数のOrderをIDで取得
@@ -66,8 +66,8 @@ public class CosmosSqlApiSample {
 			.Select(id => (id, new PartitionKey(id)))
 			.ToList();
 		var response = await container.ReadManyItemsAsync<Order>(items);
-		_logger.LogInformation(response.RequestCharge.ToString());
-		_logger.LogInformation(response.ToJson());
+		_logger.LogInformation("{requestCharge}", response.RequestCharge);
+		_logger.LogInformation("{response}", response.ToJson());
 	}
 
 	// Orderをクエリで取得
@@ -79,8 +79,8 @@ public class CosmosSqlApiSample {
 
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge);
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 
@@ -93,8 +93,8 @@ public class CosmosSqlApiSample {
 
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge);
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 
@@ -106,8 +106,8 @@ public class CosmosSqlApiSample {
 
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge);
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 
@@ -119,8 +119,8 @@ public class CosmosSqlApiSample {
 
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge);
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 
@@ -131,8 +131,8 @@ public class CosmosSqlApiSample {
 			.ToFeedIterator();
 		while (iterator.HasMoreResults) {
 			var response = await iterator.ReadNextAsync();
-			_logger.LogInformation(response.RequestCharge.ToString());
-			_logger.LogInformation(response.ToJson());
+			_logger.LogInformation("{requestCharge}", response.RequestCharge);
+			_logger.LogInformation("{response}", response.ToJson());
 		}
 	}
 

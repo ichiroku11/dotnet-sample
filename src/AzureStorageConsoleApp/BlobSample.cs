@@ -9,7 +9,7 @@ public class BlobSample {
 	private readonly ILogger _logger;
 
 	public BlobSample(IConfiguration config, ILogger<BlobSample> logger) {
-		_connectionString = config.GetConnectionString("Storage");
+		_connectionString = config.GetConnectionString("Storage") ?? throw new InvalidOperationException();
 		_logger = logger;
 	}
 
@@ -30,11 +30,18 @@ public class BlobSample {
 
 		// Blob一覧
 		await foreach (var item in containerClient.GetBlobsAsync()) {
-			_logger.LogInformation(item.Name);
+			var name = item.Name;
+			_logger.LogInformation("{name}", name);
 		}
 
 		// Blobをダウンロード
-		_logger.LogInformation(await containerClient.DownloadTextAsync("a.txt"));
-		_logger.LogInformation(await containerClient.DownloadTextAsync("b.txt"));
+		{
+			var content = await containerClient.DownloadTextAsync("a.txt");
+			_logger.LogInformation("{content}", content);
+		}
+		{
+			var content = await containerClient.DownloadTextAsync("b.txt");
+			_logger.LogInformation("{content}", content);
+		}
 	}
 }

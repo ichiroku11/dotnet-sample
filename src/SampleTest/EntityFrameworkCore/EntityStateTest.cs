@@ -30,6 +30,8 @@ public class EntityStateTest : IDisposable {
 
 	public void Dispose() {
 		_context.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	// テストパターン

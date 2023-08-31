@@ -11,7 +11,10 @@ public class SampleService : OnceHostedService {
 	}
 
 	protected override async Task RunAsync(IServiceProvider services) {
-		// ユーザー一覧
+		// ユーザー取得
+		//await services.GetRequiredService<GraphGetUserSample>().RunAsync();
+
+		// ユーザー一覧取得
 		await services.GetRequiredService<GraphGetUserListSample>().RunAsync();
 
 		// ユーザー作成

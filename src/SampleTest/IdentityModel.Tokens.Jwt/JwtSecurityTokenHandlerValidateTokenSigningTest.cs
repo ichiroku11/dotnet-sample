@@ -38,8 +38,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 
 		public string JwkThumbprint => _jwk.Kid;
 
-		public SigningCredentials GetSigningCredentials()
-			=> new SigningCredentials(_privateKey, SecurityAlgorithms.RsaSha256);
+		public SigningCredentials GetSigningCredentials() => new(_privateKey, SecurityAlgorithms.RsaSha256);
 
 		private JsonWebKeySet GetValidationJsonWebKeySet() {
 			var jwks = new JsonWebKeySet();
@@ -61,13 +60,14 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 		public void Dispose() {
 			_certificate?.Dispose();
 			_certificate = null;
+
+			GC.SuppressFinalize(this);
 		}
 
 		public IEnumerator<object[]> GetEnumerator() {
 			// HS256
 			{
-
-				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+				var key = new SymmetricSecurityKey(TestSecrets.Default());
 				yield return new object[] {
 					new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
 					key,
@@ -169,9 +169,9 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 	public void ValidateToken_署名と検証でキーが異なると例外がスローされる() {
 		// Arrange
 		// 署名の鍵
-		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-1"));
+		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcd-1"));
 		// 検証の鍵
-		var key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcd-2"));
+		var key2 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef0123456789abcd-2"));
 
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,

@@ -12,6 +12,9 @@ public class SqlServerDbContext : AppDbContext {
 			DataSource = ".",
 			InitialCatalog = "Test",
 			IntegratedSecurity = true,
+			// A connection was successfully established with the server, but then an error occurred during the login process
+			// https://learn.microsoft.com/ja-jp/sql/connect/ado-net/sqlclient-troubleshooting-guide?view=sql-server-ver16#login-phase-errors
+			TrustServerCertificate = true,
 		}.ToString();
 		optionsBuilder.UseSqlServer(connectionString);
 	}

@@ -11,11 +11,9 @@ services.Configure<RouteOptions>(options => {
 var app = builder.Build();
 
 app.UseRouting();
-app.UseEndpoints(endpoints => {
-	endpoints.MapControllerRoute(
-		name: "default",
-		pattern: "{controller=Default}/{action=Index}/{id?}");
-});
+app.MapControllerRoute(
+	name: "default",
+	pattern: "{controller=Default}/{action=Index}/{id?}");
 
 app.Run();
 

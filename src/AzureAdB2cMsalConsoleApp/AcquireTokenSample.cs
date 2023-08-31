@@ -2,24 +2,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace AzureAdB2cMsalConsoleApp;
 
 public class AcquireTokenSample {
 	private readonly IConfiguration _config;
-	private readonly IHttpClientFactory _factory;
+	//private readonly IHttpClientFactory _factory;
 	private readonly InMemoryTokenCache _tokenCache;
 	private readonly ILogger _logger;
 
 	public AcquireTokenSample(
 		IConfiguration config,
-		IHttpClientFactory factory,
+		//IHttpClientFactory factory,
 		InMemoryTokenCache tokenCache,
 		ILogger<AcquireTokenSample> logger) {
 		_config = config;
-		_factory = factory;
+		//_factory = factory;
 		_tokenCache = tokenCache;
 		_logger = logger;
 	}
@@ -49,7 +47,7 @@ public class AcquireTokenSample {
 			.WithDefaultRedirectUri()
 			.WithLogging((level, message, containsPii) => {
 				// ログ
-				//_logger.LogInformation($"{nameof(LogCallback)}: {message}");
+				//_logger.LogInformation("{name}: {message}", nameof(LogCallback), message);
 			});
 		var app = builder.Build();
 
@@ -91,21 +89,21 @@ public class AcquireTokenSample {
 
 			// IDトークン
 			var idToken = handler.ReadJwtToken(result.IdToken);
-			_logger.LogInformation(result.IdToken);
-			_logger.LogInformation(idToken.ToString());
+			_logger.LogInformation("{idToken}", result.IdToken);
+			_logger.LogInformation("{idToken}", idToken.ToString());
 
 			// アクセストークン
 			var accessToken = handler.ReadJwtToken(result.AccessToken);
-			_logger.LogInformation(result.AccessToken);
-			_logger.LogInformation(accessToken.ToString());
+			_logger.LogInformation("{accessToken}", result.AccessToken);
+			_logger.LogInformation("{accessToken}", accessToken.ToString());
 		}
 
 		{
 			var account = (await app.GetAccountsAsync()).FirstOrDefault();
 			// ユーザーがログインした場合、キャッシュからIDトークンとアクセストークンを取得できる
 			var result = await app.AcquireTokenSilent(scopes, account).ExecuteAsync();
-			_logger.LogInformation(result.IdToken);
-			_logger.LogInformation(result.AccessToken);
+			_logger.LogInformation("{idToken}", result.IdToken);
+			_logger.LogInformation("{accessToken}", result.AccessToken);
 		}
 	}
 }

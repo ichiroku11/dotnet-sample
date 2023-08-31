@@ -112,6 +112,8 @@ public class RelatedDataTest : IDisposable {
 		DropTable();
 
 		_context.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	private int CreateTable() {
@@ -170,7 +172,7 @@ delete from dbo.MonsterCategory;";
 		return _context.Database.ExecuteSqlRawAsync(sql);
 	}
 
-	private IEnumerable<Monster> GetMonsters()
+	private static IEnumerable<Monster> GetMonsters()
 		=> _monsters
 			.Select(monster => new Monster {
 				Id = monster.Id,

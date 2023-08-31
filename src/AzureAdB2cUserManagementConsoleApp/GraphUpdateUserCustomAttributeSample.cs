@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
@@ -10,7 +11,7 @@ public class GraphUpdateUserCustomAttributeSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		// todo:
+		// IDを指定
 		var id = "{id}";
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
@@ -22,15 +23,15 @@ public class GraphUpdateUserCustomAttributeSample : GraphSampleBase {
 				[attributeName] = attributeValue,
 			},
 		};
-		await client.Users[id]
-			.Request()
-			.UpdateAsync(userToUpdate);
+		await client.Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id]
-			.Request()
-			.Select(attributeName)
-			.GetAsync();
-		ShowUser(userUpdated);
+		var userUpdated = await client.Users[id].GetAsync(config => {
+			config.QueryParameters.Select = new[] { attributeName };
+		});
+
+		if (userUpdated is not null) {
+			ShowUser(userUpdated);
+		}
 	}
 }

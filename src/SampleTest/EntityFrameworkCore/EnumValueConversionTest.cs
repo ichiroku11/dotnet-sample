@@ -17,7 +17,7 @@ public class EnumValueConversionTest {
 	private static class MonsterCategoryHelper {
 		// 最初から2文字の文字列
 		public static string ToString(MonsterCategory value)
-			=> value.ToString().Substring(0, 2).ToLower();
+			=> value.ToString()[..2].ToLower();
 
 		// 2文字の文字列からenum値に（ちょっと雑）
 		public static MonsterCategory ToEnum(string value)
@@ -152,7 +152,7 @@ create table dbo.Monster(
 			Assert.Equal(expected2.Name, actual2.Name);
 			Assert.Equal(expected2.Category, actual2.Category);
 		} catch (Exception) {
-			AssertHelper.Fail();
+			Assert.Fail();
 		} finally {
 			await DropTableAsync(context);
 		}

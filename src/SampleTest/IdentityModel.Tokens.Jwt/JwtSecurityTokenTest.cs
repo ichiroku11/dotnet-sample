@@ -16,7 +16,7 @@ public class JwtSecurityTokenTest {
 
 	// 署名付きのJwtSecurityTokenを生成するSecurityTokenDescriptor
 	private static SecurityTokenDescriptor CreateSecurityTokenDescriptor() {
-		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));
+		var key = new SymmetricSecurityKey(TestSecrets.Default());
 		var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 		var descriptor = new SecurityTokenDescriptor {
 			Audience = "audience",
@@ -48,7 +48,7 @@ public class JwtSecurityTokenTest {
 		// Act
 		// Assert
 		// わざわざWriteTokenしなくても、RawDataからシリアライズしたJWTが取得できる
-		Assert.True(string.Equals(token.RawData, serializedToken, StringComparison.Ordinal));
+		Assert.Equal(serializedToken, token.RawData);
 	}
 
 	[Fact]
@@ -59,7 +59,7 @@ public class JwtSecurityTokenTest {
 
 		// Act
 		// Assert
-		Assert.True(string.Equals(token.RawHeader, token.EncodedHeader, StringComparison.Ordinal));
+		Assert.Equal(token.EncodedHeader, token.RawHeader);
 	}
 
 	[Fact]
@@ -70,7 +70,7 @@ public class JwtSecurityTokenTest {
 
 		// Act
 		// Assert
-		Assert.True(string.Equals(token.RawPayload, token.EncodedPayload, StringComparison.Ordinal));
+		Assert.Equal(token.EncodedPayload, token.RawPayload);
 	}
 
 	public class TestDataForSignatureAlgorithm : IEnumerable<object?[]>, IDisposable {
@@ -83,6 +83,8 @@ public class JwtSecurityTokenTest {
 		public void Dispose() {
 			_certificate?.Dispose();
 			_certificate = null;
+
+			GC.SuppressFinalize(this);
 		}
 
 		public IEnumerator<object?[]> GetEnumerator() {

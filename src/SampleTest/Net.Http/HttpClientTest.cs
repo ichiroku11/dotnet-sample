@@ -11,21 +11,21 @@ public class HttpClientTest : IDisposable {
 		private static void ConfigureQueryTest(IApplicationBuilder app) {
 			app.Run(async context => {
 				context.Response.ContentType = "text/plain";
-				await context.Response.WriteAsync(context.Request.Query["test"]);
+				await context.Response.WriteAsync(context.Request.Query["test"].ToString());
 			});
 		}
 
 		private static void ConfigureFormTest(IApplicationBuilder app) {
 			app.Run(async context => {
 				context.Response.ContentType = "text/plain";
-				await context.Response.WriteAsync(context.Request.Form["test"]);
+				await context.Response.WriteAsync(context.Request.Form["test"].ToString());
 			});
 		}
 
-		public void ConfigureServices(IServiceCollection services) {
+		public void ConfigureServices(IServiceCollection _) {
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment _) {
 			app.Map("/query", ConfigureQueryTest);
 			app.Map("/form", ConfigureFormTest);
 
@@ -48,6 +48,8 @@ public class HttpClientTest : IDisposable {
 	public void Dispose() {
 		_client.Dispose();
 		_server.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	[Fact]

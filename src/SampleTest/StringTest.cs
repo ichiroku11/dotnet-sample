@@ -1,15 +1,19 @@
 namespace SampleTest;
 
 public class StringTest {
-	[Fact]
-	public void Equals_引数がnullでも比較できる() {
+	[Theory]
+	// 空文字とnullは等しくない
+	[InlineData("", null, false)]
+	[InlineData(null, "", false)]
+	// nullとnullは等しい
+	[InlineData(null, null, true)]
+	public void Equals_引数がnullでも比較できる(string? left, string? right, bool expected) {
 		// Arrange
 		// Act
-		// Assert
-		Assert.False(string.Equals("", null, StringComparison.OrdinalIgnoreCase));
-		Assert.False(string.Equals(null, "", StringComparison.OrdinalIgnoreCase));
+		var actual = string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
 
-		Assert.True(string.Equals(null, null, StringComparison.OrdinalIgnoreCase));
+		// Assert
+		Assert.Equal(expected, actual);
 	}
 
 	[Theory]

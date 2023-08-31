@@ -12,7 +12,7 @@ public class SubjectTest {
 
 		subject.Subscribe(
 			onNext: value => values.Add(value),
-			onError: _ => AssertHelper.Fail(),
+			onError: _ => Assert.Fail(),
 			onCompleted: () => completed = true);
 
 		// Act

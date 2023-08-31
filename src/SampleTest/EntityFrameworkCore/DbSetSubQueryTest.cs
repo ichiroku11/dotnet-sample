@@ -35,6 +35,8 @@ public class DbSetSubQueryTest : IDisposable {
 		DropTable();
 
 		_context.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	private void InitTable() {
@@ -82,7 +84,7 @@ values
 
 		Assert.All(items, item => _output.WriteLine(item.ToString()));
 
-		Assert.Equal(3, items.Count());
+		Assert.Equal(3, items.Count);
 		Assert.Contains(items, item => string.Equals(item.Name, "純けい"));
 		Assert.Contains(items, item => string.Equals(item.Name, "しろ"));
 		Assert.Contains(items, item => string.Equals(item.Name, "串カツ"));
@@ -113,7 +115,7 @@ values
 
 		Assert.All(items, item => _output.WriteLine(item.ToString()));
 
-		Assert.Equal(4, items.Count());
+		Assert.Equal(4, items.Count);
 		Assert.Contains(items, item => string.Equals(item.Name, "純けい"));
 		Assert.Contains(items, item => string.Equals(item.Name, "しろ"));
 		Assert.Contains(items, item => string.Equals(item.Name, "串カツ"));

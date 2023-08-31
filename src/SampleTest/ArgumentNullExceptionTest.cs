@@ -14,7 +14,7 @@ public class ArgumentNullExceptionTest {
 		// Act
 		// Assert
 		var exception = Assert.Throws<ArgumentNullException>(() => {
-			ArgumentNullException.ThrowIfNull(null, nameof(value));
+			ArgumentNullException.ThrowIfNull(default(object), nameof(value));
 		});
 		_output.WriteLine(exception.Message);
 		Assert.Contains(nameof(value), exception.ParamName);

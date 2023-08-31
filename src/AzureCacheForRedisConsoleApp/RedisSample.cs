@@ -14,7 +14,7 @@ public class RedisSample {
 	private readonly ILogger _logger;
 
 	public RedisSample(IConfiguration config, ILogger<RedisSample> logger) {
-		_connectionString = config.GetConnectionString("Redis");
+		_connectionString = config.GetConnectionString("Redis") ?? throw new InvalidOperationException();
 		_logger = logger;
 	}
 
@@ -33,13 +33,13 @@ public class RedisSample {
 		// PINGコマンドを実行
 		_logger.LogInformation("Ping:");
 		var result = await database.ExecutePingAsync();
-		_logger.LogInformation(result);
+		_logger.LogInformation("{result}", result);
 
 		// エンドポイント一覧
 		_logger.LogInformation("EndPoints:");
 		var endpoints = multiplexer.GetEndPoints();
 		foreach (var endpoint in endpoints.Cast<DnsEndPoint>()) {
-			_logger.LogInformation($"{endpoint.Host}:{endpoint.Port}");
+			_logger.LogInformation("{host}:{post}", endpoint.Host, endpoint.Port);
 		}
 
 		// クライアント一覧
@@ -47,12 +47,12 @@ public class RedisSample {
 		_logger.LogInformation("Clients:");
 		var clients = await server.ClientListAsync();
 		foreach (var client in clients) {
-			_logger.LogInformation(client.Raw);
+			_logger.LogInformation("{raw}", client.Raw);
 		}
 
 		// オブジェクトを設定・取得
 		await database.SetAsync("test", new Message("Hello Redis!"));
 		var message = await database.GetAsync<Message>("test");
-		_logger.LogInformation($"{nameof(DatabaseExtensions.GetAsync)}: {message?.Content}");
+		_logger.LogInformation("{action}:{content}", nameof(DatabaseExtensions.GetAsync), message?.Content);
 	}
 }

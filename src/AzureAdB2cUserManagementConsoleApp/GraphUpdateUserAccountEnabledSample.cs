@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
@@ -10,7 +11,7 @@ public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		// todo:
+		// IDを指定
 		var id = "{id}";
 
 		// 更新
@@ -18,15 +19,14 @@ public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
 			// アカウントを無効にする
 			AccountEnabled = false,
 		};
-		await client.Users[id]
-			.Request()
-			.UpdateAsync(userToUpdate);
+		await client.Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id]
-			.Request()
-			.Select("accountEnabled")
-			.GetAsync();
-		ShowUser(userUpdated);
+		var userUpdated = await client.Users[id].GetAsync(config => {
+			config.QueryParameters.Select = new[] { "accountEnabled" };
+		});
+		if (userUpdated is not null) {
+			ShowUser(userUpdated);
+		}
 	}
 }

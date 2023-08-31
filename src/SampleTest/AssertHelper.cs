@@ -9,14 +9,6 @@ public static class AssertHelper {
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <param name="message"></param>
-	public static void Fail(string? message = null) {
-		Assert.True(false, message ?? "Never be called.");
-	}
-
-	/// <summary>
-	/// 
-	/// </summary>
 	/// <param name="claims"></param>
 	/// <param name="type"></param>
 	/// <param name="value"></param>

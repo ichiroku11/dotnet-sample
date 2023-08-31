@@ -40,7 +40,7 @@ public class ConfigurationBuilderTest {
 		var options = builder.Build().Get<Options>();
 
 		// Assert
-		Assert.Equal("efg", options.Sample);
+		Assert.Equal("efg", options?.Sample);
 	}
 
 	[Fact]
@@ -55,7 +55,7 @@ public class ConfigurationBuilderTest {
 			.Build();
 
 		// Assert
-		Assert.Equal("abc", config1.Get<Options>().Sample);
+		Assert.Equal("abc", config1.Get<Options>()?.Sample);
 
 		// Action
 		var config2 = new ConfigurationBuilder()
@@ -66,7 +66,7 @@ public class ConfigurationBuilderTest {
 			.Build();
 
 		// Assert
-		Assert.Equal("abc", config1.Get<Options>().Sample);
-		Assert.Equal("efg", config2.Get<Options>().Sample);
+		Assert.Equal("abc", config1.Get<Options>()?.Sample);
+		Assert.Equal("efg", config2.Get<Options>()?.Sample);
 	}
 }

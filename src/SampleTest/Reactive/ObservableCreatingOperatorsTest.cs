@@ -41,7 +41,7 @@ public class ObservableCreatingOperatorsTest {
 		// Act
 		observable.Subscribe(
 			onNext: value => values.Add(value),
-			onError: _ => AssertHelper.Fail(),
+			onError: _ => Assert.Fail(),
 			onCompleted: () => completed = true);
 
 		// Assert
@@ -57,8 +57,8 @@ public class ObservableCreatingOperatorsTest {
 
 		// Act
 		Observable.Empty<int>().Subscribe(
-			onNext: _ => AssertHelper.Fail(),
-			onError: _ => AssertHelper.Fail(),
+			onNext: _ => Assert.Fail(),
+			onError: _ => Assert.Fail(),
 			// onCompletedだけが呼ばれる
 			onCompleted: () => {
 				Assert.False(completed);
@@ -106,7 +106,7 @@ public class ObservableCreatingOperatorsTest {
 				resultSelector: value => value * 2)
 			.Subscribe(
 				onNext: value => values.Add(value),
-				onError: _ => AssertHelper.Fail(),
+				onError: _ => Assert.Fail(),
 				onCompleted: () => completed = true);
 
 		// Assert
@@ -120,9 +120,9 @@ public class ObservableCreatingOperatorsTest {
 		// Act
 		// Assert
 		Observable.Never<int>().Subscribe(
-			onNext: _ => AssertHelper.Fail(),
-			onError: _ => AssertHelper.Fail(),
-			onCompleted: () => AssertHelper.Fail());
+			onNext: _ => Assert.Fail(),
+			onError: _ => Assert.Fail(),
+			onCompleted: () => Assert.Fail());
 	}
 
 	[Fact]
@@ -144,7 +144,7 @@ public class ObservableCreatingOperatorsTest {
 			},
 			onError: _ => {
 					// エラーが発生しないので呼ばれない
-					AssertHelper.Fail();
+					Assert.Fail();
 			},
 			onCompleted: () => {
 				_output.WriteLine($"onCompleted");
@@ -174,7 +174,7 @@ public class ObservableCreatingOperatorsTest {
 				values.Add(value);
 			},
 			onError: _ => {
-				AssertHelper.Fail();
+				Assert.Fail();
 			},
 			onCompleted: () => {
 				Assert.False(completed);
@@ -203,7 +203,7 @@ public class ObservableCreatingOperatorsTest {
 				values.Add(value);
 			},
 			onError: _ => {
-				AssertHelper.Fail();
+				Assert.Fail();
 			},
 			onCompleted: () => {
 				Assert.False(completed);
@@ -225,10 +225,10 @@ public class ObservableCreatingOperatorsTest {
 
 		// Act
 		Observable.Throw<int>(expected).Subscribe(
-			onNext: _ => AssertHelper.Fail(),
+			onNext: _ => Assert.Fail(),
 			// onErrorだけが呼ばれる
 			onError: exception => actual = exception,
-			onCompleted: () => AssertHelper.Fail());
+			onCompleted: () => Assert.Fail());
 
 		// Assert
 		Assert.Equal(expected, actual);

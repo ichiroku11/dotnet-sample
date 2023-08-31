@@ -29,7 +29,7 @@ public class DefaultController : Controller {
 				.Append($" {nameof(entry.Key)}={entry.Key}")
 				.Append($", {nameof(entry.Value.RawValue)}.Type={entry.Value.RawValue?.GetType()}")
 				.Append($", {nameof(entry.Value.RawValue)}={entry.Value.GetRawValueAsString()}");
-			_logger.LogInformation(builder.ToString());
+			_logger.LogInformation("{modelState}", builder.ToString());
 		}
 
 		return RedirectToAction(nameof(Form));

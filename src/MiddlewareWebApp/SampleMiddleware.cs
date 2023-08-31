@@ -13,7 +13,7 @@ namespace MiddlewareWebApp;
 // サンプルミドルウェア
 public class SampleMiddleware {
 	private static readonly JsonSerializerOptions _options
-		= new JsonSerializerOptions {
+		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
@@ -30,13 +30,15 @@ public class SampleMiddleware {
 	private void Log(HttpContext context, bool beforeRequestDelegate) {
 		var routeValues = context.Request.RouteValues;
 
-		var json = new {
-			label = _label,
-			beforeRequestDelegate,
-			controller = routeValues["controller"],
-			action = routeValues["action"],
-		};
-		_logger.LogInformation(JsonSerializer.Serialize(json, _options));
+		var json = JsonSerializer.Serialize(
+			new {
+				label = _label,
+				beforeRequestDelegate,
+				controller = routeValues["controller"],
+				action = routeValues["action"],
+			},
+			_options);
+		_logger.LogInformation("{json}", json);
 	}
 
 	public async Task InvokeAsync(HttpContext context) {

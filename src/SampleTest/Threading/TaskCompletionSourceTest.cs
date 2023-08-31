@@ -3,7 +3,7 @@ namespace SampleTest.Threading;
 // TaskCompletionSourceを使ったサンプル
 public class TaskCompletionSourceTest {
 	[Fact]
-	public async Task<int> SetResult() {
+	public async Task SetResult() {
 		// 指定した時間が経過した後に結果を返すローカル関数
 		Task<TResult> completeAsync<TResult>(TResult result, int milliseconds) {
 			var source = new TaskCompletionSource<TResult>();
@@ -16,8 +16,6 @@ public class TaskCompletionSourceTest {
 
 		// 100ms後に結果を取得できる
 		Assert.Equal(1, await completeAsync(1, 100));
-
-		return 0;
 	}
 
 	[Fact]

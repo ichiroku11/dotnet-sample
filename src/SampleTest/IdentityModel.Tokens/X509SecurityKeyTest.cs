@@ -21,7 +21,7 @@ public class X509SecurityKeyTest {
 		// Arrange
 		using var certificate1 = X509Certificate2Helper.GetDevelopmentCertificate();
 		if (certificate1 is null) {
-			AssertHelper.Fail();
+			Assert.Fail();
 			return;
 		}
 

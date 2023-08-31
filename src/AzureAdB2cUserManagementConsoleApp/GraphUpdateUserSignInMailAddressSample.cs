@@ -2,6 +2,7 @@ using AzureAdB2cUserManagementConsoleApp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 // ユーザーのサインインメールアドレスを変更する
 // 参考
@@ -11,12 +12,13 @@ internal class GraphUpdateUserSignInMailAddressSample : GraphSampleBase {
 	}
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
-		// todo:
+		// IDを指定
 		var id = "{id}";
+		// 変更後のメールアドレスを指定
 		var mail = "{mail}";
 
 		var userToUpdate = new User {
-			Identities = new[] {
+			Identities = new List<ObjectIdentity> {
 				// サインイン情報を設定する
 				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
 				new ObjectIdentity {
@@ -28,17 +30,17 @@ internal class GraphUpdateUserSignInMailAddressSample : GraphSampleBase {
 			},
 		};
 
-		Logger.LogInformation(mail);
+		Logger.LogInformation("{mail}", mail);
 
-		await client.Users[id]
-			.Request()
-			.UpdateAsync(userToUpdate);
+		await client.Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id]
-			.Request()
-			.Select("identities")
-			.GetAsync();
-		ShowUser(userUpdated);
+		var userUpdated = await client.Users[id].GetAsync(
+			config => {
+				config.QueryParameters.Select = new[] { "identities" };
+			});
+		if (userUpdated is not null) {
+			ShowUser(userUpdated);
+		}
 	}
 }

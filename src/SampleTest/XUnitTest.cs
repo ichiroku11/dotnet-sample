@@ -19,6 +19,8 @@ public class XUnitTest : IDisposable {
 		// 後処理はDisposeで行う
 		// テストごとに呼ばれる
 		_output.WriteLine("Teardown");
+
+		GC.SuppressFinalize(this);
 	}
 
 	// パラメータを使わないテスト
