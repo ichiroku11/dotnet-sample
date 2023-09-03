@@ -79,4 +79,33 @@ create table dbo.[Sample](
 
 		_context.Database.ExecuteSqlRaw(sql);
 	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_IDを指定して更新する() {
+		// Arrange
+		var sampleToAdd = new Sample { Id = 1, Name = "abc" };
+		_context.Samples.Add(sampleToAdd);
+		await _context.SaveChangesAsync();
+
+		// Act
+		var result = await _context.Samples
+			// 条件にIDを指定する
+			// Timestamp属性が設定されたカラムがあるからといって、条件に含まれないことはない
+			.Where(sample => sample.Id == 1)
+			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, "efg"));
+
+		// 実行されるSQL
+		/*
+		UPDATE [s]
+		SET [s].[Name] = N'efg'
+		FROM [Sample] AS [s]
+		WHERE [s].[Id] = 1
+		*/
+
+		var actual = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Assert
+		Assert.Equal(1, actual.Id);
+		Assert.Equal("efg", actual.Name);
+	}
 }
