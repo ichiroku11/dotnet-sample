@@ -9,7 +9,11 @@ namespace SampleTest.EntityFrameworkCore;
 public class ExecuteUpdateTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
+
 		public string Name { get; init; } = "";
+
+		[Timestamp]
+		public byte[] Version { get; init; } = default!;
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
@@ -45,11 +49,34 @@ public class ExecuteUpdateTest : IDisposable {
 		_output = output;
 
 		_context = new SampleDbContext(_output);
+
+		DropTable();
+		CreateTable();
 	}
 
 	public void Dispose() {
+		DropTable();
+
 		_context.Dispose();
 
 		GC.SuppressFinalize(this);
+	}
+
+	private void CreateTable() {
+		var sql = @"
+create table dbo.[Sample](
+	Id int not null,
+	Name nvarchar(10) not null,
+	Version rowversion not null,
+	constraint PK_Sample primary key(Id)
+);";
+
+		_context.Database.ExecuteSqlRaw(sql);
+	}
+
+	private void DropTable() {
+		var sql = "drop table if exists dbo.[Sample];";
+
+		_context.Database.ExecuteSqlRaw(sql);
 	}
 }
