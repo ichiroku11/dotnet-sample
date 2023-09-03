@@ -90,7 +90,7 @@ create table dbo.[Sample](
 		// Act
 		var result = await _context.Samples
 			// 条件にIDを指定する
-			// Timestamp属性が設定されたカラムがあるからといって、条件に含まれないことはない
+			// Timestamp属性が設定されたカラムがあるからといって、条件に含まれることはない
 			.Where(sample => sample.Id == 1)
 			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, "efg"));
 
