@@ -139,7 +139,7 @@ create table dbo.[Sample](
 		var actual = await _context.Samples.FirstAsync(sample => sample.Id == 1);
 
 		// Assert
-		Assert.Equal(1, actual.Id);
-		Assert.Equal("efg", actual.Name);
+		Assert.Equal(id, actual.Id);
+		Assert.Equal(name, actual.Name);
 	}
 }
