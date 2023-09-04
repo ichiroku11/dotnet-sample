@@ -108,4 +108,38 @@ create table dbo.[Sample](
 		Assert.Equal(1, actual.Id);
 		Assert.Equal("efg", actual.Name);
 	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_変数を使って更新する() {
+		// Arrange
+		var sampleToAdd = new Sample { Id = 1, Name = "abc" };
+		_context.Samples.Add(sampleToAdd);
+		await _context.SaveChangesAsync();
+
+		// 更新する条件
+		var id = 1;
+
+		// 更新する値
+		var name = "efg";
+
+		// Act
+		var result = await _context.Samples
+			.Where(sample => sample.Id == id)
+			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, name));
+
+		// 実行されるSQL
+		// 変数名をもとにパラメーター名が決まる様子か
+		/*
+		UPDATE [s]
+		SET [s].[Name] = @__name_1
+		FROM [Sample] AS [s]
+		WHERE [s].[Id] = @__id_0
+		*/
+
+		var actual = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Assert
+		Assert.Equal(1, actual.Id);
+		Assert.Equal("efg", actual.Name);
+	}
 }
