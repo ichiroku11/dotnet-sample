@@ -142,4 +142,40 @@ create table dbo.[Sample](
 		Assert.Equal(id, actual.Id);
 		Assert.Equal(name, actual.Name);
 	}
+
+	// 楽観的同時実行制御
+	[Fact]
+	public async Task ExecuteUpdateAsync_条件にIDとバージョンを指定して更新する() {
+		// Arrange
+		var sampleToAdd = new Sample { Id = 1, Name = "abc" };
+		_context.Samples.Add(sampleToAdd);
+		await _context.SaveChangesAsync();
+
+		// 更新する条件
+		var id = 1;
+		var version = sampleToAdd.Version.ToArray();
+
+		// 更新する値
+		var name = "efg";
+
+		// Act
+		var result = await _context.Samples
+			.Where(sample => sample.Id == id && sample.Version == version)
+			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, name));
+
+		// 実行されるSQL
+		/*
+		UPDATE [s]
+		SET [s].[Name] = @__name_2
+		FROM [Sample] AS [s]
+		WHERE [s].[Id] = @__id_0 AND [s].[Version] = @__version_1
+		*/
+
+		var actual = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Assert
+		Assert.Equal(id, actual.Id);
+		Assert.Equal(name, actual.Name);
+		Assert.NotEqual(version, actual.Version);
+	}
 }
