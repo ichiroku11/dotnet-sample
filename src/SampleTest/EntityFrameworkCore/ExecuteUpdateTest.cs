@@ -12,6 +12,8 @@ public class ExecuteUpdateTest : IDisposable {
 
 		public string Name { get; init; } = "";
 
+		public string Description { get; init; } = "";
+
 		[Timestamp]
 		public byte[] Version { get; init; } = default!;
 	}
@@ -67,6 +69,7 @@ public class ExecuteUpdateTest : IDisposable {
 create table dbo.[Sample](
 	Id int not null,
 	Name nvarchar(10) not null,
+	Description nvarchar(20) not null,
 	Version rowversion not null,
 	constraint PK_Sample primary key(Id)
 );";
@@ -142,6 +145,46 @@ create table dbo.[Sample](
 		Assert.Equal(id, actual.Id);
 		Assert.Equal(name, actual.Name);
 	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_複数カラムを更新する() {
+		// Arrange
+		_context.Samples.Add(new Sample { Id = 1, Name = "abc" });
+		await _context.SaveChangesAsync();
+
+		// 更新する条件
+		var id = 1;
+
+		// 更新する値
+		var name = "efg";
+		var description = "hijklm";
+
+		// Act
+		var result = await _context.Samples
+			.Where(sample => sample.Id == id)
+			.ExecuteUpdateAsync(calls
+				// 更新するカラムを複数指定する
+				=> calls
+					.SetProperty(sample => sample.Name, name)
+					.SetProperty(sample => sample.Description, description));
+
+		// 実行されるSQL
+		/*
+		UPDATE [s]
+		SET [s].[Description] = @__description_2,
+			[s].[Name] = @__name_1
+		FROM [Sample] AS [s]
+		WHERE [s].[Id] = @__id_0
+		*/
+
+		var actual = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Assert
+		Assert.Equal(id, actual.Id);
+		Assert.Equal(name, actual.Name);
+		Assert.Equal(description, actual.Description);
+	}
+
 
 	// 楽観的同時実行制御
 	[Fact]
