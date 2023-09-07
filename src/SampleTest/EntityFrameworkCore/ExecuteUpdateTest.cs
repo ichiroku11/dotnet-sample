@@ -86,8 +86,7 @@ create table dbo.[Sample](
 	[Fact]
 	public async Task ExecuteUpdateAsync_条件にIDを指定して更新する() {
 		// Arrange
-		var sampleToAdd = new Sample { Id = 1, Name = "abc" };
-		_context.Samples.Add(sampleToAdd);
+		_context.Samples.Add(new Sample { Id = 1, Name = "abc" });
 		await _context.SaveChangesAsync();
 
 		// Act
@@ -115,8 +114,7 @@ create table dbo.[Sample](
 	[Fact]
 	public async Task ExecuteUpdateAsync_変数を使って更新する() {
 		// Arrange
-		var sampleToAdd = new Sample { Id = 1, Name = "abc" };
-		_context.Samples.Add(sampleToAdd);
+		_context.Samples.Add(new Sample { Id = 1, Name = "abc" });
 		await _context.SaveChangesAsync();
 
 		// 更新する条件
