@@ -40,4 +40,29 @@ public class ArrayTest {
 		var range = 2..4;
 		Assert.Equal("23".ToCharArray(), numbers[range]);
 	}
+
+	// 範囲インデックス
+	[Fact]
+	public void Range_開始は含まれるが終了は含まれない() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
+
+		// Act
+		var actual = values[2..4];
+
+		// Assert
+		Assert.Equal(new[] { 2, 3 }, actual);
+	}
+
+	[Fact]
+	public void Range_開始と終了で同じインデックスを指定すると空になる() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
+
+		// Act
+		var actual = values[2..2];
+
+		// Assert
+		Assert.Empty(actual);
+	}
 }
