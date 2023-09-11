@@ -65,4 +65,32 @@ public class ArrayTest {
 		// Assert
 		Assert.Empty(actual);
 	}
+
+	[Fact]
+	public void Range_配列の要素を最初から3つとそれ以降でわける() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
+
+		// Act
+		var actual1 = values[..3];
+		var actual2 = values[3..];
+
+		// Assert
+		Assert.Equal(new[] { 1, 2, 3 }, actual1);
+		Assert.Equal(new[] { 4, 5 }, actual2);
+	}
+
+	[Fact]
+	public void Range_配列の要素を最後から3つとそれ以降でわける() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
+
+		// Act
+		var actual1 = values[..^3];
+		var actual2 = values[^3..];
+
+		// Assert
+		Assert.Equal(new[] { 1, 2 }, actual1);
+		Assert.Equal(new[] { 3, 4, 5 }, actual2);
+	}
 }
