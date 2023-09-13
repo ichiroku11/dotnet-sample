@@ -79,27 +79,4 @@ public class XUnitTest : IDisposable {
 
 		Assert.Equal(0, value % 2);
 	}
-
-	[Fact]
-	public void Throwsで例外の発生をテストする() {
-		static void action() => throw new InvalidOperationException();
-
-		Assert.Throws<InvalidOperationException>(() => {
-			action();
-		});
-	}
-
-	[Fact]
-	public void Recordで例外の発生を記録する() {
-		static void action() => throw new InvalidOperationException();
-
-		var exception = Record.Exception(() => action());
-
-		Assert.IsType<InvalidOperationException>(exception);
-	}
-
-	[Fact]
-	public void NotEqual_文字列の比較は大文字小文字を区別する() {
-		Assert.NotEqual("x", "X");
-	}
 }
