@@ -48,7 +48,7 @@ public class ArrayTest {
 		var values = new[] { 1, 2, 3, 4, 5 };
 
 		// Act
-		var actual = values[2..4];
+		var actual = values[1..3];
 
 		// Assert
 		Assert.Equal(new[] { 2, 3 }, actual);
@@ -61,6 +61,30 @@ public class ArrayTest {
 
 		// Act
 		var actual = values[2..2];
+
+		// Assert
+		Assert.Empty(actual);
+	}
+
+	[Fact]
+	public void Range_開始に配列の長さを指定すると空の配列を返す() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var actual = values[values.Length..];
+
+		// Assert
+		Assert.Empty(actual);
+	}
+
+	[Fact]
+	public void Range_終了に0を指定すると空の配列を返す() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var actual = values[..0];
 
 		// Assert
 		Assert.Empty(actual);
