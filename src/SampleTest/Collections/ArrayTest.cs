@@ -91,6 +91,30 @@ public class ArrayTest {
 	}
 
 	[Fact]
+	public void Range_開始に配列の長さより大きい値を指定すると例外が発生する() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var exception = Record.Exception(() => values[(values.Length + 1)..]);
+
+		// Assert
+		Assert.IsType<ArgumentOutOfRangeException>(exception);
+	}
+
+	[Fact]
+	public void Range_終了に0より小さい値を指定すると例外が発生する() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var exception = Record.Exception(() => values[..-1]);
+
+		// Assert
+		Assert.IsType<ArgumentOutOfRangeException>(exception);
+	}
+
+	[Fact]
 	public void Range_配列の要素を最初から3つとそれ以降でわける() {
 		// Arrange
 		var values = new[] { 1, 2, 3, 4, 5 };
