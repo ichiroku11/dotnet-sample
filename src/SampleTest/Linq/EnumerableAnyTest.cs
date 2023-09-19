@@ -1,6 +1,17 @@
 namespace SampleTest.Linq;
 
 public class EnumerableAnyTest {
+	// https://qiita.com/whopper1962/items/53b8f07c4571b8cfb2ff
+	[Fact]
+	public void Any_空のコレクションの場合は条件を満たす要素が存在しないのでfalse() {
+		// Arrange
+		// Act
+		var actual = Enumerable.Empty<int>().Any(_ => true);
+
+		// Assert
+		Assert.False(actual);
+	}
+
 	private static IEnumerable<int> Range(int start, int count, Action<int> action) {
 		for (var index = start; index < count; index++) {
 			action(index);
@@ -46,5 +57,4 @@ public class EnumerableAnyTest {
 		Assert.False(any);
 		Assert.Equal(new List<int> { 0, 1, 2, 3, 4 }, values);
 	}
-
 }
