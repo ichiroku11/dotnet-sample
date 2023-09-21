@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SampleTest.Text.Json;
 
@@ -13,8 +14,21 @@ public class JsonRequiredAttributeTest {
 		public string Name { get; set; } = "";
 	}
 
+	// 必須属性を指定する
+	private class SampleWithAttribute {
+		public int Value { get; set; }
+		[JsonRequired]
+		public string Name { get; set; } = "";
+	}
+
+	private readonly ITestOutputHelper _output;
+
+	public JsonRequiredAttributeTest(ITestOutputHelper ouput) {
+		_output = ouput;
+	}
+
 	[Fact]
-	public void Deserialize_JSON文字列に存在しなくてもデシリアライズできる() {
+	public void Deserialize_プロパティがJSON文字列に存在しなくてもデシリアライズできる() {
 		// Arrange
 		var json = @"{""value"":1}";
 
@@ -25,5 +39,19 @@ public class JsonRequiredAttributeTest {
 		Assert.NotNull(actual);
 		Assert.Equal(1, actual.Value);
 		Assert.Equal("", actual.Name);
+	}
+
+	[Fact]
+	public void Deserialize_JsonRequiredAttributeを指定したプロパティがJSON文字列に存在しない場合に例外が発生する() {
+		// Arrange
+		var json = @"{""value"":1}";
+
+		// Act
+		var exception = Record.Exception(() => JsonSerializer.Deserialize<SampleWithAttribute>(json, _options));
+
+		// Assert
+		Assert.IsType<JsonException>(exception);
+
+		_output.WriteLine(exception.Message);
 	}
 }
