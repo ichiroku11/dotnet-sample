@@ -21,6 +21,12 @@ public class JsonRequiredAttributeTest {
 		public string Name { get; set; } = "";
 	}
 
+	// required修飾子を指定する
+	private class SampleWithModifier {
+		public int Value { get; set; }
+		public required string Name { get; set; } = "";
+	}
+
 	private readonly ITestOutputHelper _output;
 
 	public JsonRequiredAttributeTest(ITestOutputHelper ouput) {
@@ -48,6 +54,20 @@ public class JsonRequiredAttributeTest {
 
 		// Act
 		var exception = Record.Exception(() => JsonSerializer.Deserialize<SampleWithAttribute>(json, _options));
+
+		// Assert
+		Assert.IsType<JsonException>(exception);
+
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public void Deserialize_required修飾子を指定したプロパティがJSON文字列に存在しない場合に例外が発生する() {
+		// Arrange
+		var json = @"{""value"":1}";
+
+		// Act
+		var exception = Record.Exception(() => JsonSerializer.Deserialize<SampleWithModifier>(json, _options));
 
 		// Assert
 		Assert.IsType<JsonException>(exception);
