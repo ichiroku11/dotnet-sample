@@ -62,6 +62,20 @@ public class JsonRequiredAttributeTest {
 	}
 
 	[Fact]
+	public void Deserialize_JsonRequiredAttributeを指定したプロパティがJSON文字列にnullで存在する場合はデシリアライズできる() {
+		// Arrange
+		var json = @"{""value"":1,""name"":null}";
+
+		// Act
+		var actual = JsonSerializer.Deserialize<SampleWithAttribute>(json, _options);
+
+		// Assert
+		Assert.NotNull(actual);
+		Assert.Equal(1, actual.Value);
+		Assert.Null(actual.Name);
+	}
+
+	[Fact]
 	public void Deserialize_required修飾子を指定したプロパティがJSON文字列に存在しない場合に例外が発生する() {
 		// Arrange
 		var json = @"{""value"":1}";
