@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 namespace ModelBindingWebApp.Controllers.Test;
 
 public class Int32ControllerTest : ControllerTestBase {
-	public Int32ControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public Int32ControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 

@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 namespace ModelBindingWebApp.Controllers.Test;
 
 public class ValidationAllStringLengthControllerTest : ControllerTestBase {
-	public ValidationAllStringLengthControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) : base(output, factory) {
+	public ValidationAllStringLengthControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
 	[Theory]

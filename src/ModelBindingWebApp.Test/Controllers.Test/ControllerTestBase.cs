@@ -5,11 +5,11 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<Startup>> {
+public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<Program>> {
 	private readonly ITestOutputHelper _output;
-	private readonly WebApplicationFactory<Startup> _factory;
+	private readonly WebApplicationFactory<Program> _factory;
 
-	protected ControllerTestBase(ITestOutputHelper output, WebApplicationFactory<Startup> factory) {
+	protected ControllerTestBase(ITestOutputHelper output, WebApplicationFactory<Program> factory) {
 		_output = output;
 		_factory = factory;
 	}

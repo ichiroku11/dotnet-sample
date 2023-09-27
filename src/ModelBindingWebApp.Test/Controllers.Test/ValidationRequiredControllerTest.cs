@@ -9,7 +9,7 @@ namespace ModelBindingWebApp.Controllers.Test;
 
 // Required属性
 public class ValidationRequiredControllerTest : ControllerTestBase {
-	public ValidationRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) : base(output, factory) {
+	public ValidationRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
 	// 値型

@@ -14,7 +14,7 @@ public class GeometryControllerTest : ControllerTestBase {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
-	public GeometryControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public GeometryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 
