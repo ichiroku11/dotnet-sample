@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Mvc.Testing.Handlers;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,7 +18,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 
 	protected void WriteLine(string message) => _output.WriteLine(message);
 
-	protected HttpClient CreateClient(bool logging = true) {
+	protected HttpClient CreateClient(Action<IServiceCollection>? configure = default, bool logging = true) {
 		var options = _factory.ClientOptions;
 
 		// 参考
@@ -35,7 +37,13 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 			}
 		}
 
-		return _factory.CreateDefaultClient(options.BaseAddress, createHandlers().ToArray());
+		return _factory
+			.WithWebHostBuilder(builder => {
+				if (configure is not null) {
+					builder.ConfigureTestServices(configure);
+				}
+			})
+			.CreateDefaultClient(options.BaseAddress, createHandlers().ToArray());
 	}
 
 	private class LoggingHandler : DelegatingHandler {
