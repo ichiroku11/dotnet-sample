@@ -13,7 +13,5 @@ public class MessageProviderController : ControllerBase {
 	}
 
 	[HttpPost]
-	public IActionResult MissingBindRequired([FromForm]MissingBindRequiredModel model) {
-		return Ok(model);
-	}
+	public IActionResult MissingBindRequired([FromForm] MissingBindRequiredModel model) => Ok(model);
 }

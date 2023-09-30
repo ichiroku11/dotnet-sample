@@ -10,29 +10,37 @@ using Xunit.Abstractions;
 namespace ModelBindingWebApp.Controllers.Test;
 
 public class MessageProviderControllerTest : ControllerTestBase {
+
+	private static FormUrlEncodedContent GetEmptyFormUrlEncodedContent()
+		=> new(Enumerable.Empty<KeyValuePair<string, string>>());
+
 	public MessageProviderControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
 	[Fact]
-	public async Task MissingBindRequired_テスト() {
+	public async Task MissingBindRequired_BindRequired属性のエラーメッセージを変更できる() {
 		// Arrange
 		var client = CreateClient(
 			configure: services => {
 				services.Configure<MvcOptions>(options => {
-					// todo:
+					// デフォルトのメッセージ
+					// "A value for the '{0}' parameter or property was not provided."
+					options.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor(arg => {
+						return $@"""{arg}""を指定してください。";
+					});
 				});
 			});
 
 		// Act
 		var response = await client.PostAsync(
 			"/api/messageprovider/missingbindrequired",
-			new FormUrlEncodedContent(Enumerable.Empty<KeyValuePair<string, string>>()));
+			GetEmptyFormUrlEncodedContent());
 		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
 		// Assert
 		Assert.NotNull(problem);
 		var error = Assert.Single(problem.Errors);
 		Assert.Equal("Value", error.Key);
-		Assert.Equal("A value for the 'Value' parameter or property was not provided.", error.Value.Single());
+		Assert.Equal(@"""Value""を指定してください。", error.Value.Single());
 	}
 }
