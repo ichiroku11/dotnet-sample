@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using System.Composition.Hosting.Core;
 using System.Net.Http.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -42,5 +40,30 @@ public class MessageProviderControllerTest : ControllerTestBase {
 		var error = Assert.Single(problem.Errors);
 		Assert.Equal("Value", error.Key);
 		Assert.Equal(@"""Value""を指定してください。", error.Value.Single());
+	}
+
+	[Fact]
+	public async Task ValueMustNotBeNull_Required属性のエラーメッセージを変更できる() {
+		// Arrange
+		var client = CreateClient(
+			configure: services => {
+				services.Configure<MvcOptions>(options => {
+					// デフォルトのメッセージ
+					// "The value '' is invalid."
+					// todo:
+				});
+			});
+
+		// Act
+		var response = await client.PostAsync(
+			"/api/messageprovider/valuemustnotbenull",
+			GetEmptyFormUrlEncodedContent());
+		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+		// Assert
+		Assert.NotNull(problem);
+		var error = Assert.Single(problem.Errors);
+		Assert.Equal("Value", error.Key);
+		Assert.Equal("The Value field is required.", error.Value.Single());
 	}
 }
