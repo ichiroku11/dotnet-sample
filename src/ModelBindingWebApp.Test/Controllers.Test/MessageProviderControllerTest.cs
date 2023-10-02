@@ -42,28 +42,32 @@ public class MessageProviderControllerTest : ControllerTestBase {
 		Assert.Equal(@"""Value""を指定してください。", error.Value.Single());
 	}
 
-	[Fact]
-	public async Task ValueMustNotBeNull_Required属性のエラーメッセージを変更できる() {
+	[Theory]
+	[InlineData(null)]
+	[InlineData("")]
+	public async Task ValueMustNotBeNull_Required属性のエラーメッセージを変更できる(string? value) {
 		// Arrange
 		var client = CreateClient(
 			configure: services => {
 				services.Configure<MvcOptions>(options => {
 					// デフォルトのメッセージ
-					// "The value '' is invalid."
-					// todo:
+					// "The Value field is required."
+					options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(arg => {
+						return $@"""{arg}""をバインドできません。";
+					});
 				});
 			});
 
 		// Act
 		var response = await client.PostAsync(
 			"/api/messageprovider/valuemustnotbenull",
-			GetEmptyFormUrlEncodedContent());
+			new FormUrlEncodedContent(new Dictionary<string, string?> { ["value"] = value }));
 		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
 		// Assert
 		Assert.NotNull(problem);
 		var error = Assert.Single(problem.Errors);
 		Assert.Equal("Value", error.Key);
-		Assert.Equal("The Value field is required.", error.Value.Single());
+		Assert.Equal(@"""""をバインドできません。", error.Value.Single());
 	}
 }

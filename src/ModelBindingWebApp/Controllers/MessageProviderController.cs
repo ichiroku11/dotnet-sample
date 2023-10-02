@@ -20,8 +20,7 @@ public class MessageProviderController : ControllerBase {
 
 	// ValueMustNotBeNullAccessorのテスト
 	public class ValueMustNotBeNullModel {
-		[Required]
-		public string Value { get; set; } = "";
+		public int Value { get; set; }
 	}
 
 	[HttpPost]
