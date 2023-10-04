@@ -11,7 +11,7 @@ public class MessageProviderController : ControllerBase {
 	// MissingBindRequiredValueAccessorのテスト
 	public class MissingBindRequiredModel {
 		[BindRequired]
-		public int Value { get; set; }
+		public int Value { get; init; }
 	}
 
 	[HttpPost]
@@ -20,7 +20,7 @@ public class MessageProviderController : ControllerBase {
 
 	// ValueMustNotBeNullAccessorのテスト
 	public class ValueMustNotBeNullModel {
-		public int Value { get; set; }
+		public int Value { get; init; }
 	}
 
 	[HttpPost]
