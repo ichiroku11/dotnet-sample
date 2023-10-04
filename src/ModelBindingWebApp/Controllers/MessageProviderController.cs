@@ -25,4 +25,14 @@ public class MessageProviderController : ControllerBase {
 
 	[HttpPost]
 	public IActionResult ValueMustNotBeNull([FromForm] ValueMustNotBeNullModel model) => Ok(model);
+
+
+	// MissingKeyOrValueAccessorのテスト
+	public class MissingKeyOrValueModel {
+		public Dictionary<string, string> Values { get; init; } = new();
+	}
+
+	[HttpPost]
+	public IActionResult MissingKeyOrValue([FromForm] MissingKeyOrValueModel model) => Ok(model);
+
 }
