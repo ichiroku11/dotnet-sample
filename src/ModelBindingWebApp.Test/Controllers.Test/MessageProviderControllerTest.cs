@@ -70,4 +70,32 @@ public class MessageProviderControllerTest : ControllerTestBase {
 		Assert.Equal("Value", error.Key);
 		Assert.Equal(@"""""をバインドできません。", error.Value.Single());
 	}
+
+	[Fact]
+	public async Task MissingKeyOrValue_Dictionaryのキーバリューが見つからないときのエラーメッセージを変更できる() {
+		// Arrange
+		var client = CreateClient(
+			configure: services => {
+				services.Configure<MvcOptions>(options => {
+					// デフォルトのメッセージ
+					// A value is required.
+					// todo:
+				});
+			});
+
+		// Act
+		var response = await client.PostAsync(
+			"/api/messageprovider/missingkeyorvalue",
+			new FormUrlEncodedContent(
+				new Dictionary<string, string?> {
+					[@"values[0].Key"] = "x",
+				}));
+		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+		// Assert
+		Assert.NotNull(problem);
+		var error = Assert.Single(problem.Errors);
+		Assert.Equal("Values[0].Value", error.Key);
+		Assert.Equal("A value is required.", error.Value.Single());
+	}
 }
