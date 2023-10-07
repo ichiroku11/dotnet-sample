@@ -71,8 +71,31 @@ public class MessageProviderControllerTest : ControllerTestBase {
 		Assert.Equal(@"""""をバインドできません。", error.Value.Single());
 	}
 
-	[Fact]
-	public async Task MissingKeyOrValue_Dictionaryのキーバリューが見つからないときのエラーメッセージを変更できる() {
+	public static TheoryData<FormUrlEncodedContent, string> GetTheoryData_MissingKeyOrValue() {
+		return new() {
+			// POSTデータにキーは存在するが、バリューが存在しない
+			{
+				new FormUrlEncodedContent(
+					new Dictionary<string, string> {
+						[@"values[0].Key"] = "x",
+					}),
+				"Values[0].Value"
+			},
+			// POSTデータにバリューは存在するが、キーが存在しない
+			{
+				new FormUrlEncodedContent(
+					new Dictionary<string, string> {
+						[@"values[0].Value"] = "x",
+					}),
+				"Values[0].Key"
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_MissingKeyOrValue))]
+	public async Task MissingKeyOrValue_Dictionaryのキーバリューが見つからないときのエラーメッセージを変更できる(
+		FormUrlEncodedContent content, string expectedKey) {
 		// Arrange
 		var client = CreateClient(
 			configure: services => {
@@ -86,18 +109,13 @@ public class MessageProviderControllerTest : ControllerTestBase {
 			});
 
 		// Act
-		var response = await client.PostAsync(
-			"/api/messageprovider/missingkeyorvalue",
-			new FormUrlEncodedContent(
-				new Dictionary<string, string?> {
-					[@"values[0].Key"] = "x",
-				}));
+		var response = await client.PostAsync("/api/messageprovider/missingkeyorvalue", content);
 		var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
 		// Assert
 		Assert.NotNull(problem);
 		var error = Assert.Single(problem.Errors);
-		Assert.Equal("Values[0].Value", error.Key);
+		Assert.Equal(expectedKey, error.Key);
 		Assert.Equal("バインドできません。", error.Value.Single());
 	}
 }
