@@ -79,7 +79,9 @@ public class MessageProviderControllerTest : ControllerTestBase {
 				services.Configure<MvcOptions>(options => {
 					// デフォルトのメッセージ
 					// A value is required.
-					// todo:
+					options.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() => {
+						return "バインドできません。";
+					});
 				});
 			});
 
@@ -96,6 +98,6 @@ public class MessageProviderControllerTest : ControllerTestBase {
 		Assert.NotNull(problem);
 		var error = Assert.Single(problem.Errors);
 		Assert.Equal("Values[0].Value", error.Key);
-		Assert.Equal("A value is required.", error.Value.Single());
+		Assert.Equal("バインドできません。", error.Value.Single());
 	}
 }
