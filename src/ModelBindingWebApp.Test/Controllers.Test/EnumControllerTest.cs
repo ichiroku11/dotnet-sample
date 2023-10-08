@@ -5,7 +5,7 @@ using Xunit.Abstractions;
 namespace ModelBindingWebApp.Controllers.Test;
 
 public class EnumControllerTest : ControllerTestBase {
-	public EnumControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public EnumControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 

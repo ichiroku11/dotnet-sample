@@ -16,7 +16,7 @@ public class CollectionControllerTest : ControllerTestBase {
 		};
 
 
-	public CollectionControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public CollectionControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 

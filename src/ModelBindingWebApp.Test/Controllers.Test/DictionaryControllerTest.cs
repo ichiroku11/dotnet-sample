@@ -12,7 +12,7 @@ public class DictionaryControllerTest : ControllerTestBase {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
-	public DictionaryControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public DictionaryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 

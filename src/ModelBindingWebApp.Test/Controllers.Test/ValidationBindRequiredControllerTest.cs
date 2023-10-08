@@ -8,7 +8,7 @@ namespace ModelBindingWebApp.Controllers.Test;
 
 // BindRequired属性
 public class ValidationBindRequiredControllerTest : ControllerTestBase {
-	public ValidationBindRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) : base(output, factory) {
+	public ValidationBindRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
 	// 値型

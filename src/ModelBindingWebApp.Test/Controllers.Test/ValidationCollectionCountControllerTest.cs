@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ModelBindingWebApp.Controllers;
 
 public class ValidationCollectionCountControllerTest : ControllerTestBase {
-	public ValidationCollectionCountControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) : base(output, factory) {
+	public ValidationCollectionCountControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
 	}
 
 	[Fact]

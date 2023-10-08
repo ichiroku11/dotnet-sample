@@ -14,7 +14,7 @@ public class Base64JsonControllerTest : ControllerTestBase {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
-	public Base64JsonControllerTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	public Base64JsonControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 		: base(output, factory) {
 	}
 
