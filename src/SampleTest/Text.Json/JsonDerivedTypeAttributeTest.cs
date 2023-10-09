@@ -9,6 +9,8 @@ public class JsonDerivedTypeAttributeTest {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
+	// JsonDerivedTypeAttributeを使わず
+	// 派生クラスを基本クラスとしてシリアライズする
 	private abstract class BaseNoAttribute {
 		// 属性でJSON文字列のプロパティの並び順を制御する
 		[JsonPropertyOrder(1)]
@@ -52,7 +54,8 @@ public class JsonDerivedTypeAttributeTest {
 		Assert.Equal(@"{""base"":1}", actual);
 	}
 
-
+	// JsonDerivedTypeAttributeを使って
+	// 派生クラスを基本クラスとしてシリアライズする
 	[JsonDerivedType(typeof(DerivedWithAttribute))]
 	private abstract class BaseWithAttribute {
 		// 属性でJSON文字列のプロパティの並び順を制御する
