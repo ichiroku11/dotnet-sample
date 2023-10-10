@@ -99,4 +99,34 @@ public class JsonDerivedTypeAttributeTest {
 		// 派生クラスの情報が欠落しない
 		Assert.Equal(@"{""base"":1,""derived"":2}", actual);
 	}
+
+
+	// 型の判別子を使ってシリアライズ・デシリアライズする
+	[JsonDerivedType(typeof(DerivedWithAttributeAndDiscriminator), "derived")]
+	private abstract class BaseWithAttributeAndDiscriminator {
+		// 属性でJSON文字列のプロパティの並び順を制御する
+		[JsonPropertyOrder(1)]
+		public int Base { get; init; }
+	}
+
+	private class DerivedWithAttributeAndDiscriminator : BaseWithAttributeAndDiscriminator {
+		[JsonPropertyOrder(2)]
+		public int Derived { get; init; }
+	}
+
+	[Fact]
+	public void Serialize_型の判別子がJSONに出力される() {
+		// Arrange
+		BaseWithAttributeAndDiscriminator derived = new DerivedWithAttributeAndDiscriminator {
+			Base = 1,
+			Derived = 2,
+		};
+
+		// Act
+		var actual = JsonSerializer.Serialize(derived, _options);
+
+		// Assert
+		// $typeプロパティは必ず先頭なのか？
+		Assert.Equal(@"{""$type"":""derived"",""base"":1,""derived"":2}", actual);
+	}
 }
