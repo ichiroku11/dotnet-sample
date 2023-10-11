@@ -129,4 +129,20 @@ public class JsonDerivedTypeAttributeTest {
 		// $typeプロパティは必ず先頭なのか？
 		Assert.Equal(@"{""$type"":""derived"",""base"":1,""derived"":2}", actual);
 	}
+
+	[Fact]
+	public void Deserialize_型の判別子を使ってデシリアライズする() {
+		// Arrange
+		var json = @"{""$type"":""derived"",""base"":1,""derived"":2}";
+
+		// Act
+		// 基本クラスとしてデシリアライズする
+		var actualBase = JsonSerializer.Deserialize<BaseWithAttributeAndDiscriminator>(json, _options);
+
+		// Assert
+		// 型は派生クラスになる
+		var actualDerived = Assert.IsType<DerivedWithAttributeAndDiscriminator>(actualBase);
+		Assert.Equal(1, actualDerived.Base);
+		Assert.Equal(2, actualDerived.Derived);
+	}
 }
