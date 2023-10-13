@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace SampleTest.EntityFrameworkCore;
@@ -8,6 +9,12 @@ public class SqlQueryTest : IDisposable {
 	}
 
 	private readonly SampleDbContext _context = new();
+
+	private readonly ITestOutputHelper _output;
+
+	public SqlQueryTest(ITestOutputHelper output) {
+		_output = output;
+	}
 
 	public void Dispose() {
 		_context.Dispose();
@@ -26,5 +33,20 @@ public class SqlQueryTest : IDisposable {
 
 		// Assert
 		Assert.Equal(1, actual);
+	}
+
+	[Fact]
+	public async Task SqlQuery_スカラー値を返すクエリにValue句がないと例外が発生する() {
+		// Arrange
+		// Act
+		var exception = await Record.ExceptionAsync(async () => {
+			await _context.Database
+				.SqlQuery<int>($"select 1")
+				.FirstAsync();
+		});
+
+		// Assert
+		Assert.IsType<SqlException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 }
