@@ -30,6 +30,13 @@ public class SqlQueryTest : IDisposable {
 			// 出力列名を「Value」とする必要がある様子
 			.SqlQuery<int>($"select 1 as Value")
 			.FirstAsync();
+		// 実行されるクエリ
+		/*
+		SELECT TOP(1) [t].[Value]
+		FROM (
+			select 1 as Value
+		) AS [t]
+		*/
 
 		// Assert
 		Assert.Equal(1, actual);
