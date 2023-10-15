@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SampleTest.EntityFrameworkCore;
 
+// 参考
 // https://learn.microsoft.com/ja-jp/ef/core/querying/sql-queries#querying-scalar-non-entity-types
 public class SqlQueryTest : IDisposable {
 	private class SampleDbContext : SqlServerDbContext {
@@ -27,7 +28,7 @@ public class SqlQueryTest : IDisposable {
 		// Arrange
 		// Act
 		var actual = await _context.Database
-			// 出力列名を「Value」とする必要がある様子
+			// サブクエリになるため、出力カラム名を「Value」とする必要がある
 			.SqlQuery<int>($"select 1 as Value")
 			.FirstAsync();
 		// 実行されるクエリ
