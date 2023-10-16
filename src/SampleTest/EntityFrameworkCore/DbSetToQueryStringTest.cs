@@ -61,7 +61,7 @@ values
 		// Arrange
 		// Act
 		var query = _context.Samples
-			.FromSqlInterpolated($"select * from dbo.Sample")
+			.FromSql($"select * from dbo.Sample")
 			.ToQueryString();
 		_output.WriteLine(query);
 
