@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SampleTest.EntityFrameworkCore;
 
 [Collection(CollectionNames.EfCoreSample)]
-public class FromSqlInterpolatedOutputTest : IDisposable {
+public class FromSqlOutputTest : IDisposable {
 	private class Sample {
 		public int Id { get; init; }
 		public string Name { get; init; } = "";
@@ -19,7 +19,7 @@ public class FromSqlInterpolatedOutputTest : IDisposable {
 
 	private readonly SampleDbContext _context = new();
 
-	public FromSqlInterpolatedOutputTest() {
+	public FromSqlOutputTest() {
 		DropTable();
 		InitTable();
 	}
@@ -53,14 +53,14 @@ values
 	}
 
 	[Fact]
-	public async Task FromSqlInterpolated_output句を使ったinsert文を実行して結果を取得できる() {
+	public async Task FromSql_output句を使ったinsert文を実行して結果を取得できる() {
 		FormattableString sql = @$"
 insert into dbo.Sample(Id, Name)
 output inserted.*
 values ({2}, {"b"})";
 
 		var samples = await _context.Samples
-			.FromSqlInterpolated(sql)
+			.FromSql(sql)
 			.ToListAsync();
 
 		var sample = samples.Single();
@@ -69,14 +69,14 @@ values ({2}, {"b"})";
 	}
 
 	[Fact]
-	public async Task FromSqlInterpolated_output句を使ったupdate文を実行して結果を取得できる() {
+	public async Task FromSql_output句を使ったupdate文を実行して結果を取得できる() {
 		FormattableString sql = @$"
 update dbo.Sample
 set Id = {1}, Name = {"c"}
 output inserted.*";
 
 		var samples = await _context.Samples
-			.FromSqlInterpolated(sql)
+			.FromSql(sql)
 			.ToListAsync();
 
 		var sample = samples.Single();
