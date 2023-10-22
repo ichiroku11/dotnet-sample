@@ -44,7 +44,7 @@ public class ValueConversionImmutableTest {
 	public async Task シンプルな値オブジェクトにマッピングする() {
 		using var context = new UserDbContext();
 		var user = await context.Users
-			.FromSqlInterpolated($"select {1} as Id, {"a"} as Name")
+			.FromSql($"select {1} as Id, {"a"} as Name")
 			.FirstOrDefaultAsync();
 
 		Assert.Equal(1, user?.Id);
