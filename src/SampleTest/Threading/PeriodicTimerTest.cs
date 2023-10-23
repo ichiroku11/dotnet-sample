@@ -26,6 +26,22 @@ public class PeriodicTimerTest {
 		Assert.False(actual);
 	}
 
-	// todo: キャンセル済みのキャンセルトークンを渡す
+	[Fact]
+	public async void WaitForNextTickAsync_キャンセル済みのキャンセルトークンを渡して呼び出すとTaskCanceledExceptionが発生する() {
+		// Arrange
+		using var tokenSource = new CancellationTokenSource();
+		tokenSource.Cancel();
+
+		using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1));
+
+		// Act
+		var exception = await Record.ExceptionAsync(async () => {
+			await timer.WaitForNextTickAsync(tokenSource.Token);
+		});
+
+		// Assert
+		Assert.IsType<TaskCanceledException>(exception);
+	}
+
 	// todo: コンストラクターの例外など
 }
