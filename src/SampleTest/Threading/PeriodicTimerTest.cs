@@ -1,6 +1,26 @@
 namespace SampleTest.Threading;
 
 public class PeriodicTimerTest {
+	public static TheoryData<TimeSpan> GetTheoryData_Constructor() {
+		return new() {
+			TimeSpan.Zero,
+			TimeSpan.FromMilliseconds(uint.MaxValue)
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Constructor))]
+	public void Constructor_許容範囲外の数値をコンストラクターに渡すと例外が発生する(TimeSpan period) {
+		// Arrange
+		// Act
+		var exception = Record.Exception(() => {
+			new PeriodicTimer(period);
+		});
+
+		// Assert
+		Assert.IsType<ArgumentOutOfRangeException>(exception);
+	}
+
 	[Fact]
 	public async void WaitForNextTickAsync_戻り値はtrueになる() {
 		// Arrange
@@ -42,6 +62,4 @@ public class PeriodicTimerTest {
 		// Assert
 		Assert.IsType<TaskCanceledException>(exception);
 	}
-
-	// todo: コンストラクターの例外など
 }
