@@ -168,9 +168,14 @@ public class IsPatternMatchingTest {
 		var values = new[] { 1, 2, 3 };
 
 		// Act
-		var actual = values is [1, 2, 3];
-
 		// Assert
-		Assert.True(actual);
+		Assert.True(values is [1, 2, 3]);
+
+		// 要素が1つ異なるため一致しない
+		Assert.False(values is [1, 2, 4]);
+
+		// 要素数が異なるため一致しない
+		Assert.False(values is [1, 2]);
+		Assert.False(values is [1, 2, 3, 4]);
 	}
 }
