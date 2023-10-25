@@ -158,4 +158,18 @@ public class IsPatternMatchingTest {
 		// Assert
 		Assert.True(actual);
 	}
+
+	// C# 11
+	// https://learn.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/patterns#list-patterns
+	[Fact]
+	public void Is_リストパターンを試す() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var actual = values is [1, 2, 3];
+
+		// Assert
+		Assert.True(actual);
+	}
 }
