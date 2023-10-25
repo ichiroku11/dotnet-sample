@@ -121,6 +121,7 @@ public class IsPatternMatchingTest {
 		Assert.Equal(expected, actual);
 	}
 
+	// https://learn.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/patterns#property-pattern
 	[Fact]
 	public void Is_プロパティパターンを試す() {
 		// Arrange
