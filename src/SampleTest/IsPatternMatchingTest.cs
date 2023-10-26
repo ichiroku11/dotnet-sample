@@ -163,12 +163,33 @@ public class IsPatternMatchingTest {
 	// C# 11
 	// https://learn.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/patterns#list-patterns
 	[Fact]
-	public void Is_リストパターンを試す() {
+	public void Is_配列に対してリストパターンを試す() {
 		// Arrange
 		var values = new[] { 1, 2, 3 };
 
 		// Act
 		// Assert
+		Assert.True(values is [1, 2, 3]);
+	}
+
+	[Fact]
+	public void Is_リストに対してリストパターンを試す() {
+		// Arrange
+		var values = new List<int> { 1, 2, 3 };
+
+		// Act
+		// Assert
+		Assert.True(values is [1, 2, 3]);
+	}
+
+	[Fact]
+	public void Is_様々なリストパターンを試す() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		// Assert
+		// 要素がすべて一致する
 		Assert.True(values is [1, 2, 3]);
 
 		// 要素が1つ異なるため一致しない
