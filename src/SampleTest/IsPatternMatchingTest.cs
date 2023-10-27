@@ -198,5 +198,21 @@ public class IsPatternMatchingTest {
 		// 要素数が異なるため一致しない
 		Assert.False(values is [1, 2]);
 		Assert.False(values is [1, 2, 3, 4]);
+
+		// リレーショナルパターンと使う
+		// 要素が条件に一致する
+		Assert.True(values is [0 or 1, >= 2, <= 3]);
+
+		// 破棄パターンと使う
+		// 要素が任意の値に一致する
+		Assert.True(values is [1, 2, _]);
+		Assert.True(values is [_, _, _]);
+
+		// varパターンと使う
+		if (values is [var first, _, _]) {
+			Assert.Equal(1, first);
+		} else {
+			Assert.Fail();
+		}
 	}
 }
