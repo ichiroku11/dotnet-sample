@@ -214,5 +214,13 @@ public class IsPatternMatchingTest {
 		} else {
 			Assert.Fail();
 		}
+
+		// スライスパターンと使う
+		Assert.True(values is [1, ..]);
+		Assert.True(values is [.., 3]);
+		Assert.True(values is [1, .., 3]);
+
+		// スライスパターンは1カ所だけっぽい（CS8980）
+		// values is [.., 2, ..]);
 	}
 }
