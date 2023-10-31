@@ -2,7 +2,7 @@ using NCrontab;
 
 namespace SampleTest;
 
-public class NCrontabTest {
+public class CrontabScheduleTest {
 	[Fact]
 	public void NCrontabを使ってみる() {
 		// Arrange
