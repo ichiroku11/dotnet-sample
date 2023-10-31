@@ -2,7 +2,16 @@ using NCrontab;
 
 namespace SampleTest;
 
+// NCrontab: Crontab for .NET
+// https://github.com/atifaziz/NCrontab
 public class CrontabScheduleTest {
+
+	private readonly ITestOutputHelper _output;
+
+	public CrontabScheduleTest(ITestOutputHelper output) {
+		_output = output;
+	}
+
 	[Fact]
 	public void NCrontabを使ってみる() {
 		// Arrange
@@ -14,5 +23,19 @@ public class CrontabScheduleTest {
 
 		// Assert
 		Assert.Equal(today.AddMinutes(5), actual);
+	}
+
+	[Fact]
+	public void Parse_オプションを指定してないと秒を含めることができず例外が発生する() {
+		// Arrange
+		// Act
+		var exception = Record.Exception(() => {
+			// 秒を含むフォーマットを指定しても例外が発生する
+			CrontabSchedule.Parse("* * * * * *", options: null);
+		});
+
+		// Assert
+		Assert.IsType<CrontabException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 }
