@@ -26,7 +26,7 @@ public class CrontabScheduleTest {
 	}
 
 	[Fact]
-	public void Parse_オプションを指定してないと秒を含めることができず例外が発生する() {
+	public void Parse_オプションを指定しないと秒を含めることができず例外が発生する() {
 		// Arrange
 		// Act
 		var exception = Record.Exception(() => {
@@ -37,5 +37,19 @@ public class CrontabScheduleTest {
 		// Assert
 		Assert.IsType<CrontabException>(exception);
 		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public void Parse_オプションを指定して秒を含めることができる() {
+		// Arrange
+		var scheduleOptions = new CrontabSchedule.ParseOptions {
+			IncludingSeconds = true
+		};
+
+		// Act
+		var schedule = CrontabSchedule.Parse("* * * * * *", scheduleOptions);
+
+		// Assert
+		Assert.NotNull(schedule);
 	}
 }
