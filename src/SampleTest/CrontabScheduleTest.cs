@@ -12,17 +12,29 @@ public class CrontabScheduleTest {
 		_output = output;
 	}
 
-	[Fact]
-	public void NCrontabを使ってみる() {
-		// Arrange
-		var schedule = CrontabSchedule.Parse("*/5 * * * *");
+	public static TheoryData<string, DateTime, DateTime> GetTheoryData_GetNextOccurrence() {
 		var today = DateTime.Today;
+		return new() {
+			{
+				// 5分ごとに実行する
+				"*/5 * * * *",
+				today,
+				today.AddMinutes(5)
+			}
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_GetNextOccurrence))]
+	public void GetNextOccurrence_色々なパターンを試す(string expression, DateTime start, DateTime expected) {
+		// Arrange
+		var schedule = CrontabSchedule.Parse(expression);
 
 		// Act
-		var actual = schedule.GetNextOccurrence(today);
+		var actual = schedule.GetNextOccurrence(start);
 
 		// Assert
-		Assert.Equal(today.AddMinutes(5), actual);
+		Assert.Equal(expected, actual);
 	}
 
 	[Fact]
