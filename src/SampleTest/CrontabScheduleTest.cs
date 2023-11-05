@@ -13,13 +13,29 @@ public class CrontabScheduleTest {
 	}
 
 	public static TheoryData<string, DateTime, DateTime> GetTheoryData_GetNextOccurrence() {
-		var today = DateTime.Today;
+		// 基準日
+		var baseDate = DateTime.Today;
 		return new() {
 			{
-				// 5分ごとに実行する
-				"*/5 * * * *",
-				today,
-				today.AddMinutes(5)
+				// 5分に実行する
+				// 例） 00:00 => 00:05
+				"5 * * * *",
+				baseDate,
+				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, baseDate.Hour, 5, 0)
+			},
+			{
+				// 5分に実行する
+				// 次の時間の5分
+				// 例） 01:10 => 02:05
+				"5 * * * *",
+				baseDate.AddHours(1).AddMinutes(10),
+				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, baseDate.Hour + 2, 5, 0)
+			},
+			{
+				// 11:05に実行する
+				"5 11 * * *",
+				baseDate,
+				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0)
 			}
 		};
 	}
