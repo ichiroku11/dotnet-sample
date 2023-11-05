@@ -45,7 +45,13 @@ public class CrontabScheduleTest {
 				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0).AddDays(1)
 			},
 
-
+			// 次の1日の11:05
+			{
+				"5 11 1 * *",
+				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0),
+				// 翌月
+				new DateTime(baseDate.Year, baseDate.Month, 1, 11, 5, 0).AddMonths(1)
+			},
 		};
 	}
 
