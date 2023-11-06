@@ -45,7 +45,7 @@ public class CrontabScheduleTest {
 				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0).AddDays(1)
 			},
 
-			// 次の1日の11:05
+			// 毎月1日の11:05
 			{
 				"5 11 1 * *",
 				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0),
@@ -63,6 +63,49 @@ public class CrontabScheduleTest {
 
 		// Act
 		var actual = schedule.GetNextOccurrence(start);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	public static TheoryData<string, DateTime, DateTime, IEnumerable<DateTime>> GetTheoryData_GetNextOccurrences() {
+		// 基準日
+		var baseDate = DateTime.Today;
+		return new() {
+			// xx:05、xx:10、xx:15...と5分間隔で実行する
+			{
+				"*/5 * * * *",
+				baseDate,
+				baseDate.AddMinutes(20),
+				new [] {
+					baseDate.AddMinutes(5),
+					baseDate.AddMinutes(10),
+					baseDate.AddMinutes(15),
+					// xx:20（終了時刻）は含まれない
+				}
+			},
+			{
+				// xx:01から開始しても、xx:05、xx:10、xx:15...と実行される
+				"*/5 * * * *",
+				baseDate.AddMinutes(1),
+				baseDate.AddMinutes(20),
+				new [] {
+					baseDate.AddMinutes(5),
+					baseDate.AddMinutes(10),
+					baseDate.AddMinutes(15),
+				}
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_GetNextOccurrences))]
+	public void GetNextOccurrences_色々なパターンを試す(string expression, DateTime start, DateTime end, IEnumerable<DateTime> expected) {
+		// Arrange
+		var schedule = CrontabSchedule.Parse(expression);
+
+		// Act
+		var actual = schedule.GetNextOccurrences(start, end);
 
 		// Assert
 		Assert.Equal(expected, actual);
