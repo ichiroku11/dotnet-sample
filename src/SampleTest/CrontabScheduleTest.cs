@@ -14,43 +14,42 @@ public class CrontabScheduleTest {
 
 	public static TheoryData<string, DateTime, DateTime> GetTheoryData_GetNextOccurrence() {
 		// 基準日
-		var baseDate = DateTime.Today;
 		return new() {
 			// 次のxx:05に実行する
 			{
 				// 例）00:00 => 00:05
 				"5 * * * *",
-				baseDate,
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 0, 5, 0)
+				new DateTime(2023, 9, 1),
+				new DateTime(2023, 9, 1, 0, 5, 0)
 			},
 			{
 				// 例）01:05 => 02:05
 				"5 * * * *",
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 1, 5, 0),
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 2, 5, 0)
+				new DateTime(2023, 9, 1, 1, 5, 0),
+				new DateTime(2023, 9, 1, 2, 5, 0)
 			},
 
 			// 次の11:05に実行する
 			{
 				// 例）11:04 => 当日の11:05
 				"5 11 * * *",
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 4, 0),
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0)
+				new DateTime(2023, 9, 1, 11, 4, 0),
+				new DateTime(2023, 9, 1, 11, 5, 0)
 			},
 			{
 				// 例）11:05 => 翌日の11:05
 				"5 11 * * *",
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0),
+				new DateTime(2023, 9, 1, 11, 5, 0),
 				// 翌日
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0).AddDays(1)
+				new DateTime(2023, 9, 2, 11, 5, 0)
 			},
 
 			// 毎月1日の11:05
 			{
 				"5 11 1 * *",
-				new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, 11, 5, 0),
+				new DateTime(2023, 9, 1, 11, 5, 0),
 				// 翌月
-				new DateTime(baseDate.Year, baseDate.Month, 1, 11, 5, 0).AddMonths(1)
+				new DateTime(2023, 10, 1, 11, 5, 0)
 			},
 		};
 	}
@@ -70,42 +69,45 @@ public class CrontabScheduleTest {
 
 	public static TheoryData<string, DateTime, DateTime, IEnumerable<DateTime>> GetTheoryData_GetNextOccurrences() {
 		// 基準日
-		var baseDate = DateTime.Today;
 		return new() {
 			// xx:05、xx:10、xx:15...と5分間隔で実行する
 			{
 				"*/5 * * * *",
-				baseDate,
-				baseDate.AddMinutes(20),
+				new DateTime(2023, 9, 1),
+				new DateTime(2023, 9, 1, 0, 20, 0),
 				new [] {
-					baseDate.AddMinutes(5),
-					baseDate.AddMinutes(10),
-					baseDate.AddMinutes(15),
+					new DateTime(2023, 9, 1, 0, 5, 0),
+					new DateTime(2023, 9, 1, 0, 10, 0),
+					new DateTime(2023, 9, 1, 0, 15, 0),
 					// xx:20（終了時刻）は含まれない
 				}
 			},
 			{
 				// xx:01から開始しても、xx:05、xx:10、xx:15...と実行される
 				"*/5 * * * *",
-				baseDate.AddMinutes(1),
-				baseDate.AddMinutes(20),
+				new DateTime(2023, 9, 1, 0, 1, 0),
+				new DateTime(2023, 9, 1, 0, 20, 0),
 				new [] {
-					baseDate.AddMinutes(5),
-					baseDate.AddMinutes(10),
-					baseDate.AddMinutes(15),
+					new DateTime(2023, 9, 1, 0, 5, 0),
+					new DateTime(2023, 9, 1, 0, 10, 0),
+					new DateTime(2023, 9, 1, 0, 15, 0),
 				}
 			},
 			// 毎日01:00に実行する
 			{
 				"0 1 * * *",
-				baseDate,
-				baseDate.AddDays(3),
+				new DateTime(2023, 9, 1),
+				new DateTime(2023, 9, 4),
 				new [] {
-					baseDate.AddHours(1),
-					baseDate.AddHours(1).AddDays(1),
-					baseDate.AddHours(1).AddDays(2),
+					new DateTime(2023, 9, 1, 1, 0, 0),
+					new DateTime(2023, 9, 2, 1, 0, 0),
+					new DateTime(2023, 9, 3, 1, 0, 0),
 				}
 			},
+
+			// todo: 毎週何曜日
+			// todo: 毎週何曜日と何曜日
+			// todo: 毎月5日
 		};
 	}
 
