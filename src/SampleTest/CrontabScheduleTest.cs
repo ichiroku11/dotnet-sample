@@ -95,6 +95,17 @@ public class CrontabScheduleTest {
 					baseDate.AddMinutes(15),
 				}
 			},
+			// 毎日01:00に実行する
+			{
+				"0 1 * * *",
+				baseDate,
+				baseDate.AddDays(3),
+				new [] {
+					baseDate.AddHours(1),
+					baseDate.AddHours(1).AddDays(1),
+					baseDate.AddHours(1).AddDays(2),
+				}
+			},
 		};
 	}
 
