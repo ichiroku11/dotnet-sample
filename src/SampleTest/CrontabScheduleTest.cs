@@ -76,6 +76,7 @@ public class CrontabScheduleTest {
 				new DateTime(2023, 9, 1),
 				new DateTime(2023, 9, 1, 0, 20, 0),
 				new [] {
+					// xx:00（開始時刻）は含まれない
 					new DateTime(2023, 9, 1, 0, 5, 0),
 					new DateTime(2023, 9, 1, 0, 10, 0),
 					new DateTime(2023, 9, 1, 0, 15, 0),
