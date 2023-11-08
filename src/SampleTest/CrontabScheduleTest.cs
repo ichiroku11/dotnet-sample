@@ -105,8 +105,19 @@ public class CrontabScheduleTest {
 					new DateTime(2023, 9, 3, 1, 0, 0),
 				}
 			},
+			// 毎週日曜日01:00に実行する
+			{
+				"0 1 * * 0",
+				new DateTime(2023, 9, 1),
+				new DateTime(2023, 9, 30),
+				new [] {
+					new DateTime(2023, 9, 3, 1, 0, 0),
+					new DateTime(2023, 9, 10, 1, 0, 0),
+					new DateTime(2023, 9, 17, 1, 0, 0),
+					new DateTime(2023, 9, 24, 1, 0, 0),
+				}
+			},
 
-			// todo: 毎週何曜日
 			// todo: 毎週何曜日と何曜日
 			// todo: 毎月5日
 		};
