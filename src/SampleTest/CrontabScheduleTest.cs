@@ -137,8 +137,19 @@ public class CrontabScheduleTest {
 					new DateTime(2023, 9, 29, 1, 0, 0),
 				}).OrderBy(date => date)
 			},
-
-			// todo: 平日01:00に実行する
+			// 平日01:00に実行する
+			{
+				"0 1 * * 1-5",
+				new DateTime(2023, 9, 2),
+				new DateTime(2023, 9, 10),
+				new [] {
+					new DateTime(2023, 9, 4, 1, 0, 0),
+					new DateTime(2023, 9, 5, 1, 0, 0),
+					new DateTime(2023, 9, 6, 1, 0, 0),
+					new DateTime(2023, 9, 7, 1, 0, 0),
+					new DateTime(2023, 9, 8, 1, 0, 0),
+				}
+			}
 			// todo: 毎月5日
 		};
 	}
