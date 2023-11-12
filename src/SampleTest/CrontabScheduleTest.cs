@@ -149,8 +149,19 @@ public class CrontabScheduleTest {
 					new DateTime(2023, 9, 7, 1, 0, 0),
 					new DateTime(2023, 9, 8, 1, 0, 0),
 				}
+			},
+			// 毎月5日01:00に実行する
+			{
+				"0 1 5 * *",
+				new DateTime(2023, 9, 1),
+				new DateTime(2024, 1, 1),
+				new [] {
+					new DateTime(2023, 9, 5, 1, 0, 0),
+					new DateTime(2023, 10, 5, 1, 0, 0),
+					new DateTime(2023, 11, 5, 1, 0, 0),
+					new DateTime(2023, 12, 5, 1, 0, 0),
+				}
 			}
-			// todo: 毎月5日
 		};
 	}
 
