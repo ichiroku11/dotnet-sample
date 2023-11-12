@@ -179,6 +179,19 @@ public class CrontabScheduleTest {
 	}
 
 	[Fact]
+	public void GetNextOccurrences_終了日時に開始日時より前の日時を指定すると結果は空になる() {
+		// Arrange
+		var schedule = CrontabSchedule.Parse("*/5 * * * *");
+		var today = DateTime.Today;
+
+		// Act
+		var actual = schedule.GetNextOccurrences(today, today.AddDays(-1));
+
+		// Assert
+		Assert.Empty(actual);
+	}
+
+	[Fact]
 	public void Parse_オプションを指定しないと秒を含めることができず例外が発生する() {
 		// Arrange
 		// Act
