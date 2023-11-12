@@ -18,6 +18,7 @@ public class ECDsaTest {
 		// Act
 		// Assert
 		Assert.Null(ecdsa.KeyExchangeAlgorithm);
+		Assert.Equal(521, ecdsa.KeySize);
 		Assert.Equal("ECDsa", ecdsa.SignatureAlgorithm);
 	}
 
