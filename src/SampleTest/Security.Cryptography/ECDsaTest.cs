@@ -13,13 +13,30 @@ public class ECDsaTest {
 	[Fact]
 	public void Create_生成したインスタンスの各プロパティを確認する() {
 		// Arrange
+		// Act
 		using var ecdsa = ECDsa.Create();
 
-		// Act
 		// Assert
 		Assert.Null(ecdsa.KeyExchangeAlgorithm);
 		Assert.Equal(521, ecdsa.KeySize);
 		Assert.Equal("ECDsa", ecdsa.SignatureAlgorithm);
+	}
+
+	public static TheoryData<ECCurve, int> GetTheoryData_Create() {
+		return new() {
+			{ ECCurve.NamedCurves.nistP521, 521 }
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Create))]
+	public void Create_ECCurveを指定して生成した場合のKeySizeを確認する(ECCurve curve, int expected) {
+		// Arrange
+		// Act
+		using var ecdsa = ECDsa.Create(curve);
+
+		// Assert
+		Assert.Equal(expected, ecdsa.KeySize);
 	}
 
 	[Fact]
