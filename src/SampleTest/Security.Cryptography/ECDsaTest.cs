@@ -24,6 +24,8 @@ public class ECDsaTest {
 
 	public static TheoryData<ECCurve, int> GetTheoryData_Create() {
 		return new() {
+			{ ECCurve.NamedCurves.nistP256, 256 },
+			{ ECCurve.NamedCurves.nistP384, 384 },
 			{ ECCurve.NamedCurves.nistP521, 521 }
 		};
 	}
@@ -37,6 +39,26 @@ public class ECDsaTest {
 
 		// Assert
 		Assert.Equal(expected, ecdsa.KeySize);
+	}
+
+	[Fact]
+	public void Create_nistP521で生成した場合のECCurveを確認する() {
+		// Arrange
+		var expected = ECCurve.NamedCurves.nistP521;
+		// todo: 引数を省略した場合
+		// todo: 指定した場合
+		using var ecdsa = ECDsa.Create();
+
+		// Act
+		var actual = ecdsa.ExportParameters(false).Curve;
+		_output.WriteLine(actual.Oid.Value);
+		_output.WriteLine(actual.Oid.FriendlyName);
+
+		// Assert
+		Assert.Equal(ECCurve.ECCurveType.Named, actual.CurveType);
+		Assert.Equal(expected.CurveType, actual.CurveType);
+		Assert.Equal(expected.Oid.Value, actual.Oid.Value);
+		Assert.Equal(expected.Oid.FriendlyName, actual.Oid.FriendlyName);
 	}
 
 	[Fact]
