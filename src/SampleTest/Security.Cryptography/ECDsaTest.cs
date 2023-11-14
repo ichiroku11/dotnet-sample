@@ -22,7 +22,7 @@ public class ECDsaTest {
 		Assert.Equal("ECDsa", ecdsa.SignatureAlgorithm);
 	}
 
-	public static TheoryData<ECCurve, int> GetTheoryData_Create() {
+	public static TheoryData<ECCurve, int> GetTheoryData_Create_KeySize() {
 		return new() {
 			{ ECCurve.NamedCurves.nistP256, 256 },
 			{ ECCurve.NamedCurves.nistP384, 384 },
@@ -31,7 +31,7 @@ public class ECDsaTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_Create))]
+	[MemberData(nameof(GetTheoryData_Create_KeySize))]
 	public void Create_ECCurveを指定して生成した場合のKeySizeを確認する(ECCurve curve, int expected) {
 		// Arrange
 		// Act
@@ -42,12 +42,37 @@ public class ECDsaTest {
 	}
 
 	[Fact]
-	public void Create_nistP521で生成した場合のECCurveを確認する() {
+	public void Create_引数を省略して生成した場合のECCurveはnistP521になる(){
 		// Arrange
 		var expected = ECCurve.NamedCurves.nistP521;
-		// todo: 引数を省略した場合
-		// todo: 指定した場合
 		using var ecdsa = ECDsa.Create();
+
+		// Act
+		var actual = ecdsa.ExportParameters(false).Curve;
+		_output.WriteLine(actual.Oid.Value);
+		_output.WriteLine(actual.Oid.FriendlyName);
+
+		// Assert
+		Assert.Equal(ECCurve.ECCurveType.Named, actual.CurveType);
+		Assert.Equal(expected.CurveType, actual.CurveType);
+		Assert.Equal(expected.Oid.Value, actual.Oid.Value);
+		Assert.Equal(expected.Oid.FriendlyName, actual.Oid.FriendlyName);
+	}
+
+	public static TheoryData<ECCurve> GetTheoryData_Create_Curve() {
+		return new() {
+			// Createの引数にCurveを渡すかどうか
+			{ ECCurve.NamedCurves.nistP256 },
+			{ ECCurve.NamedCurves.nistP384 },
+			{ ECCurve.NamedCurves.nistP521 },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Create_Curve))]
+	public void Create_ECCurveを指定して生成した場合のECCurveを確認する(ECCurve expected) {
+		// Arrange
+		using var ecdsa = ECDsa.Create(expected);
 
 		// Act
 		var actual = ecdsa.ExportParameters(false).Curve;
