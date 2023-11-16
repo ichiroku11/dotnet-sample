@@ -13,12 +13,77 @@ public class ECDsaTest {
 	[Fact]
 	public void Create_生成したインスタンスの各プロパティを確認する() {
 		// Arrange
+		// Act
+		using var ecdsa = ECDsa.Create();
+
+		// Assert
+		Assert.Null(ecdsa.KeyExchangeAlgorithm);
+		Assert.Equal(521, ecdsa.KeySize);
+		Assert.Equal("ECDsa", ecdsa.SignatureAlgorithm);
+	}
+
+	public static TheoryData<ECCurve, int> GetTheoryData_Create_KeySize() {
+		return new() {
+			{ ECCurve.NamedCurves.nistP256, 256 },
+			{ ECCurve.NamedCurves.nistP384, 384 },
+			{ ECCurve.NamedCurves.nistP521, 521 }
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Create_KeySize))]
+	public void Create_ECCurveを指定して生成した場合のKeySizeを確認する(ECCurve curve, int expected) {
+		// Arrange
+		// Act
+		using var ecdsa = ECDsa.Create(curve);
+
+		// Assert
+		Assert.Equal(expected, ecdsa.KeySize);
+	}
+
+	[Fact]
+	public void Create_引数を省略して生成した場合のECCurveはnistP521になる(){
+		// Arrange
+		var expected = ECCurve.NamedCurves.nistP521;
 		using var ecdsa = ECDsa.Create();
 
 		// Act
+		var actual = ecdsa.ExportParameters(false).Curve;
+		_output.WriteLine(actual.Oid.Value);
+		_output.WriteLine(actual.Oid.FriendlyName);
+
 		// Assert
-		Assert.Null(ecdsa.KeyExchangeAlgorithm);
-		Assert.Equal("ECDsa", ecdsa.SignatureAlgorithm);
+		Assert.Equal(ECCurve.ECCurveType.Named, actual.CurveType);
+		Assert.Equal(expected.CurveType, actual.CurveType);
+		Assert.Equal(expected.Oid.Value, actual.Oid.Value);
+		Assert.Equal(expected.Oid.FriendlyName, actual.Oid.FriendlyName);
+	}
+
+	public static TheoryData<ECCurve> GetTheoryData_Create_Curve() {
+		return new() {
+			// Createの引数にCurveを渡すかどうか
+			{ ECCurve.NamedCurves.nistP256 },
+			{ ECCurve.NamedCurves.nistP384 },
+			{ ECCurve.NamedCurves.nistP521 },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Create_Curve))]
+	public void Create_ECCurveを指定して生成した場合のECCurveを確認する(ECCurve expected) {
+		// Arrange
+		using var ecdsa = ECDsa.Create(expected);
+
+		// Act
+		var actual = ecdsa.ExportParameters(false).Curve;
+		_output.WriteLine(actual.Oid.Value);
+		_output.WriteLine(actual.Oid.FriendlyName);
+
+		// Assert
+		Assert.Equal(ECCurve.ECCurveType.Named, actual.CurveType);
+		Assert.Equal(expected.CurveType, actual.CurveType);
+		Assert.Equal(expected.Oid.Value, actual.Oid.Value);
+		Assert.Equal(expected.Oid.FriendlyName, actual.Oid.FriendlyName);
 	}
 
 	[Fact]
