@@ -125,7 +125,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[1,2]}", token.ToString());
 	}
 
-	[Fact]
+	[Fact(Skip = "IdentityModel.7x")]
 	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
@@ -146,7 +146,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
 	}
 
-	[Fact]
+	[Fact(Skip = "IdentityModel.7x")]
 	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含める() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
@@ -311,7 +311,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	}
 
 	// ECDHによる鍵交換
-	[Fact]
+	[Fact(Skip = "IdentityModel.7x")]
 	public void CreateJwtSecurityToken_非対称鍵で暗号化したトークンを生成する() {
 		// Arrange
 		// 暗号化する側

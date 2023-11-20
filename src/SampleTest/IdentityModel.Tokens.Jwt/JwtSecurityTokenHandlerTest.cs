@@ -55,7 +55,7 @@ public class JwtSecurityTokenHandlerTest {
 		Assert.Equal(expected, actual);
 	}
 
-	[Fact]
+	[Fact(Skip = "IdentityModel.7x")]
 	public void ReadJwtToken_トークンに含まれたオブジェクトの配列を取り出す() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {

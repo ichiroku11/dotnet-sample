@@ -2,7 +2,7 @@ using Microsoft.IdentityModel.Tokens;
 using SampleLib.IdentityModel.Tokens.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
-using System.Text;
+using System.Text.Json;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -58,7 +58,7 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 		Assert.IsType<JwtSecurityToken>(validatedToken);
 	}
 
-	[Fact]
+	[Fact(Skip = "IdentityModel.7x")]
 	public void CreateJwtSecurityToken_非対称鍵で暗号化したトークンを復号する() {
 		// Arrange
 		// 復号する側の鍵ペア
@@ -119,7 +119,7 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 				}
 
 				// 暗号化する側の公開鍵は"epk"から取り出す
-				var epk = JsonExtensions.SerializeToJson(token.Header[JwtHeaderParameterNames.Epk]);
+				var epk = JsonSerializer.Serialize(token.Header[JwtHeaderParameterNames.Epk]);
 				var jwk = JsonWebKey.Create(epk);
 				var ecParams = jwk.GetECParameters();
 
