@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.Text.Json;
 
@@ -38,7 +40,7 @@ public class JsonSerializerCollectionTest {
 	}
 
 	[Fact]
-	public void Serialize_空配列はシリアライズされる() {
+	public void Serialize_空のコレクションは配列としてシリアライズされる() {
 		// Arrange
 		var sample = new SampleWithEnumerable {
 			// Itemsは空配列
@@ -46,6 +48,34 @@ public class JsonSerializerCollectionTest {
 
 		// Act
 		var actual = JsonSerializer.Serialize(sample, _options);
+
+		// Assert
+		Assert.Equal(@"{""items"":[]}", actual);
+	}
+
+	[Fact]
+	public void Serialize_空のコレクションをシリアライズしない() {
+		// Arrange
+		var sample = new SampleWithEnumerable {
+			// Itemsは空配列
+		};
+
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			// nullをシリアライズしない
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+			// 空のコレクションであればnullを返す
+			TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+				Modifiers = {
+					(typeInfo) => {
+						// todo:
+					}
+				}
+			}
+		};
+
+		// Act
+		var actual = JsonSerializer.Serialize(sample, options);
 
 		// Assert
 		Assert.Equal(@"{""items"":[]}", actual);
