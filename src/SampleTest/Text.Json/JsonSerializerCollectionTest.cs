@@ -28,13 +28,27 @@ public class JsonSerializerCollectionTest {
 		// Act
 		var sample = new SampleWithEnumerable {
 			Items = new[] {
-					new SampleItem(1, "a"),
-				},
+				new SampleItem(1, "a"),
+			},
 		};
 		var actual = JsonSerializer.Serialize(sample, _options);
 
 		// Assert
 		Assert.Equal(@"{""items"":[{""number"":1,""text"":""a""}]}", actual);
+	}
+
+	[Fact]
+	public void Serialize_空配列はシリアライズされる() {
+		// Arrange
+		var sample = new SampleWithEnumerable {
+			// Itemsは空配列
+		};
+
+		// Act
+		var actual = JsonSerializer.Serialize(sample, _options);
+
+		// Assert
+		Assert.Equal(@"{""items"":[]}", actual);
 	}
 
 	[Fact]
