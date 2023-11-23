@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -43,7 +44,7 @@ public class JsonSerializerCollectionTest {
 	public void Serialize_空のコレクションは配列としてシリアライズされる() {
 		// Arrange
 		var sample = new SampleWithEnumerable {
-			// Itemsは空配列
+			// Itemsは空のコレクション
 		};
 
 		// Act
@@ -57,20 +58,38 @@ public class JsonSerializerCollectionTest {
 	public void Serialize_空のコレクションをシリアライズしない() {
 		// Arrange
 		var sample = new SampleWithEnumerable {
-			// Itemsは空配列
+			// Itemsは空のコレクション
+		};
+
+		// 空のコレクションを返すプロパティのJSONコントラクトを変更する
+		// 参考
+		// https://learn.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json/custom-contracts
+		var modifier = (JsonTypeInfo typeInfo) => {
+			if (typeInfo.Kind is not JsonTypeInfoKind.Object) {
+				return;
+			}
+			var properties = typeInfo.Properties.Where(property => property.PropertyType.IsAssignableTo(typeof(IEnumerable)));
+			foreach (var property in properties) {
+				var getter = property.Get;
+				// プリパティの値が空のコレクションであればnullを返す
+				property.Get = (obj) => {
+					if (getter?.Invoke(obj) is not IEnumerable values) {
+						return null;
+					}
+
+					return values.Cast<object>().Any()
+						? values
+						: null;
+				};
+			}
 		};
 
 		var options = new JsonSerializerOptions {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 			// nullをシリアライズしない
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-			// 空のコレクションであればnullを返す
 			TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-				Modifiers = {
-					(typeInfo) => {
-						// todo:
-					}
-				}
+				Modifiers = { modifier }
 			}
 		};
 
@@ -78,7 +97,7 @@ public class JsonSerializerCollectionTest {
 		var actual = JsonSerializer.Serialize(sample, options);
 
 		// Assert
-		Assert.Equal(@"{""items"":[]}", actual);
+		Assert.Equal(@"{}", actual);
 	}
 
 	[Fact]
