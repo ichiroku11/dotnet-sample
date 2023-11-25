@@ -4,17 +4,17 @@ using System.Text.Json.Serialization;
 namespace SampleTest.Text.Json;
 
 public class JsonIgnoreConditionTest {
-	private class Sample {
+	private class SampleNull {
 		public int? Value { get; init; }
 	}
 
 	[Fact]
-	public void WhenWritingNull_プロパティの値がnullの場合シリアライズされない() {
+	public void WhenWritingNull_プロパティの値がnullの場合はシリアライズされない() {
 		// Arrange
 
 		// Act
 		var actual = JsonSerializer.Serialize(
-			new Sample(),
+			new SampleNull(),
 			new JsonSerializerOptions {
 				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 			});
@@ -23,5 +23,22 @@ public class JsonIgnoreConditionTest {
 		Assert.Equal("{}", actual);
 	}
 
-	// todo: JsonIgnoreCondition.WhenWritingDefault
+	private class SampleDefault {
+		public int Value { get; init; }
+	}
+
+	[Fact]
+	public void WhenWritingDefault_プロパティの値がデフォルトの場合はシリアライズされない() {
+		// Arrange
+
+		// Act
+		var actual = JsonSerializer.Serialize(
+			new SampleDefault(),
+			new JsonSerializerOptions {
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+			});
+
+		// Assert
+		Assert.Equal("{}", actual);
+	}
 }
