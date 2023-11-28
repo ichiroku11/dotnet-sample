@@ -10,7 +10,7 @@ public class JsonValueTest {
 	}
 
 	[Fact]
-	public void Create_引数にint32を渡して生成したインスタンスのプロパティなどを確認する() {
+	public void Create_引数にInt32を渡して生成したインスタンスのプロパティなどを確認する() {
 		// Arrange
 
 		// Act
@@ -21,5 +21,7 @@ public class JsonValueTest {
 		Assert.Null(actual.Parent);
 		Assert.Same(actual, actual.Root);
 		Assert.Equal(1, (int)actual);
+		Assert.Equal(1, actual.GetValue<int>());
+		Assert.Equal("$", actual.GetPath());
 	}
 }
