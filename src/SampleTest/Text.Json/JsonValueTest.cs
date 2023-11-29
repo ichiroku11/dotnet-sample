@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace SampleTest.Text.Json;
@@ -23,5 +24,19 @@ public class JsonValueTest {
 		Assert.Equal(1, (int)actual);
 		Assert.Equal(1, actual.GetValue<int>());
 		Assert.Equal("$", actual.GetPath());
+	}
+
+	[Fact]
+	public void Deserialize_Int32のJsonValueをJsonElementに変換する() {
+		// Arrange
+		var jsonValue = JsonValue.Create(1);
+		_output.WriteLine(jsonValue.ToJsonString());
+
+		// Act
+		var actual = jsonValue.Deserialize<JsonElement>();
+
+		// Assert
+		Assert.Equal(JsonValueKind.Number, actual.ValueKind);
+		Assert.Equal(1, actual.GetInt32());
 	}
 }
