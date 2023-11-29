@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace SampleTest.Text.Json;
+namespace SampleTest.Text.Json.Nodes;
 
 public class JsonValueTest {
 	private readonly ITestOutputHelper _output;
