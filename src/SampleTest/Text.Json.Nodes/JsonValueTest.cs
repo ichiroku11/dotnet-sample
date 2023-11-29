@@ -15,15 +15,15 @@ public class JsonValueTest {
 		// Arrange
 
 		// Act
-		var actual = JsonValue.Create(1);
-		_output.WriteLine(actual.ToJsonString());
+		var jsonValue = JsonValue.Create(1);
+		_output.WriteLine(jsonValue.ToJsonString());
 
 		// Assert
-		Assert.Null(actual.Parent);
-		Assert.Same(actual, actual.Root);
-		Assert.Equal(1, (int)actual);
-		Assert.Equal(1, actual.GetValue<int>());
-		Assert.Equal("$", actual.GetPath());
+		Assert.Null(jsonValue.Parent);
+		Assert.Same(jsonValue, jsonValue.Root);
+		Assert.Equal(1, (int)jsonValue);
+		Assert.Equal(1, jsonValue.GetValue<int>());
+		Assert.Equal("$", jsonValue.GetPath());
 	}
 
 	[Fact]
