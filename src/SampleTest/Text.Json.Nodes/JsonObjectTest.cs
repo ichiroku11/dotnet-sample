@@ -34,4 +34,22 @@ public class JsonObjectTest {
 		Assert.Equal(1, (int)property);
 		Assert.Equal(1, property.GetValue<int>());
 	}
+
+	[Fact]
+	public void Deserialize_JsonObjectをJsonElementに変換する() {
+		// Arrange
+		var jsonObject = new JsonObject {
+			["test"] = JsonValue.Create(1),
+		};
+		_output.WriteLine(jsonObject.ToJsonString());
+
+		// Act
+		var actual = jsonObject.Deserialize<JsonElement>();
+
+		// Assert
+		Assert.Equal(JsonValueKind.Object, actual.ValueKind);
+
+		Assert.Equal(JsonValueKind.Number, actual.GetProperty("test").ValueKind);
+		Assert.Equal(1, actual.GetProperty("test").GetInt32());
+	}
 }
