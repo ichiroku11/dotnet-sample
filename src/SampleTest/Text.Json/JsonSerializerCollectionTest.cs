@@ -1,4 +1,7 @@
+using System.Collections;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.Text.Json;
 
@@ -28,13 +31,73 @@ public class JsonSerializerCollectionTest {
 		// Act
 		var sample = new SampleWithEnumerable {
 			Items = new[] {
-					new SampleItem(1, "a"),
-				},
+				new SampleItem(1, "a"),
+			},
 		};
 		var actual = JsonSerializer.Serialize(sample, _options);
 
 		// Assert
 		Assert.Equal(@"{""items"":[{""number"":1,""text"":""a""}]}", actual);
+	}
+
+	[Fact]
+	public void Serialize_空のコレクションは配列としてシリアライズされる() {
+		// Arrange
+		var sample = new SampleWithEnumerable {
+			// Itemsは空のコレクション
+		};
+
+		// Act
+		var actual = JsonSerializer.Serialize(sample, _options);
+
+		// Assert
+		Assert.Equal(@"{""items"":[]}", actual);
+	}
+
+	[Fact]
+	public void Serialize_空のコレクションをシリアライズしない() {
+		// Arrange
+		var sample = new SampleWithEnumerable {
+			// Itemsは空のコレクション
+		};
+
+		// 空のコレクションを返すプロパティのJSONコントラクトを変更する
+		// 参考
+		// https://learn.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json/custom-contracts
+		var modifier = (JsonTypeInfo typeInfo) => {
+			if (typeInfo.Kind is not JsonTypeInfoKind.Object) {
+				return;
+			}
+			var properties = typeInfo.Properties.Where(property => property.PropertyType.IsAssignableTo(typeof(IEnumerable)));
+			foreach (var property in properties) {
+				var getter = property.Get;
+				// プリパティの値が空のコレクションであればnullを返す
+				property.Get = (obj) => {
+					if (getter?.Invoke(obj) is not IEnumerable values) {
+						return null;
+					}
+
+					return values.Cast<object>().Any()
+						? values
+						: null;
+				};
+			}
+		};
+
+		var options = new JsonSerializerOptions {
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			// nullをシリアライズしない
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+			TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+				Modifiers = { modifier }
+			}
+		};
+
+		// Act
+		var actual = JsonSerializer.Serialize(sample, options);
+
+		// Assert
+		Assert.Equal(@"{}", actual);
 	}
 
 	[Fact]
