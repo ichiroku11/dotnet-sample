@@ -21,10 +21,11 @@ public class JwtPayloadTest {
 		// Assert
 		Assert.Null(payload.Sub);
 		Assert.Null(payload.Nonce);
-		Assert.Null(payload.Nbf);
+		Assert.Null(payload.NotBefore);
 		Assert.Null(payload.Iss);
-		Assert.Null(payload.Iat);
-		Assert.Null(payload.Exp);
+		// "iat"クレームがない場合はDateTimeの最小値
+		Assert.Equal(DateTime.MinValue, payload.IssuedAt);
+		Assert.Null(payload.Expiration);
 		Assert.Empty(payload.Aud);
 
 		_output.WriteLine(payload.SerializeToJson());
@@ -44,10 +45,10 @@ public class JwtPayloadTest {
 		// Assert
 		Assert.Null(payload.Sub);
 		Assert.Null(payload.Nonce);
-		Assert.Null(payload.Nbf);
+		Assert.Null(payload.NotBefore);
 		Assert.Equal("i", payload.Iss);
-		Assert.Null(payload.Iat);
-		Assert.Null(payload.Exp);
+		Assert.Equal(DateTime.MinValue, payload.IssuedAt);
+		Assert.Null(payload.Expiration);
 		var audience = Assert.Single(payload.Aud);
 		Assert.Equal("a", audience);
 
@@ -63,10 +64,10 @@ public class JwtPayloadTest {
 		// Assert
 		Assert.Null(payload.Sub);
 		Assert.Null(payload.Nonce);
-		Assert.Null(payload.Nbf);
+		Assert.Null(payload.NotBefore);
 		Assert.Equal("i", payload.Iss);
-		Assert.Null(payload.Iat);
-		Assert.Null(payload.Exp);
+		Assert.Equal(DateTime.MinValue, payload.IssuedAt);
+		Assert.Null(payload.Expiration);
 		var audience = Assert.Single(payload.Aud);
 		Assert.Equal("a", audience);
 
@@ -87,10 +88,10 @@ public class JwtPayloadTest {
 		// Assert
 		Assert.Null(payload.Sub);
 		Assert.Null(payload.Nonce);
-		Assert.Equal(1, payload.Nbf);
+		Assert.Equal(1, payload.NotBefore);
 		Assert.Equal("i", payload.Iss);
-		Assert.Null(payload.Iat);
-		Assert.Equal(2, payload.Exp);
+		Assert.Equal(DateTime.MinValue, payload.IssuedAt);
+		Assert.Equal(2, payload.Expiration);
 		var audience = Assert.Single(payload.Aud);
 		Assert.Equal("a", audience);
 
