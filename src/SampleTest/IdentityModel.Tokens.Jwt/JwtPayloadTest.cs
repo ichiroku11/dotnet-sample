@@ -98,7 +98,7 @@ public class JwtPayloadTest {
 		_output.WriteLine(payload.SerializeToJson());
 	}
 
-	[Fact(Skip = "IdentityModel.7x")]
+	[Fact]
 	public void Constructor_claimsCollectionで配列を指定してペイロードを生成する() {
 		// Arrange
 		// Act
@@ -117,7 +117,11 @@ public class JwtPayloadTest {
 
 		// Assert
 		Assert.Single(claims);
-		Assert.Equal("[1,2]", claim.Value);
+		// IdentityModel 6.xでは配列をJSON形式で出力されたが、7.xではJSON形式で出力されなくなった
+		// 6.x
+		//Assert.Equal("[1,2]", claim.Value);
+		// 7.x
+		Assert.Equal(Array.Empty<int>().ToString(), claim.Value);
 		// JSONには配列が出力される
 		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
 	}
