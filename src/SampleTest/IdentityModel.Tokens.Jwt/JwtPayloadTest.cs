@@ -117,16 +117,17 @@ public class JwtPayloadTest {
 
 		// Assert
 		Assert.Single(claims);
-		// IdentityModel 6.xでは配列をJSON形式で出力されたが、7.xではJSON形式で出力されなくなった
+		// 配列をもつクレームは、IdentityModel 6.xではJSON形式の文字列だったが、7.xではJSON形式ではない
 		// 6.x
 		//Assert.Equal("[1,2]", claim.Value);
 		// 7.x
 		Assert.Equal(Array.Empty<int>().ToString(), claim.Value);
+
 		// JSONには配列が出力される
 		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
 	}
 
-	[Fact(Skip = "IdentityModel.7x")]
+	[Fact]
 	public void Constructor_claimsCollectionでオブジェクトを指定してペイロードを生成する() {
 		// Arrange
 		// Act
@@ -145,12 +146,27 @@ public class JwtPayloadTest {
 
 		// Assert
 		Assert.Single(claims);
-		Assert.Equal(@"{""x"":1}", claim.Value);
+		// オブジェクトをもつクレームは、IdentityModel 6.xではJSON形式の文字列だったが、7.xではJSON形式ではない
+		// 6.x
+		//Assert.Equal(@"{""x"":1}", claim.Value);
+		// 7.x
+		Assert.Equal(new { x = 1 }.ToString(), claim.Value);
+
+		// IdentityModel 6.xではJSONにシリアライズできたが、7.xでは例外が発生するようようになった
+		// 6.x
 		// JSONにはオブジェクトが出力される
-		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
+		//Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
+		// 7.x
+		var exception = Record.Exception(() => {
+			payload.SerializeToJson();
+		});
+		Assert.IsType<ArgumentException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 
-	[Fact(Skip = "IdentityModel.7x")]
+	// todo: claimsCollection：JsonObject => JsonElement
+
+	[Fact]
 	public void Constructor_claimsCollectionでオブジェクトの配列を指定してペイロードを生成する() {
 		// Arrange
 		// Act
@@ -172,15 +188,26 @@ public class JwtPayloadTest {
 		// Assert
 		Assert.Equal(2, claims.Count());
 
-		// ValueTypeの値は、JsonClaimValueTypes.Jsonではなく、匿名型の型名のような文字列？
-		var claim = AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}");
-		_output.WriteLine(claim.ValueType);
-		claim = AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}");
-		_output.WriteLine(claim.ValueType);
+		// ディクショナリをもつクレームは、IdentityModel 6.xではJSON形式の文字列だったが、7.xではJSON形式ではない
+		// 6.x
+		//var claim1 = AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}");
+		//var claim2 = AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}");
+		// 7.x
+		var claim1 = AssertHelper.ContainsClaim(claims, "test", new { x = 1 }.ToString()!);
+		var claim2 = AssertHelper.ContainsClaim(claims, "test", new { x = 2 }.ToString()!);
 
-		// JSONにはオブジェクトが出力される
-		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
+		// ValueTypeの値は、JsonClaimValueTypes.Jsonではなく、匿名型の型名のような文字列？
+		_output.WriteLine(claim1.ValueType);
+		_output.WriteLine(claim2.ValueType);
+
+		// IdentityModel 6.xではオブジェクトの配列としてシリアライズできたが、7.xでは文字列の配列としてシリアライズされる
+		// 6.x
+		//Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
+		// 7.x
+		Assert.Equal(@"{""test"":[""{ x = 1 }"",""{ x = 2 }""]}", payload.SerializeToJson());
 	}
+
+	// todo: claimsCollection：JsonArray => JsonElement
 
 	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
