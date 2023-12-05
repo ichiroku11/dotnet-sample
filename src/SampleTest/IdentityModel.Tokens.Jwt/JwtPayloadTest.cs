@@ -1,6 +1,8 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -99,7 +101,7 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
-	public void Constructor_claimsCollectionで配列を指定してペイロードを生成する() {
+	public void Constructor_claimsCollectionでInt32の配列を指定してペイロードを生成する() {
 		// Arrange
 		// Act
 		var payload = new JwtPayload(
@@ -122,6 +124,33 @@ public class JwtPayloadTest {
 		//Assert.Equal("[1,2]", claim.Value);
 		// 7.x
 		Assert.Equal(Array.Empty<int>().ToString(), claim.Value);
+
+		// JSONには配列が出力される
+		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
+	}
+
+	[Fact]
+	public void Constructor_claimsCollectionでInt32のJsonArrayをJsonElementとして指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new JsonArray(JsonValue.Create(1), JsonValue.Create(2)).Deserialize<JsonElement>(),
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+
+		// Assert
+		// 配列の要素数分のクレームが追加される
+		var claim1 = AssertHelper.ContainsClaim(claims, "test", "1");
+		Assert.Equal("http://www.w3.org/2001/XMLSchema#integer32", claim1.ValueType);
+		var claim2 = AssertHelper.ContainsClaim(claims, "test", "2");
+		Assert.Equal("http://www.w3.org/2001/XMLSchema#integer32", claim2.ValueType);
 
 		// JSONには配列が出力される
 		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
