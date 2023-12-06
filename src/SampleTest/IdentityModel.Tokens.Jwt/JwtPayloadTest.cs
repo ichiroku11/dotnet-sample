@@ -193,7 +193,29 @@ public class JwtPayloadTest {
 		_output.WriteLine(exception.Message);
 	}
 
-	// todo: claimsCollection：JsonObject => JsonElement
+	[Fact]
+	public void Constructor_claimsCollectionでJsonObjectをJsonElementとして指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new JsonObject { ["x"] = 1 }.Deserialize<JsonElement>(),
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+		var claim = claims.Single(claim => string.Equals(claim.Type, "test", StringComparison.Ordinal));
+
+		// Assert
+		Assert.Single(claims);
+		Assert.Equal(@"{""x"":1}", claim.Value);
+		Assert.Equal("JSON", claim.ValueType);
+		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
+	}
 
 	[Fact]
 	public void Constructor_claimsCollectionでオブジェクトの配列を指定してペイロードを生成する() {
