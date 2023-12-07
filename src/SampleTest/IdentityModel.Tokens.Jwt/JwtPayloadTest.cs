@@ -212,8 +212,11 @@ public class JwtPayloadTest {
 
 		// Assert
 		Assert.Single(claims);
+
+		// クレームにJSON文字列が格納され、ValueTypeは"JSON"になる
 		Assert.Equal(@"{""x"":1}", claim.Value);
 		Assert.Equal("JSON", claim.ValueType);
+
 		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
 	}
 
@@ -258,7 +261,36 @@ public class JwtPayloadTest {
 		Assert.Equal(@"{""test"":[""{ x = 1 }"",""{ x = 2 }""]}", payload.SerializeToJson());
 	}
 
-	// todo: claimsCollection：JsonArray => JsonElement
+	[Fact]
+	public void Constructor_claimsCollectionでJsonObjectのJsonArrayをJsonElementとして指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = new JsonArray {
+					new JsonObject { ["x"] = 1 },
+					new JsonObject { ["x"] = 2 },
+				}.Deserialize<JsonElement>()
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+
+		// Assert
+		Assert.Equal(2, claims.Count());
+
+		// クレームにJSON文字列が格納され、ValueTypeは"JSON"になる
+		var claim1 = AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}");
+		Assert.Equal("JSON", claim1.ValueType);
+		var claim2 = AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}");
+		Assert.Equal("JSON", claim2.ValueType);
+
+		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
+	}
 
 	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
