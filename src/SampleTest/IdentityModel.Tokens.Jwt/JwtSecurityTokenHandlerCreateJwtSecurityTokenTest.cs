@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -125,8 +126,9 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[1,2]}", token.ToString());
 	}
 
-	[Fact(Skip = "IdentityModel.7x")]
-	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
+	// 6.xまではトークンを生成できた
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含めると例外が発生する() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
@@ -136,6 +138,33 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 			// クレームにオブジェクトを追加する
 			Claims = new Dictionary<string, object> {
 				["test"] = new { x = 1 },
+			}
+		};
+
+		// Act
+		var exception = Record.Exception(() => handler.CreateJwtSecurityToken(descriptor));
+
+		// Assert
+		Assert.IsType<ArgumentException>(exception);
+		_output.WriteLine(exception.Message);
+
+		// 6.xまではトークンを生成できたが、
+		// 7.xからは例外が発生するようになった
+		//var token = handler.CreateJwtSecurityToken(descriptor);
+		//Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
+	}
+
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにオブジェクトを追加するにはJsonElementを利用する
+			Claims = new Dictionary<string, object> {
+				["test"] = new JsonObject { ["x"] = 1 }.Deserialize<JsonElement>(),
 			}
 		};
 
