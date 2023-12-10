@@ -154,6 +154,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		//Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
 	}
 
+	// 7.x～
 	[Fact]
 	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
 		// Arrange
@@ -175,8 +176,8 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
 	}
 
-	[Fact(Skip = "IdentityModel.7x")]
-	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含める() {
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含めたいが文字列の配列になってしまう() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
@@ -189,6 +190,35 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 					new { x = 1 },
 					new { x = 2 },
 				},
+			}
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		// IdentityModel 6.xではオブジェクトの配列としてシリアライズできたが、7.xでは文字列の配列としてシリアライズされる
+		// 6.x
+		//Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[{""x"":1},{""x"":2}]}", token.ToString());
+		// 7.x
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[""{ x = 1 }"",""{ x = 2 }""]}", token.ToString());
+	}
+
+	// 7.x～
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含める() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにJsonObjectのJsonArrayを追加する
+			Claims = new Dictionary<string, object> {
+				["test"] = new JsonArray(
+					new JsonObject { ["x"] = 1 },
+					new JsonObject { ["x"] = 2 }
+				).Deserialize<JsonElement>(),
 			}
 		};
 
