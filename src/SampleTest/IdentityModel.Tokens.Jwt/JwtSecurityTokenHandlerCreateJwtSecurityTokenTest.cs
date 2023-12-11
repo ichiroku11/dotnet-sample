@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -370,7 +372,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	}
 
 	// ECDHによる鍵交換
-	[Fact(Skip = "IdentityModel.7x")]
+	[Fact]
 	public void CreateJwtSecurityToken_非対称鍵で暗号化したトークンを生成する() {
 		// Arrange
 		// 暗号化する側
@@ -393,7 +395,24 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 			},
 			AdditionalHeaderClaims = new Dictionary<string, object> {
 				// 暗号化する側の公開鍵をトークンに含める（復号する側に伝える）
-				[JwtHeaderParameterNames.Epk] = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+				// 6.xではJsonWebKeyをシリアライズできたが、7.xでは例外が発生するようになった
+				// Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException : IDX10616: Encryption failed. EncryptionProvider failed for: Algorithm: 'A128CBC-HS256', SecurityKey: '[PII of type 'Microsoft.IdentityModel.Tokens.ECDsaSecurityKey' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.See inner exception.
+				// ---- System.ArgumentException : IDX11025: Cannot serialize object of type: 'Microsoft.IdentityModel.Tokens.JsonWebKey' into property: 'epk'.
+				// 6.x
+				//[JwtHeaderParameterNames.Epk] = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+				// 7.x
+				// JsonElementに変換して設定する
+				[JwtHeaderParameterNames.Epk] =
+					JsonSerializer.SerializeToElement(
+						JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+						new JsonSerializerOptions {
+							DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+							TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+								Modifiers = {
+									JsonTypeInfoModifiers.ReturnNullIfCollectionEmpty,
+								}
+							}
+						}),
 			},
 		};
 		var handler = new JwtSecurityTokenHandler {
@@ -423,7 +442,11 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 			Assert.True(token.Header.ContainsKey(JwtHeaderParameterNames.Epk));
 
 			// "epk"クレームの値はJsonWebKey
-			var jwk = token.Header[JwtHeaderParameterNames.Epk] as JsonWebKey;
+			// 6.x
+			//var jwk = token.Header[JwtHeaderParameterNames.Epk] as JsonWebKey;
+			// 7.x
+			var element = Assert.IsType<JsonElement>(token.Header[JwtHeaderParameterNames.Epk]);
+			var jwk = JsonSerializer.Deserialize<JsonWebKey>(element);
 			Assert.NotNull(jwk);
 			Assert.Equal(JsonWebAlgorithmsKeyTypes.EllipticCurve, jwk.Kty);
 			Assert.Equal(JsonWebKeyECTypes.P521, jwk.Crv);
