@@ -101,6 +101,31 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
+	public void Constructor_issuerとaudienceとnotBeforeとexpiresとissuedAtを指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: "i",
+			audience: "a",
+			claims: null,
+			notBefore: EpochTime.UnixEpoch.AddSeconds(1),
+			expires: EpochTime.UnixEpoch.AddSeconds(2),
+			issuedAt: EpochTime.UnixEpoch.AddSeconds(3));
+
+		// Assert
+		Assert.Null(payload.Sub);
+		Assert.Null(payload.Nonce);
+		Assert.Equal(1, payload.NotBefore);
+		Assert.Equal("i", payload.Iss);
+		Assert.Equal(EpochTime.UnixEpoch.AddSeconds(3), payload.IssuedAt);
+		Assert.Equal(2, payload.Expiration);
+		var audience = Assert.Single(payload.Aud);
+		Assert.Equal("a", audience);
+
+		_output.WriteLine(payload.SerializeToJson());
+	}
+
+	[Fact]
 	public void Constructor_claimsCollectionでInt32の配列を指定してペイロードを生成する() {
 		// Arrange
 		// Act
@@ -147,10 +172,8 @@ public class JwtPayloadTest {
 
 		// Assert
 		// 配列の要素数分のクレームが追加される
-		var claim1 = AssertHelper.ContainsClaim(claims, "test", "1");
-		Assert.Equal("http://www.w3.org/2001/XMLSchema#integer32", claim1.ValueType);
-		var claim2 = AssertHelper.ContainsClaim(claims, "test", "2");
-		Assert.Equal("http://www.w3.org/2001/XMLSchema#integer32", claim2.ValueType);
+		AssertHelper.ContainsClaim(claims, "test", "1", ClaimValueTypes.Integer32);
+		AssertHelper.ContainsClaim(claims, "test", "2", ClaimValueTypes.Integer32);
 
 		// JSONには配列が出力される
 		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
@@ -284,10 +307,8 @@ public class JwtPayloadTest {
 		Assert.Equal(2, claims.Count());
 
 		// クレームにJSON文字列が格納され、ValueTypeは"JSON"になる
-		var claim1 = AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}");
-		Assert.Equal("JSON", claim1.ValueType);
-		var claim2 = AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}");
-		Assert.Equal("JSON", claim2.ValueType);
+		AssertHelper.ContainsClaim(claims, "test", @"{""x"":1}", JsonClaimValueTypes.Json);
+		AssertHelper.ContainsClaim(claims, "test", @"{""x"":2}", JsonClaimValueTypes.Json);
 
 		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
 	}
