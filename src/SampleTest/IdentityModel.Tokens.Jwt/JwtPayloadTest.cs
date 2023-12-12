@@ -180,6 +180,31 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
+	public void Constructor_claimsCollectionでInt32の配列をJsonElementとして指定してペイロードを生成する() {
+		// Arrange
+		// Act
+		var payload = new JwtPayload(
+			issuer: null,
+			audience: null,
+			claims: null,
+			claimsCollection: new Dictionary<string, object> {
+				["test"] = JsonSerializer.SerializeToElement(new[] { 1, 2 }),
+			},
+			notBefore: null,
+			expires: null,
+			issuedAt: null);
+		var claims = payload.Claims;
+
+		// Assert
+		// 配列の要素数分のクレームが追加される
+		AssertHelper.ContainsClaim(claims, "test", "1", ClaimValueTypes.Integer32);
+		AssertHelper.ContainsClaim(claims, "test", "2", ClaimValueTypes.Integer32);
+
+		// JSONには配列が出力される
+		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
+	}
+
+	[Fact]
 	public void Constructor_claimsCollectionでオブジェクトを指定してペイロードを生成する() {
 		// Arrange
 		// Act
@@ -242,6 +267,8 @@ public class JwtPayloadTest {
 
 		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
 	}
+
+	// todo: SerializeToElement
 
 	[Fact]
 	public void Constructor_claimsCollectionでオブジェクトの配列を指定してペイロードを生成する() {
@@ -312,6 +339,8 @@ public class JwtPayloadTest {
 
 		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
 	}
+
+	// todo: SerializeToElement
 
 	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
