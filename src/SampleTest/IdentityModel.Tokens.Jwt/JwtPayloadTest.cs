@@ -154,8 +154,17 @@ public class JwtPayloadTest {
 		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
 	}
 
-	[Fact]
-	public void Constructor_claimsCollectionでInt32のJsonArrayをJsonElementとして指定してペイロードを生成する() {
+	public static TheoryData<JsonElement> GetTheoryData_Constructor_JsonArray()
+		=> new() {
+			// JsonArrayからJsonElementを生成する
+			new JsonArray(JsonValue.Create(1), JsonValue.Create(2)).Deserialize<JsonElement>(),
+			// intの配列からJsonElementを生成する
+			JsonSerializer.SerializeToElement(new[] { 1, 2 })
+		};
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Constructor_JsonArray))]
+	public void Constructor_claimsCollectionでInt32配列をJsonElementとして指定してペイロードを生成する(JsonElement element) {
 		// Arrange
 		// Act
 		var payload = new JwtPayload(
@@ -163,32 +172,7 @@ public class JwtPayloadTest {
 			audience: null,
 			claims: null,
 			claimsCollection: new Dictionary<string, object> {
-				["test"] = new JsonArray(JsonValue.Create(1), JsonValue.Create(2)).Deserialize<JsonElement>(),
-			},
-			notBefore: null,
-			expires: null,
-			issuedAt: null);
-		var claims = payload.Claims;
-
-		// Assert
-		// 配列の要素数分のクレームが追加される
-		AssertHelper.ContainsClaim(claims, "test", "1", ClaimValueTypes.Integer32);
-		AssertHelper.ContainsClaim(claims, "test", "2", ClaimValueTypes.Integer32);
-
-		// JSONには配列が出力される
-		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
-	}
-
-	[Fact]
-	public void Constructor_claimsCollectionでInt32の配列をJsonElementとして指定してペイロードを生成する() {
-		// Arrange
-		// Act
-		var payload = new JwtPayload(
-			issuer: null,
-			audience: null,
-			claims: null,
-			claimsCollection: new Dictionary<string, object> {
-				["test"] = JsonSerializer.SerializeToElement(new[] { 1, 2 }),
+				["test"] = element,
 			},
 			notBefore: null,
 			expires: null,
