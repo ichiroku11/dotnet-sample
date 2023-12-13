@@ -126,7 +126,7 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
-	public void Constructor_claimsCollectionでInt32の配列を指定してペイロードを生成する() {
+	public void Constructor_claimsCollectionでInt32配列を指定してペイロードを生成する() {
 		// Arrange
 		// Act
 		var payload = new JwtPayload(
@@ -154,7 +154,7 @@ public class JwtPayloadTest {
 		Assert.Equal(@"{""test"":[1,2]}", payload.SerializeToJson());
 	}
 
-	public static TheoryData<JsonElement> GetTheoryData_Constructor_JsonArray()
+	public static TheoryData<JsonElement> GetTheoryData_Constructor_Int32Array()
 		=> new() {
 			// JsonArrayからJsonElementを生成する
 			new JsonArray(JsonValue.Create(1), JsonValue.Create(2)).Deserialize<JsonElement>(),
@@ -163,7 +163,7 @@ public class JwtPayloadTest {
 		};
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_Constructor_JsonArray))]
+	[MemberData(nameof(GetTheoryData_Constructor_Int32Array))]
 	public void Constructor_claimsCollectionでInt32配列をJsonElementとして指定してペイロードを生成する(JsonElement element) {
 		// Arrange
 		// Act
@@ -225,8 +225,17 @@ public class JwtPayloadTest {
 		_output.WriteLine(exception.Message);
 	}
 
-	[Fact]
-	public void Constructor_claimsCollectionでJsonObjectをJsonElementとして指定してペイロードを生成する() {
+	public static TheoryData<JsonElement> GetTheoryData_Constructor_Object()
+		=> new() {
+			// JsonObjectからJsonElementを生成する
+			new JsonObject { ["x"] = 1 }.Deserialize<JsonElement>(),
+			// 匿名オブジェクトからJsonElementを生成する
+			JsonSerializer.SerializeToElement(new { x = 1 })
+		};
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Constructor_Object))]
+	public void Constructor_claimsCollectionでオブジェクトをJsonElementとして指定してペイロードを生成する(JsonElement element) {
 		// Arrange
 		// Act
 		var payload = new JwtPayload(
@@ -234,7 +243,7 @@ public class JwtPayloadTest {
 			audience: null,
 			claims: null,
 			claimsCollection: new Dictionary<string, object> {
-				["test"] = new JsonObject { ["x"] = 1 }.Deserialize<JsonElement>(),
+				["test"] = element,
 			},
 			notBefore: null,
 			expires: null,
@@ -247,12 +256,10 @@ public class JwtPayloadTest {
 
 		// クレームにJSON文字列が格納され、ValueTypeは"JSON"になる
 		Assert.Equal(@"{""x"":1}", claim.Value);
-		Assert.Equal("JSON", claim.ValueType);
+		Assert.Equal(JsonClaimValueTypes.Json, claim.ValueType);
 
 		Assert.Equal(@"{""test"":{""x"":1}}", payload.SerializeToJson());
 	}
-
-	// todo: SerializeToElement
 
 	[Fact]
 	public void Constructor_claimsCollectionでオブジェクトの配列を指定してペイロードを生成する() {
