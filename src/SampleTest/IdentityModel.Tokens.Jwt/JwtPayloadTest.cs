@@ -159,7 +159,7 @@ public class JwtPayloadTest {
 			// JsonArrayからJsonElementを生成する
 			new JsonArray(JsonValue.Create(1), JsonValue.Create(2)).Deserialize<JsonElement>(),
 			// intの配列からJsonElementを生成する
-			JsonSerializer.SerializeToElement(new[] { 1, 2 })
+			JsonSerializer.SerializeToElement(new[] { 1, 2 }),
 		};
 
 	[Theory]
@@ -230,7 +230,7 @@ public class JwtPayloadTest {
 			// JsonObjectからJsonElementを生成する
 			new JsonObject { ["x"] = 1 }.Deserialize<JsonElement>(),
 			// 匿名オブジェクトからJsonElementを生成する
-			JsonSerializer.SerializeToElement(new { x = 1 })
+			JsonSerializer.SerializeToElement(new { x = 1 }),
 		};
 
 	[Theory]
@@ -262,7 +262,7 @@ public class JwtPayloadTest {
 	}
 
 	[Fact]
-	public void Constructor_claimsCollectionでオブジェクトの配列を指定してペイロードを生成する() {
+	public void Constructor_claimsCollectionでオブジェクト配列を指定してペイロードを生成する() {
 		// Arrange
 		// Act
 		var payload = new JwtPayload(
@@ -302,8 +302,22 @@ public class JwtPayloadTest {
 		Assert.Equal(@"{""test"":[""{ x = 1 }"",""{ x = 2 }""]}", payload.SerializeToJson());
 	}
 
-	[Fact]
-	public void Constructor_claimsCollectionでJsonObjectのJsonArrayをJsonElementとして指定してペイロードを生成する() {
+	public static TheoryData<JsonElement> GetTheoryData_Constructor_ObjectArray()
+	=> new() {
+			new JsonArray {
+				new JsonObject { ["x"] = 1 },
+				new JsonObject { ["x"] = 2 },
+			}.Deserialize<JsonElement>(),
+
+			JsonSerializer.SerializeToElement(new[] {
+				new { x = 1 },
+				new { x = 2 }
+			}),
+	};
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Constructor_ObjectArray))]
+	public void Constructor_claimsCollectionでオブジェクト配列をJsonElementとして指定してペイロードを生成する(JsonElement element) {
 		// Arrange
 		// Act
 		var payload = new JwtPayload(
@@ -311,10 +325,7 @@ public class JwtPayloadTest {
 			audience: null,
 			claims: null,
 			claimsCollection: new Dictionary<string, object> {
-				["test"] = new JsonArray {
-					new JsonObject { ["x"] = 1 },
-					new JsonObject { ["x"] = 2 },
-				}.Deserialize<JsonElement>()
+				["test"] = element
 			},
 			notBefore: null,
 			expires: null,
@@ -330,8 +341,6 @@ public class JwtPayloadTest {
 
 		Assert.Equal(@"{""test"":[{""x"":1},{""x"":2}]}", payload.SerializeToJson());
 	}
-
-	// todo: SerializeToElement
 
 	[Fact]
 	public void SerializeToJson_空のペイロードをJSONにシリアライズする() {
