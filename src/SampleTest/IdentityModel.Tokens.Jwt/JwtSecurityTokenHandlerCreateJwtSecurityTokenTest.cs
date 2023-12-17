@@ -167,7 +167,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		var descriptor = new SecurityTokenDescriptor {
 			// クレームにオブジェクトを追加するにはJsonElementを利用する
 			Claims = new Dictionary<string, object> {
-				["test"] = new JsonObject { ["x"] = 1 }.Deserialize<JsonElement>(),
+				["test"] = JsonSerializer.SerializeToElement(new { x = 1 }),
 			}
 		};
 
@@ -217,10 +217,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		var descriptor = new SecurityTokenDescriptor {
 			// クレームにJsonObjectのJsonArrayを追加する
 			Claims = new Dictionary<string, object> {
-				["test"] = new JsonArray(
-					new JsonObject { ["x"] = 1 },
-					new JsonObject { ["x"] = 2 }
-				).Deserialize<JsonElement>(),
+				["test"] = JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } }),
 			}
 		};
 
