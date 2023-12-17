@@ -3,6 +3,8 @@ using SampleLib.IdentityModel.Tokens.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using System.Text.Json.Serialization;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -58,7 +60,7 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 		Assert.IsType<JwtSecurityToken>(validatedToken);
 	}
 
-	[Fact(Skip = "IdentityModel.7x")]
+	[Fact]
 	public void CreateJwtSecurityToken_非対称鍵で暗号化したトークンを復号する() {
 		// Arrange
 		// 復号する側の鍵ペア
@@ -89,7 +91,16 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 				},
 				AdditionalHeaderClaims = new Dictionary<string, object> {
 					// 暗号化する側の公開鍵
-					[JwtHeaderParameterNames.Epk] = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+					[JwtHeaderParameterNames.Epk] = JsonSerializer.SerializeToElement(
+						JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+						new JsonSerializerOptions {
+							DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+							TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+								Modifiers = {
+									JsonTypeInfoModifiers.ReturnNullIfCollectionEmpty,
+								}
+							}
+						}),
 				},
 			};
 
@@ -113,14 +124,20 @@ public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
 					return null;
 				}
 
-				if (!token.Header.ContainsKey(JwtHeaderParameterNames.Epk)) {
+				// 暗号化する側の公開鍵は"epk"から取り出す
+				if (!token.Header.TryGetValue(JwtHeaderParameterNames.Epk, out var epk)) {
 					// nullでいいか
 					return null;
 				}
 
-				// 暗号化する側の公開鍵は"epk"から取り出す
-				var epk = JsonSerializer.Serialize(token.Header[JwtHeaderParameterNames.Epk]);
-				var jwk = JsonWebKey.Create(epk);
+				if (epk is not JsonElement element) {
+					return null;
+				}
+
+				var jwk = element.Deserialize<JsonWebKey>();
+				if (jwk is null) {
+					return null;
+				}
 				var ecParams = jwk.GetECParameters();
 
 				validationParameters.TokenDecryptionKey = new ECDsaSecurityKey(ECDsa.Create(ecParams));
