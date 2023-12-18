@@ -232,8 +232,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 		_output.WriteLine(exception.Message);
 	}
 
-	// todo:
-	[Fact(Skip = "IdentityModel.7x")]
+	[Fact]
 	public async Task ValidateTokenAsync_トークンに含まれたオブジェクトの配列を取り出す() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
@@ -243,10 +242,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 		var descriptor = new SecurityTokenDescriptor {
 			// クレームにオブジェクトの配列を追加する
 			Claims = new Dictionary<string, object> {
-				["test"] = new[] {
-					new { x = 1 },
-					new { x = 2 },
-				},
+				["test"] = JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } }),
 			}
 		};
 
@@ -288,12 +284,20 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 			_output.WriteLine(key);
 			_output.WriteLine(value.ToString());
 
-			// dynamic型に変換して"x"プロパティの値を確認
 			var values = value as IList<object>;
 			Assert.NotNull(values);
 			Assert.Equal(2, values.Count);
+			// 6.x～
+			// dynamic型に変換して"x"プロパティの値を確認
+			/*
 			Assert.Contains(values, value => ((dynamic)value).x == 1);
 			Assert.Contains(values, value => ((dynamic)value).x == 2);
+			*/
+			// 7.x～
+			// オブジェクトはJsonElementになった様子
+			// JsonElement型に変換して"x"プロパティの値を確認
+			Assert.Contains(values, value => ((JsonElement)value).GetProperty("x").GetInt32() == 1);
+			Assert.Contains(values, value => ((JsonElement)value).GetProperty("x").GetInt32() == 2);
 		}
 	}
 }
