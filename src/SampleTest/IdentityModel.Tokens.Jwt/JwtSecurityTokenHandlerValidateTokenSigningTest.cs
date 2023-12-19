@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -47,9 +49,17 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 			return jwks;
 		}
 
-		// todo:
 		public string GetValidationJsonWebKeySetAsJson()
-			=> JsonSerializer.Serialize(GetValidationJsonWebKeySet());
+			=> JsonSerializer.Serialize(
+				GetValidationJsonWebKeySet(),
+				new JsonSerializerOptions {
+					DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+						Modifiers = {
+							JsonTypeInfoModifiers.ReturnNullIfCollectionEmpty,
+						}
+					}
+				});
 	}
 
 	public class TestDataForValidateToken : IEnumerable<object[]>, IDisposable {
@@ -113,7 +123,7 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest {
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
-	[Theory(Skip = "IdentityModel.7x")]
+	[Theory]
 	[ClassData(typeof(TestDataForValidateToken))]
 	public void ValidateToken_署名したトークンを検証する(
 		// 署名に利用する資格情報
