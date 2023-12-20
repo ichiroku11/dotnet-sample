@@ -45,4 +45,33 @@ public class JsonElementTest {
 		Assert.Equal(1, values["x"]);
 		Assert.Equal(2, values["y"]);
 	}
+
+	public static TheoryData<Func<JsonElement>> GetTheoryData() {
+		return new() {
+			() =>  JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } })
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData))]
+	public void オブジェクト配列のJsonElementを色々な方法で生成する(Func<JsonElement> func) {
+		// Arrange
+
+		// Act
+		var actual = func();
+
+		// Assert
+		Assert.Equal(JsonValueKind.Array, actual.ValueKind);
+		Assert.Equal(2, actual.GetArrayLength());
+		Assert.Collection(
+			actual.EnumerateArray(),
+			entry => {
+				Assert.Equal(JsonValueKind.Object, entry.ValueKind);
+				Assert.Equal(1, entry.GetProperty("x").GetInt32());
+			},
+			entry => {
+				Assert.Equal(JsonValueKind.Object, entry.ValueKind);
+				Assert.Equal(2, entry.GetProperty("x").GetInt32());
+			});
+	}
 }
