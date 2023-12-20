@@ -1,5 +1,4 @@
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -44,7 +43,7 @@ public class JsonWebKeyTest {
 		// Arrange
 		// Act
 		var actual = new JsonWebKey();
-		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+		_output.WriteLine(actual.ToJson());
 
 		// Assert
 		Assert.Null(actual.Kty);
@@ -64,7 +63,7 @@ public class JsonWebKeyTest {
 
 		// Act
 		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
-		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+		_output.WriteLine(actual.ToJson());
 
 		// Assert
 		Assert.Equal("oct", actual.Kty);
@@ -89,7 +88,7 @@ public class JsonWebKeyTest {
 
 		// Act
 		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
-		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+		_output.WriteLine(actual.ToJson());
 
 		// Assert
 		Assert.Equal("RSA", actual.Kty);
@@ -115,7 +114,7 @@ public class JsonWebKeyTest {
 
 		// Act
 		var actual = JsonWebKeyConverter.ConvertFromSecurityKey(key);
-		_output.WriteLine(JsonExtensions.SerializeToJson(actual));
+		_output.WriteLine(actual.ToJson());
 
 		// Assert
 		Assert.Equal("EC", actual.Kty);
@@ -139,7 +138,7 @@ public class JsonWebKeyTest {
 		var key = new ECDsaSecurityKey(ecdsa);
 
 		var expected = JsonWebKeyConverter.ConvertFromSecurityKey(key);
-		var json = JsonExtensions.SerializeToJson(expected);
+		var json = expected.ToJson();
 		_output.WriteLine(json);
 
 		// Act

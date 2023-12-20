@@ -4,6 +4,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
@@ -125,8 +128,9 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[1,2]}", token.ToString());
 	}
 
+	// 6.xまではトークンを生成できた
 	[Fact]
-	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含めると例外が発生する() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
@@ -140,6 +144,34 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 		};
 
 		// Act
+		var exception = Record.Exception(() => handler.CreateJwtSecurityToken(descriptor));
+
+		// Assert
+		Assert.IsType<ArgumentException>(exception);
+		_output.WriteLine(exception.Message);
+
+		// 6.xまではトークンを生成できたが、
+		// 7.xからは例外が発生するようになった
+		//var token = handler.CreateJwtSecurityToken(descriptor);
+		//Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":{""x"":1}}", token.ToString());
+	}
+
+	// 7.x～
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトを含める() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにオブジェクトを追加するにはJsonElementを利用する
+			Claims = new Dictionary<string, object> {
+				["test"] = JsonSerializer.SerializeToElement(new { x = 1 }),
+			}
+		};
+
+		// Act
 		var token = handler.CreateJwtSecurityToken(descriptor);
 
 		// Assert
@@ -147,7 +179,7 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 	}
 
 	[Fact]
-	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含める() {
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含めたいが文字列の配列になってしまう() {
 		// Arrange
 		var handler = new JwtSecurityTokenHandler {
 			SetDefaultTimesOnTokenCreation = false,
@@ -160,6 +192,32 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 					new { x = 1 },
 					new { x = 2 },
 				},
+			}
+		};
+
+		// Act
+		var token = handler.CreateJwtSecurityToken(descriptor);
+
+		// Assert
+		// IdentityModel 6.xではオブジェクトの配列としてシリアライズできたが、7.xでは文字列の配列としてシリアライズされる
+		// 6.x
+		//Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[{""x"":1},{""x"":2}]}", token.ToString());
+		// 7.x
+		Assert.Equal(@"{""alg"":""none"",""typ"":""JWT""}.{""test"":[""{ x = 1 }"",""{ x = 2 }""]}", token.ToString());
+	}
+
+	// 7.x～
+	[Fact]
+	public void CreateJwtSecurityToken_SecurityTokenDescriptorを使ってトークンにオブジェクトの配列を含める() {
+		// Arrange
+		var handler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
+		var descriptor = new SecurityTokenDescriptor {
+			// クレームにJsonObjectのJsonArrayを追加する
+			Claims = new Dictionary<string, object> {
+				["test"] = JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } }),
 			}
 		};
 
@@ -334,7 +392,24 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 			},
 			AdditionalHeaderClaims = new Dictionary<string, object> {
 				// 暗号化する側の公開鍵をトークンに含める（復号する側に伝える）
-				[JwtHeaderParameterNames.Epk] = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+				// 6.xではJsonWebKeyをシリアライズできたが、7.xでは例外が発生するようになった
+				// Microsoft.IdentityModel.Tokens.SecurityTokenEncryptionFailedException : IDX10616: Encryption failed. EncryptionProvider failed for: Algorithm: 'A128CBC-HS256', SecurityKey: '[PII of type 'Microsoft.IdentityModel.Tokens.ECDsaSecurityKey' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.See inner exception.
+				// ---- System.ArgumentException : IDX11025: Cannot serialize object of type: 'Microsoft.IdentityModel.Tokens.JsonWebKey' into property: 'epk'.
+				// 6.x
+				//[JwtHeaderParameterNames.Epk] = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+				// 7.x
+				// JsonElementに変換して設定する
+				[JwtHeaderParameterNames.Epk] =
+					JsonSerializer.SerializeToElement(
+						JsonWebKeyConverter.ConvertFromECDsaSecurityKey(new ECDsaSecurityKey(encryptorPublic)),
+						new JsonSerializerOptions {
+							DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+							TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+								Modifiers = {
+									JsonTypeInfoModifiers.ReturnNullIfCollectionEmpty,
+								}
+							}
+						}),
 			},
 		};
 		var handler = new JwtSecurityTokenHandler {
@@ -364,7 +439,11 @@ public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
 			Assert.True(token.Header.ContainsKey(JwtHeaderParameterNames.Epk));
 
 			// "epk"クレームの値はJsonWebKey
-			var jwk = token.Header[JwtHeaderParameterNames.Epk] as JsonWebKey;
+			// 6.x
+			//var jwk = token.Header[JwtHeaderParameterNames.Epk] as JsonWebKey;
+			// 7.x
+			var element = Assert.IsType<JsonElement>(token.Header[JwtHeaderParameterNames.Epk]);
+			var jwk = JsonSerializer.Deserialize<JsonWebKey>(element);
 			Assert.NotNull(jwk);
 			Assert.Equal(JsonWebAlgorithmsKeyTypes.EllipticCurve, jwk.Kty);
 			Assert.Equal(JsonWebKeyECTypes.P521, jwk.Crv);
