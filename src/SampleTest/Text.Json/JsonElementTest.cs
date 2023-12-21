@@ -72,13 +72,22 @@ public class JsonElementTest {
 		Assert.Equal(2, actual.GetArrayLength());
 		Assert.Collection(
 			actual.EnumerateArray(),
+			// 順番は保証されているのか？
 			entry => {
 				Assert.Equal(JsonValueKind.Object, entry.ValueKind);
-				Assert.Equal(1, entry.GetProperty("x").GetInt32());
+
+				var result = entry.TryGetProperty("x", out var property);
+				Assert.True(result);
+				Assert.Equal(JsonValueKind.Number, property.ValueKind);
+				Assert.Equal(1, property.GetInt32());
 			},
 			entry => {
 				Assert.Equal(JsonValueKind.Object, entry.ValueKind);
-				Assert.Equal(2, entry.GetProperty("x").GetInt32());
+
+				var result = entry.TryGetProperty("x", out var property);
+				Assert.True(result);
+				Assert.Equal(JsonValueKind.Number, property.ValueKind);
+				Assert.Equal(2, property.GetInt32());
 			});
 	}
 }
