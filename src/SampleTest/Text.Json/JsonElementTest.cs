@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SampleTest.Text.Json;
 
@@ -47,8 +48,14 @@ public class JsonElementTest {
 	}
 
 	public static TheoryData<Func<JsonElement>> GetTheoryData() {
+		var values = new JsonArray(
+			new JsonObject { ["x"] = JsonValue.Create(1) },
+			new JsonObject { ["x"] = JsonValue.Create(2) });
+
 		return new() {
-			() =>  JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } })
+			() => JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } }),
+			() => JsonSerializer.Deserialize<JsonElement>(values),
+			() => values.Deserialize<JsonElement>(),
 		};
 	}
 
