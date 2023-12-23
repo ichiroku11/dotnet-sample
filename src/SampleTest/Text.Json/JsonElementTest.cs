@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SampleTest.Text.Json;
 
@@ -44,5 +45,49 @@ public class JsonElementTest {
 		Assert.Equal(2, values.Count);
 		Assert.Equal(1, values["x"]);
 		Assert.Equal(2, values["y"]);
+	}
+
+	public static TheoryData<Func<JsonElement>> GetTheoryData() {
+		var values = new JsonArray(
+			new JsonObject { ["x"] = JsonValue.Create(1) },
+			new JsonObject { ["x"] = JsonValue.Create(2) });
+
+		return new() {
+			() => JsonSerializer.SerializeToElement(new[] { new { x = 1 }, new { x = 2 } }),
+			() => JsonSerializer.Deserialize<JsonElement>(values),
+			() => values.Deserialize<JsonElement>(),
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData))]
+	public void オブジェクト配列のJsonElementを色々な方法で生成する(Func<JsonElement> func) {
+		// Arrange
+
+		// Act
+		var actual = func();
+
+		// Assert
+		Assert.Equal(JsonValueKind.Array, actual.ValueKind);
+		Assert.Equal(2, actual.GetArrayLength());
+		Assert.Collection(
+			actual.EnumerateArray(),
+			// 順番は保証されているのか？
+			entry => {
+				Assert.Equal(JsonValueKind.Object, entry.ValueKind);
+
+				var result = entry.TryGetProperty("x", out var property);
+				Assert.True(result);
+				Assert.Equal(JsonValueKind.Number, property.ValueKind);
+				Assert.Equal(1, property.GetInt32());
+			},
+			entry => {
+				Assert.Equal(JsonValueKind.Object, entry.ValueKind);
+
+				var result = entry.TryGetProperty("x", out var property);
+				Assert.True(result);
+				Assert.Equal(JsonValueKind.Number, property.ValueKind);
+				Assert.Equal(2, property.GetInt32());
+			});
 	}
 }
