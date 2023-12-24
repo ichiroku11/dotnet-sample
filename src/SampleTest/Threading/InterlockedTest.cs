@@ -7,8 +7,7 @@ public class InterlockedTest {
 		var target = 0;
 
 		// Act
-		// location1の値がcomparandと同じ場合に、
-		// location1の値をvalueの値にする
+		// location1の値がcomparandと一致する場合に、location1の値をvalueの値にする
 		// 戻り値は元の値を返す
 		var result = Interlocked.CompareExchange(location1: ref target, value: 1, comparand: 0);
 
@@ -23,7 +22,7 @@ public class InterlockedTest {
 		var target = 0;
 
 		// Act
-		// 一致しないので値が変更されない
+		// location1の値がcomparandと一致しないので値が変更されない
 		var result = Interlocked.CompareExchange(location1: ref target, value: 1, comparand: 1);
 
 		// Assert
