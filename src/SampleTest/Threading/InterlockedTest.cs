@@ -16,4 +16,18 @@ public class InterlockedTest {
 		Assert.Equal(1, target);
 		Assert.Equal(0, result);
 	}
+
+	[Fact]
+	public void CompareExchange_Int32で値が変更されないことを確認する() {
+		// Arrange
+		var target = 0;
+
+		// Act
+		// 一致しないので値が変更されない
+		var result = Interlocked.CompareExchange(location1: ref target, value: 1, comparand: 1);
+
+		// Assert
+		Assert.Equal(0, target);
+		Assert.Equal(0, result);
+	}
 }
