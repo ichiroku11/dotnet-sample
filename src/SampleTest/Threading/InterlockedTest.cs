@@ -30,4 +30,18 @@ public class InterlockedTest {
 		Assert.Equal(0, target);
 		Assert.Equal(0, result);
 	}
+
+	[Fact]
+	public void CompareExchange_参照型でnullと比較して値が変更されることを確認する() {
+		// Arrange
+		var values = default(List<int>);
+
+		// Act
+		var result = Interlocked.CompareExchange(location1: ref values, value: new List<int> { 1 }, comparand: default);
+
+		// Assert
+		Assert.NotNull(values);
+		Assert.Single(values, 1);
+		Assert.Null(result);
+	}
 }
