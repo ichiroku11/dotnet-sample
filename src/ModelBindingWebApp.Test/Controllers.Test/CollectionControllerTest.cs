@@ -168,6 +168,18 @@ public class CollectionControllerTest : ControllerTestBase {
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.NotNull(values);
-		Assert.Equal(new[] { new Sample { Id = 1, Name = "a" }, new Sample { Id = 2, Name = "b" } }, values);
+		// .NET 8
+		// Sample[]ではなくList<Sample>になった
+		//Assert.Equal(new[] { new Sample { Id = 1, Name = "a" }, new Sample { Id = 2, Name = "b" } }, values);
+		Assert.Collection(
+			values.OrderBy(sample => sample.Id),
+			sample => {
+				Assert.Equal(1, sample.Id);
+				Assert.Equal("a", sample.Name);
+			},
+			sample => {
+				Assert.Equal(2, sample.Id);
+				Assert.Equal("b", sample.Name);
+			});
 	}
 }
