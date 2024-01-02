@@ -3,13 +3,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -73,14 +70,14 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
 			_output.WriteLine(request.ToString());
 			if (request.Content != null) {
-				_output.WriteLine(await request.Content.ReadAsStringAsync());
+				_output.WriteLine(await request.Content.ReadAsStringAsync(cancellationToken));
 			}
 
 			var response = await base.SendAsync(request, cancellationToken);
 
 			_output.WriteLine(response.ToString());
 			if (response.Content != null) {
-				_output.WriteLine(await response.Content.ReadAsStringAsync());
+				_output.WriteLine(await response.Content.ReadAsStringAsync(cancellationToken));
 			}
 			return response;
 
