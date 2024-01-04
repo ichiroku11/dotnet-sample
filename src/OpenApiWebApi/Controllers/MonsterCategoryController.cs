@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using OpenApiWebApi.Models;
-using SampleLib;
 
 namespace OpenApiWebApi.Controllers;
 
@@ -27,7 +26,14 @@ public class MonsterCategoryController : ControllerBase {
 
 		return new MonsterCategoryResponse {
 			Category = category,
-			CategoryName = category.DisplayName() ?? "",
+			// .NET 8のSampleLibとNSwag.AspNetCore 13.20.0でエラーになるため
+			// 一旦SampleLibの依存をなくす
+			CategoryName = category switch {
+				MonsterCategory.Slime => "スライム系",
+				MonsterCategory.Animal => "けもの系",
+				MonsterCategory.Fly => "鳥系",
+				_ => "",
+			},
 		};
 	}
 }
