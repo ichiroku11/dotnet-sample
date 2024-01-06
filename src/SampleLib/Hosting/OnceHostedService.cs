@@ -4,19 +4,13 @@ using Microsoft.Extensions.Logging;
 namespace SampleLib.Hosting;
 
 // 一度実行したら終了するサービス
-public abstract class OnceHostedService : IHostedService {
-	private readonly IServiceProvider _services;
-	private readonly IHostApplicationLifetime _lifetime;
-	private readonly ILogger _logger;
-
-	public OnceHostedService(
-		IHost host,
-		IHostApplicationLifetime lifetime,
-		ILogger logger) {
-		_services = host.Services;
-		_lifetime = lifetime;
-		_logger = logger;
-	}
+public abstract class OnceHostedService(
+	IHost host,
+	IHostApplicationLifetime lifetime,
+	ILogger logger) : IHostedService {
+	private readonly IServiceProvider _services = host.Services;
+	private readonly IHostApplicationLifetime _lifetime = lifetime;
+	private readonly ILogger _logger = logger;
 
 	// 実行
 	protected abstract Task RunAsync(IServiceProvider services);

@@ -5,7 +5,9 @@ using Xunit.Abstractions;
 
 namespace SampleLib.AspNetCore.Test;
 
-public class HttpRequestExtensionsTest {
+public class HttpRequestExtensionsTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private static HttpRequest CreateRequest(string scheme, string host, string pathBase) {
 		var context = new DefaultHttpContext();
 		var request = context.Request;
@@ -23,12 +25,6 @@ public class HttpRequestExtensionsTest {
 		context.Features.Get<IHttpRequestFeature>().Headers = headers;
 
 		return context.Request;
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public HttpRequestExtensionsTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Theory]

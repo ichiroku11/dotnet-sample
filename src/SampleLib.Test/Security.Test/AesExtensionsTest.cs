@@ -4,12 +4,8 @@ using Xunit.Abstractions;
 
 namespace SampleLib.Security.Test;
 
-public class AesExtensionsTest {
-	private readonly ITestOutputHelper _output;
-
-	public AesExtensionsTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class AesExtensionsTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void 暗号化と復号を試す() {

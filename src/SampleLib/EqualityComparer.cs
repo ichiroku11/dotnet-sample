@@ -7,19 +7,11 @@ namespace SampleLib;
 /// </summary>
 /// <typeparam name="TElement"></typeparam>
 /// <typeparam name="TKey"></typeparam>
-public class EqualityComparer<TElement, TKey> : EqualityComparer<TElement>
+/// <param name="keySelector"></param>
+public class EqualityComparer<TElement, TKey>(Func<TElement, TKey> keySelector) : EqualityComparer<TElement>
 	where TElement : notnull
 	where TKey : notnull {
-
-	private readonly Func<TElement, TKey> _keySelector;
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="keySelector"></param>
-	public EqualityComparer(Func<TElement, TKey> keySelector) {
-		_keySelector = keySelector;
-	}
+	private readonly Func<TElement, TKey> _keySelector = keySelector;
 
 	/// <summary>
 	/// 指定したオブジェクトが等しいかどうか
