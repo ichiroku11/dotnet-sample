@@ -3,7 +3,9 @@ using Polly;
 
 namespace SampleTest.Polly;
 
-public class PolicyBuilderOrTest {
+public class PolicyBuilderOrTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private class SampleException1 : Exception {
 	}
 
@@ -11,12 +13,6 @@ public class PolicyBuilderOrTest {
 	}
 
 	private class SampleException3 : Exception {
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public PolicyBuilderOrTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	public static TheoryData<Exception, int> GetTheoryData_Or() {

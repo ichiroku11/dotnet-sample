@@ -3,18 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SampleTest.AspNetCore;
 
-public class DataProtectorTest {
+public class DataProtectorTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private static IServiceProvider GetServiceProvider() {
 		var services = new ServiceCollection();
 		services.AddDataProtection();
 
 		return services.BuildServiceProvider();
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public DataProtectorTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]

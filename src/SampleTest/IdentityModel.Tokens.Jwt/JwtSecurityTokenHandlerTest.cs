@@ -5,13 +5,8 @@ using System.Text.Json;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtSecurityTokenHandlerTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
-		_output = output;
-	}
-
+public class JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void CanValidateToken_trueを返す() {

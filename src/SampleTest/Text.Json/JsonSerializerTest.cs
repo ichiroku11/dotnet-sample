@@ -4,12 +4,8 @@ using System.Text.Json;
 namespace SampleTest.Text.Json;
 
 // https://docs.microsoft.com/ja-jp/dotnet/standard/serialization/system-text-json-how-to?view=netcore-3.0
-public class JsonSerializerTest {
-	private readonly ITestOutputHelper _output;
-
-	public JsonSerializerTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JsonSerializerTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Theory]
 	[InlineData(1, "1")]

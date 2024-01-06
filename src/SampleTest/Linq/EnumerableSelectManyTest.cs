@@ -1,11 +1,7 @@
 namespace SampleTest.Linq;
 
-public class EnumerableSelectManyTest {
-	private readonly ITestOutputHelper _output;
-
-	public EnumerableSelectManyTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class EnumerableSelectManyTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void SelectMany_配列の配列を平坦化するサンプル() {
@@ -55,15 +51,10 @@ public class EnumerableSelectManyTest {
 	}
 
 	// 子を持つ（階層構造がある）クラス
-	private class Item {
-		public Item(string name, IEnumerable<Item>? children = default) {
-			Name = name;
-			Children = children ?? Enumerable.Empty<Item>();
-		}
+	private class Item(string name, IEnumerable<Item>? children = default) {
+		public string Name { get; } = name;
 
-		public string Name { get; }
-
-		public IEnumerable<Item> Children { get; }
+		public IEnumerable<Item> Children { get; } = children ?? Enumerable.Empty<Item>();
 	}
 
 	private static readonly IEnumerable<Item> _items

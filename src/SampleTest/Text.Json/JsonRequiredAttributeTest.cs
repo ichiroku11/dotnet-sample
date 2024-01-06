@@ -3,7 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace SampleTest.Text.Json;
 
-public class JsonRequiredAttributeTest {
+public class JsonRequiredAttributeTest(ITestOutputHelper ouput) {
+	private readonly ITestOutputHelper _output = ouput;
+
 	private static readonly JsonSerializerOptions _options
 		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -25,12 +27,6 @@ public class JsonRequiredAttributeTest {
 	private class SampleWithModifier {
 		public int Value { get; set; }
 		public required string Name { get; set; } = "";
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public JsonRequiredAttributeTest(ITestOutputHelper ouput) {
-		_output = ouput;
 	}
 
 	[Fact]

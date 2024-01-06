@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
-public class OptionsBuilderConfigureTest {
+public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 	private class SampleOptions {
 		public int Value { get; set; }
 	}
@@ -12,21 +12,13 @@ public class OptionsBuilderConfigureTest {
 		int GetValue();
 	}
 
-	private class SampleService : ISampleService {
-		private readonly SampleOptions _options;
-
-		public SampleService(IOptions<SampleOptions> options) {
-			_options = options.Value;
-		}
+	private class SampleService(IOptions<SampleOptions> options) : ISampleService {
+		private readonly SampleOptions _options = options.Value;
 
 		public int GetValue() => _options.Value;
 	}
 
-	private readonly ITestOutputHelper _output;
-
-	public OptionsBuilderConfigureTest(ITestOutputHelper output) {
-		_output = output;
-	}
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Configure_IConfigureOptionsが登録されていることを確認する() {

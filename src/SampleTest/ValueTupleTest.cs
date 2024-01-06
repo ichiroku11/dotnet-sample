@@ -1,20 +1,15 @@
 namespace SampleTest;
 
 // 分解の確認用
-public struct Vector3 {
-	public Vector3(int x = 0, int y = 0, int z = 0) {
-		X = x;
-		Y = y;
-		Z = z;
-	}
+public struct Vector3(int x = 0, int y = 0, int z = 0) {
 	// コンストラクタは次のようにも書けるみたい
 	/*
 	public Vector3(int x = 0, int y = 0, int z = 0) => (X, Y, Z) = (x, y, z);
 	*/
 
-	public int X { get; }
-	public int Y { get; }
-	public int Z { get; }
+	public int X { get; } = x;
+	public int Y { get; } = y;
+	public int Z { get; } = z;
 
 	// 分解メソッド
 	public void Deconstruct(out int x, out int y, out int z) => (x, y, z) = (X, Y, Z);

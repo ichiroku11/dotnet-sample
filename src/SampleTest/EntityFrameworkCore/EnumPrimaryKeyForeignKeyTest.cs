@@ -6,7 +6,9 @@ namespace SampleTest.EntityFrameworkCore;
 
 // 主キーや外部キーをenumのプロパティにマッピングするサンプル
 [Collection(CollectionNames.EfCoreMonster)]
-public class EnumPrimaryKeyForeignKeyTest {
+public class EnumPrimaryKeyForeignKeyTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private enum MonsterCategoryType {
 		None = 0,
 		Slime,
@@ -98,12 +100,6 @@ drop table if exists dbo.MonsterCategory;";
 		context.Monsters.AddRange(monsters);
 
 		await context.SaveChangesAsync();
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public EnumPrimaryKeyForeignKeyTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]

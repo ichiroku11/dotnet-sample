@@ -1,11 +1,7 @@
 namespace SampleTest.Threading;
 
-public class SemaphoreSlimTest {
-	private readonly ITestOutputHelper _output;
-
-	public SemaphoreSlimTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class SemaphoreSlimTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void 使ってみる() {

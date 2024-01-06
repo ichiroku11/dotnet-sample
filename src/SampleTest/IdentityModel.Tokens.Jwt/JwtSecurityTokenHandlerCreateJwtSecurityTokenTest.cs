@@ -10,12 +10,8 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtSecurityTokenHandlerCreateJwtSecurityTokenTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JwtSecurityTokenHandlerCreateJwtSecurityTokenTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void CreateJwtSecurityToken_ペイロードが空の署名なしトークンを生成する() {

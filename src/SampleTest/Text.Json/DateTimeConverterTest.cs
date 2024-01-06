@@ -4,7 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace SampleTest.Text.Json;
 
-public class DateTimeConverterTest {
+public class DateTimeConverterTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	// 独自フォーマットの日付文字列とDateTimeを変換するJsonConverter
 	private class DateTimeConverter : JsonConverter<DateTime> {
 		private static readonly string _format = "yyyy/MM/dd HH:mm:ss";
@@ -28,12 +30,6 @@ public class DateTimeConverterTest {
 	// JSONに変換するデータ
 	private class ConverterSample {
 		public DateTime Value { get; set; }
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public DateTimeConverterTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]

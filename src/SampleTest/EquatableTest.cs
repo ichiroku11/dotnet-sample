@@ -2,14 +2,9 @@ namespace SampleTest;
 
 public class EquatableTest {
 	// クイックアクションでEquals、GetHashCode、演算子を生成できる
-	private class Vector : IEquatable<Vector> {
-		public Vector(int x, int y) {
-			X = x;
-			Y = y;
-		}
-
-		public int X { get; }
-		public int Y { get; }
+	private class Vector(int x, int y) : IEquatable<Vector> {
+		public int X { get; } = x;
+		public int Y { get; } = y;
 
 		public override bool Equals(object? obj) => Equals(obj as Vector);
 

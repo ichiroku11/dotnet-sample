@@ -6,12 +6,8 @@ using System.Text.Json.Nodes;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtPayloadTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtPayloadTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JwtPayloadTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Constructor_空のペイロードを生成する() {

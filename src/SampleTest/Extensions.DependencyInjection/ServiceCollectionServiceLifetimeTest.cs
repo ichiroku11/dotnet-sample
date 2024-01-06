@@ -5,22 +5,14 @@ namespace SampleTest.Extensions.DependencyInjection;
 // AddTransient/AddSingleton/AddScopedの違いを確認する
 // 参考
 // https://docs.microsoft.com/ja-jp/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
-public class ServiceCollectionServiceLifetimeTest {
-	private class Service {
+public class ServiceCollectionServiceLifetimeTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
+	private class Service(Guid value) {
 		public Service() : this(Guid.NewGuid()) {
 		}
 
-		public Service(Guid value) {
-			Value = value;
-		}
-
-		public Guid Value { get; }
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public ServiceCollectionServiceLifetimeTest(ITestOutputHelper output) {
-		_output = output;
+		public Guid Value { get; } = value;
 	}
 
 	[Fact]

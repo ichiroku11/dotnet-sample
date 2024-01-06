@@ -3,7 +3,10 @@ using SampleLib;
 
 namespace SampleTest.EntityFrameworkCore;
 
-public class EntityStateTest : IDisposable {
+public class EntityStateTest(ITestOutputHelper output) : IDisposable {
+	private readonly ITestOutputHelper _output = output;
+	private readonly SampleDbContext _context = new();
+
 	private record Sample(int Id, string Name);
 
 	// InMemory
@@ -19,13 +22,6 @@ public class EntityStateTest : IDisposable {
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));
 		}
-	}
-
-	private readonly SampleDbContext _context = new();
-	private readonly ITestOutputHelper _output;
-
-	public EntityStateTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	public void Dispose() {

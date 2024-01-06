@@ -2,14 +2,10 @@ using Polly;
 
 namespace SampleTest.Polly;
 
-public class PolicyHandleTest {
+public class PolicyHandleTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private class SampleException : Exception {
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public PolicyHandleTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]

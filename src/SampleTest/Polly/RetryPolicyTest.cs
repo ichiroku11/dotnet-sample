@@ -2,13 +2,9 @@ using Polly;
 
 namespace SampleTest.Polly;
 
-public class RetryPolicyTest {
+public class RetryPolicyTest(ITestOutputHelper output) {
 
-	private readonly ITestOutputHelper _output;
-
-	public RetryPolicyTest(ITestOutputHelper output) {
-		_output = output;
-	}
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Retry_引数を省略すると1回リトライされる() {

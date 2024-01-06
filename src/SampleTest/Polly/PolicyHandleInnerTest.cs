@@ -3,14 +3,10 @@ using Xunit.Sdk;
 
 namespace SampleTest.Polly;
 
-public class PolicyHandleInnerTest {
+public class PolicyHandleInnerTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private class SampleException : Exception {
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public PolicyHandleInnerTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	public static TheoryData<Exception> GetTheoryData_HandleInner_NotRetry() {

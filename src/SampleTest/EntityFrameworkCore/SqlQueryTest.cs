@@ -5,16 +5,11 @@ namespace SampleTest.EntityFrameworkCore;
 
 // 参考
 // https://learn.microsoft.com/ja-jp/ef/core/querying/sql-queries#querying-scalar-non-entity-types
-public class SqlQueryTest : IDisposable {
-	private class SampleDbContext : SqlServerDbContext {
-	}
-
+public class SqlQueryTest(ITestOutputHelper output) : IDisposable {
+	private readonly ITestOutputHelper _output = output;
 	private readonly SampleDbContext _context = new();
 
-	private readonly ITestOutputHelper _output;
-
-	public SqlQueryTest(ITestOutputHelper output) {
-		_output = output;
+	private class SampleDbContext : SqlServerDbContext {
 	}
 
 	public void Dispose() {

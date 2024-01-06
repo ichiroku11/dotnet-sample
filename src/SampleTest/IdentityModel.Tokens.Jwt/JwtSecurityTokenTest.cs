@@ -7,12 +7,8 @@ using System.Text;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtSecurityTokenTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtSecurityTokenTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JwtSecurityTokenTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	// 署名付きのJwtSecurityTokenを生成するSecurityTokenDescriptor
 	private static SecurityTokenDescriptor CreateSecurityTokenDescriptor() {

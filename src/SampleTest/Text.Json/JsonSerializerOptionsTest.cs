@@ -3,12 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace SampleTest.Text.Json;
 
-public class JsonSerializerOptionsTest {
-	private readonly ITestOutputHelper _output;
-
-	public JsonSerializerOptionsTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JsonSerializerOptionsTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void DefaultIgnoreCondition_Alwaysを設定するとArgumentExceptionがスローされる() {

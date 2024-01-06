@@ -11,12 +11,8 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtSecurityTokenHandlerValidateTokenSigningTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtSecurityTokenHandlerValidateTokenSigningTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JwtSecurityTokenHandlerValidateTokenSigningTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	private class RsaSecurityKeyHelper {
 		private readonly RsaSecurityKey _privateKey;

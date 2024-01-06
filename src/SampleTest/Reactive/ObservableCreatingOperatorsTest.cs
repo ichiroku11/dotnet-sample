@@ -5,12 +5,8 @@ namespace SampleTest.Reactive;
 // 参考
 // https://www.atmarkit.co.jp/fdotnet/introrx/introrx_02/introrx_02_01.html
 // https://blog.okazuki.jp/entry/20111104/1320409976
-public class ObservableCreatingOperatorsTest {
-	private readonly ITestOutputHelper _output;
-
-	public ObservableCreatingOperatorsTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class ObservableCreatingOperatorsTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	// todo:
 	// Defer

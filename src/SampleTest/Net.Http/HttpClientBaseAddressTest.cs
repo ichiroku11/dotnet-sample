@@ -8,7 +8,9 @@ using System.Net;
 
 namespace SampleTest.Net.Http;
 
-public class HttpClientBaseAddressTest {
+public class HttpClientBaseAddressTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private class Startup {
 		public void ConfigureServices(IServiceCollection services) {
 		}
@@ -41,12 +43,6 @@ public class HttpClientBaseAddressTest {
 		=> new TestServer(new WebHostBuilder().UseStartup<Startup>()) {
 			BaseAddress = new Uri(baseUri)
 		};
-
-	private readonly ITestOutputHelper _output;
-
-	public HttpClientBaseAddressTest(ITestOutputHelper output) {
-		_output = output;
-	}
 
 	[Theory]
 	// ドメイン直下に配置する場合は最後のスラッシュができる

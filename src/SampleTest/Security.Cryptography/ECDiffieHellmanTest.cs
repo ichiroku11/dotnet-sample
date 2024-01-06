@@ -4,12 +4,8 @@ using System.Security.Cryptography;
 
 namespace SampleTest.Security.Cryptography;
 
-public class ECDiffieHellmanTest {
-	private readonly ITestOutputHelper _output;
-
-	public ECDiffieHellmanTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class ECDiffieHellmanTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Create_生成したインスタンスの各プロパティを確認する() {

@@ -2,19 +2,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SampleTest.EntityFrameworkCore;
 
-public class ExecuteUpdateInMemoryTest {
+public class ExecuteUpdateInMemoryTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private class Sample {
 		public int Id { get; init; }
 
 		public string Name { get; init; } = "";
 	}
 
-	private class SampleDbContext : AppDbContext {
-		private readonly ITestOutputHelper _output;
-
-		public SampleDbContext(ITestOutputHelper output) {
-			_output = output;
-		}
+	private class SampleDbContext(ITestOutputHelper output) : AppDbContext {
+		private readonly ITestOutputHelper _output = output;
 
 		public DbSet<Sample> Samples => Set<Sample>();
 
@@ -27,12 +25,6 @@ public class ExecuteUpdateInMemoryTest {
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Sample>().ToTable(nameof(Sample));
 		}
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public ExecuteUpdateInMemoryTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]
