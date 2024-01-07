@@ -6,10 +6,8 @@ using Microsoft.Graph.Models;
 namespace AzureAdB2cUserManagementConsoleApp;
 
 // ユーザーのカスタム属性を更新
-public class GraphUpdateUserCustomAttributeSample : GraphSampleBase {
-	public GraphUpdateUserCustomAttributeSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
-	}
-
+public class GraphUpdateUserCustomAttributeSample(IConfiguration config, ILogger<GraphSampleBase> logger)
+	: GraphSampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

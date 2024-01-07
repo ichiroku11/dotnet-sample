@@ -7,10 +7,8 @@ using Microsoft.Graph.Models;
 // ユーザーのサインインメールアドレスを変更する
 // 参考
 // - https://learn.microsoft.com/en-us/answers/questions/291598/azure-ad-b2c-update-email-address-clone-existing-u
-internal class GraphUpdateUserSignInMailAddressSample : GraphSampleBase {
-	public GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
-	}
-
+internal class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILogger<GraphSampleBase> logger)
+	: GraphSampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

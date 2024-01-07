@@ -4,14 +4,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AzureStorageConsoleApp;
 
-public class BlobSample {
-	private readonly string _connectionString;
-	private readonly ILogger _logger;
-
-	public BlobSample(IConfiguration config, ILogger<BlobSample> logger) {
-		_connectionString = config.GetConnectionString("Storage") ?? throw new InvalidOperationException();
-		_logger = logger;
-	}
+public class BlobSample(IConfiguration config, ILogger<BlobSample> logger) {
+	private readonly string _connectionString = config.GetConnectionString("Storage") ?? throw new InvalidOperationException();
+	private readonly ILogger _logger = logger;
 
 	public async Task RunAsync() {
 		_logger.LogInformation(nameof(RunAsync));

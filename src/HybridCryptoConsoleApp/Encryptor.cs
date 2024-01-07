@@ -4,12 +4,8 @@ using System.Security.Cryptography;
 namespace HybridCryptoConsoleApp;
 
 // RSA、AESによる暗号化を行う
-public class Encryptor {
-	private readonly RSAParameters _parameters;
-
-	public Encryptor(RSAParameters parameters) {
-		_parameters = parameters;
-	}
+public class Encryptor(RSAParameters parameters) {
+	private readonly RSAParameters _parameters = parameters;
 
 	// 暗号化
 	public (byte[] cipher, byte[] iv, byte[] key) Encrypt(string plain) {

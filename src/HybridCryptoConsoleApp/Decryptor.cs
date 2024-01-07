@@ -4,12 +4,8 @@ using System.Security.Cryptography;
 namespace HybridCryptoConsoleApp;
 
 // RSA、AESによる復号を行う
-public class Decryptor {
-	private readonly RSAParameters _parameters;
-
-	public Decryptor(RSAParameters parameters) {
-		_parameters = parameters;
-	}
+public class Decryptor(RSAParameters parameters) {
+	private readonly RSAParameters _parameters = parameters;
 
 	// 復号
 	public string Decrypt(byte[] cipher, byte[] iv, byte[] key) {

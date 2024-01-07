@@ -5,11 +5,8 @@ using SampleLib.Hosting;
 
 namespace AzureStorageConsoleApp;
 
-public class SampleService : OnceHostedService {
-	public SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
-		: base(host, lifetime, logger) {
-	}
-
+public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
+	: OnceHostedService(host, lifetime, logger) {
 	protected override Task RunAsync(IServiceProvider services) {
 		return services.GetRequiredService<BlobSample>().RunAsync();
 	}
