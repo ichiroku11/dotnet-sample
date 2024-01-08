@@ -2,12 +2,8 @@ using Microsoft.Identity.Web;
 
 namespace AzureAdB2cWebApp;
 
-public class Startup {
-	private readonly IConfiguration _config;
-
-	public Startup(IConfiguration config) {
-		_config = config;
-	}
+public class Startup(IConfiguration config) {
+	private readonly IConfiguration _config = config;
 
 	public void ConfigureServices(IServiceCollection services) {
 		services.AddControllersWithViews();

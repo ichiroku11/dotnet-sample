@@ -5,12 +5,9 @@ using Xunit;
 
 namespace BasicAuthnWebApp.Test;
 
-public class BasicAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
-	private readonly WebApplicationFactory<Startup> _factory;
-
-	public BasicAuthnWebAppTest(WebApplicationFactory<Startup> factory) {
-		_factory = factory;
-	}
+public class BasicAuthnWebAppTest(WebApplicationFactory<Startup> factory)
+	: IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
+	private readonly WebApplicationFactory<Startup> _factory = factory;
 
 	public void Dispose() {
 	}

@@ -9,17 +9,12 @@ using Microsoft.Identity.Web;
 namespace AzureAdB2cWebApp.Controllers;
 
 [Authorize]
-public class AccountController : Controller {
+public class AccountController(IConfiguration config, IOptions<MicrosoftIdentityOptions> options) : Controller {
 	private const string _scheme = OpenIdConnectDefaults.AuthenticationScheme;
 	private const string _policy = "policy";
 
-	private readonly IConfiguration _config;
-	private readonly MicrosoftIdentityOptions _options;
-
-	public AccountController(IConfiguration config, IOptions<MicrosoftIdentityOptions> options) {
-		_config = config;
-		_options = options.Value;
-	}
+	private readonly IConfiguration _config = config;
+	private readonly MicrosoftIdentityOptions _options = options.Value;
 
 	// SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
 	[AllowAnonymous]

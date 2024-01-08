@@ -24,12 +24,8 @@ namespace AzureAppInsightsWebApp;
 /// 
 /// </summary>
 // ITelemetryInitializerを実装するのもあり
-public class SampleTelemetryInitializer : TelemetryInitializerBase {
+public class SampleTelemetryInitializer(IHttpContextAccessor httpContextAccessor) : TelemetryInitializerBase(httpContextAccessor) {
 	private const string _propertyName = "sample";
-
-	public SampleTelemetryInitializer(IHttpContextAccessor httpContextAccessor)
-		: base(httpContextAccessor) {
-	}
 
 	protected override void OnInitializeTelemetry(
 		HttpContext platformContext, RequestTelemetry requestTelemetry, ITelemetry telemetry) {
