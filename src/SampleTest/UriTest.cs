@@ -115,7 +115,7 @@ public class UriTest {
 	[InlineData(default(string), UriHostNameType.Unknown)]
 	[InlineData("localhost", UriHostNameType.Dns)]
 	[InlineData("www.example.jp", UriHostNameType.Dns)]
-	public void CheckHostName_取得できるUriHostNameTypeを確認する(string name, UriHostNameType expected) {
+	public void CheckHostName_取得できるUriHostNameTypeを確認する(string? name, UriHostNameType expected) {
 		// Arrange
 		// Act
 		var actual = Uri.CheckHostName(name);
@@ -128,7 +128,7 @@ public class UriTest {
 	[InlineData("", false)]
 	[InlineData(default(string), false)]
 	[InlineData("https", true)]
-	public void CheckSchemeName_取得できる値を確認する(string name, bool expected) {
+	public void CheckSchemeName_取得できる値を確認する(string? name, bool expected) {
 		// Arrange
 		// Act
 		var actual = Uri.CheckSchemeName(name);

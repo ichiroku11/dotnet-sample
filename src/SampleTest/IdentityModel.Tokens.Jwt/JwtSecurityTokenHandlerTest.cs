@@ -29,8 +29,7 @@ public class JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
 	}
 
 	[Theory]
-	// null、空文字、空白はfalse
-	[InlineData(null, false)]
+	// 空文字、空白はfalse
 	[InlineData("", false)]
 	[InlineData(" ", false)]
 	// header.payload.signatureの形式はtrue

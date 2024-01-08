@@ -83,7 +83,7 @@ public class LinkGeneratorTest(ITestOutputHelper output) {
 				action: "Index",
 				controller: "Default",
 				values: default,
-				scheme: default,
+				scheme: "",
 				host: new HostString("localhost"));
 		});
 		_output.WriteLine(exception.Message);
