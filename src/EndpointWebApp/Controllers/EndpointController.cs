@@ -4,12 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EndpointWebApp.Controllers;
 
-public class EndpointController : Controller {
-	private readonly EndpointDataSource _dataSource;
-
-	public EndpointController(EndpointDataSource dataSource) {
-		_dataSource = dataSource;
-	}
+public class EndpointController(EndpointDataSource dataSource) : Controller {
+	private readonly EndpointDataSource _dataSource = dataSource;
 
 	[Route("~/endpoints")]
 	public IActionResult Index() {

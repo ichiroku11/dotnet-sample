@@ -3,13 +3,9 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace DistributedCacheWebApp.Controllers;
 
-public class CacheController : Controller {
-	private readonly IDistributedCache _cache;
+public class CacheController(IDistributedCache cache) : Controller {
+	private readonly IDistributedCache _cache = cache;
 	private const string _cacheKey = "cache-sample";
-
-	public CacheController(IDistributedCache cache) {
-		_cache = cache;
-	}
 
 	public async Task<IActionResult> Get() {
 		// キャッシュから取得

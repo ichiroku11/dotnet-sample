@@ -8,12 +8,8 @@ using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace ControllerWebApp.Controllers;
 
-public class DefaultController : AppController {
-	private readonly ApplicationPartManager _manager;
-
-	public DefaultController(ApplicationPartManager manager) {
-		_manager = manager;
-	}
+public class DefaultController(ApplicationPartManager manager) : AppController {
+	private readonly ApplicationPartManager _manager = manager;
 
 	// privateなメソッドはActionメソッドにならない
 	private string PrivateMethod() => nameof(PrivateMethod);
