@@ -6,13 +6,9 @@ using Xunit;
 
 namespace LinkWebApp.Controllers.Test;
 
-public class DefaultControllerTest : IClassFixture<WebApplicationFactory<Program>> {
+public class DefaultControllerTest(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>> {
 
-	private readonly WebApplicationFactory<Program> _factory;
-
-	public DefaultControllerTest(WebApplicationFactory<Program> factory) {
-		_factory = factory;
-	}
+	private readonly WebApplicationFactory<Program> _factory = factory;
 
 	[Fact]
 	public async Task Generator() {

@@ -17,6 +17,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		= new JsonSerializerOptions {
 			PropertyNameCaseInsensitive = true,
 		};
+
 	protected static StringContent GetJsonStringContent<TModel>(TModel model) {
 		var json = JsonSerializer.Serialize(model, _jsonSerializerOptions);
 		var content = new StringContent(json);
@@ -60,12 +61,8 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		return client;
 	}
 
-	private class LoggingHandler : DelegatingHandler {
-		private readonly ITestOutputHelper _output;
-
-		public LoggingHandler(ITestOutputHelper output) {
-			_output = output;
-		}
+	private class LoggingHandler(ITestOutputHelper output) : DelegatingHandler {
+		private readonly ITestOutputHelper _output = output;
 
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
 			_output.WriteLine(request.ToString());
@@ -86,14 +83,8 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 
 	private const string _testAuthScheme = "Test";
 
-	private class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions> {
-		public TestAuthHandler(
-			IOptionsMonitor<AuthenticationSchemeOptions> options,
-			ILoggerFactory logger,
-			UrlEncoder encoder)
-			: base(options, logger, encoder) {
-		}
-
+	private class TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+		: AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder) {
 		protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
 			// テスト用のユーザーでログインしたことにする
 			var claims = new[] {

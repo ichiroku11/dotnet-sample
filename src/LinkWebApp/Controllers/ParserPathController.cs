@@ -2,12 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LinkWebApp.Controllers;
 
-public class ParserPathController : Controller {
-	private readonly LinkParser _linkParser;
-
-	public ParserPathController(LinkParser linkParser) {
-		_linkParser = linkParser;
-	}
+public class ParserPathController(LinkParser linkParser) : Controller {
+	private readonly LinkParser _linkParser = linkParser;
 
 	// defaultのルートでパースする
 	public IActionResult Default() {

@@ -6,11 +6,8 @@ using Xunit.Abstractions;
 
 namespace MiscWebApi.Controllers.Test;
 
-public class RequestBodyControllerTest : ControllerTestBase {
-	public RequestBodyControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
-
+public class RequestBodyControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	private class Result {
 		public string Body { get; init; } = "";
 

@@ -3,14 +3,9 @@ using System.Text;
 
 namespace LinkWebApp.Controllers;
 
-public class DefaultController : Controller {
-	private readonly LinkGenerator _linkGenerator;
-	private readonly LinkParser _linkParser;
-
-	public DefaultController(LinkGenerator linkGenerator, LinkParser linkParser) {
-		_linkGenerator = linkGenerator;
-		_linkParser = linkParser;
-	}
+public class DefaultController(LinkGenerator linkGenerator, LinkParser linkParser) : Controller {
+	private readonly LinkGenerator _linkGenerator = linkGenerator;
+	private readonly LinkParser _linkParser = linkParser;
 
 	public IActionResult Generator() {
 		// 参考

@@ -5,9 +5,8 @@ using System.Net;
 
 namespace MiscWebApi.Controllers.Test;
 
-public class ProduceControllerTest : ControllerTestBase {
-	public ProduceControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
+public class ProduceControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 
 	// Produces属性がない場合、レスポンスのContentTypeは"application/json"になる
 	[Fact]

@@ -1,13 +1,9 @@
 namespace HostedServiceWebApp.Services;
 
 // BackgroundServiceを継承し、定期的な処理を実行するホステッドサービス
-public class SampleBackgroundService : BackgroundService {
-	private readonly ILogger _logger;
+public class SampleBackgroundService(ILogger<SampleBackgroundService> logger) : BackgroundService {
+	private readonly ILogger _logger = logger;
 	private int _count;
-
-	public SampleBackgroundService(ILogger<SampleBackgroundService> logger) {
-		_logger = logger;
-	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
 		_logger.LogInformation($"{nameof(ExecuteAsync)} Start");

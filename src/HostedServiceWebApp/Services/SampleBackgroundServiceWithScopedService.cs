@@ -5,16 +5,12 @@ namespace HostedServiceWebApp.Services;
 // InvalidOperationException:
 // Cannot consume scoped service 'HostedServiceWebApp.Services.SampleScopedService' from singleton 'Microsoft.Extensions.Hosting.IHostedService'.
 /*
-public class SampleBackgroundServiceWithScopedService : BackgroundService {
-	private readonly ILogger _logger;
-	private readonly SampleScopedService _service;
-
-	public SampleBackgroundServiceWithScopedService(
-		ILogger<SampleBackgroundServiceWithScopedService> logger,
-		SampleScopedService service) {
-		_logger = logger;
-		_service = service;
-	}
+public class SampleBackgroundServiceWithScopedService(
+	ILogger<SampleBackgroundServiceWithScopedService> logger,
+	SampleScopedService service)
+	: BackgroundService {
+	private readonly ILogger _logger = logger;
+	private readonly SampleScopedService _service = service;
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
 		_logger.LogInformation($"{nameof(ExecuteAsync)} Start");
@@ -29,16 +25,12 @@ public class SampleBackgroundServiceWithScopedService : BackgroundService {
 // AddScopedで追加されたサービスを呼び出すBackgroundService
 // 参考
 // https://stackoverflow.com/questions/48368634/how-should-i-inject-a-dbcontext-instance-into-an-ihostedservice
-public class SampleBackgroundServiceWithScopedService : BackgroundService {
-	private readonly ILogger _logger;
-	private readonly IServiceProvider _serviceProvider;
-
-	public SampleBackgroundServiceWithScopedService(
-		ILogger<SampleBackgroundServiceWithScopedService> logger,
-		IServiceProvider serviceProvider) {
-		_logger = logger;
-		_serviceProvider = serviceProvider;
-	}
+public class SampleBackgroundServiceWithScopedService(
+	ILogger<SampleBackgroundServiceWithScopedService> logger,
+	IServiceProvider serviceProvider)
+	: BackgroundService {
+	private readonly ILogger _logger = logger;
+	private readonly IServiceProvider _serviceProvider = serviceProvider;
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
 		_logger.LogInformation($"{nameof(ExecuteAsync)} Start");
