@@ -5,11 +5,7 @@ using Xunit.Abstractions;
 
 namespace MiscWebApp.Test;
 
-public class HeaderTest : TestBase {
-	public HeaderTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
-
+public class HeaderTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : TestBase(output, factory) {
 	[Fact]
 	public async Task テスト実行だとレスポンスヘッダがなさげ() {
 		// Arrange

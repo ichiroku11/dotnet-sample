@@ -46,12 +46,8 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 			.CreateDefaultClient(options.BaseAddress, createHandlers().ToArray());
 	}
 
-	private class LoggingHandler : DelegatingHandler {
-		private readonly ITestOutputHelper _output;
-
-		public LoggingHandler(ITestOutputHelper output) {
-			_output = output;
-		}
+	private class LoggingHandler(ITestOutputHelper output) : DelegatingHandler {
+		private readonly ITestOutputHelper _output = output;
 
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
 			_output.WriteLine(request.ToString());

@@ -7,9 +7,8 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class ValidationNestedControllerTest : ControllerTestBase {
-	public ValidationNestedControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
+public class ValidationNestedControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 
 	// POSTするJSON、バリデーションエラーのキーとメッセージ
 	public static TheoryData<object, string, string> GetTheoryData_Nested() {

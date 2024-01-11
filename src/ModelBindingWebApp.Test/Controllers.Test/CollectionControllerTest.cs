@@ -9,16 +9,12 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class CollectionControllerTest : ControllerTestBase {
+public class CollectionControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new JsonSerializerOptions {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
-
-
-	public CollectionControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
 
 	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryData_Int32Values() {
 		return new() {

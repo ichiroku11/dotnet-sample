@@ -3,15 +3,10 @@ using Microsoft.Extensions.Options;
 
 namespace OptionPatternWebApp.Controllers;
 
-public class DefaultController : Controller {
-	private readonly SampleOptions _options;
+public class DefaultController(IOptions<SampleOptions> options, IOptionsMonitor<SampleOptionsMonitor> optionsMonitor) : Controller {
+	private readonly SampleOptions _options = options.Value;
 	// アプリケーション実行中の変更が反映される設定
-	private readonly SampleOptionsMonitor _optionsMonitor;
-
-	public DefaultController(IOptions<SampleOptions> options, IOptionsMonitor<SampleOptionsMonitor> optionsMonitor) {
-		_options = options.Value;
-		_optionsMonitor = optionsMonitor.CurrentValue;
-	}
+	private readonly SampleOptionsMonitor _optionsMonitor = optionsMonitor.CurrentValue;
 
 	public IActionResult Index() {
 		var content

@@ -8,15 +8,12 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class GeometryControllerTest : ControllerTestBase {
+public class GeometryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new JsonSerializerOptions {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
-
-	public GeometryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
 
 	public static TheoryData<GeometryModel> GetTheoryData() {
 		return new() {

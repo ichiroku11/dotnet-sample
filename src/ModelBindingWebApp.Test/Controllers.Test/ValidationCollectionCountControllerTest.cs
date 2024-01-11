@@ -8,10 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ModelBindingWebApp.Controllers;
 
-public class ValidationCollectionCountControllerTest : ControllerTestBase {
-	public ValidationCollectionCountControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
-
+public class ValidationCollectionCountControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	[Fact]
 	public async Task Test_BadRequest_空のJSON() {
 		// Arrange

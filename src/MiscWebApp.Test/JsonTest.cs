@@ -6,11 +6,7 @@ using Xunit.Abstractions;
 
 namespace MiscWebApp.Test;
 
-public class JsonTest : TestBase {
-	public JsonTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
-
+public class JsonTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : TestBase(output, factory) {
 	[Fact]
 	public async Task ReadFromJsonAsyncとWriteAsJsonAsyncを確認する() {
 		// Arrange

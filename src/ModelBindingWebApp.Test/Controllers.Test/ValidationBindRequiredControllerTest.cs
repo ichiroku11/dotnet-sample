@@ -7,9 +7,8 @@ using Xunit.Abstractions;
 namespace ModelBindingWebApp.Controllers.Test;
 
 // BindRequired属性
-public class ValidationBindRequiredControllerTest : ControllerTestBase {
-	public ValidationBindRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
+public class ValidationBindRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 
 	// 値型
 	[Fact]

@@ -7,13 +7,11 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class MessageProviderControllerTest : ControllerTestBase {
+public class MessageProviderControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 
 	private static FormUrlEncodedContent GetEmptyFormUrlEncodedContent()
 		=> new(Enumerable.Empty<KeyValuePair<string, string>>());
-
-	public MessageProviderControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
 
 	[Fact]
 	public async Task MissingBindRequired_BindRequired属性のエラーメッセージを変更できる() {

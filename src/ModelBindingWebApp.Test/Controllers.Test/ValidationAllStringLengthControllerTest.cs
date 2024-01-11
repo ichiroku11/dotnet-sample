@@ -7,10 +7,8 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class ValidationAllStringLengthControllerTest : ControllerTestBase {
-	public ValidationAllStringLengthControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
-
+public class ValidationAllStringLengthControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	[Theory]
 	[InlineData("01234", "0123456789")]
 	public async Task Test_Ok_各文字列が属性で指定した範囲内の文字数の文字列だけが含まれる(params string[] values) {

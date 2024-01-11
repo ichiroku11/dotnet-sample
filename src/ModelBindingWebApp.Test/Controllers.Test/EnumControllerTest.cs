@@ -4,11 +4,8 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class EnumControllerTest : ControllerTestBase {
-	public EnumControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
-
+public class EnumControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	[Theory]
 	[InlineData("1")]
 	[InlineData("apple")]

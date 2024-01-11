@@ -6,10 +6,7 @@ using Xunit.Abstractions;
 
 namespace MiscWebApp.Test;
 
-public class BodyTest : TestBase {
-	public BodyTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
-
+public class BodyTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : TestBase(output, factory) {
 	private class Result {
 		public bool CanSeek { get; init; }
 		public string First { get; init; } = "";

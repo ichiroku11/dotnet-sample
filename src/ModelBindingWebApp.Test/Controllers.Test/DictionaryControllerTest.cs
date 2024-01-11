@@ -6,15 +6,12 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class DictionaryControllerTest : ControllerTestBase {
+public class DictionaryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new JsonSerializerOptions {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
-
-	public DictionaryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
 
 	public static TheoryData<IEnumerable<KeyValuePair<string, string>>> GetTheoryDataSimpleValues() {
 		return new() {
