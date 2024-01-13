@@ -13,13 +13,9 @@ public enum ButtonStyle {
 
 // Bootstrapのボタンスタイルを適用するTagHelper
 [HtmlTargetElement("button", Attributes = _styleAttributeName)]
-public class ButtonTagHelper : TagHelper {
+public class ButtonTagHelper(HtmlEncoder encoder) : TagHelper {
 	private const string _styleAttributeName = "bs-style";
-	private readonly HtmlEncoder _encoder;
-
-	public ButtonTagHelper(HtmlEncoder encoder) {
-		_encoder = encoder;
-	}
+	private readonly HtmlEncoder _encoder = encoder;
 
 	[HtmlAttributeName(_styleAttributeName)]
 	public ButtonStyle Style { get; set; }
