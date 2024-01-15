@@ -3,14 +3,9 @@ using System.Security.Cryptography;
 namespace DigitalSignatureConsoleApp;
 
 // 署名を生成する
-public class SignatureCreator {
-	private readonly MessageHasher _hasher;
-	private readonly RSAParameters _parameters;
-
-	public SignatureCreator(RSAParameters parameters) {
-		_hasher = new MessageHasher();
-		_parameters = parameters;
-	}
+public class SignatureCreator(RSAParameters parameters) {
+	private readonly MessageHasher _hasher = new MessageHasher();
+	private readonly RSAParameters _parameters = parameters;
 
 	// メッセージの署名を生成する（メッセージに署名する）
 	public byte[] CreateSignature(string message) {

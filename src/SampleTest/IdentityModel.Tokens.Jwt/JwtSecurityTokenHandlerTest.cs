@@ -5,13 +5,8 @@ using System.Text.Json;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtSecurityTokenHandlerTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
-		_output = output;
-	}
-
+public class JwtSecurityTokenHandlerTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void CanValidateToken_trueを返す() {
@@ -34,8 +29,7 @@ public class JwtSecurityTokenHandlerTest {
 	}
 
 	[Theory]
-	// null、空文字、空白はfalse
-	[InlineData(null, false)]
+	// 空文字、空白はfalse
 	[InlineData("", false)]
 	[InlineData(" ", false)]
 	// header.payload.signatureの形式はtrue

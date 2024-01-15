@@ -1,13 +1,9 @@
 namespace SampleTest;
 
-public class NullableTest {
+public class NullableTest(ITestOutputHelper output) {
 	// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/builtin-types/nullable-value-types#how-to-identify-a-nullable-value-type
 
-	private readonly ITestOutputHelper _output;
-
-	public NullableTest(ITestOutputHelper output) {
-		_output = output;
-	}
+	private readonly ITestOutputHelper _output = output;
 
 	// Nullable.GetUnderlyingTypeを使うと、指定した型ががnullableか判定できる
 	[Theory]

@@ -1,12 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinkWebApp.Controllers;
-public class GeneratorUriController : Controller {
-	private readonly LinkGenerator _linkGenerator;
-
-	public GeneratorUriController(LinkGenerator linkGenerator) {
-		_linkGenerator = linkGenerator;
-	}
+public class GeneratorUriController(LinkGenerator linkGenerator) : Controller {
+	private readonly LinkGenerator _linkGenerator = linkGenerator;
 
 	public IActionResult Self() {
 		// このアクションへのURLを生成する

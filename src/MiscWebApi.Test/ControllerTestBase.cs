@@ -3,13 +3,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,6 +17,7 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		= new JsonSerializerOptions {
 			PropertyNameCaseInsensitive = true,
 		};
+
 	protected static StringContent GetJsonStringContent<TModel>(TModel model) {
 		var json = JsonSerializer.Serialize(model, _jsonSerializerOptions);
 		var content = new StringContent(json);
@@ -63,24 +61,20 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		return client;
 	}
 
-	private class LoggingHandler : DelegatingHandler {
-		private readonly ITestOutputHelper _output;
-
-		public LoggingHandler(ITestOutputHelper output) {
-			_output = output;
-		}
+	private class LoggingHandler(ITestOutputHelper output) : DelegatingHandler {
+		private readonly ITestOutputHelper _output = output;
 
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
 			_output.WriteLine(request.ToString());
 			if (request.Content != null) {
-				_output.WriteLine(await request.Content.ReadAsStringAsync());
+				_output.WriteLine(await request.Content.ReadAsStringAsync(cancellationToken));
 			}
 
 			var response = await base.SendAsync(request, cancellationToken);
 
 			_output.WriteLine(response.ToString());
 			if (response.Content != null) {
-				_output.WriteLine(await response.Content.ReadAsStringAsync());
+				_output.WriteLine(await response.Content.ReadAsStringAsync(cancellationToken));
 			}
 			return response;
 
@@ -89,15 +83,8 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 
 	private const string _testAuthScheme = "Test";
 
-	private class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions> {
-		public TestAuthHandler(
-			IOptionsMonitor<AuthenticationSchemeOptions> options,
-			ILoggerFactory logger,
-			UrlEncoder encoder,
-			ISystemClock clock)
-			: base(options, logger, encoder, clock) {
-		}
-
+	private class TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+		: AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder) {
 		protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
 			// テスト用のユーザーでログインしたことにする
 			var claims = new[] {

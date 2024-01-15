@@ -9,10 +9,8 @@ namespace MiscWebApi.Controllers.Test;
 
 // 参考
 // https://learn.microsoft.com/ja-jp/aspnet/core/web-api/?view=aspnetcore-7.0#define-supported-request-content-types-with-the-consumes-attribute-1
-public class ConsumeControllerTest : ControllerTestBase {
-	public ConsumeControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
-
+public class ConsumeControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	// Consumes属性がない場合
 	[Theory]
 	// "application/json"、"text/json"を受け入れる

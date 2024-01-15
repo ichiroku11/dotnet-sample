@@ -3,12 +3,8 @@ using System.Text;
 
 namespace SampleTest.Security.Cryptography;
 
-public class ECDsaTest {
-	private readonly ITestOutputHelper _output;
-
-	public ECDsaTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class ECDsaTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Create_生成したインスタンスの各プロパティを確認する() {

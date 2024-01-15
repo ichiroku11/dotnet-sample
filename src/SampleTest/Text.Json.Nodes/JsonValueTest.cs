@@ -3,12 +3,8 @@ using System.Text.Json.Nodes;
 
 namespace SampleTest.Text.Json.Nodes;
 
-public class JsonValueTest {
-	private readonly ITestOutputHelper _output;
-
-	public JsonValueTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JsonValueTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Create_引数にInt32を渡して生成したインスタンスのプロパティなどを確認する() {

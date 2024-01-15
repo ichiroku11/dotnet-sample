@@ -9,7 +9,8 @@ namespace SampleTest.AspNetCore;
 
 // 参考
 // https://github.com/dotnet/aspnetcore/blob/c85baf8db0c72ae8e68643029d514b2e737c9fae/src/Mvc/Mvc.Core/test/Routing/ControllerLinkGeneratorExtensionsTest.cs
-public class LinkGeneratorTest {
+public class LinkGeneratorTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	private static RouteEndpoint CreateEndpoint() {
 		return new RouteEndpoint(
@@ -39,12 +40,6 @@ public class LinkGeneratorTest {
 		var services = CreateServiceProvider(CreateEndpoint());
 
 		return services.GetRequiredService<LinkGenerator>();
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public LinkGeneratorTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]
@@ -88,7 +83,7 @@ public class LinkGeneratorTest {
 				action: "Index",
 				controller: "Default",
 				values: default,
-				scheme: default,
+				scheme: "",
 				host: new HostString("localhost"));
 		});
 		_output.WriteLine(exception.Message);

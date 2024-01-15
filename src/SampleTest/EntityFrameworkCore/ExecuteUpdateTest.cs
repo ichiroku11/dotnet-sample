@@ -18,12 +18,8 @@ public class ExecuteUpdateTest : IDisposable {
 		public byte[] Version { get; init; } = default!;
 	}
 
-	private class SampleDbContext : SqlServerDbContext {
-		private readonly ITestOutputHelper _output;
-
-		public SampleDbContext(ITestOutputHelper output) {
-			_output = output;
-		}
+	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
+		private readonly ITestOutputHelper _output = output;
 
 		public DbSet<Sample> Samples => Set<Sample>();
 

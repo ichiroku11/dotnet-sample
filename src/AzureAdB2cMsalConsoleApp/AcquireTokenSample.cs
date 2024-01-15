@@ -5,22 +5,15 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace AzureAdB2cMsalConsoleApp;
 
-public class AcquireTokenSample {
-	private readonly IConfiguration _config;
-	//private readonly IHttpClientFactory _factory;
-	private readonly InMemoryTokenCache _tokenCache;
-	private readonly ILogger _logger;
-
-	public AcquireTokenSample(
-		IConfiguration config,
-		//IHttpClientFactory factory,
-		InMemoryTokenCache tokenCache,
-		ILogger<AcquireTokenSample> logger) {
-		_config = config;
-		//_factory = factory;
-		_tokenCache = tokenCache;
-		_logger = logger;
-	}
+public class AcquireTokenSample(
+	IConfiguration config,
+	//IHttpClientFactory factory,
+	InMemoryTokenCache tokenCache,
+	ILogger<AcquireTokenSample> logger) {
+	private readonly IConfiguration _config = config;
+	//private readonly IHttpClientFactory _factory = factory;
+	private readonly InMemoryTokenCache _tokenCache = tokenCache;
+	private readonly ILogger _logger = logger;
 
 	public async Task RunAsync() {
 		// https://docs.microsoft.com/ja-jp/azure/active-directory-b2c/integrate-with-app-code-samples

@@ -4,12 +4,8 @@ using TagHelperWebApp.Models;
 
 namespace TagHelperWebApp.Controllers;
 
-public class DefaultController : Controller {
-	private readonly ILogger _logger;
-
-	public DefaultController(ILogger<DefaultController> logger) {
-		_logger = logger;
-	}
+public class DefaultController(ILogger<DefaultController> logger) : Controller {
+	private readonly ILogger _logger = logger;
 
 	public IActionResult Index() {
 		return View();

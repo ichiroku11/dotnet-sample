@@ -11,16 +11,11 @@ namespace PolicyAuthzWebApp;
 public abstract class HogeAreaController : Controller {
 }
 */
-public class AreaRolesAuthorizationRequirement : AuthorizationHandler<AreaRolesAuthorizationRequirement>, IAuthorizationRequirement {
-	public AreaRolesAuthorizationRequirement(string area, IEnumerable<string> allowedRoles) {
-		Area = area;
-		AllowedRoles = allowedRoles;
-		RolesAuthorizationRequirement = new RolesAuthorizationRequirement(allowedRoles);
-	}
-
-	public string Area { get; }
-	public IEnumerable<string> AllowedRoles { get; }
-	public RolesAuthorizationRequirement RolesAuthorizationRequirement { get; }
+public class AreaRolesAuthorizationRequirement(string area, IEnumerable<string> allowedRoles)
+	: AuthorizationHandler<AreaRolesAuthorizationRequirement>, IAuthorizationRequirement {
+	public string Area { get; } = area;
+	public IEnumerable<string> AllowedRoles { get; } = allowedRoles;
+	public RolesAuthorizationRequirement RolesAuthorizationRequirement { get; } = new RolesAuthorizationRequirement(allowedRoles);
 
 	private string GetAreaName(object? resource) {
 		if (resource is AuthorizationFilterContext context) {

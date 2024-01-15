@@ -5,8 +5,10 @@ using Xunit.Abstractions;
 
 namespace SampleLib.AspNetCore.Test;
 
-public class HttpRequestExtensionsTest {
-	private static HttpRequest CreateRequest(string scheme, string host, string pathBase) {
+public class HttpRequestExtensionsTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
+	private static HttpRequest CreateRequest(string scheme, string host, string? pathBase) {
 		var context = new DefaultHttpContext();
 		var request = context.Request;
 
@@ -20,21 +22,18 @@ public class HttpRequestExtensionsTest {
 	private static HttpRequest CreateRequest(IHeaderDictionary headers) {
 		var context = new DefaultHttpContext();
 
-		context.Features.Get<IHttpRequestFeature>().Headers = headers;
+		var feature = context.Features.Get<IHttpRequestFeature>();
+		if (feature is not null) {
+			feature.Headers = headers;
+		}
 
 		return context.Request;
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public HttpRequestExtensionsTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Theory]
 	[InlineData("https", "example.jp", null, "https://example.jp")]
 	[InlineData("https", "example.jp", "/app", "https://example.jp/app")]
-	public void GetAppUrl_取得できる(string scheme, string host, string pathBase, string expected) {
+	public void GetAppUrl_取得できる(string scheme, string host, string? pathBase, string expected) {
 		// Arrange
 		var request = CreateRequest(scheme, host, pathBase);
 

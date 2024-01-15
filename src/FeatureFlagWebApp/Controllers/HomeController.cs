@@ -3,13 +3,9 @@ using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace FeatureFlagWebApp.Controllers;
-public class HomeController : Controller {
+public class HomeController(IFeatureManager featureManager) : Controller {
 	// https://docs.microsoft.com/ja-jp/azure/azure-app-configuration/use-feature-flags-dotnet-core?tabs=core5x
-	private readonly IFeatureManager _featureManager;
-
-	public HomeController(IFeatureManager featureManager) {
-		_featureManager = featureManager;
-	}
+	private readonly IFeatureManager _featureManager = featureManager;
 
 	public IActionResult Index() => View();
 

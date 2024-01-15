@@ -1,14 +1,8 @@
 namespace SampleTest.Threading;
 
-public class CancellationTokenSourceTest : IDisposable {
-	private readonly ITestOutputHelper _output;
-	private readonly CancellationTokenSource _source;
-
-
-	public CancellationTokenSourceTest(ITestOutputHelper output) {
-		_output = output;
-		_source = new CancellationTokenSource();
-	}
+public class CancellationTokenSourceTest(ITestOutputHelper output) : IDisposable {
+	private readonly ITestOutputHelper _output = output;
+	private readonly CancellationTokenSource _source = new CancellationTokenSource();
 
 	public void Dispose() {
 		_source?.Dispose();

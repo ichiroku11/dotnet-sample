@@ -4,12 +4,8 @@ using System.Text.Json.Nodes;
 
 namespace SampleTest.Text.Json.Nodes;
 
-public class JsonArrayTest {
-	private readonly ITestOutputHelper _output;
-
-	public JsonArrayTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JsonArrayTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Create_生成したインスタンスのプロパティなどを確認する() {

@@ -6,10 +6,8 @@ using Xunit.Abstractions;
 
 namespace MiscWebApi.Controllers.Test;
 
-public class UserControllerTest : ControllerTestBase {
-	public UserControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
+public class UserControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 
 	// 認証されていないのでUnauthorized
 	[Fact]

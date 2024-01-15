@@ -7,19 +7,15 @@ using Xunit.Abstractions;
 
 namespace CookieAuthnWebApp;
 
-public class CookieAuthnWebAppTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
+public class CookieAuthnWebAppTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
+	: IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new JsonSerializerOptions {
 			PropertyNameCaseInsensitive = true,
 		};
 
-	private readonly ITestOutputHelper _output;
-	private readonly WebApplicationFactory<Startup> _factory;
-
-	public CookieAuthnWebAppTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory) {
-		_output = output;
-		_factory = factory;
-	}
+	private readonly ITestOutputHelper _output = output;
+	private readonly WebApplicationFactory<Startup> _factory = factory;
 
 	public void Dispose() {
 		// だめっぽい

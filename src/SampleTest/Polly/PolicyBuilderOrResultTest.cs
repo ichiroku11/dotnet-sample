@@ -3,12 +3,8 @@ using Polly;
 
 namespace SampleTest.Polly;
 
-public class PolicyBuilderOrResultTest {
-	private readonly ITestOutputHelper _output;
-
-	public PolicyBuilderOrResultTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class PolicyBuilderOrResultTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Theory]
 	// HandleResultで指定した条件なのでリトライされる

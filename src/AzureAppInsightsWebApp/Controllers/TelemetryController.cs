@@ -5,12 +5,8 @@ namespace AzureAppInsightsWebApp.Controllers;
 
 // カスタムイベントやメトリックを収集する
 // https://docs.microsoft.com/ja-jp/azure/azure-monitor/app/api-custom-events-metrics#api-summary
-public class TelemetryController : Controller {
-	private readonly TelemetryClient _client;
-
-	public TelemetryController(TelemetryClient client) {
-		_client = client;
-	}
+public class TelemetryController(TelemetryClient client) : Controller {
+	private readonly TelemetryClient _client = client;
 
 	public IActionResult Event() {
 		var name = nameof(Event).ToLower();

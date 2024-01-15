@@ -4,16 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
-public class OptionsBuilderValidateTest {
+public class OptionsBuilderValidateTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private class SampleOptions {
 		[Range(1, 10)]
 		public int Value { get; set; }
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public OptionsBuilderValidateTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]

@@ -3,14 +3,9 @@ using Xunit;
 namespace SampleLib.Test;
 
 public class ValueObjectTest {
-	private class SampleObject : ValueObject {
-		public SampleObject(string text, int nuber) {
-			Text = text;
-			Number = nuber;
-		}
-
-		public string Text { get; }
-		public int Number { get; }
+	private class SampleObject(string text, int nuber) : ValueObject {
+		public string Text { get; } = text;
+		public int Number { get; } = nuber;
 
 		protected override IEnumerable<object> GetAtomicValues() {
 			yield return Text;

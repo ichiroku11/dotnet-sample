@@ -1,11 +1,7 @@
 namespace SampleTest;
 
-public class ArgumentNullExceptionTest {
-	private readonly ITestOutputHelper _output;
-
-	public ArgumentNullExceptionTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class ArgumentNullExceptionTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void ThrowIfNull_引数がnullだと例外がスローされる() {

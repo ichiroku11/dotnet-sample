@@ -7,12 +7,8 @@ namespace SampleTest.EntityFrameworkCore;
 // https://docs.microsoft.com/ja-jp/ef/core/modeling/value-conversions
 public class ValueConversionImmutableTest {
 	// 値オブジェクト
-	private class UserName : IEquatable<UserName> {
-		public UserName(string value) {
-			Value = value;
-		}
-
-		public string Value { get; }
+	private class UserName(string value) : IEquatable<UserName> {
+		public string Value { get; } = value;
 
 		public override bool Equals(object? obj) => Equals(obj as UserName);
 

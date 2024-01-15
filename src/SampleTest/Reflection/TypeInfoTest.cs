@@ -3,16 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace SampleTest.Reflection;
 
-public class TypeInfoTest {
+public class TypeInfoTest(ITestOutputHelper output) {
 	public class Sample {
 		public int Value { get; set; }
 	}
 
-	private readonly ITestOutputHelper _output;
-
-	public TypeInfoTest(ITestOutputHelper output) {
-		_output = output;
-	}
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void GetMethods_親クラスのメソッドを取得できる() {

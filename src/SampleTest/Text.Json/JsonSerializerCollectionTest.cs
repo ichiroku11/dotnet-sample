@@ -6,7 +6,9 @@ using System.Text.Json.Serialization.Metadata;
 namespace SampleTest.Text.Json;
 
 // JsonSerializerのコレクション系のシリアライズ・デシリアライズのテスト
-public class JsonSerializerCollectionTest {
+public class JsonSerializerCollectionTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	// レコード型のサンプル
 	private record SampleItem(int Number, string Text);
 
@@ -17,12 +19,6 @@ public class JsonSerializerCollectionTest {
 	private static readonly JsonSerializerOptions _options = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 	};
-
-	private readonly ITestOutputHelper _output;
-
-	public JsonSerializerCollectionTest(ITestOutputHelper output) {
-		_output = output;
-	}
 
 	[Fact]
 	public void Serialize_IEnumerableを配列にシリアライズできる() {

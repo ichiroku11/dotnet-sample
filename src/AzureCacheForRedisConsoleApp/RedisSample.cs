@@ -7,16 +7,11 @@ namespace AzureCacheForRedisConsoleApp;
 
 // 参考
 // https://docs.microsoft.com/ja-jp/azure/azure-cache-for-redis/cache-dotnet-core-quickstart
-public class RedisSample {
+public class RedisSample(IConfiguration config, ILogger<RedisSample> logger) {
+	private readonly string _connectionString = config.GetConnectionString("Redis") ?? throw new InvalidOperationException();
+	private readonly ILogger _logger = logger;
+
 	private record Message(string Content);
-
-	private readonly string _connectionString;
-	private readonly ILogger _logger;
-
-	public RedisSample(IConfiguration config, ILogger<RedisSample> logger) {
-		_connectionString = config.GetConnectionString("Redis") ?? throw new InvalidOperationException();
-		_logger = logger;
-	}
 
 	public async Task RunAsync() {
 		_logger.LogInformation(nameof(RunAsync));

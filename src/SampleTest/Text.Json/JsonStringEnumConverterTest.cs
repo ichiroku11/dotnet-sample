@@ -3,7 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace SampleTest.Text.Json;
 
-public class JsonStringEnumConverterTest {
+public class JsonStringEnumConverterTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	// enum<=>文字列・数値の変換を試すテスト
 	private enum SampleCode {
 		Unknown = 0,
@@ -13,12 +15,6 @@ public class JsonStringEnumConverterTest {
 
 	private class SampleData {
 		public SampleCode Code { get; set; }
-	}
-
-	private readonly ITestOutputHelper _output;
-
-	public JsonStringEnumConverterTest(ITestOutputHelper output) {
-		_output = output;
 	}
 
 	[Fact]

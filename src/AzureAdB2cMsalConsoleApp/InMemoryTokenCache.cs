@@ -4,17 +4,14 @@ using System.Text.Json;
 
 namespace AzureAdB2cMsalConsoleApp;
 
-public class InMemoryTokenCache {
+public class InMemoryTokenCache(ILogger<InMemoryTokenCache> logger) {
 	private static readonly JsonSerializerOptions _options = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		WriteIndented = true,
 	};
-	private readonly ILogger _logger;
-	private byte[]? _cache;
 
-	public InMemoryTokenCache(ILogger<InMemoryTokenCache> logger) {
-		_logger = logger;
-	}
+	private readonly ILogger _logger = logger;
+	private byte[]? _cache;
 
 	private void LogInformation(string method, TokenCacheNotificationArgs args) {
 		_logger.LogInformation("{method}", method);

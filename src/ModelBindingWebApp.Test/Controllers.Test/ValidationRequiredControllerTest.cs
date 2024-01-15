@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ModelBindingWebApp.Controllers.Test;
 
 // Required属性
-public class ValidationRequiredControllerTest : ControllerTestBase {
-	public ValidationRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : base(output, factory) {
-	}
+public class ValidationRequiredControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 
 	// 値型
 	[Fact]

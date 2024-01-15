@@ -3,14 +3,9 @@ using System.Security.Cryptography;
 namespace DigitalSignatureConsoleApp;
 
 // 署名を検証する
-public class SignatureVerifier {
-	private readonly MessageHasher _hasher;
-	private readonly RSAParameters _parameters;
-
-	public SignatureVerifier(RSAParameters parameters) {
-		_hasher = new MessageHasher();
-		_parameters = parameters;
-	}
+public class SignatureVerifier(RSAParameters parameters) {
+	private readonly MessageHasher _hasher = new MessageHasher();
+	private readonly RSAParameters _parameters = parameters;
 
 	// メッセージと署名を検証する
 	public bool VerifySignature(string message, byte[] signature) {

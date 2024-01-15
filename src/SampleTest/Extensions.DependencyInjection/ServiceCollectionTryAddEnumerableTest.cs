@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace SampleTest.Extensions.DependencyInjection;
 
 // AddXxx/TryAddXxx/TryAdd/TryAddEnumerableの違いを確認する
-public class ServiceCollectionTryAddEnumerableTest {
+public class ServiceCollectionTryAddEnumerableTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private interface IService {
 	}
 
@@ -14,11 +16,6 @@ public class ServiceCollectionTryAddEnumerableTest {
 	private class ServiceB : IService {
 	}
 
-	private readonly ITestOutputHelper _output;
-
-	public ServiceCollectionTryAddEnumerableTest(ITestOutputHelper output) {
-		_output = output;
-	}
 
 	private void WriteServices(ServiceCollection services) {
 		foreach (var service in services) {

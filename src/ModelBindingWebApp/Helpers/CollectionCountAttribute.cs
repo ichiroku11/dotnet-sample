@@ -4,14 +4,10 @@ using System.ComponentModel.DataAnnotations;
 namespace ModelBindingWebApp.Helpers;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-public class CollectionCountAttribute : ValidationAttribute {
-	public CollectionCountAttribute(int max) {
-		Max = max;
-	}
-
+public class CollectionCountAttribute(int max) : ValidationAttribute {
 	public int Min { get; init; }
 
-	public int Max { get; }
+	public int Max { get; } = max;
 
 	public override bool IsValid(object? value) {
 		if (Max < 0) {

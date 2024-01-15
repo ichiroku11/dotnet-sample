@@ -5,11 +5,8 @@ using SampleLib.Hosting;
 
 namespace AzureCacheForRedisConsoleApp;
 
-public class SampleService : OnceHostedService {
-	public SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
-		: base(host, lifetime, logger) {
-	}
-
+public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
+	: OnceHostedService(host, lifetime, logger) {
 	protected override Task RunAsync(IServiceProvider services) {
 		return services.GetRequiredService<RedisSample>().RunAsync();
 	}

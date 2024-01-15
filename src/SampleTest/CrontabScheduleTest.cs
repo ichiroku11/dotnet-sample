@@ -4,13 +4,8 @@ namespace SampleTest;
 
 // NCrontab: Crontab for .NET
 // https://github.com/atifaziz/NCrontab
-public class CrontabScheduleTest {
-
-	private readonly ITestOutputHelper _output;
-
-	public CrontabScheduleTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class CrontabScheduleTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	public static TheoryData<string, DateTime, DateTime> GetTheoryData_GetNextOccurrence() {
 		// 基準日

@@ -2,12 +2,8 @@ using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace SampleTest.Extensions.FileSystemGlobbing;
 
-public class InMemoryDirectoryInfoTest {
-	private readonly ITestOutputHelper _output;
-
-	public InMemoryDirectoryInfoTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class InMemoryDirectoryInfoTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void FullName_フォルダのフルパスを確認できる() {

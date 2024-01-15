@@ -7,7 +7,7 @@ namespace AzureCosmosDbConsoleApp;
 // 参考
 // https://docs.microsoft.com/ja-jp/ef/core/providers/cosmos/?tabs=dotnet-core-cli
 // https://github.com/dotnet/EntityFramework.Docs/blob/main/samples/core/Cosmos/ModelBuilding/OrderContext.cs
-public class CosmosDbContext : DbContext {
+public class CosmosDbContext(IConfiguration config) : DbContext {
 	private static readonly ILoggerFactory _loggerFactory = LoggerFactory.Create(builder => {
 		builder
 			.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name)
@@ -15,11 +15,8 @@ public class CosmosDbContext : DbContext {
 			.AddDebug();
 	});
 
-	private readonly string _connectionString;
-
-	public CosmosDbContext(IConfiguration config) {
-		_connectionString = config.GetConnectionString(Constants.ConnectionStringName) ?? throw new InvalidOperationException();
-	}
+	private readonly string _connectionString = config.GetConnectionString(Constants.ConnectionStringName)
+		?? throw new InvalidOperationException();
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 		optionsBuilder

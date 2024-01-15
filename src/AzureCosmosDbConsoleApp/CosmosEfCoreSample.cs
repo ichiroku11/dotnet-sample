@@ -5,14 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AzureCosmosDbConsoleApp;
 
-public class CosmosEfCoreSample {
-	private readonly CosmosDbContext _context;
-	private readonly ILogger _logger;
-
-	public CosmosEfCoreSample(CosmosDbContext context, ILogger<CosmosEfCoreSample> logger) {
-		_context = context;
-		_logger = logger;
-	}
+public class CosmosEfCoreSample(CosmosDbContext context, ILogger<CosmosEfCoreSample> logger) {
+	private readonly CosmosDbContext _context = context;
+	private readonly ILogger _logger = logger;
 
 	// Orderを削除
 	private async Task DeleteOrdersAsync() {

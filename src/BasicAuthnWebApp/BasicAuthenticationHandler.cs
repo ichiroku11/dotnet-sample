@@ -7,15 +7,9 @@ namespace BasicAuthnWebApp;
 
 // 参考
 // https://github.com/blowdart/idunno.Authentication/
-public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions> {
-	public BasicAuthenticationHandler(
-		IOptionsMonitor<BasicAuthenticationOptions> options,
-		ILoggerFactory logger,
-		UrlEncoder encoder,
-		ISystemClock clock)
-		: base(options, logger, encoder, clock) {
-	}
-
+public class BasicAuthenticationHandler(
+	IOptionsMonitor<BasicAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+	: AuthenticationHandler<BasicAuthenticationOptions>(options, logger, encoder) {
 	protected new BasicAuthenticationEvents? Events {
 		get => base.Events as BasicAuthenticationEvents;
 		set => base.Events = value;

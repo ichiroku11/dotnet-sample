@@ -27,12 +27,8 @@ public class JsonConstructorAttributeTest {
 	}
 
 	// コンストラクタが1つの場合
-	private class Sample2 {
-		public int Value { get; }
-
-		public Sample2(int value) {
-			Value = value;
-		}
+	private class Sample2(int value) {
+		public int Value { get; } = value;
 	}
 
 	[Theory]

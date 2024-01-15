@@ -1,11 +1,7 @@
 namespace SampleTest;
 
-public class ExceptionTest {
-	private readonly ITestOutputHelper _output;
-
-	public ExceptionTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class ExceptionTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Message_コンストラクタで指定したメッセージを取得できる() {

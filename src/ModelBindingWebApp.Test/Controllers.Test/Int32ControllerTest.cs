@@ -5,11 +5,8 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class Int32ControllerTest : ControllerTestBase {
-	public Int32ControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
-
+public class Int32ControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	[Fact]
 	public async Task GetWithQuery_クエリ文字列を省略するとintは0になる() {
 		// Arrange

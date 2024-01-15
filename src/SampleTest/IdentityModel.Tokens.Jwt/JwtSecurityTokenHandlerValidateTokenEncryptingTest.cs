@@ -8,12 +8,8 @@ using System.Text.Json.Serialization;
 
 namespace SampleTest.IdentityModel.Tokens.Jwt;
 
-public class JwtSecurityTokenHandlerValidateTokenEncryptingTest {
-	private readonly ITestOutputHelper _output;
-
-	public JwtSecurityTokenHandlerValidateTokenEncryptingTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JwtSecurityTokenHandlerValidateTokenEncryptingTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void CreateJwtSecurityToken_対称鍵で暗号化したトークンを復号する() {

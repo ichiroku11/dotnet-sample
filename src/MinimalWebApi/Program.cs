@@ -66,10 +66,7 @@ app.Run();
 
 internal record Monster(int Id, string Name);
 
-internal class MonsterDbContext : DbContext {
-	public MonsterDbContext(DbContextOptions options) : base(options) {
-	}
-
+internal class MonsterDbContext(DbContextOptions options) : DbContext(options) {
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		base.OnModelCreating(modelBuilder);
 
@@ -80,12 +77,8 @@ internal class MonsterDbContext : DbContext {
 	}
 }
 
-internal class MonsterStore {
-	private readonly MonsterDbContext _context;
-
-	public MonsterStore(MonsterDbContext context) {
-		_context = context;
-	}
+internal class MonsterStore(MonsterDbContext context) {
+	private readonly MonsterDbContext _context = context;
 
 	public async Task<IList<Monster>> GetAsync()
 		=> await _context.Set<Monster>().OrderBy(monster => monster.Id).ToListAsync();

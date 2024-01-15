@@ -4,12 +4,8 @@ using System.Text;
 
 namespace SampleTest.IdentityModel.Tokens;
 
-public class JsonWebKeyTest {
-	private readonly ITestOutputHelper _output;
-
-	public JsonWebKeyTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class JsonWebKeyTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	public static TheoryData<JsonWebKey> GetTheoryData_KeyIdIsNull() {
 		var key1 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789abcdef"));

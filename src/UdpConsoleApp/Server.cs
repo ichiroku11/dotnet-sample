@@ -8,13 +8,10 @@ namespace UdpConsoleApp;
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public class Server<TRequest, TResponse> {
+/// <param name="endpoint"></param>
+public class Server<TRequest, TResponse>(IPEndPoint endpoint) {
 	// リクエストを受信するエンドポイント
-	private readonly IPEndPoint _endpoint;
-
-	public Server(IPEndPoint endpoint) {
-		_endpoint = endpoint;
-	}
+	private readonly IPEndPoint _endpoint = endpoint;
 
 	/// <summary>
 	/// サーバを実行する

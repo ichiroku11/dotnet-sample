@@ -5,11 +5,7 @@ using Xunit.Abstractions;
 
 namespace MiscWebApp.Test;
 
-public class ContentTypeTest : TestBase {
-	public ContentTypeTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
-
+public class ContentTypeTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) : TestBase(output, factory) {
 	[Theory]
 	[InlineData(".txt", "text/plain")]
 	[InlineData("test.html", "text/html")]

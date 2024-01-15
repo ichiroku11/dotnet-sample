@@ -8,15 +8,12 @@ using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 
-public class Base64JsonControllerTest : ControllerTestBase {
+public class Base64JsonControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: ControllerTestBase(output, factory) {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
-
-	public Base64JsonControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
-		: base(output, factory) {
-	}
 
 	[Fact]
 	public async Task PostAsync_Base64にエンコードしたJSON文字列をモデルにバインドできる() {

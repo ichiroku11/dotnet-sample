@@ -6,10 +6,8 @@ using Microsoft.Graph.Models;
 namespace AzureAdB2cUserManagementConsoleApp;
 
 // ユーザーを無効にする
-public class GraphUpdateUserAccountEnabledSample : GraphSampleBase {
-	public GraphUpdateUserAccountEnabledSample(IConfiguration config, ILogger<GraphSampleBase> logger) : base(config, logger) {
-	}
-
+public class GraphUpdateUserAccountEnabledSample(IConfiguration config, ILogger<GraphSampleBase> logger)
+	: GraphSampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

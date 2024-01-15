@@ -8,13 +8,10 @@ namespace TcpConsoleApp;
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public class Client<TRequest, TResponse> {
+/// <param name="endpoint"></param>
+public class Client<TRequest, TResponse>(IPEndPoint endpoint) {
 	// 接続先のエンドポイント
-	private readonly IPEndPoint _endpoint;
-
-	public Client(IPEndPoint endpoint) {
-		_endpoint = endpoint;
-	}
+	private readonly IPEndPoint _endpoint = endpoint;
 
 	/// <summary>
 	/// サーバにリクエストを送信してレスポンスを受信する

@@ -11,21 +11,15 @@ namespace MiddlewareWebApp;
 // を持つ
 
 // サンプルミドルウェア
-public class SampleMiddleware {
+public class SampleMiddleware(RequestDelegate next, ILogger<SampleMiddleware> logger, string label) {
 	private static readonly JsonSerializerOptions _options
 		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
-	private readonly RequestDelegate _next;
-	private readonly ILogger _logger;
-	private readonly string _label;
-
-	public SampleMiddleware(RequestDelegate next, ILogger<SampleMiddleware> logger, string label) {
-		_next = next;
-		_logger = logger;
-		_label = label;
-	}
+	private readonly RequestDelegate _next = next;
+	private readonly ILogger _logger = logger;
+	private readonly string _label = label;
 
 	private void Log(HttpContext context, bool beforeRequestDelegate) {
 		var routeValues = context.Request.RouteValues;

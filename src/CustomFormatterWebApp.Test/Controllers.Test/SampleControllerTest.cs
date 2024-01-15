@@ -7,14 +7,8 @@ using Xunit.Abstractions;
 
 namespace CustomFormatterWebApp.Controllers.Test {
 	// https://docs.microsoft.com/ja-jp/aspnet/core/test/integration-tests?view=aspnetcore-6.0#basic-tests-with-the-default-webapplicationfactory
-	public class SampleControllerTest : IClassFixture<WebApplicationFactory<Program>> {
-		private readonly ITestOutputHelper _output;
-		private readonly WebApplicationFactory<Program> _factory;
-
-		public SampleControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory) {
-			_output = output;
-			_factory = factory;
-		}
+	public class SampleControllerTest(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>> {
+		private readonly WebApplicationFactory<Program> _factory = factory;
 
 		[Fact]
 		public async Task PostAsync_POSTした値を取得できる() {

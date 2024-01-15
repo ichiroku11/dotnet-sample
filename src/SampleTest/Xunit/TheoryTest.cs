@@ -1,12 +1,7 @@
 namespace SampleTest.Xunit;
 
-public class TheoryTest {
-	private readonly ITestOutputHelper _output;
-
-	public TheoryTest(ITestOutputHelper output) {
-		_output = output;
-	}
-
+public class TheoryTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Theory]
 	// テストデータを埋め込む

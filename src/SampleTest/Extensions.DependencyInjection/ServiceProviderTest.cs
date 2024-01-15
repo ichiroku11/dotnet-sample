@@ -18,12 +18,8 @@ public class ServiceProviderTest {
 		string GetValue();
 	}
 
-	private class SampleScenario : ISampleScenario {
-		private readonly ISampleService _service;
-
-		public SampleScenario(ISampleService service) {
-			_service = service;
-		}
+	private class SampleScenario(ISampleService service) : ISampleScenario {
+		private readonly ISampleService _service = service;
 
 		public string GetValue() => $"{nameof(SampleScenario)}.{_service.GetValue()}";
 	}

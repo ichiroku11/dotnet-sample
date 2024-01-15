@@ -10,14 +10,10 @@ namespace AzureCosmosDbConsoleApp;
 // 参考
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ContainerManagement/Program.cs
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ItemManagement/Program.cs
-public class CosmosSqlApiSample {
-	private readonly string _connectionString;
-	private readonly ILogger _logger;
-
-	public CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
-		_connectionString = config.GetConnectionString(Constants.ConnectionStringName) ?? throw new InvalidOperationException();
-		_logger = logger;
-	}
+public class CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
+	private readonly string _connectionString = config.GetConnectionString(Constants.ConnectionStringName)
+		?? throw new InvalidOperationException();
+	private readonly ILogger _logger = logger;
 
 	// コンテナー一覧表示
 	private async Task ListContainerAsync(Database database) {
@@ -72,7 +68,7 @@ public class CosmosSqlApiSample {
 
 	// Orderをクエリで取得
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-query-items#query-items-using-a-sql-query-asynchronously
-	private async Task GetOrdersByCustomerIdAsync(Container container, string customerId)	{
+	private async Task GetOrdersByCustomerIdAsync(Container container, string customerId) {
 		var query = new QueryDefinition("select * from c where c.customerId = @customerId")
 			.WithParameter("@customerId", customerId);
 		using var iterator = container.GetItemQueryIterator<Order>(query);

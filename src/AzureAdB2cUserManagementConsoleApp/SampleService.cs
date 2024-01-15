@@ -5,11 +5,8 @@ using SampleLib.Hosting;
 
 namespace AzureAdB2cUserManagementConsoleApp;
 
-public class SampleService : OnceHostedService {
-	public SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
-		: base(host, lifetime, logger) {
-	}
-
+public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
+	: OnceHostedService(host, lifetime, logger) {
 	protected override async Task RunAsync(IServiceProvider services) {
 		// ユーザー取得
 		//await services.GetRequiredService<GraphGetUserSample>().RunAsync();

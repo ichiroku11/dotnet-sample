@@ -2,12 +2,8 @@ using Polly;
 
 namespace SampleTest.Polly;
 
-public class PolicyHandleResultTest {
-	private readonly ITestOutputHelper _output;
-
-	public PolicyHandleResultTest(ITestOutputHelper output) {
-		_output = output;
-	}
+public class PolicyHandleResultTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void HandleResult_結果に基づいて1回リトライする動きを確認する() {
