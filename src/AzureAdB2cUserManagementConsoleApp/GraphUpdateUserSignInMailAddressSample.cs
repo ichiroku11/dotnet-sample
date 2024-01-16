@@ -19,7 +19,7 @@ internal class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILo
 			Identities = new List<ObjectIdentity> {
 				// サインイン情報を設定する
 				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
-				new ObjectIdentity {
+				new() {
 					Issuer = TenantId,
 					IssuerAssignedId = mail,
 					// メールアドレスでログインする

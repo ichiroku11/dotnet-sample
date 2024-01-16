@@ -36,7 +36,7 @@ public class GraphCreateUserSample(IConfiguration config, ILogger<GraphSampleBas
 			Identities = new List<ObjectIdentity> {
 				// サインインするための情報
 				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
-				new ObjectIdentity {
+				new() {
 					Issuer = TenantId,
 					IssuerAssignedId = mail,
 					// メールアドレスでログインする
