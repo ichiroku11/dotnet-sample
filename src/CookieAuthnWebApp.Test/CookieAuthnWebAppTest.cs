@@ -10,7 +10,7 @@ namespace CookieAuthnWebApp;
 public class CookieAuthnWebAppTest(ITestOutputHelper output, WebApplicationFactory<Startup> factory)
 	: IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
-		= new JsonSerializerOptions {
+		= new() {
 			PropertyNameCaseInsensitive = true,
 		};
 
