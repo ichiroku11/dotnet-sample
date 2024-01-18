@@ -161,7 +161,7 @@ public class EnumerableTest {
 	[Fact]
 	public void ToList_クラスのListをインターフェイスのIListに変換する() {
 		// Arrange
-		var items = new List<Sample> { new Sample() };
+		var items = new List<Sample> { new() };
 
 		// Act
 		// Assert

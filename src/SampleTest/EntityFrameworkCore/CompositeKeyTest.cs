@@ -120,8 +120,8 @@ drop table if exists dbo.Sample;";
 			Id2 = 3,
 			Value = "b",
 			Details = new List<SampleDetail> {
-					new SampleDetail(1, 3, 1, "b-1"),
-					new SampleDetail(1, 3, 2, "b-2"),
+					new(1, 3, 1, "b-1"),
+					new(1, 3, 2, "b-2"),
 				},
 		};
 
