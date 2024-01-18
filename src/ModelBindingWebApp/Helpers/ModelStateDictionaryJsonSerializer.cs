@@ -47,7 +47,7 @@ public static class ModelStateDictionaryJsonSerializer {
 	}
 
 	private static JsonSerializerOptions _jsonSerializerOptions
-		= new JsonSerializerOptions {
+		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 			PropertyNameCaseInsensitive = true,
 		};

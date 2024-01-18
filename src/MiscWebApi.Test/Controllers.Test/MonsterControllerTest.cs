@@ -6,7 +6,7 @@ namespace MiscWebApi.Controllers.Test;
 
 public partial class MonsterControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 	: ControllerTestBase(output, factory) {
-	private static readonly Monster _slime = new Monster {
+	private static readonly Monster _slime = new() {
 		Id = 1,
 		Name = "スライム",
 	};

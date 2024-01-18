@@ -9,7 +9,7 @@ namespace ModelBindingWebApp.Controllers.Test;
 public class DictionaryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 	: ControllerTestBase(output, factory) {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
-		= new JsonSerializerOptions {
+		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		};
 
