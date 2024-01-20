@@ -7,8 +7,7 @@ namespace ModelBindingWebApp.Models;
 // GeometryModelをバインドする
 public class GeometryModelBinder : IModelBinder {
 	// サブクラスのバインダーとメタデータ
-	private readonly Dictionary<Type, (IModelBinder binder, ModelMetadata metadata)> _binders
-		= new();
+	private readonly Dictionary<Type, (IModelBinder binder, ModelMetadata metadata)> _binders = [];
 
 	private bool TryGetSubclassBinder(
 		Type type,

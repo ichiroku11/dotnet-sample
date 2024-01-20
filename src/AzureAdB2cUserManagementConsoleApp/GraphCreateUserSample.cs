@@ -33,16 +33,16 @@ public class GraphCreateUserSample(IConfiguration config, ILogger<GraphSampleBas
 			AdditionalData = new Dictionary<string, object> {
 				[attributeName] = attributeValue,
 			},
-			Identities = new List<ObjectIdentity> {
+			Identities = [
 				// サインインするための情報
 				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
-				new() {
+				new ObjectIdentity {
 					Issuer = TenantId,
 					IssuerAssignedId = mail,
 					// メールアドレスでログインする
 					SignInType = "emailAddress",
 				},
-			},
+			],
 			PasswordProfile = new() {
 				// 次回のログインでパスワードを変更する
 				ForceChangePasswordNextSignIn = true,
