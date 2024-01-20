@@ -24,13 +24,13 @@ public class ObservableCombiningOperatorsTest {
 
 		// 2つ目のシーケンスが発行されたので発行される
 		subject2.OnNext(2);
-		Assert.Equal(new List<string> { "1:2" }, values);
+		Assert.Equal(["1:2"], values);
 
 		subject2.OnNext(3);
-		Assert.Equal(new List<string> { "1:2", "1:3" }, values);
+		Assert.Equal(["1:2", "1:3"], values);
 
 		subject1.OnNext(4);
-		Assert.Equal(new List<string> { "1:2", "1:3", "4:3" }, values);
+		Assert.Equal(["1:2", "1:3", "4:3"], values);
 	}
 
 	[Fact]
@@ -56,7 +56,7 @@ public class ObservableCombiningOperatorsTest {
 		subject2.OnNext(4);
 
 		// Assert
-		Assert.Equal(new List<int> { 1, 2, 3, 4 }, values);
+		Assert.Equal([1, 2, 3, 4], values);
 
 		subject1.Dispose();
 		subject2.Dispose();
@@ -73,7 +73,7 @@ public class ObservableCombiningOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 1, 2, 3 }, values);
+		Assert.Equal([1, 2, 3], values);
 	}
 
 	[Fact]
@@ -89,7 +89,7 @@ public class ObservableCombiningOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<string> { "1:4", "2:5", "3:6" }, values);
+		Assert.Equal(["1:4", "2:5", "3:6"], values);
 	}
 
 	[Fact]
@@ -107,6 +107,6 @@ public class ObservableCombiningOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<string> { "1:4", "2:5" }, values);
+		Assert.Equal(["1:4", "2:5"], values);
 	}
 }

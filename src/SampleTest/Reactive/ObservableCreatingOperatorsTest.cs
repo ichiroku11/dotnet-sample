@@ -43,7 +43,7 @@ public class ObservableCreatingOperatorsTest(ITestOutputHelper output) {
 		// Assert
 		Assert.True(disposed);
 		Assert.True(completed);
-		Assert.Equal(new List<int> { 1, 2, 3 }, values);
+		Assert.Equal([1, 2, 3], values);
 	}
 
 	[Fact]
@@ -107,7 +107,7 @@ public class ObservableCreatingOperatorsTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.True(completed);
-		Assert.Equal(new List<int> { 2, 4, 6 }, values);
+		Assert.Equal([2, 4, 6], values);
 	}
 
 	[Fact]
@@ -151,7 +151,7 @@ public class ObservableCreatingOperatorsTest(ITestOutputHelper output) {
 			});
 
 		// Assert
-		Assert.Equal(new List<int>() { 0, 1, 2 }, values);
+		Assert.Equal([0, 1, 2], values);
 		Assert.True(completed);
 	}
 
@@ -180,7 +180,7 @@ public class ObservableCreatingOperatorsTest(ITestOutputHelper output) {
 			});
 
 		// Assert
-		Assert.Equal(new List<int>() { 1, 1, 1 }, values);
+		Assert.Equal([1, 1, 1], values);
 		Assert.True(completed);
 	}
 
@@ -209,7 +209,7 @@ public class ObservableCreatingOperatorsTest(ITestOutputHelper output) {
 			});
 
 		// Assert
-		Assert.Equal(new List<int>() { 1 }, values);
+		Assert.Equal([1], values);
 		Assert.True(completed);
 	}
 

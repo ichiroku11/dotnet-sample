@@ -75,7 +75,7 @@ public class ObjectToInferredTypesConverterTest {
 	private class SampleData2 {
 		// プロパティに定義されていないデータを扱う
 		[JsonExtensionData]
-		public Dictionary<string, object> Exts { get; init; } = new();
+		public Dictionary<string, object> Exts { get; init; } = [];
 	}
 
 	[Theory]

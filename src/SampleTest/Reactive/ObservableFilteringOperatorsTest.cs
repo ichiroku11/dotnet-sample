@@ -14,7 +14,7 @@ public class ObservableFilteringOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 0, 2, 4 }, values);
+		Assert.Equal([0, 2, 4], values);
 	}
 
 	[Fact]
@@ -28,7 +28,7 @@ public class ObservableFilteringOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 3, 4 }, values);
+		Assert.Equal([3, 4], values);
 	}
 
 	[Fact]
@@ -42,6 +42,6 @@ public class ObservableFilteringOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 0, 1, 2 }, values);
+		Assert.Equal([0, 1, 2], values);
 	}
 }

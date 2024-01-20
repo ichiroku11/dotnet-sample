@@ -16,7 +16,7 @@ public class ObservableTransformingOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 1, 3, 6 }, values);
+		Assert.Equal([1, 3, 6], values);
 	}
 
 	[Fact]
@@ -30,7 +30,7 @@ public class ObservableTransformingOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 4 }, values);
+		Assert.Equal([4], values);
 	}
 
 	[Fact]
@@ -44,11 +44,6 @@ public class ObservableTransformingOperatorsTest {
 			.Subscribe(value => actual.Add(value));
 
 		// Assert
-		var expected = new List<int> {
-				10,
-				10, 11,
-				10, 11, 12,
-			};
-		Assert.Equal(expected, actual);
+		Assert.Equal([10, 10, 11, 10, 11, 12], actual);
 	}
 }
