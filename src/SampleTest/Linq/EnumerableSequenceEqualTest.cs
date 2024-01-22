@@ -2,8 +2,10 @@ namespace SampleTest.Linq;
 
 public class EnumerableSequenceEqualTest {
 	[Theory]
+#pragma warning disable xUnit1012
 	[InlineData(new[] { 0 }, null)]
 	[InlineData(null, new[] { 0 })]
+#pragma warning restore xUnit1012
 	public void SequenceEqual_引数のどちらかがnullだとArgumentNullExceptionが発生する(IEnumerable<int> first, IEnumerable<int> second) {
 		// Arrange
 		// Act
