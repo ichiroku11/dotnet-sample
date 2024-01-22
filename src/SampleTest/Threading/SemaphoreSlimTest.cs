@@ -1,5 +1,6 @@
 namespace SampleTest.Threading;
 
+#pragma warning disable IDE0063
 public class SemaphoreSlimTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
@@ -82,7 +83,7 @@ public class SemaphoreSlimTest(ITestOutputHelper output) {
 
 	// しっくりこないかも・・・
 	[Fact]
-	public void Release_WaitAsyncしたタスクにReleaseで通知する() {
+	public async Task Release_WaitAsyncしたタスクにReleaseで通知する() {
 		// Arrange
 		// Act
 		// Assert
@@ -109,7 +110,8 @@ public class SemaphoreSlimTest(ITestOutputHelper output) {
 				_output.WriteLine($"Release After");
 			});
 
-			Task.WaitAll(task);
+			// todo:
+			await task;
 		}
 	}
 
@@ -188,3 +190,4 @@ public class SemaphoreSlimTest(ITestOutputHelper output) {
 	}
 	*/
 }
+#pragma warning restore IDE0063
