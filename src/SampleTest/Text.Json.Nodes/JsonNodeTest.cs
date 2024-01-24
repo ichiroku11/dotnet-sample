@@ -43,14 +43,13 @@ public class JsonNodeTest {
 
 	public static TheoryData<JsonNode, JsonValueKind> GetTheoryData_GetValueKind()
 		=> new() {
-			// todo: undefined
 			{ new JsonObject(), JsonValueKind.Object },
 			{ new JsonArray(), JsonValueKind.Array },
 			{ JsonValue.Create(""), JsonValueKind.String },
 			{ JsonValue.Create(0), JsonValueKind.Number },
 			{ JsonValue.Create(true), JsonValueKind.True },
 			{ JsonValue.Create(false), JsonValueKind.False },
-			// todo: null
+			// JsonValueKind.UndefinedとJsonValueKind.Nullの作り方がわからず・・
 		};
 
 	[Theory]
