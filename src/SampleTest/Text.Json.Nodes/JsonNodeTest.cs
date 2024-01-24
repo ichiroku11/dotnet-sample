@@ -40,4 +40,28 @@ public class JsonNodeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	public static TheoryData<JsonNode, JsonValueKind> GetTheoryData_GetValueKind()
+		=> new() {
+			// todo: undefined
+			{ new JsonObject(), JsonValueKind.Object },
+			{ new JsonArray(), JsonValueKind.Array },
+			{ JsonValue.Create(""), JsonValueKind.String },
+			{ JsonValue.Create(0), JsonValueKind.Number },
+			{ JsonValue.Create(true), JsonValueKind.True },
+			{ JsonValue.Create(false), JsonValueKind.False },
+			// todo: null
+		};
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_GetValueKind))]
+	public void GetValueKind(JsonNode node, JsonValueKind expected) {
+		// Arrange
+
+		// Act
+		var actual = node.GetValueKind();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
