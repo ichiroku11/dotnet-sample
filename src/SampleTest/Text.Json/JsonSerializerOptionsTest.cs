@@ -13,12 +13,15 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	public void DefaultIgnoreCondition_Alwaysを設定するとArgumentExceptionがスローされる() {
 		// Arrange
 		// Act
-		// Assert
-		Assert.Throws<ArgumentException>(() => {
+		var actual = Record.Exception(() => {
 			var options = new JsonSerializerOptions {
 				DefaultIgnoreCondition = JsonIgnoreCondition.Always
 			};
 		});
+
+		// Assert
+		Assert.IsType<ArgumentException>(actual);
+		_output.WriteLine(actual.Message);
 	}
 
 	private record Sample(int Value = default, string? Text = default);
