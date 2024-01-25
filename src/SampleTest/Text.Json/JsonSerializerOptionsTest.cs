@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace SampleTest.Text.Json;
 
+// Cache and reuse 'JsonSerializerOptions' instances
+#pragma warning disable CA1869
+
 public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
@@ -133,3 +136,6 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 		Assert.Equal(expected, actual);
 	}
 }
+
+// Cache and reuse 'JsonSerializerOptions' instances
+#pragma warning restore CA1869
