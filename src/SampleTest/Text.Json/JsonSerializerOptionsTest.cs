@@ -102,6 +102,22 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void MakeReadOnly_TypeInfoResolverを設定しないと例外が発生する() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+		};
+
+		// Act
+		var exception = Record.Exception(() => {
+			options.MakeReadOnly();
+		});
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
 	public void PropertyNamingPolicy_を使ってプロパティ名をキャメルケースでシリアライズする() {
 		// Arrange
 		var model = new { Number = 1, Text = "Abc" };
