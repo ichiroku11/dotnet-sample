@@ -36,7 +36,7 @@ public class InterlockedTest {
 		var values = default(List<int>);
 
 		// Act
-		var result = Interlocked.CompareExchange(location1: ref values, value: new List<int> { 1 }, comparand: default);
+		var result = Interlocked.CompareExchange(location1: ref values, value: [1], comparand: default);
 
 		// Assert
 		Assert.NotNull(values);

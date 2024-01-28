@@ -6,7 +6,7 @@ namespace TcpConsoleApp;
 public static class StreamExtensions {
 	private static readonly Encoding _encoding = Encoding.UTF8;
 
-	private static readonly JsonSerializerOptions _options = new JsonSerializerOptions {
+	private static readonly JsonSerializerOptions _options = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		PropertyNameCaseInsensitive = true,
 	};

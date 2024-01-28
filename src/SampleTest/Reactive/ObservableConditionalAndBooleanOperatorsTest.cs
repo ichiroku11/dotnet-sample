@@ -34,7 +34,7 @@ public class ObservableConditionalAndBooleanOperatorsTest {
 
 		// Assert
 		// 条件を満たした段階で発行が終了するっぽい
-		Assert.Equal(new List<int> { 0, 1 }, intercepts);
+		Assert.Equal([0, 1], intercepts);
 		Assert.True(values.Single());
 	}
 }

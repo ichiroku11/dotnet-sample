@@ -5,7 +5,7 @@ namespace AzureCacheForRedisConsoleApp;
 
 public static class DatabaseExtensions {
 	private static readonly JsonSerializerOptions _options
-		= new JsonSerializerOptions {
+		= new() {
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 			PropertyNameCaseInsensitive = true,
 		};

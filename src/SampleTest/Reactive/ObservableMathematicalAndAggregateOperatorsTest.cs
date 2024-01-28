@@ -17,7 +17,7 @@ public class ObservableMathematicalAndAggregateOperatorsTest {
 			.Subscribe(value => values.Add(value));
 
 		// Assert
-		Assert.Equal(new List<int> { 6 }, values);
+		Assert.Equal([6], values);
 	}
 
 	[Fact]
@@ -40,16 +40,16 @@ public class ObservableMathematicalAndAggregateOperatorsTest {
 		// 1つ目が完了するまでは、2つ目のシーケンスは発行されない
 		subject1.OnNext(1);
 		subject2.OnNext(2);
-		Assert.Equal(new List<int> { 1 }, values);
+		Assert.Equal([1], values);
 
 		// 1つ目が完了しても、それまでに発行された2つ目のシーケンスは発行されない
 		// 「2」は発行されない
 		subject1.OnCompleted();
-		Assert.Equal(new List<int> { 1 }, values);
+		Assert.Equal([1], values);
 
 		// 2つ目のシーケンスが発行される
 		subject2.OnNext(3);
 		subject2.OnNext(4);
-		Assert.Equal(new List<int> { 1, 3, 4 }, values);
+		Assert.Equal([1, 3, 4], values);
 	}
 }

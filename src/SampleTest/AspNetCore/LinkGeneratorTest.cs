@@ -25,7 +25,7 @@ public class LinkGeneratorTest(ITestOutputHelper output) {
 			displayName: null);
 	}
 
-	private static IServiceProvider CreateServiceProvider(params Endpoint[] endpoints) {
+	private static ServiceProvider CreateServiceProvider(params Endpoint[] endpoints) {
 		var services = new ServiceCollection();
 		services.AddOptions();
 		services.AddLogging();

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 namespace SampleTest.Extensions.Logging;
 
 public class TestLogger : ILogger {
-	private readonly List<string> _messages = new();
+	private readonly List<string> _messages = [];
 
 	public IDisposable? BeginScope<TState>(TState state) where TState : notnull
 		=> throw new NotImplementedException();

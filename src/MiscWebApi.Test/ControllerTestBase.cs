@@ -14,7 +14,7 @@ namespace MiscWebApi;
 
 public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<Program>> {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
-		= new JsonSerializerOptions {
+		= new() {
 			PropertyNameCaseInsensitive = true,
 		};
 

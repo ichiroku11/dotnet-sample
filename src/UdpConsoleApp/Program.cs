@@ -4,13 +4,13 @@ namespace UdpConsoleApp;
 
 class Program {
 	// サーバの作成
-	private static Server<string, string> Server(IPEndPoint endpoint) => new Server<string, string>(endpoint);
+	private static Server<string, string> Server(IPEndPoint endpoint) => new(endpoint);
 
 	// クライアントの作成
-	private static Client<string, string> Client(IPEndPoint endpoint) => new Client<string, string>(endpoint);
+	private static Client<string, string> Client(IPEndPoint endpoint) => new(endpoint);
 
 	// 文字列を並びを反対にする
-	private static string Reverse(string original) => new string(original.Reverse().ToArray());
+	private static string Reverse(string original) => new(original.Reverse().ToArray());
 
 	static void Main(string[] args) {
 		var endpoint = new IPEndPoint(IPAddress.Loopback, 54321);

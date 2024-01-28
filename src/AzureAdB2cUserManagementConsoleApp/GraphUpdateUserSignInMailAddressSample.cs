@@ -16,7 +16,7 @@ internal class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILo
 		var mail = "{mail}";
 
 		var userToUpdate = new User {
-			Identities = new List<ObjectIdentity> {
+			Identities = [
 				// サインイン情報を設定する
 				// https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity
 				new ObjectIdentity {
@@ -25,7 +25,7 @@ internal class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILo
 					// メールアドレスでログインする
 					SignInType = "emailAddress",
 				},
-			},
+			],
 		};
 
 		Logger.LogInformation("{mail}", mail);

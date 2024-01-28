@@ -18,21 +18,21 @@ public class SubjectTest {
 		// Act
 		// Assert
 		subject.OnNext(1);
-		Assert.Equal(new List<int> { 1 }, values);
+		Assert.Equal([1], values);
 		Assert.False(completed);
 
 		subject.OnNext(2);
-		Assert.Equal(new List<int> { 1, 2 }, values);
+		Assert.Equal([1, 2], values);
 		Assert.False(completed);
 
 		// onCompletedが呼ばれる
 		subject.OnCompleted();
-		Assert.Equal(new List<int> { 1, 2 }, values);
+		Assert.Equal([1, 2], values);
 		Assert.True(completed);
 
 		// OnCompletedした後、onNextは呼ばれない
 		subject.OnNext(4);
-		Assert.Equal(new List<int> { 1, 2 }, values);
+		Assert.Equal([1, 2], values);
 		Assert.True(completed);
 	}
 }

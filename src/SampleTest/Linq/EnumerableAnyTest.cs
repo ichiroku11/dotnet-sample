@@ -29,7 +29,7 @@ public class EnumerableAnyTest {
 
 		// Assert
 		Assert.True(any);
-		Assert.Equal(new List<int> { 0 }, values);
+		Assert.Equal([0], values);
 	}
 
 	[Fact]
@@ -42,7 +42,7 @@ public class EnumerableAnyTest {
 
 		// Assert
 		Assert.True(any);
-		Assert.Equal(new List<int> { 0, 1, 2 }, values);
+		Assert.Equal([0, 1, 2], values);
 	}
 
 	[Fact]
@@ -55,6 +55,6 @@ public class EnumerableAnyTest {
 
 		// Assert
 		Assert.False(any);
-		Assert.Equal(new List<int> { 0, 1, 2, 3, 4 }, values);
+		Assert.Equal([0, 1, 2, 3, 4], values);
 	}
 }

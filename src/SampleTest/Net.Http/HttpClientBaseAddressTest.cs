@@ -40,7 +40,7 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 	}
 
 	private static TestServer CreateServer(string baseUri)
-		=> new TestServer(new WebHostBuilder().UseStartup<Startup>()) {
+		=> new(new WebHostBuilder().UseStartup<Startup>()) {
 			BaseAddress = new Uri(baseUri)
 		};
 

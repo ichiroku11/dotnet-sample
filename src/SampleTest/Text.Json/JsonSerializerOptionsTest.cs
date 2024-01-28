@@ -1,7 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.Text.Json;
+
+// Cache and reuse 'JsonSerializerOptions' instances
+#pragma warning disable CA1869
 
 public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
@@ -10,12 +14,15 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	public void DefaultIgnoreCondition_Alwaysを設定するとArgumentExceptionがスローされる() {
 		// Arrange
 		// Act
-		// Assert
-		Assert.Throws<ArgumentException>(() => {
+		var actual = Record.Exception(() => {
 			var options = new JsonSerializerOptions {
 				DefaultIgnoreCondition = JsonIgnoreCondition.Always
 			};
 		});
+
+		// Assert
+		Assert.IsType<ArgumentException>(actual);
+		_output.WriteLine(actual.Message);
 	}
 
 	private record Sample(int Value = default, string? Text = default);
@@ -96,6 +103,51 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void IsReadOnly_インスタンスを生成しただけではfalseを返す() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+		};
+
+		// Act
+		var actual = options.IsReadOnly;
+
+		// Assert
+		Assert.False(actual);
+	}
+
+	[Fact]
+	public void IsReadOnly_MakeReadOnlyするとtrueを返す() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			// TypeInfoResolverを指定する必要がある
+			TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+		};
+
+		// Act
+		options.MakeReadOnly();
+		var actual = options.IsReadOnly;
+
+		// Assert
+		Assert.True(actual);
+	}
+
+	[Fact]
+	public void MakeReadOnly_TypeInfoResolverを指定しないと例外が発生する() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+		};
+
+		// Act
+		var exception = Record.Exception(() => {
+			options.MakeReadOnly();
+		});
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
 	public void PropertyNamingPolicy_を使ってプロパティ名をキャメルケースでシリアライズする() {
 		// Arrange
 		var model = new { Number = 1, Text = "Abc" };
@@ -133,3 +185,6 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 		Assert.Equal(expected, actual);
 	}
 }
+
+// Cache and reuse 'JsonSerializerOptions' instances
+#pragma warning restore CA1869

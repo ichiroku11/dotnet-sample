@@ -26,7 +26,7 @@ public class RelatedDataTest : IDisposable {
 
 		// Navigation
 		public MonsterCategory? Category { get; init; }
-		public List<MonsterItem> Items { get; init; } = new();
+		public List<MonsterItem> Items { get; init; } = [];
 	}
 
 	private class Item {

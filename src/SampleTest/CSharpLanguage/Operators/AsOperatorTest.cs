@@ -20,7 +20,7 @@ public class AsOperatorTest {
 	[Fact]
 	public void AsOperator_クラスのListはクラスのIListに変換できる() {
 		// Arrange
-		var items = new List<Sample> { new Sample() };
+		var items = new List<Sample> { new() };
 
 		// Act
 		// Assert
@@ -30,7 +30,7 @@ public class AsOperatorTest {
 	[Fact]
 	public void AsOperator_クラスのListはインターフェイスのIListに変換できない() {
 		// Arrange
-		var items = new List<Sample> { new Sample() };
+		var items = new List<Sample> { new() };
 
 		// Act
 		// Assert

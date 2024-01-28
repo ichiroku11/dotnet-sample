@@ -14,7 +14,7 @@ public class JsonExtensionDataAttributeTest {
 		// JsonExtensionData属性を指定できるのは、
 		// Dictionary<string, object>またはDictionary<string, JsonElement>
 		[JsonExtensionData]
-		public Dictionary<string, object> Exts { get; set; } = new();
+		public Dictionary<string, object> Exts { get; set; } = [];
 	}
 
 	[Fact]

@@ -4,7 +4,7 @@ namespace SampleTest;
 
 public class DynamicObjectTest {
 	private class DynamicBag : DynamicObject {
-		private readonly Dictionary<string, object?> _storage = new();
+		private readonly Dictionary<string, object?> _storage = [];
 
 		public override bool TryGetMember(GetMemberBinder binder, out object? result) {
 			//return base.TryGetMember(binder, out result);

@@ -11,7 +11,7 @@ public class CompositeKeyTest : IDisposable {
 		public int Id1 { get; init; }
 		public int Id2 { get; init; }
 		public string Value { get; init; } = "";
-		public List<SampleDetail> Details { get; init; } = new();
+		public List<SampleDetail> Details { get; init; } = [];
 	}
 
 	private record SampleDetail(int SampleId1, int SampleId2, int DetailNo, string Value);
@@ -119,10 +119,10 @@ drop table if exists dbo.Sample;";
 			Id1 = 1,
 			Id2 = 3,
 			Value = "b",
-			Details = new List<SampleDetail> {
-					new SampleDetail(1, 3, 1, "b-1"),
-					new SampleDetail(1, 3, 2, "b-2"),
-				},
+			Details = [
+				new SampleDetail(1, 3, 1, "b-1"),
+				new SampleDetail(1, 3, 2, "b-2"),
+			],
 		};
 
 		// Act
