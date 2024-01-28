@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SampleTest.Text.Json;
 
@@ -102,7 +103,36 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
-	public void MakeReadOnly_TypeInfoResolverを設定しないと例外が発生する() {
+	public void IsReadOnly_インスタンスを生成しただけではfalseを返す() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+		};
+
+		// Act
+		var actual = options.IsReadOnly;
+
+		// Assert
+		Assert.False(actual);
+	}
+
+	[Fact]
+	public void IsReadOnly_MakeReadOnlyするとtrueを返す() {
+		// Arrange
+		var options = new JsonSerializerOptions {
+			// TypeInfoResolverを指定する必要がある
+			TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+		};
+
+		// Act
+		options.MakeReadOnly();
+		var actual = options.IsReadOnly;
+
+		// Assert
+		Assert.True(actual);
+	}
+
+	[Fact]
+	public void MakeReadOnly_TypeInfoResolverを指定しないと例外が発生する() {
 		// Arrange
 		var options = new JsonSerializerOptions {
 		};
