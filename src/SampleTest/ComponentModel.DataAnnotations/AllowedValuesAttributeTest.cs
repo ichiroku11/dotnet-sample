@@ -21,4 +21,18 @@ public class AllowedValuesAttributeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData(1, true)]
+	[InlineData(2, false)]
+	public void IsValid_Int32で確認する(object? value, bool expected) {
+		// Arrange
+		var attribute = new AllowedValuesAttribute(1);
+
+		// Act
+		var actual = attribute.IsValid(value);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
