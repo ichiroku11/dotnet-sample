@@ -21,4 +21,18 @@ public class DeniedValuesAttributeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData(1, false)]
+	[InlineData(2, true)]
+	public void IsValid_Int32で確認する(object? value, bool expected) {
+		// Arrange
+		var attribute = new DeniedValuesAttribute(1);
+
+		// Act
+		var actual = attribute.IsValid(value);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
