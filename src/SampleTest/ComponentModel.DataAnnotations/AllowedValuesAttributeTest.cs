@@ -11,7 +11,7 @@ public class AllowedValuesAttributeTest {
 	[InlineData(null, false)]
 	[InlineData("A", false)]
 	[InlineData("B", false)]
-	public void IsValid_確認する(object? value, bool expected) {
+	public void IsValid_文字列で確認する(object? value, bool expected) {
 		// Arrange
 		var attribute = new AllowedValuesAttribute("a", "b");
 

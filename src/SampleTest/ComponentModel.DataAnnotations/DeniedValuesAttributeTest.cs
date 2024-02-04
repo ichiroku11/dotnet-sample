@@ -11,7 +11,7 @@ public class DeniedValuesAttributeTest {
 	[InlineData(null, true)]
 	[InlineData("A", true)]
 	[InlineData("B", true)]
-	public void IsValid_確認する(object? value, bool expected) {
+	public void IsValid_文字列で確認する(object? value, bool expected) {
 		// Arrange
 		var attribute = new DeniedValuesAttribute("a", "b");
 
