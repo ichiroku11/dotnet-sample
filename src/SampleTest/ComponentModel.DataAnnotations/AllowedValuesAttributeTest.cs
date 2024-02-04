@@ -11,7 +11,7 @@ public class AllowedValuesAttributeTest {
 	[InlineData(null, false)]
 	[InlineData("A", false)]
 	[InlineData("B", false)]
-	public void IsValid_文字列で確認する(object? value, bool expected) {
+	public void IsValid_文字列で確認する(string? value, bool expected) {
 		// Arrange
 		var attribute = new AllowedValuesAttribute("a", "b");
 
@@ -25,7 +25,7 @@ public class AllowedValuesAttributeTest {
 	[Theory]
 	[InlineData(1, true)]
 	[InlineData(2, false)]
-	public void IsValid_Int32で確認する(object? value, bool expected) {
+	public void IsValid_Int32で確認する(int value, bool expected) {
 		// Arrange
 		var attribute = new AllowedValuesAttribute(1);
 
