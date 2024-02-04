@@ -20,4 +20,20 @@ public class LengthAttributeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData("a", false)]
+	[InlineData("ab", true)]
+	[InlineData("abc", true)]
+	[InlineData("abcd", false)]
+	public void IsValid_文字列で長さの有効性を確認する(string text, bool expected) {
+		// Arrange
+		var attribute = new LengthAttribute(2, 3);
+
+		// Act
+		var actual = attribute.IsValid(text);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
