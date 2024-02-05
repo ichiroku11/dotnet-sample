@@ -4,13 +4,14 @@ namespace SampleTest.ComponentModel.DataAnnotations;
 
 public class LengthAttributeTest {
 	[Theory]
+	[InlineData(null, true)]
 #pragma warning disable CA1861 // Avoid constant arrays as arguments
 	[InlineData(new[] { 0 }, false)]
 	[InlineData(new[] { 0, 1 }, true)]
 	[InlineData(new[] { 0, 1, 2 }, true)]
 	[InlineData(new[] { 0, 1, 2, 3 }, false)]
 #pragma warning restore CA1861 // Avoid constant arrays as arguments
-	public void IsValid_配列で長さの有効性を確認する(int[] values, bool expected) {
+	public void IsValid_配列で長さの有効性を確認する(int[]? values, bool expected) {
 		// Arrange
 		var attribute = new LengthAttribute(2, 3);
 
@@ -22,11 +23,12 @@ public class LengthAttributeTest {
 	}
 
 	[Theory]
+	[InlineData(null, true)]
 	[InlineData("a", false)]
 	[InlineData("ab", true)]
 	[InlineData("abc", true)]
 	[InlineData("abcd", false)]
-	public void IsValid_文字列で長さの有効性を確認する(string text, bool expected) {
+	public void IsValid_文字列で長さの有効性を確認する(string? text, bool expected) {
 		// Arrange
 		var attribute = new LengthAttribute(2, 3);
 
