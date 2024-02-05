@@ -2,7 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SampleTest.ComponentModel.DataAnnotations;
 
-public class LengthAttributeTest {
+public class LengthAttributeTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Theory]
 	[InlineData(null, true)]
 #pragma warning disable CA1861 // Avoid constant arrays as arguments
@@ -37,5 +39,26 @@ public class LengthAttributeTest {
 
 		// Assert
 		Assert.Equal(expected, actual);
+	}
+
+	public static TheoryData<LengthAttribute> GetTheoryData_IsValid()
+		=> new() {
+			// インスタンスを作るときは例外が発生せず
+			// IsValidを呼び出すときに例外が発生する
+			new LengthAttribute(-1, 1),
+			new LengthAttribute(2, 1),
+		};
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_IsValid))]
+	public void IsValid_指定した最小値と最大値が不正な場合は例外が発生することを確認する(LengthAttribute attribute) {
+		// Arrange
+
+		// Act
+		var exception = Record.Exception(() => attribute.IsValid(null));
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 }
