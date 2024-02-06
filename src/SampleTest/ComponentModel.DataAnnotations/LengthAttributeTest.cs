@@ -45,7 +45,9 @@ public class LengthAttributeTest(ITestOutputHelper output) {
 		=> new() {
 			// インスタンスを作るときは例外が発生せず
 			// IsValidを呼び出すときに例外が発生する
+			// 最小値がマイナス
 			new LengthAttribute(-1, 1),
+			// 最小値が最大値より大きい
 			new LengthAttribute(2, 1),
 		};
 
