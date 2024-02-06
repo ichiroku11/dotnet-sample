@@ -2,7 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SampleTest.ComponentModel.DataAnnotations;
 
-public class RangeAttributeTest {
+public class RangeAttributeTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Theory]
 	[InlineData(0, true)]
 	[InlineData(10, true)]
@@ -33,5 +35,27 @@ public class RangeAttributeTest {
 
 		// Assert
 		Assert.Equal(expected, actual);
+	}
+
+	public static TheoryData<RangeAttribute> GetTheoryData_IsValid()
+		=> new() {
+			// 最小値が最大値より大きい
+			new RangeAttribute(2, 1),
+			// 範囲内の数値が存在しない
+			new RangeAttribute(1, 1) { MinimumIsExclusive = true },
+			new RangeAttribute(1, 1) { MaximumIsExclusive = true },
+		};
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_IsValid))]
+	public void IsValid_指定した最小値と最大値が不正な場合は例外が発生することを確認する(RangeAttribute attribute) {
+		// Arrange
+
+		// Act
+		var exception = Record.Exception(() => attribute.IsValid(null));
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 }
