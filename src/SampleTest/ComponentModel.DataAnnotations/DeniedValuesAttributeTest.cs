@@ -35,4 +35,16 @@ public class DeniedValuesAttributeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Fact]
+	public void IsValid_コンストラクターで引数を指定しなくても例外は発生しない() {
+		// Arrange
+		var attribute = new DeniedValuesAttribute();
+
+		// Act
+		var actual = attribute.IsValid(1);
+
+		// Assert
+		Assert.True(actual);
+	}
 }
