@@ -35,4 +35,21 @@ public class AllowedValuesAttributeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	// たぶん何を渡してもfalse
+	[Theory]
+	[InlineData(0)]
+	[InlineData(null)]
+	[InlineData(false)]
+	[InlineData("")]
+	public void IsValid_コンストラクターで引数を指定しない場合は必ずfalse(object? value) {
+		// Arrange
+		var attribute = new AllowedValuesAttribute();
+
+		// Act
+		var actual = attribute.IsValid(value);
+
+		// Assert
+		Assert.False(actual);
+	}
 }
