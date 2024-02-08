@@ -36,13 +36,18 @@ public class DeniedValuesAttributeTest {
 		Assert.Equal(expected, actual);
 	}
 
-	[Fact]
-	public void IsValid_コンストラクターで引数を指定しなくても例外は発生しない() {
+	// たぶん何を渡してもtrue
+	[Theory]
+	[InlineData(0)]
+	[InlineData(null)]
+	[InlineData(false)]
+	[InlineData("")]
+	public void IsValid_コンストラクターで引数を指定しない場合は必ずtrue(object? value) {
 		// Arrange
 		var attribute = new DeniedValuesAttribute();
 
 		// Act
-		var actual = attribute.IsValid(1);
+		var actual = attribute.IsValid(value);
 
 		// Assert
 		Assert.True(actual);
