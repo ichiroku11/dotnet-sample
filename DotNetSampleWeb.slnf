@@ -36,6 +36,7 @@
       "src\\OpenIdConnectWebApp\\OpenIdConnectWebApp.csproj",
       "src\\OptionPatternWebApp\\OptionPatternWebApp.csproj",
       "src\\PolicyAuthzWebApp\\PolicyAuthzWebApp.csproj",
+      "src\\RazorPageWebApp\\RazorPageWebApp.csproj",
       "src\\SampleLib.Test\\SampleLib.Test.csproj",
       "src\\SampleLib\\SampleLib.csproj",
       "src\\SampleTest\\SampleTest.csproj",
