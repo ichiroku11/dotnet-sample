@@ -119,7 +119,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtBearerAuthnWebApp", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenIdConnectWebApp", "src\OpenIdConnectWebApp\OpenIdConnectWebApp.csproj", "{9169C858-A781-458D-BD80-5DAFF0E4BAF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPageWebApp", "src\RazorPageWebApp\RazorPageWebApp.csproj", "{AD2A7230-A91F-4AB2-8002-D28A424A4B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPageWebApp", "src\RazorPageWebApp\RazorPageWebApp.csproj", "{AD2A7230-A91F-4AB2-8002-D28A424A4B3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
