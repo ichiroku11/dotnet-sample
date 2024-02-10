@@ -4,3 +4,7 @@
 	ViewBag.Title = "Index";
 }
 <p>Index</p>
+
+@foreach (var monster in Model.Monsters) {
+	<div>@monster.Name</div>
+}
