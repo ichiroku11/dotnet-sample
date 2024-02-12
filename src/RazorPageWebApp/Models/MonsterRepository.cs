@@ -9,5 +9,16 @@ public class MonsterRepository {
 			new Monster(2, "ドラキー"),
 		}.Select(monster => KeyValuePair.Create(monster.Id, monster)));
 
-	public IList<Monster> QueryAll() => _monsters.Values.OrderBy(monster => monster.Id).ToList();
+	public IList<Monster> Query(MonsterListQueryOption option) {
+
+		IEnumerable<Monster> monsters = _monsters.Values;
+
+		if (!string.IsNullOrWhiteSpace(option.Query)) {
+			monsters = monsters.Where(monster => monster.Name.Contains(option.Query));
+		}
+
+		return monsters
+			.OrderBy(monster => monster.Id)
+			.ToList();
+	}
 }

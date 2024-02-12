@@ -5,6 +5,12 @@
 }
 
 <a asp-page="Add">Add</a>
-@foreach (var monster in Model.Monsters) {
+
+<form method="get">
+	<input asp-for="Query" />
+	<button type="submit">Search</button>
+</form>
+
+@foreach (var monster in Model.QueryMonsters()) {
 	<div>@monster.Name</div>
 }
