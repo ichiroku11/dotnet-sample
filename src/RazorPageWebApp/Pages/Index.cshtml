@@ -3,8 +3,8 @@
 @{
 	ViewBag.Title = "Index";
 }
-<p>Index</p>
 
+<a asp-page="Add">Add</a>
 @foreach (var monster in Model.Monsters) {
 	<div>@monster.Name</div>
 }
