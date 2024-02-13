@@ -9,16 +9,16 @@ public class MonsterRepository {
 			new Monster(2, "ドラキー"),
 		}.Select(monster => KeyValuePair.Create(monster.Id, monster)));
 
-	public IList<Monster> Query(MonsterListQueryOption option) {
-
+	public Task<IList<Monster>> QueryAsync(MonsterListQueryOption option) {
 		IEnumerable<Monster> monsters = _monsters.Values;
 
 		if (!string.IsNullOrWhiteSpace(option.Query)) {
 			monsters = monsters.Where(monster => monster.Name.Contains(option.Query));
 		}
 
-		return monsters
-			.OrderBy(monster => monster.Id)
-			.ToList();
+		return Task.FromResult<IList<Monster>>(
+			monsters
+				.OrderBy(monster => monster.Id)
+				.ToList());
 	}
 }
