@@ -11,6 +11,6 @@
 	<button type="submit">Search</button>
 </form>
 
-@foreach (var monster in await Model.QueryMonstersAsync()) {
+@foreach (var monster in Model.Monsters) {
 	<div>@monster.Name</div>
 }
