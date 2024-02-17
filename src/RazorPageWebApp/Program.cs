@@ -14,6 +14,7 @@ services.AddScoped<MonsterRepository>();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
 app.UseRouting();
 app.MapRazorPages();
 

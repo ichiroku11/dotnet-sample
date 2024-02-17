@@ -11,6 +11,8 @@
 	<button type="submit">Search</button>
 </form>
 
+<div class="monster-list">
 @foreach (var monster in Model.Monsters) {
 	<div>@monster.Name</div>
 }
+</div>
