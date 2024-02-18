@@ -22,6 +22,13 @@ public class MonsterRepository {
 		return Task.FromResult<IList<Monster>>(result);
 	}
 
+	public Task<Monster?> GetByIdAsync(int id) {
+		var result = _monsters.TryGetValue(id, out var monster)
+			? monster
+			: null;
+		return Task.FromResult(result);
+	}
+
 	public Task<bool> AddAsync(Monster monster) {
 		var result = _monsters.TryAdd(monster.Id, monster);
 

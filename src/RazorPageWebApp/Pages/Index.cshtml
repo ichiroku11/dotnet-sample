@@ -12,7 +12,22 @@
 </form>
 
 <div class="monster-list">
-@foreach (var monster in Model.Monsters) {
-	<div>@monster.Name</div>
-}
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var monster in Model.Monsters) {
+				<tr>
+					<td>@monster.Id</td>
+					<td>@monster.Name</td>
+					<td><a asp-page="Edit" asp-route-id="@monster.Id">Edit</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
