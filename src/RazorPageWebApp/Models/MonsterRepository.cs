@@ -16,9 +16,15 @@ public class MonsterRepository {
 			monsters = monsters.Where(monster => monster.Name.Contains(option.Query));
 		}
 
-		return Task.FromResult<IList<Monster>>(
-			monsters
-				.OrderBy(monster => monster.Id)
-				.ToList());
+		var result = monsters
+			.OrderBy(monster => monster.Id)
+			.ToList();
+		return Task.FromResult<IList<Monster>>(result);
+	}
+
+	public Task<bool> AddAsync(Monster monster) {
+		var result = _monsters.TryAdd(monster.Id, monster);
+
+		return Task.FromResult(result);
 	}
 }
