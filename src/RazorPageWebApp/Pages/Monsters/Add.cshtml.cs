@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorPageWebApp.Models;
+using RazorPageWebApp.Models.Monsters;
 using System.ComponentModel.DataAnnotations;
 
-namespace RazorPageWebApp.Pages;
+namespace RazorPageWebApp.Pages.Monsters;
 
 public class AddModel(MonsterRepository repository) : PageModel {
 	private readonly MonsterRepository _repository = repository;

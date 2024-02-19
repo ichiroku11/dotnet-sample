@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace RazorPageWebApp.Models;
+namespace RazorPageWebApp.Models.Monsters;
 
 public class MonsterRepository {
 	private static readonly ConcurrentDictionary<int, Monster> _monsters

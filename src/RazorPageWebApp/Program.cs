@@ -1,4 +1,4 @@
-using RazorPageWebApp.Models;
+using RazorPageWebApp.Models.Monsters;
 
 var builder = WebApplication.CreateBuilder(args);
 
