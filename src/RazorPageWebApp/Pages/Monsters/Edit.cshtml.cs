@@ -27,4 +27,13 @@ public class EditModel(MonsterRepository repository) : PageModel {
 
 		return Page();
 	}
+
+	public async Task<IActionResult> OnPostAsync() {
+		// todo: Validation
+
+		await _repository.UpdateAsync(new Monster(Id, Name));
+
+		return RedirectToPage("Index");
+	}
+
 }

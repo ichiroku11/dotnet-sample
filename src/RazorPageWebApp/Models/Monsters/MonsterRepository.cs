@@ -34,4 +34,15 @@ public class MonsterRepository {
 
 		return Task.FromResult(result);
 	}
+
+	public Task<bool> UpdateAsync(Monster monsterToUpdate) {
+		if (!_monsters.TryGetValue(monsterToUpdate.Id, out var monster) ||
+			monster is null) {
+			return Task.FromResult(false);
+		}
+
+		monster.CopyFrom(monsterToUpdate);
+
+		return Task.FromResult(true);
+	}
 }
