@@ -20,6 +20,8 @@ public class AddModel(MonsterRepository repository) : PageModel {
 	}
 
 	public async Task<IActionResult> OnPostAsync() {
+		// todo: Validation
+
 		await _repository.AddAsync(new Monster(Id, Name));
 
 		return RedirectToPage("Index");
