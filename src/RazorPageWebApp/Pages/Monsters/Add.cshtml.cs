@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RazorPageWebApp.Pages.Monsters;
 
+[TypeFilter(typeof(LoadModelStateAsyncPageFilter))]
 [TypeFilter(typeof(SaveModelStateAsyncResultFilter))]
 public class AddModel(MonsterRepository repository) : PageModel {
 	private readonly MonsterRepository _repository = repository;
