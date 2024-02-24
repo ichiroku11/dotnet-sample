@@ -8,6 +8,7 @@ namespace SampleLib.AspNetCore.Mvc.Filters;
 public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 
 	public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next) {
+		// Resultを実行する
 		await next.Invoke();
 
 		// POSTメソッドが対象
@@ -21,12 +22,12 @@ public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 		}
 
 		// PageModelが対象
-		if (context.Controller is not PageModel pageModel) {
+		if (context.Controller is not PageModel) {
 			return;
 		}
 
 		// バリデーションに失敗した場合が対象
-		if (pageModel.ModelState.IsValid) {
+		if (context.ModelState.IsValid) {
 			return;
 		}
 
