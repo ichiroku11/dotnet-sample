@@ -22,7 +22,7 @@ public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 		}
 
 		// PageModelが対象
-		if (context.Controller is not PageModel) {
+		if (context.Controller is not PageModel pageModel) {
 			return;
 		}
 
@@ -31,6 +31,7 @@ public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 			return;
 		}
 
-		// todo: TempDataにModelStateを保存する
+		// TempDataにModelStateを保存する
+		pageModel.TempData.AddModelState(context.ModelState);
 	}
 }

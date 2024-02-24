@@ -14,12 +14,15 @@ public class LoadModelStateAsyncPageFilter : IAsyncPageFilter {
 			}
 
 			// PageModelが対象
-			if (context.HandlerInstance is not PageModel) {
+			if (context.HandlerInstance is not PageModel pageModel) {
 				break;
 			}
 
-			// todo: TempDataからModelStateを取り出す
-
+			// TempDataからModelStateを取り出す
+			var modelState = pageModel.TempData.GetModelState();
+			if (modelState is not null) {
+				context.ModelState.Merge(modelState);
+			}
 		} while (false);
 
 		// ハンドラーを呼び出す
