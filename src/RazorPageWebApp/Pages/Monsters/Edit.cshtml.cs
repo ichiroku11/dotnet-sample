@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageWebApp.Models.Monsters;
+using SampleLib.AspNetCore.Mvc.Filters;
 using System.ComponentModel.DataAnnotations;
 
 namespace RazorPageWebApp.Pages.Monsters;
 
+[TypeFilter(typeof(LoadModelStateAsyncPageFilter))]
+[TypeFilter(typeof(SaveModelStateAsyncResultFilter))]
 public class EditModel(MonsterRepository repository) : PageModel {
 	private readonly MonsterRepository _repository = repository;
 
@@ -29,7 +32,9 @@ public class EditModel(MonsterRepository repository) : PageModel {
 	}
 
 	public async Task<IActionResult> OnPostAsync() {
-		// todo: Validation
+		if (!ModelState.IsValid) {
+			return RedirectToPage();
+		}
 
 		await _repository.UpdateAsync(new Monster(Id, Name));
 
