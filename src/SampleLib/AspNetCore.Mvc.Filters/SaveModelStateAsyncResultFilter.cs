@@ -1,11 +1,28 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace SampleLib.AspNetCore.Mvc.Filters;
 
+/// <summary>
+/// POST処理でバリデーションエラーが発生しリダイレクトしたときに
+/// <see cref="ModelStateDictionary"/>を<see cref="ITempDataDictionary"/>に保存する
+/// </summary>
+/// <remarks>
+/// MVC、Razor Pagesどちらでも利用可
+/// </remarks>
 public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
+	private static bool IsRedirectResult(IActionResult result) {
+		return
+			// MVC
+			result is RedirectToActionResult ||
+			result is RedirectToRouteResult ||
+			// Razor Pages
+			result is RedirectToPageResult;
+	}
 
 	public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next) {
 		// Resultを実行する
@@ -17,12 +34,7 @@ public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 		}
 
 		// リダイレクトが対象
-		if (context.Result is not RedirectToPageResult) {
-			return;
-		}
-
-		// PageModelが対象
-		if (context.Controller is not PageModel pageModel) {
+		if (!IsRedirectResult(context.Result)) {
 			return;
 		}
 
@@ -32,6 +44,10 @@ public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 		}
 
 		// TempDataにModelStateを保存する
-		pageModel.TempData.AddModelState(context.ModelState);
+		if (context.Controller is Controller controller) {
+			controller.TempData.AddModelState(context.ModelState);
+		} else if (context.Controller is PageModel pageModel) {
+			pageModel.TempData.AddModelState(context.ModelState);
+		}
 	}
 }

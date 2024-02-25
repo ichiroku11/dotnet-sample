@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,13 +13,14 @@ namespace SampleLib.AspNetCore.Mvc.Filters;
 /// <remarks>
 /// Razor Pagesでのみ利用可
 /// </remarks>
-public class LoadModelStateAsyncPageFilter : IAsyncPageFilter {
-	public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next) {
-		// GETメソッドかつPageModelが対象
+
+public class LoadModelStateAsyncActionFilter : IAsyncActionFilter {
+	public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
+		// GETメソッドかつControllerが対象
 		if (HttpMethods.IsGet(context.HttpContext.Request.Method) &&
-			context.HandlerInstance is PageModel pageModel) {
+			context.Controller is Controller controller) {
 			// TempDataからModelStateを取り出す
-			var modelState = pageModel.TempData.GetModelState();
+			var modelState = controller.TempData.GetModelState();
 			if (modelState is not null) {
 				context.ModelState.Merge(modelState);
 			}
@@ -26,9 +28,5 @@ public class LoadModelStateAsyncPageFilter : IAsyncPageFilter {
 
 		// ハンドラーを呼び出す
 		await next();
-	}
-
-	public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context) {
-		return Task.CompletedTask;
 	}
 }
