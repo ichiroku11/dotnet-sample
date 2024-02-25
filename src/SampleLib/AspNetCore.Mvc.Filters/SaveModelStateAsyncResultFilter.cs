@@ -44,10 +44,11 @@ public class SaveModelStateAsyncResultFilter : IAsyncResultFilter {
 		}
 
 		// TempDataにModelStateを保存する
-		if (context.Controller is Controller controller) {
-			controller.TempData.AddModelState(context.ModelState);
-		} else if (context.Controller is PageModel pageModel) {
-			pageModel.TempData.AddModelState(context.ModelState);
-		}
+		var tempData = context.Controller switch {
+			Controller controller => controller.TempData,
+			PageModel pageModel => pageModel.TempData,
+			_ => throw new ArgumentOutOfRangeException(nameof(context)),
+		};
+		tempData.AddModelState(context.ModelState);
 	}
 }
