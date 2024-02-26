@@ -45,4 +45,10 @@ public class MonsterRepository {
 
 		return Task.FromResult(true);
 	}
+
+	public Task<bool> DeleteAsync(int id) {
+		var result = _monsters.TryRemove(id, out var _);
+
+		return Task.FromResult(result);
+	}
 }

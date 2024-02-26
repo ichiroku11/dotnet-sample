@@ -19,6 +19,8 @@ public class EditModel(MonsterRepository repository) : PageModel {
 	[Length(2, 10)]
 	public string Name { get; set; } = "";
 
+	private RedirectToPageResult RedirectToIndexPage() => RedirectToPage("Index");
+
 	public async Task<IActionResult> OnGetAsync(int id) {
 		var monster = await _repository.GetByIdAsync(id);
 		if (monster is null) {
@@ -38,7 +40,12 @@ public class EditModel(MonsterRepository repository) : PageModel {
 
 		await _repository.UpdateAsync(new Monster(Id, Name));
 
-		return RedirectToPage("Index");
+		return RedirectToIndexPage();
 	}
 
+	public async Task<IActionResult> OnPostDeleteAsync(int id) {
+		await _repository.DeleteAsync(id);
+
+		return RedirectToIndexPage();
+	}
 }
