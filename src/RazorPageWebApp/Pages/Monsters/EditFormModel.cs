@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RazorPageWebApp.Pages.Monsters;
 
-public class FormModel {
+public class EditFormModel {
 	[Range(1, 999)]
 	public int Id { get; set; }
 

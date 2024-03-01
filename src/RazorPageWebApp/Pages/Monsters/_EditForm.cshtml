@@ -1,0 +1,15 @@
+@model EditFormModel
+@{
+}
+<div asp-validation-summary="All"></div>
+<form method="post">
+	<div>
+		ID<br>
+		<input asp-for="Id" />
+	</div>
+	<div>
+		Name<br>
+		<input asp-for="Name" />
+	</div>
+	<button type="submit">Save</button>
+</form>
