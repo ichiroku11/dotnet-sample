@@ -2,13 +2,9 @@
 @model EditModel
 @{
 	ViewBag.Title = "Edit";
+	var formModel = ViewData["formModel"] as EditFormModel;
 }
-<div asp-validation-summary="All"></div>
-<form method="post">
-	ID:<input asp-for="Id" />
-	Name:<input asp-for="Name" />
-	<button type="submit">Save</button>
-</form>
+<partial name="_EditForm" model="formModel" />
 <form method="post">
 	<button type="submit" asp-page-handler="delete">Delete</button>
 </form>

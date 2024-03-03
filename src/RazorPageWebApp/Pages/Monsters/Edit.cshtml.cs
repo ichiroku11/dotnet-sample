@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPageWebApp.Models.Monsters;
 using SampleLib.AspNetCore.Mvc.Filters;
-using System.ComponentModel.DataAnnotations;
 
 namespace RazorPageWebApp.Pages.Monsters;
 
@@ -10,14 +9,6 @@ namespace RazorPageWebApp.Pages.Monsters;
 [TypeFilter(typeof(SaveModelStateAsyncResultFilter))]
 public class EditModel(MonsterRepository repository) : PageModel {
 	private readonly MonsterRepository _repository = repository;
-
-	[BindProperty]
-	[Range(1, 999)]
-	public int Id { get; set; }
-
-	[BindProperty]
-	[Length(2, 10)]
-	public string Name { get; set; } = "";
 
 	private RedirectToPageResult RedirectToIndexPage() => RedirectToPage("Index");
 
@@ -27,18 +18,20 @@ public class EditModel(MonsterRepository repository) : PageModel {
 			return NotFound();
 		}
 
-		Id = monster.Id;
-		Name = monster.Name;
+		ViewData["formModel"] = new EditFormModel {
+			Id = monster.Id,
+			Name = monster.Name,
+		};
 
 		return Page();
 	}
 
-	public async Task<IActionResult> OnPostAsync() {
+	public async Task<IActionResult> OnPostAsync(EditFormModel formModel) {
 		if (!ModelState.IsValid) {
 			return RedirectToPage();
 		}
 
-		await _repository.UpdateAsync(new Monster(Id, Name));
+		await _repository.UpdateAsync(new Monster(formModel.Id, formModel.Name));
 
 		return RedirectToIndexPage();
 	}
