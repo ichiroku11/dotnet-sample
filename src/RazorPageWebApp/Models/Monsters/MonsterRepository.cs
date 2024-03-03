@@ -5,8 +5,8 @@ namespace RazorPageWebApp.Models.Monsters;
 public class MonsterRepository {
 	private static readonly ConcurrentDictionary<int, Monster> _monsters
 		= new(new[] {
-			new Monster(1, "スライム"),
-			new Monster(2, "ドラキー"),
+			new Monster(1, MonsterCategory.Slime, "スライム"),
+			new Monster(2, MonsterCategory.Fly, "ドラキー"),
 		}.Select(monster => KeyValuePair.Create(monster.Id, monster)));
 
 	public Task<IList<Monster>> QueryAsync(MonsterListQueryOption option) {
