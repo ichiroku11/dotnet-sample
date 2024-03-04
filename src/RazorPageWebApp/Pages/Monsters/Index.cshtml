@@ -16,6 +16,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
+				<th>Category</th>
 				<th>Name</th>
 				<th></th>
 			</tr>
@@ -24,6 +25,7 @@
 			@foreach (var monster in Model.Monsters) {
 				<tr>
 					<td>@monster.Id</td>
+					<td>@monster.CategoryName</td>
 					<td>@monster.Name</td>
 					<td><a asp-page="Edit" asp-route-id="@monster.Id">Edit</a></td>
 				</tr>

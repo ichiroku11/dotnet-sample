@@ -1,9 +1,13 @@
+using SampleLib;
+
 namespace RazorPageWebApp.Models.Monsters;
 
 public class Monster(int id, MonsterCategory category, string name) {
 	public int Id { get; private set; } = id;
 
 	public MonsterCategory Category { get; private set; } = category;
+
+	public string CategoryName => Category.DisplayName() ?? "";
 
 	public string Name { get; private set; } = name;
 
