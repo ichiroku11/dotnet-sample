@@ -31,7 +31,7 @@ public class EditModel(MonsterRepository repository) : PageModel {
 			return RedirectToPage();
 		}
 
-		await _repository.UpdateAsync(formModel.CreateMonster());
+		await _repository.UpdateAsync(formModel.ToMonster());
 
 		return RedirectToIndexPage();
 	}

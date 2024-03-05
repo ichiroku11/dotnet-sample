@@ -18,7 +18,7 @@ public class AddModel(MonsterRepository repository) : PageModel {
 			return RedirectToPage();
 		}
 
-		await _repository.AddAsync(formModel.CreateMonster());
+		await _repository.AddAsync(formModel.ToMonster());
 
 		return RedirectToPage("Index");
 	}
