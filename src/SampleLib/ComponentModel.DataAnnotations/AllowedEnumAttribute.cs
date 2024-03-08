@@ -3,17 +3,13 @@ using System.ComponentModel.DataAnnotations;
 namespace SampleLib.ComponentModel.DataAnnotations;
 
 /// <summary>
-/// <paramref name="enumType"/>に変換できる文字列かどうかを検証する属性
+/// <paramref name="enumType"/>に変換できる文字列どうかを検証する属性
 /// </summary>
 /// <param name="enumType"></param>
-public class AllowedEnumAttribute(Type enumType) : ValidationAttribute {
-	private readonly Type _enumType = enumType;
+public class AllowedEnumAttribute<TEnum> : ValidationAttribute
+	where TEnum : Enum {
 
 	public override bool IsValid(object? value) {
-		if (!_enumType.IsAssignableTo(typeof(Enum))) {
-			throw new InvalidOperationException();
-		}
-
 		// not nullのチェックはRequiredAttributeを使うことを想定し
 		// nullの場合は、trueを返す
 		if (value is null) {
@@ -25,6 +21,6 @@ public class AllowedEnumAttribute(Type enumType) : ValidationAttribute {
 			return false;
 		}
 
-		return Enum.TryParse(_enumType, text, true, out var _);
+		return Enum.TryParse(typeof(TEnum), text, true, out var _);
 	}
 }
