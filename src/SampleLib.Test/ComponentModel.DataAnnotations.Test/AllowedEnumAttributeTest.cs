@@ -29,4 +29,20 @@ public class AllowedEnumAttributeTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData("a", true)]
+	[InlineData("A", true)]
+	[InlineData("b", false)]
+	[InlineData("B", false)]
+	public void IsValid_コンストラクターでexcludesを指定した場合も有効性を評価できる(object? value, bool expected) {
+		// Arrange
+		var attribute = new AllowedEnumAttribute<Sample>(excludes: Sample.B);
+
+		// Act
+		var actual = attribute.IsValid(value);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
