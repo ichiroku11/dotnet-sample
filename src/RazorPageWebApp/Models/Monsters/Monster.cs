@@ -3,6 +3,9 @@ using SampleLib;
 namespace RazorPageWebApp.Models.Monsters;
 
 public class Monster(int id, MonsterCategory category, string name) {
+	public static Monster Create(int id, string category, string name)
+		=> new(id, Enum.Parse<MonsterCategory>(category, true), name);
+
 	public int Id { get; private set; } = id;
 
 	public MonsterCategory Category { get; private set; } = category;
