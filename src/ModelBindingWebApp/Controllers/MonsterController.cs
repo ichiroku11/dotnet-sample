@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using ModelBindingWebApp.Helpers;
 using ModelBindingWebApp.Models;
+using SampleLib.AspNetCore.Mvc.Filters;
 
 namespace ModelBindingWebApp.Controllers;
 
 // あるあるなモデルバインドのサンプル
 public class MonsterController : Controller {
-	[LoadModelState]
+	[TypeFilter(typeof(LoadModelStateAsyncActionFilter))]
 	public IActionResult Index() {
 		var viewModel = new MonsterViewModel {
 			CategorySelectListItems = Enum.GetValues(typeof(MonsterCategory))
@@ -23,7 +23,7 @@ public class MonsterController : Controller {
 	}
 
 	[HttpPost]
-	[SaveModelState]
+	[TypeFilter(typeof(SaveModelStateAsyncResultFilter))]
 	public IActionResult Save(
 		// POSTする部分はViewModelのプロパティに指定しているため
 		// Bind属性でPrefixを指定する

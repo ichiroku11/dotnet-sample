@@ -1,22 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
-using ModelBindingWebApp.Helpers;
 using ModelBindingWebApp.Models;
+using SampleLib.AspNetCore.Mvc.Filters;
 
 namespace ModelBindingWebApp.Controllers;
 
 // ModelStateをTempDataに保存し、TempDataから読み出すサンプル
 public class DefaultController : Controller {
-	[LoadModelState]
+	[TypeFilter(typeof(LoadModelStateAsyncActionFilter))]
 	public IActionResult Index() {
-		// OnActionExecutingでModelStateをTempDataから復元する
 		return View(new UserUpdateCommand { });
 	}
 
 	[HttpPost]
-	[SaveModelState]
+	[TypeFilter(typeof(SaveModelStateAsyncResultFilter))]
 	public IActionResult Index(UserUpdateCommand command) {
 		if (!ModelState.IsValid) {
-			// OnActionExecutedでModelStateをTempDataに保存する
 			return RedirectToAction();
 		}
 
