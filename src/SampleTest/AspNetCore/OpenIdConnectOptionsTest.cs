@@ -16,9 +16,9 @@ public class OpenIdConnectOptionsTest {
 
 		var provider = services.BuildServiceProvider();
 
-		// Act
 		var actual = provider.GetRequiredService<IOptions<OpenIdConnectOptions>>().Value;
 
+		// Act
 		// Assert
 		Assert.NotNull(actual);
 		Assert.Null(actual.Configuration);
