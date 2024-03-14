@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -31,6 +31,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SampleLib\SampleLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="sample-openid-configuration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
