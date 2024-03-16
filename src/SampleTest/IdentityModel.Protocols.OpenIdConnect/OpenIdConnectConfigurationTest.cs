@@ -4,7 +4,28 @@ namespace SampleTest.IdentityModel.Protocols.OpenIdConnect;
 
 public class OpenIdConnectConfigurationTest {
 	[Fact]
-	public async Task Properties_各プロパティの値を確認する() {
+	public void Properties_インスタンスの各プロパティの値を確認する() {
+		// Arrange
+		var config = new OpenIdConnectConfiguration();
+
+		// Act
+		// Assert
+		Assert.Null(config.Issuer);
+		Assert.Null(config.AuthorizationEndpoint);
+		Assert.Null(config.TokenEndpoint);
+		Assert.Null(config.EndSessionEndpoint);
+		Assert.Null(config.JwksUri);
+		Assert.Empty(config.ResponseModesSupported);
+		Assert.Empty(config.ResponseTypesSupported);
+		Assert.Empty(config.ScopesSupported);
+		Assert.Empty(config.SubjectTypesSupported);
+		Assert.Empty(config.IdTokenSigningAlgValuesSupported);
+		Assert.Empty(config.TokenEndpointAuthMethodsSupported);
+		Assert.Empty(config.ClaimsSupported);
+	}
+
+	[Fact]
+	public async Task Properties_コンストラクターにJSONを指定して生成したインスタンスの各プロパティの値を確認する() {
 		// Arrange
 		using var stream = File.OpenRead("sample-openid-configuration.json");
 		using var reader = new StreamReader(stream);
