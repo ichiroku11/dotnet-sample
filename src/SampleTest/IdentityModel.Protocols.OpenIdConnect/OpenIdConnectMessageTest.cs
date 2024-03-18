@@ -12,6 +12,7 @@ public class OpenIdConnectMessageTest {
 		// Assert
 		Assert.Empty(message.IssuerAddress);
 		Assert.Empty(message.Parameters);
+		Assert.Equal(OpenIdConnectRequestType.Authentication, message.RequestType);
 	}
 
 	[Fact]
