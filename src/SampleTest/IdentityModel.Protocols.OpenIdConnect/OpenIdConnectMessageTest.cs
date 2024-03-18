@@ -26,4 +26,15 @@ public class OpenIdConnectMessageTest {
 		// Assert
 		Assert.Empty(url);
 	}
+
+	[Fact]
+	public void GetParameter_存在しないパラメーター名を指定した場合の戻り値はnull() {
+		// Arrange
+		var message = new OpenIdConnectMessage {
+		};
+
+		// Act
+		// Assert
+		Assert.Null(message.GetParameter("does-not-exist"));
+	}
 }
