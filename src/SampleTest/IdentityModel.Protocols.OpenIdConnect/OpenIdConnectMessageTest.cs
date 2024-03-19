@@ -37,4 +37,29 @@ public class OpenIdConnectMessageTest {
 		// Assert
 		Assert.Null(message.GetParameter("does-not-exist"));
 	}
+
+	[Fact]
+	public void GetParameter_指定したパラメーター名で値を取得できる値を確認する() {
+		// Arrange
+		var message = new OpenIdConnectMessage {
+			IssuerAddress = "https://example.jp",
+			ClientId = "client-id",
+			RedirectUri = "https://localhost/signin-oidc",
+			ResponseType = OpenIdConnectResponseType.IdToken,
+			Scope = "scope",
+			ResponseMode = OpenIdConnectResponseMode.FormPost,
+			Nonce = "nonce",
+			State = "state"
+		};
+
+		// Act
+		// Assert
+		Assert.Equal("client-id", message.GetParameter(OpenIdConnectParameterNames.ClientId));
+		Assert.Equal("https://localhost/signin-oidc", message.GetParameter(OpenIdConnectParameterNames.RedirectUri));
+		Assert.Equal(OpenIdConnectResponseType.IdToken, message.GetParameter(OpenIdConnectParameterNames.ResponseType));
+		Assert.Equal("scope", message.GetParameter(OpenIdConnectParameterNames.Scope));
+		Assert.Equal(OpenIdConnectResponseMode.FormPost, message.GetParameter(OpenIdConnectParameterNames.ResponseMode));
+		Assert.Equal("nonce", message.GetParameter(OpenIdConnectParameterNames.Nonce));
+		Assert.Equal("state", message.GetParameter(OpenIdConnectParameterNames.State));
+	}
 }
