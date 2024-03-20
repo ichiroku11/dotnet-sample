@@ -16,7 +16,7 @@ public class OpenIdConnectMessageTest {
 	}
 
 	[Fact]
-	public void BuildRedirectUrl_インスタンスを生成しただけで呼び出す空文字になる() {
+	public void BuildRedirectUrl_インスタンスを生成しただけで呼び出すと空文字になる() {
 		// Arrange
 		var message = new OpenIdConnectMessage();
 
@@ -25,6 +25,21 @@ public class OpenIdConnectMessageTest {
 
 		// Assert
 		Assert.Empty(url);
+	}
+
+	[Fact]
+	public void BuildRedirectUrl_生成されるURLを確認する() {
+		// Arrange
+		var message = new OpenIdConnectMessage {
+			IssuerAddress = "https://example.jp",
+			ClientId = "client-id",
+		};
+
+		// Act
+		var url = message.BuildRedirectUrl();
+
+		// Assert
+		Assert.Equal("https://example.jp?client_id=client-id", url);
 	}
 
 	[Fact]
