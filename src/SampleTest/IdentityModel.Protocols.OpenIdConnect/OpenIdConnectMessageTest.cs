@@ -15,31 +15,33 @@ public class OpenIdConnectMessageTest {
 		Assert.Equal(OpenIdConnectRequestType.Authentication, message.RequestType);
 	}
 
-	[Fact]
-	public void BuildRedirectUrl_インスタンスを生成しただけで呼び出すと空文字になる() {
-		// Arrange
-		var message = new OpenIdConnectMessage();
-
-		// Act
-		var url = message.BuildRedirectUrl();
-
-		// Assert
-		Assert.Empty(url);
+	public static TheoryData<OpenIdConnectMessage, string> GetTheoryData_BuildRedirectUrl() {
+		return new() {
+			// デフォルトコンストラクターでインスタンスを生成した場合は空文字
+			{
+				new OpenIdConnectMessage(),
+				""
+			},
+			// 
+			{
+				new OpenIdConnectMessage {
+					IssuerAddress = "https://example.jp",
+					ClientId = "client-id",
+				},
+				"https://example.jp?client_id=client-id"
+			}
+		};
 	}
 
-	[Fact]
-	public void BuildRedirectUrl_生成されるURLを確認する() {
+	[Theory]
+	[MemberData(nameof(GetTheoryData_BuildRedirectUrl))]
+	public void BuildRedirectUrl_生成されるURLを確認する(OpenIdConnectMessage message, string expected) {
 		// Arrange
-		var message = new OpenIdConnectMessage {
-			IssuerAddress = "https://example.jp",
-			ClientId = "client-id",
-		};
-
 		// Act
-		var url = message.BuildRedirectUrl();
+		var actual = message.BuildRedirectUrl();
 
 		// Assert
-		Assert.Equal("https://example.jp?client_id=client-id", url);
+		Assert.Equal(expected, actual);
 	}
 
 	[Fact]
