@@ -30,7 +30,7 @@ public class OpenIdConnectMessageTest {
 				},
 				"https://example.jp?client_id=client-id"
 			},
-			// クエリ文字列はアルファベット順に並ぶ様子
+			// クエリ文字列はパラメーター名のアルファベット順に並ぶ様子
 			{
 				new OpenIdConnectMessage {
 					ClientId = "client-id",
