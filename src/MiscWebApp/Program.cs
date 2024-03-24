@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Connections.Features;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using MiscWebApp;
 using System.Net;
@@ -16,6 +18,31 @@ if (env.IsDevelopment()) {
 }
 
 app.UseRouting();
+
+// HTTPボディを確認するEndpoint
+app.MapPost("/body", async context => {
+	if (context.Request.Query.TryGetValue("buffering", out var value) &&
+		bool.TryParse(value, out var enabled) &&
+		enabled) {
+		context.Request.EnableBuffering();
+	}
+
+	var canSeek = context.Request.Body.CanSeek;
+
+	var first = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
+
+	var thrown = false;
+	try {
+		context.Request.Body.Position = 0;
+	} catch (NotSupportedException) {
+		thrown = true;
+	}
+
+	var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
+
+	var json = JsonSerializer.Serialize(new { canSeek, first, second, thrown }, JsonHelper.Options);
+	await context.Response.WriteAsync(json);
+});
 
 // クライアント・サーバのIPアドレス・ポート番号を確認するEndpoint
 app.MapGet("/connection", async context => {
@@ -68,31 +95,6 @@ app.MapPost("/json", async context => {
 	await context.Response.WriteAsJsonAsync(sample, JsonHelper.Options);
 });
 
-// HTTPボディを確認するEndpoint
-app.MapPost("/body", async context => {
-	if (context.Request.Query.TryGetValue("buffering", out var value) &&
-		bool.TryParse(value, out var enabled) &&
-		enabled) {
-		context.Request.EnableBuffering();
-	}
-
-	var canSeek = context.Request.Body.CanSeek;
-
-	var first = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
-
-	var thrown = false;
-	try {
-		context.Request.Body.Position = 0;
-	} catch (NotSupportedException) {
-		thrown = true;
-	}
-
-	var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
-
-	var json = JsonSerializer.Serialize(new { canSeek, first, second, thrown }, JsonHelper.Options);
-	await context.Response.WriteAsync(json);
-});
-
 // リクエストを確認するEndpoint
 app.MapGet("/request/{**path}", async context => {
 	var request = new {
@@ -104,6 +106,27 @@ app.MapGet("/request/{**path}", async context => {
 		QueryString = context.Request.QueryString.Value,
 	};
 	var json = JsonSerializer.Serialize(request, JsonHelper.Options);
+	await context.Response.WriteAsync(json);
+});
+
+app.MapGet("/tlshandshake", async context => {
+	var feature = context.Features.GetRequiredFeature<ITlsHandshakeFeature>();
+
+	var tlsHandshake = new {
+		feature.CipherAlgorithm,
+		feature.CipherStrength,
+		feature.HashAlgorithm,
+		feature.HashStrength,
+		feature.HostName,
+		feature.KeyExchangeAlgorithm,
+		feature.KeyExchangeStrength,
+		feature.NegotiatedCipherSuite,
+		// SslProtocolsにはFlags属性が設定されているが
+		// ITlsHandshakeFeature経由で取得できるのは1つなのかも
+		feature.Protocol
+	};
+
+	var json = JsonSerializer.Serialize(tlsHandshake, JsonHelper.Options);
 	await context.Response.WriteAsync(json);
 });
 
