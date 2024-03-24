@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Connections.Features;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using MiscWebApp;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
@@ -104,6 +107,28 @@ app.MapGet("/request/{**path}", async context => {
 		QueryString = context.Request.QueryString.Value,
 	};
 	var json = JsonSerializer.Serialize(request, JsonHelper.Options);
+	await context.Response.WriteAsync(json);
+});
+
+app.MapGet("/tlshandshake", async context => {
+	var feature = context.Features.GetRequiredFeature<ITlsHandshakeFeature>();
+
+	var tlsHandshake = new {
+		feature.CipherAlgorithm,
+		feature.CipherStrength,
+		feature.HashAlgorithm,
+		feature.HashStrength,
+		feature.HostName,
+		feature.KeyExchangeAlgorithm,
+		feature.KeyExchangeStrength,
+		feature.NegotiatedCipherSuite,
+		feature.Protocol
+	};
+
+	var options = new JsonSerializerOptions(JsonHelper.Options);
+	options.Converters.Add(new JsonStringEnumConverter());
+
+	var json = JsonSerializer.Serialize(tlsHandshake, options);
 	await context.Response.WriteAsync(json);
 });
 
