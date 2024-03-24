@@ -17,6 +17,31 @@ if (env.IsDevelopment()) {
 
 app.UseRouting();
 
+// HTTPボディを確認するEndpoint
+app.MapPost("/body", async context => {
+	if (context.Request.Query.TryGetValue("buffering", out var value) &&
+		bool.TryParse(value, out var enabled) &&
+		enabled) {
+		context.Request.EnableBuffering();
+	}
+
+	var canSeek = context.Request.Body.CanSeek;
+
+	var first = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
+
+	var thrown = false;
+	try {
+		context.Request.Body.Position = 0;
+	} catch (NotSupportedException) {
+		thrown = true;
+	}
+
+	var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
+
+	var json = JsonSerializer.Serialize(new { canSeek, first, second, thrown }, JsonHelper.Options);
+	await context.Response.WriteAsync(json);
+});
+
 // クライアント・サーバのIPアドレス・ポート番号を確認するEndpoint
 app.MapGet("/connection", async context => {
 	var connection = new {
@@ -66,31 +91,6 @@ app.MapPost("/json", async context => {
 
 	// レスポンスにJSONを書き込む
 	await context.Response.WriteAsJsonAsync(sample, JsonHelper.Options);
-});
-
-// HTTPボディを確認するEndpoint
-app.MapPost("/body", async context => {
-	if (context.Request.Query.TryGetValue("buffering", out var value) &&
-		bool.TryParse(value, out var enabled) &&
-		enabled) {
-		context.Request.EnableBuffering();
-	}
-
-	var canSeek = context.Request.Body.CanSeek;
-
-	var first = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
-
-	var thrown = false;
-	try {
-		context.Request.Body.Position = 0;
-	} catch (NotSupportedException) {
-		thrown = true;
-	}
-
-	var second = await new StreamReader(context.Request.Body, leaveOpen: true).ReadToEndAsync();
-
-	var json = JsonSerializer.Serialize(new { canSeek, first, second, thrown }, JsonHelper.Options);
-	await context.Response.WriteAsync(json);
 });
 
 // リクエストを確認するEndpoint
