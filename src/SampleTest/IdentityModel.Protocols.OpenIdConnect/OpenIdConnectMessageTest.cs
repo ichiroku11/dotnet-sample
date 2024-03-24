@@ -22,13 +22,22 @@ public class OpenIdConnectMessageTest {
 				new OpenIdConnectMessage(),
 				""
 			},
-			// 
+			// URLとクエリ文字列1つ
 			{
 				new OpenIdConnectMessage {
 					IssuerAddress = "https://example.jp",
 					ClientId = "client-id",
 				},
 				"https://example.jp?client_id=client-id"
+			},
+			// クエリ文字列はアルファベット順に並ぶ様子
+			{
+				new OpenIdConnectMessage {
+					ClientId = "client-id",
+					ResponseMode = "form_post",
+					ResponseType = "id_token",
+				},
+				"?client_id=client-id&response_mode=form_post&response_type=id_token"
 			}
 		};
 	}
