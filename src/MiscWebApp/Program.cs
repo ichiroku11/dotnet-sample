@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.StaticFiles;
 using MiscWebApp;
 using System.Net;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
@@ -122,13 +121,12 @@ app.MapGet("/tlshandshake", async context => {
 		feature.KeyExchangeAlgorithm,
 		feature.KeyExchangeStrength,
 		feature.NegotiatedCipherSuite,
+		// SslProtocolsにはFlags属性が設定されているが
+		// ITlsHandshakeFeature経由で取得できるのは1つなのかも
 		feature.Protocol
 	};
 
-	var options = new JsonSerializerOptions(JsonHelper.Options);
-	options.Converters.Add(new JsonStringEnumConverter());
-
-	var json = JsonSerializer.Serialize(tlsHandshake, options);
+	var json = JsonSerializer.Serialize(tlsHandshake, JsonHelper.Options);
 	await context.Response.WriteAsync(json);
 });
 
