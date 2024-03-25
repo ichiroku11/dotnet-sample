@@ -4,7 +4,7 @@ namespace SampleTest.IdentityModel.Protocols.OpenIdConnect;
 
 public class OpenIdConnectConfigurationTest {
 	[Fact]
-	public void Properties_インスタンスの各プロパティの値を確認する() {
+	public void Properties_デフォルトコンストラクターで生成したインスタンスの各プロパティの値を確認する() {
 		// Arrange
 		var config = new OpenIdConnectConfiguration();
 
