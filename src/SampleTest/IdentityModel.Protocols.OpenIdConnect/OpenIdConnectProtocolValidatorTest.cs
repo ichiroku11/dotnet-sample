@@ -43,34 +43,27 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			// IDX21333: OpenIdConnectProtocolValidationContext.ProtocolMessage is null, there is no OpenIdConnect Response to validate.
 			new OpenIdConnectProtocolValidationContext(),
 			// IDX21334: Both 'id_token' and 'code' are null in OpenIdConnectProtocolValidationContext.ProtocolMessage received from Authorization Endpoint. Cannot process the message.
-			new OpenIdConnectProtocolValidationContext
-			{
+			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage(),
 			},
 			// IDX21332: OpenIdConnectProtocolValidationContext.ValidatedIdToken is null. There is no 'id_token' to validate against.
-			new OpenIdConnectProtocolValidationContext
-			{
-				ProtocolMessage = new OpenIdConnectMessage
-				{
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
 					Code = "code"
 				},
 			},
 			// IDX21329: RequireState is 'True' but the OpenIdConnectProtocolValidationContext.State is null. State cannot be validated.
-			new OpenIdConnectProtocolValidationContext
-			{
-				ProtocolMessage = new OpenIdConnectMessage
-				{
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
 					Code = "code",
 				},
 				ValidatedIdToken = new JwtSecurityToken(),
 			},
 			// IDX21330: RequireState is 'True', the OpenIdConnect Request contained 'state', but the Response does not contain 'state'.
-			new OpenIdConnectProtocolValidationContext
-			{
-				ProtocolMessage = new OpenIdConnectMessage
-				{
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
 					Code = "code",
 				},
@@ -78,10 +71,8 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 				State = "state",
 			},
 			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'aud' claim. The jwt did not contain an 'aud' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
-			new OpenIdConnectProtocolValidationContext
-			{
-				ProtocolMessage = new OpenIdConnectMessage
-				{
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
 					Code = "code",
 					State = "state",
