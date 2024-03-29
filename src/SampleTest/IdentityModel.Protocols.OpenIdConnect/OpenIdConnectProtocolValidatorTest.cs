@@ -80,6 +80,26 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 				ValidatedIdToken = new JwtSecurityToken(),
 				State = "state",
 			},
+			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'exp' claim. The jwt did not contain an 'exp' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(issuer: "i", audience: "a"),
+				State = "state",
+			},
+			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'iat' claim. The jwt did not contain an 'iat' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(issuer: "i", audience: "a", expires: DateTime.UnixEpoch),
+				State = "state",
+			},
 		};
 	}
 
