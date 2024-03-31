@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace SampleTest.IdentityModel.Protocols.OpenIdConnect;
 
@@ -38,6 +39,8 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_ThrowsException() {
+		var now = DateTime.Now;
+
 		return new() {
 			// https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/blob/dev/src/Microsoft.IdentityModel.Protocols.OpenIdConnect/OpenIdConnectProtocolValidator.cs#L208
 			// IDX21333: OpenIdConnectProtocolValidationContext.ProtocolMessage is null, there is no OpenIdConnect Response to validate.
@@ -98,6 +101,42 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 					State = "state",
 				},
 				ValidatedIdToken = new JwtSecurityToken(issuer: "i", audience: "a", expires: DateTime.UnixEpoch),
+				State = "state",
+			},
+			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'sub' claim. The jwt did not contain an 'sub' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(
+					header: new JwtHeader(),
+					payload: new JwtPayload(
+						issuer: "i",
+						audience: "a",
+						claims: [],
+						notBefore: now,
+						expires: now.AddMinutes(60),
+						issuedAt: now)),
+				State = "state",
+			},
+			// IDX21320: RequireNonce is 'True'. OpenIdConnectProtocolValidationContext.Nonce and OpenIdConnectProtocol.ValidatedIdToken.Nonce are both null or empty. The nonce cannot be validated. If you don't need to check the nonce, set OpenIdConnectProtocolValidator.RequireNonce to 'false'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(
+					header: new JwtHeader(),
+					payload: new JwtPayload(
+						issuer: "i",
+						audience: "a",
+						claims: [new Claim(type: "sub", value: "s")],
+						notBefore: now,
+						expires: now.AddMinutes(60),
+						issuedAt: now)),
 				State = "state",
 			},
 		};
