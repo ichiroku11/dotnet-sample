@@ -139,6 +139,44 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 						issuedAt: now)),
 				State = "state",
 			},
+			// IDX21320: RequireNonce is 'True'. OpenIdConnectProtocolValidationContext.Nonce and OpenIdConnectProtocol.ValidatedIdToken.Nonce are both null or empty. The nonce cannot be validated. If you don't need to check the nonce, set OpenIdConnectProtocolValidator.RequireNonce to 'false'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(
+					header: new JwtHeader(),
+					payload: new JwtPayload(
+						issuer: "i",
+						audience: "a",
+						claims: [new Claim(type: "sub", value: "s")],
+						notBefore: now,
+						expires: now.AddMinutes(60),
+						issuedAt: now)),
+				State = "state",
+			},
+			// IDX21325: The 'nonce' did not contain a timestamp: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			// Format expected is: <epochtime>.<noncedata>.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(
+					header: new JwtHeader(),
+					payload: new JwtPayload(
+						issuer: "i",
+						audience: "a",
+						claims: [new Claim(type: "sub", value: "s"), new Claim(type: "nonce", value: "nonce")],
+						notBefore: now,
+						expires: now.AddMinutes(60),
+						issuedAt: now)),
+				State = "state",
+				Nonce = "nonce",
+			},
 		};
 	}
 
