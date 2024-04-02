@@ -177,6 +177,46 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 				State = "state",
 				Nonce = "nonce",
 			},
+			// IDX21326: The 'nonce' timestamp could not be converted to a positive integer (greater than 0).
+			// timestamp: '0'
+			// nonce: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(
+					header: new JwtHeader(),
+					payload: new JwtPayload(
+						issuer: "i",
+						audience: "a",
+						claims: [new Claim(type: "sub", value: "s"), new Claim(type: "nonce", value: "0.nonce")],
+						notBefore: now,
+						expires: now.AddMinutes(60),
+						issuedAt: now)),
+				State = "state",
+				Nonce = "0.nonce",
+			},
+			// IDX21324: The 'nonce' has expired: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. Time from 'nonce' (UTC): '01/01/0001 00:00:00', Current Time (UTC): '04/01/2024 21:08:49'. NonceLifetime is: '01:00:00'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					IdToken = "id-token",
+					Code = "code",
+					State = "state",
+				},
+				ValidatedIdToken = new JwtSecurityToken(
+					header: new JwtHeader(),
+					payload: new JwtPayload(
+						issuer: "i",
+						audience: "a",
+						claims: [new Claim(type: "sub", value: "s"), new Claim(type: "nonce", value: "1.nonce")],
+						notBefore: now,
+						expires: now.AddMinutes(60),
+						issuedAt: now)),
+				State = "state",
+				Nonce = "1.nonce",
+			},
 		};
 	}
 
