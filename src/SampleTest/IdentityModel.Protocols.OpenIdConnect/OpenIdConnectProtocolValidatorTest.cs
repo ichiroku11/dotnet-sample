@@ -39,7 +39,10 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_ThrowsException() {
+		// todo: delete
+		/*
 		var now = DateTime.Now;
+		*/
 
 		return new() {
 			// https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/blob/dev/src/Microsoft.IdentityModel.Protocols.OpenIdConnect/OpenIdConnectProtocolValidator.cs#L208
@@ -103,6 +106,9 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 				ValidatedIdToken = new JwtSecurityToken(issuer: "i", audience: "a", expires: DateTime.UnixEpoch),
 				State = "state",
 			},
+
+			// todo: delete
+			/*
 			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'sub' claim. The jwt did not contain an 'sub' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage {
@@ -217,6 +223,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 				State = "state",
 				Nonce = "1.nonce",
 			},
+			*/
 		};
 	}
 
@@ -224,6 +231,97 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException))]
 	public void ValidateAuthenticationResponse_ThrowsException(OpenIdConnectProtocolValidationContext context) {
 		// Arrange
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
+
+		// Assert
+		Assert.NotNull(actual);
+		_output.WriteLine(actual.Message);
+	}
+
+	// nonce関係
+	public static TheoryData<IEnumerable<Claim>> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_Claims() {
+		return new() {
+			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'sub' claim. The jwt did not contain an 'sub' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			new List<Claim>(),
+			// IDX21320: RequireNonce is 'True'. OpenIdConnectProtocolValidationContext.Nonce and OpenIdConnectProtocol.ValidatedIdToken.Nonce are both null or empty. The nonce cannot be validated. If you don't need to check the nonce, set OpenIdConnectProtocolValidator.RequireNonce to 'false'.
+			new List<Claim> {
+				new(type: "sub", value: "s"),
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_Claims))]
+	public void ValidateAuthenticationResponse_ThrowsException_Claims(IEnumerable<Claim> claims) {
+		// Arrange
+		var now = DateTime.Now;
+		var context = new OpenIdConnectProtocolValidationContext {
+			ProtocolMessage = new OpenIdConnectMessage {
+				IdToken = "id-token",
+				Code = "code",
+				State = "state",
+			},
+			ValidatedIdToken = new JwtSecurityToken(
+				header: new JwtHeader(),
+				payload: new JwtPayload(
+					issuer: "i",
+					audience: "a",
+					claims: claims,
+					notBefore: now,
+					expires: now.AddMinutes(60),
+					issuedAt: now)),
+			State = "state",
+		};
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
+
+		// Assert
+		Assert.NotNull(actual);
+		_output.WriteLine(actual.Message);
+	}
+
+	public static TheoryData<string> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_None() {
+		return new() {
+			// IDX21325: The 'nonce' did not contain a timestamp: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			// Format expected is: <epochtime>.<noncedata>.
+			"nonce",
+			// IDX21326: The 'nonce' timestamp could not be converted to a positive integer (greater than 0).
+			// timestamp: '0'
+			// nonce: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			"0.nonce",
+			// IDX21324: The 'nonce' has expired: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. Time from 'nonce' (UTC): '01/01/0001 00:00:00', Current Time (UTC): '04/01/2024 21:08:49'. NonceLifetime is: '01:00:00'.
+			"1.nonce",
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_None))]
+	public void ValidateAuthenticationResponse_ThrowsException_None(string nonce) {
+		// Arrange
+		var now = DateTime.Now;
+		var context = new OpenIdConnectProtocolValidationContext {
+			ProtocolMessage = new OpenIdConnectMessage {
+				IdToken = "id-token",
+				Code = "code",
+				State = "state",
+			},
+			ValidatedIdToken = new JwtSecurityToken(
+				header: new JwtHeader(),
+				payload: new JwtPayload(
+					issuer: "i",
+					audience: "a",
+					claims: [new Claim(type: "sub", value: "s"), new Claim(type: "nonce", value: nonce)],
+					notBefore: now,
+					expires: now.AddMinutes(60),
+					issuedAt: now)),
+			State = "state",
+			Nonce = nonce,
+		};
 		var validator = new OpenIdConnectProtocolValidator();
 
 		// Act
