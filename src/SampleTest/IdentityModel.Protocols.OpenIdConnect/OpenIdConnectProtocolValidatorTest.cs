@@ -39,7 +39,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		Assert.True(validator.RequireTimeStampInNonce);
 	}
 
-	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_ThrowsException() {
+	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_Throws() {
 		return new() {
 			// https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/blob/dev/src/Microsoft.IdentityModel.Protocols.OpenIdConnect/OpenIdConnectProtocolValidator.cs#L208
 			// IDX21333: OpenIdConnectProtocolValidationContext.ProtocolMessage is null, there is no OpenIdConnect Response to validate.
@@ -52,7 +52,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		};
 	}
 
-	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken() {
+	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_Throws_IdToken() {
 		return new() {
 			// IDX21332: OpenIdConnectProtocolValidationContext.ValidatedIdToken is null. There is no 'id_token' to validate against.
 			new OpenIdConnectProtocolValidationContext {
@@ -80,10 +80,30 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		};
 	}
 
+	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_Throws_Code() {
+		return new() {
+			// IDX21329: RequireState is 'True' but the OpenIdConnectProtocolValidationContext.State is null. State cannot be validated.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					Code = "code"
+				},
+			},
+
+			// IDX21330: RequireState is 'True', the OpenIdConnect Request contained 'state', but the Response does not contain 'state'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					Code = "code"
+				},
+				State = "state",
+			},
+		};
+	}
+
 	[Theory]
-	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException))]
-	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken))]
-	public void ValidateAuthenticationResponse_ThrowsException(OpenIdConnectProtocolValidationContext context) {
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_Throws))]
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_Throws_IdToken))]
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_Throws_Code))]
+	public void ValidateAuthenticationResponse_Throws(OpenIdConnectProtocolValidationContext context) {
 		// Arrange
 		var validator = new OpenIdConnectProtocolValidator();
 
@@ -95,7 +115,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		_output.WriteLine(actual.Message);
 	}
 
-	public static TheoryData<JwtPayload> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_Payload() {
+	public static TheoryData<JwtPayload> GetTheoryData_ValidateAuthenticationResponse_Throws_IdTokenPayload() {
 		var now = DateTime.Now;
 		var expires = now.AddMinutes(60);
 
@@ -118,8 +138,8 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_Payload))]
-	public void ValidateAuthenticationResponse_ThrowsException_IdToken_Payload(JwtPayload payload) {
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_Throws_IdTokenPayload))]
+	public void ValidateAuthenticationResponse_Throws_IdTokenPayload(JwtPayload payload) {
 		// Arrange
 		var now = DateTime.Now;
 		var context = new OpenIdConnectProtocolValidationContext {
@@ -141,7 +161,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	// nonce関連
-	public static TheoryData<string> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_PayloadNonce() {
+	public static TheoryData<string> GetTheoryData_ValidateAuthenticationResponse_Throws_IdTokenPayloadNonce() {
 		return new() {
 			// IDX21325: The 'nonce' did not contain a timestamp: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
 			// Format expected is: <epochtime>.<noncedata>.
@@ -162,8 +182,8 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_PayloadNonce))]
-	public void ValidateAuthenticationResponse_ThrowsException_IdToken_PayloadNonce(string nonce) {
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_Throws_IdTokenPayloadNonce))]
+	public void ValidateAuthenticationResponse_Throws_IdTokenPayloadNonce(string nonce) {
 		// Arrange
 		var now = DateTime.Now;
 		var context = new OpenIdConnectProtocolValidationContext {
