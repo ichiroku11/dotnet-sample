@@ -157,6 +157,9 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			// エポックタイムではない？
 			// IDX21324: The 'nonce' has expired: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. Time from 'nonce' (UTC): '01/01/0001 00:02:51', Current Time (UTC): '04/04/2024 23:01:07'. NonceLifetime is: '01:00:00'.
 			$"{EpochTime.GetIntDate(DateTime.UtcNow.AddMinutes(60))}.",
+
+			// IDX21307: The 'c_hash' claim was not found in the id_token, but a 'code' was in the OpenIdConnectMessage, id_token: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'
+			$"{DateTime.UtcNow.AddMinutes(60).ToBinary()}.",
 		};
 	}
 
