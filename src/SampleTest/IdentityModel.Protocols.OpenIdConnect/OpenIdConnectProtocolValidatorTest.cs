@@ -49,12 +49,15 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage(),
 			},
+		};
+	}
 
+	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken() {
+		return new() {
 			// IDX21332: OpenIdConnectProtocolValidationContext.ValidatedIdToken is null. There is no 'id_token' to validate against.
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
-					Code = "code"
 				},
 			},
 
@@ -62,7 +65,6 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
-					Code = "code",
 				},
 				ValidatedIdToken = new JwtSecurityToken(),
 			},
@@ -71,7 +73,6 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage {
 					IdToken = "id-token",
-					Code = "code",
 				},
 				ValidatedIdToken = new JwtSecurityToken(),
 				State = "state",
@@ -81,6 +82,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 
 	[Theory]
 	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException))]
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken))]
 	public void ValidateAuthenticationResponse_ThrowsException(OpenIdConnectProtocolValidationContext context) {
 		// Arrange
 		var validator = new OpenIdConnectProtocolValidator();
@@ -93,7 +95,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		_output.WriteLine(actual.Message);
 	}
 
-	public static TheoryData<JwtPayload> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_Payload() {
+	public static TheoryData<JwtPayload> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_Payload() {
 		var now = DateTime.Now;
 		var expires = now.AddMinutes(60);
 
@@ -116,14 +118,13 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_Payload))]
-	public void ValidateAuthenticationResponse_ThrowsException_Payload(JwtPayload payload) {
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_Payload))]
+	public void ValidateAuthenticationResponse_ThrowsException_IdToken_Payload(JwtPayload payload) {
 		// Arrange
 		var now = DateTime.Now;
 		var context = new OpenIdConnectProtocolValidationContext {
 			ProtocolMessage = new OpenIdConnectMessage {
 				IdToken = "id-token",
-				Code = "code",
 				State = "state",
 			},
 			ValidatedIdToken = new JwtSecurityToken(header: new JwtHeader(), payload: payload),
@@ -140,7 +141,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	// nonce関連
-	public static TheoryData<string> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_PayloadNonce() {
+	public static TheoryData<string> GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_PayloadNonce() {
 		return new() {
 			// IDX21325: The 'nonce' did not contain a timestamp: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
 			// Format expected is: <epochtime>.<noncedata>.
@@ -157,21 +158,17 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			// エポックタイムではない？
 			// IDX21324: The 'nonce' has expired: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. Time from 'nonce' (UTC): '01/01/0001 00:02:51', Current Time (UTC): '04/04/2024 23:01:07'. NonceLifetime is: '01:00:00'.
 			$"{EpochTime.GetIntDate(DateTime.UtcNow.AddMinutes(60))}.",
-
-			// IDX21307: The 'c_hash' claim was not found in the id_token, but a 'code' was in the OpenIdConnectMessage, id_token: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'
-			$"{DateTime.UtcNow.AddMinutes(60).ToBinary()}.",
 		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_PayloadNonce))]
-	public void ValidateAuthenticationResponse_ThrowsException_PayloadNonce(string nonce) {
+	[MemberData(nameof(GetTheoryData_ValidateAuthenticationResponse_ThrowsException_IdToken_PayloadNonce))]
+	public void ValidateAuthenticationResponse_ThrowsException_IdToken_PayloadNonce(string nonce) {
 		// Arrange
 		var now = DateTime.Now;
 		var context = new OpenIdConnectProtocolValidationContext {
 			ProtocolMessage = new OpenIdConnectMessage {
 				IdToken = "id-token",
-				Code = "code",
 				State = "state",
 			},
 			ValidatedIdToken = new JwtSecurityToken(
