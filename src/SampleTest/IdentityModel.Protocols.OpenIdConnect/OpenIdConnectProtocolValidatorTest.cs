@@ -85,14 +85,14 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			// IDX21329: RequireState is 'True' but the OpenIdConnectProtocolValidationContext.State is null. State cannot be validated.
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage {
-					Code = "code"
+					Code = "code",
 				},
 			},
 
 			// IDX21330: RequireState is 'True', the OpenIdConnect Request contained 'state', but the Response does not contain 'state'.
 			new OpenIdConnectProtocolValidationContext {
 				ProtocolMessage = new OpenIdConnectMessage {
-					Code = "code"
+					Code = "code",
 				},
 				State = "state",
 			},
@@ -111,8 +111,27 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
 
 		// Assert
-		Assert.NotNull(actual);
+		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
 		_output.WriteLine(actual.Message);
+	}
+
+	[Fact]
+	public void ValidateAuthenticationResponse_DoesNotThrow_Code() {
+		// Arrange
+		var context = new OpenIdConnectProtocolValidationContext {
+			ProtocolMessage = new OpenIdConnectMessage {
+				Code = "code",
+				State = "state",
+			},
+			State = "state",
+		};
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
+
+		// Assert
+		Assert.Null(actual);
 	}
 
 	public static TheoryData<JwtPayload> GetTheoryData_ValidateAuthenticationResponse_Throws_IdTokenPayload() {
@@ -156,7 +175,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
 
 		// Assert
-		Assert.NotNull(actual);
+		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
 		_output.WriteLine(actual.Message);
 	}
 
@@ -209,7 +228,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
 
 		// Assert
-		Assert.NotNull(actual);
+		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
 		_output.WriteLine(actual.Message);
 	}
 
