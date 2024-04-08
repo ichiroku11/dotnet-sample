@@ -232,6 +232,38 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		_output.WriteLine(actual.Message);
 	}
 
+	[Fact]
+	public void ValidateAuthenticationResponse_DoesNotThrow_IdToken() {
+		// Arrange
+		var now = DateTime.Now;
+		// バリデーションの中でFromBinaryしてるような？
+		var nonce = $"{DateTime.UtcNow.AddMinutes(60).ToBinary()}.";
+		var context = new OpenIdConnectProtocolValidationContext {
+			ProtocolMessage = new OpenIdConnectMessage {
+				IdToken = "id-token",
+				State = "state",
+			},
+			ValidatedIdToken = new JwtSecurityToken(
+				header: new JwtHeader(),
+				payload: new JwtPayload(
+					issuer: "i",
+					audience: "a",
+					claims: [new Claim(type: "sub", value: "s"), new Claim(type: "nonce", value: nonce)],
+					notBefore: now,
+					expires: now.AddMinutes(60),
+					issuedAt: now)),
+			State = "state",
+			Nonce = nonce,
+		};
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
+
+		// Assert
+		Assert.Null(actual);
+	}
+
 	// todo:
 	// ValidateTokenResponse
 	// ValidateUserInfoResponse
