@@ -264,7 +264,60 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		Assert.Null(actual);
 	}
 
+	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateTokenResponse_Throws() {
+		return new() {
+			// IDX21333: OpenIdConnectProtocolValidationContext.ProtocolMessage is null, there is no OpenIdConnect Response to validate.
+			new OpenIdConnectProtocolValidationContext(),
+
+			// IDX21336: Both 'id_token' and 'access_token' should be present in OpenIdConnectProtocolValidationContext.ProtocolMessage received from Token Endpoint. Cannot process the message.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage(),
+			},
+
+			// IDトークンがないとだめそう
+			// IDX21336: Both 'id_token' and 'access_token' should be present in OpenIdConnectProtocolValidationContext.ProtocolMessage received from Token Endpoint. Cannot process the message.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					AccessToken = "access-token",
+				},
+			},
+
+			// IDX21332: OpenIdConnectProtocolValidationContext.ValidatedIdToken is null. There is no 'id_token' to validate against.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					AccessToken = "access-token",
+					IdToken = "id-token",
+				},
+			},
+
+			// IDX21314: OpenIdConnectProtocol requires the jwt token to have an 'aud' claim. The jwt did not contain an 'aud' claim, jwt: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+			new OpenIdConnectProtocolValidationContext {
+				ProtocolMessage = new OpenIdConnectMessage {
+					AccessToken = "access-token",
+					IdToken = "id-token",
+				},
+				ValidatedIdToken = new JwtSecurityToken(),
+				State = "state",
+			},
+
+			// IDトークンが含まれている場合のValidateAuthenticationResponseと同じか
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_ValidateTokenResponse_Throws))]
+	public void ValidateTokenResponse_Throws(OpenIdConnectProtocolValidationContext context) {
+		// Arrange
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateTokenResponse(context));
+
+		// Assert
+		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		_output.WriteLine(actual.Message);
+	}
+
 	// todo:
-	// ValidateTokenResponse
 	// ValidateUserInfoResponse
 }
