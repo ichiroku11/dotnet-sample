@@ -318,6 +318,38 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		_output.WriteLine(actual.Message);
 	}
 
+	[Fact]
+	public void ValidateTokenResponse_DoesNotThrow() {
+		// Arrange
+		var now = DateTime.Now;
+		var nonce = $"{DateTime.UtcNow.AddMinutes(60).ToBinary()}.";
+		var context = new OpenIdConnectProtocolValidationContext {
+			ProtocolMessage = new OpenIdConnectMessage {
+				AccessToken = "access-token",
+				IdToken = "id-token",
+				State = "state",
+			},
+			ValidatedIdToken = new JwtSecurityToken(
+				header: new JwtHeader(),
+				payload: new JwtPayload(
+					issuer: "i",
+					audience: "a",
+					claims: [new Claim(type: "sub", value: "s"), new Claim(type: "nonce", value: nonce)],
+					notBefore: now,
+					expires: now.AddMinutes(60),
+					issuedAt: now)),
+			State = "state",
+			Nonce = nonce,
+		};
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateTokenResponse(context));
+
+		// Assert
+		Assert.Null(actual);
+	}
+
 	// todo:
 	// ValidateUserInfoResponse
 }
