@@ -350,6 +350,35 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		Assert.Null(actual);
 	}
 
-	// todo:
-	// ValidateUserInfoResponse
+	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateUserInfoResponse_Throws() {
+		return new() {
+			// IDX21337: OpenIdConnectProtocolValidationContext.UserInfoEndpointResponse is null or empty, there is no OpenIdConnect Response to validate.
+			new OpenIdConnectProtocolValidationContext(),
+
+			// IDX21332: OpenIdConnectProtocolValidationContext.ValidatedIdToken is null. There is no 'id_token' to validate against.
+			new OpenIdConnectProtocolValidationContext {
+				UserInfoEndpointResponse = "user-info",
+			},
+
+			// IDX21343: Unable to parse response from UserInfo endpoint: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'
+			new OpenIdConnectProtocolValidationContext {
+				UserInfoEndpointResponse = "user-info",
+				ValidatedIdToken = new JwtSecurityToken(),
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_ValidateUserInfoResponse_Throws))]
+	public void ValidateUserInfoResponse_Throws(OpenIdConnectProtocolValidationContext context) {
+		// Arrange
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateUserInfoResponse(context));
+
+		// Assert
+		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		_output.WriteLine(actual.Message);
+	}
 }
