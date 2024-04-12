@@ -86,38 +86,38 @@ public class JwtSecurityTokenTest(ITestOutputHelper output) {
 		public IEnumerator<object?[]> GetEnumerator() {
 			// 署名アルゴリズムがnull
 			yield return new object?[] {
-					new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
-					null,
-				};
+				new JwtSecurityToken(new JwtHeader(), new JwtPayload()),
+				null,
+			};
 
 			// none
 			yield return new object[] {
-					new JwtSecurityToken(),
-					"none",
-				};
+				new JwtSecurityToken(),
+				"none",
+			};
 			yield return new object[] {
-					new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
-					"none",
-				};
+				new JwtSecurityToken(new JwtHeader(signingCredentials: null), new JwtPayload()),
+				"none",
+			};
 
 			// HS256
 			var credentials1 = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("x")), SecurityAlgorithms.HmacSha256);
 			yield return new object[] {
-					new JwtSecurityToken(new JwtHeader(credentials1), new JwtPayload()),
-					"HS256",
-				};
+				new JwtSecurityToken(new JwtHeader(credentials1), new JwtPayload()),
+				"HS256",
+			};
 
 			// RS256
 			var credentials2 = new X509SigningCredentials(_certificate);
 			yield return new object[] {
-					new JwtSecurityToken(new JwtHeader(credentials2), new JwtPayload()),
-					"RS256",
-				};
+				new JwtSecurityToken(new JwtHeader(credentials2), new JwtPayload()),
+				"RS256",
+			};
 			var credentials3 = new SigningCredentials(new X509SecurityKey(_certificate), SecurityAlgorithms.RsaSha256);
 			yield return new object[] {
-					new JwtSecurityToken(new JwtHeader(credentials3), new JwtPayload()),
-					"RS256",
-				};
+				new JwtSecurityToken(new JwtHeader(credentials3), new JwtPayload()),
+				"RS256",
+			};
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
