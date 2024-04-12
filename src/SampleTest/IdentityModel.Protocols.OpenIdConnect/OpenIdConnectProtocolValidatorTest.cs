@@ -351,6 +351,11 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 	}
 
 	public static TheoryData<OpenIdConnectProtocolValidationContext> GetTheoryData_ValidateUserInfoResponse_Throws() {
+		var token = new JwtSecurityToken();
+		var tokenHandler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+
 		return new() {
 			// IDX21337: OpenIdConnectProtocolValidationContext.UserInfoEndpointResponse is null or empty, there is no OpenIdConnect Response to validate.
 			new OpenIdConnectProtocolValidationContext(),
@@ -363,7 +368,13 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 			// IDX21343: Unable to parse response from UserInfo endpoint: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'
 			new OpenIdConnectProtocolValidationContext {
 				UserInfoEndpointResponse = "user-info",
-				ValidatedIdToken = new JwtSecurityToken(),
+				ValidatedIdToken = token,
+			},
+
+			// IDX21345: OpenIdConnectProtocolValidationContext.UserInfoEndpointResponse does not contain a 'sub' claim, cannot validate.
+			new OpenIdConnectProtocolValidationContext {
+				UserInfoEndpointResponse = tokenHandler.WriteToken(token),
+				ValidatedIdToken = token,
 			},
 		};
 	}
