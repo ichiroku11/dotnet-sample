@@ -392,4 +392,26 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
 		_output.WriteLine(actual.Message);
 	}
+
+	[Fact]
+	public void ValidateUserInfoResponse_DoesNotThrow() {
+		// Arrange
+		var token = new JwtSecurityToken(claims: [new Claim(type: "sub", value: "s")]);
+		var tokenHandler = new JwtSecurityTokenHandler {
+			SetDefaultTimesOnTokenCreation = false,
+		};
+		var context = new OpenIdConnectProtocolValidationContext {
+			UserInfoEndpointResponse = tokenHandler.WriteToken(token),
+			ValidatedIdToken = token,
+		};
+		_output.WriteLine(context.UserInfoEndpointResponse);
+
+		var validator = new OpenIdConnectProtocolValidator();
+
+		// Act
+		var actual = Record.Exception(() => validator.ValidateUserInfoResponse(context));
+
+		// Assert
+		Assert.Null(actual);
+	}
 }
