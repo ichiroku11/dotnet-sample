@@ -2,7 +2,9 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace SampleTest.IdentityModel.Protocols.OpenIdConnect;
 
-public class OpenIdConnectConfigurationTest {
+public class OpenIdConnectConfigurationTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Fact]
 	public void Properties_デフォルトコンストラクターで生成したインスタンスの各プロパティの値を確認する() {
 		// Arrange
@@ -33,6 +35,8 @@ public class OpenIdConnectConfigurationTest {
 
 		var config = new OpenIdConnectConfiguration(json);
 
+		// IdentityModel 7.2.0 => 7.5.1
+		// ファイルのJSONをうまく読み込みなくなった様子・・・
 		// Act
 		// Assert
 		Assert.Equal("issuer", config.Issuer);
@@ -57,5 +61,21 @@ public class OpenIdConnectConfigurationTest {
 		//	["name", "emails", "idp", "oid", "sub", "extension_1", "iss", "iat", "exp", "aud", "acr", "nonce", "auth_time"],
 		//	config.ClaimsSupported);
 		Assert.Empty(config.ClaimsSupported);
+	}
+
+	[Fact]
+	public void Properties_Writeメソッドで書き込んだJSONから生成したインスタンスの各プロパティの値を確認する() {
+		// Arrange
+		var json = OpenIdConnectConfiguration.Write(
+			new OpenIdConnectConfiguration {
+				AuthorizationEndpoint = "authorization-endpoint",
+			});
+		_output.WriteLine(json);
+
+		// Act
+		var config = new OpenIdConnectConfiguration(json);
+
+		// Assert
+		Assert.Equal("authorization-endpoint", config.AuthorizationEndpoint);
 	}
 }
