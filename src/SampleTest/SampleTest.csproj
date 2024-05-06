@@ -16,7 +16,7 @@
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NCrontab.Signed" Version="3.3.3" />
     <PackageReference Include="Polly" Version="8.3.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
     <PackageReference Include="xunit" Version="2.8.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
