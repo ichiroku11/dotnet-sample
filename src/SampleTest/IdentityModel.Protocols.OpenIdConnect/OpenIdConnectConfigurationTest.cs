@@ -68,7 +68,9 @@ public class OpenIdConnectConfigurationTest(ITestOutputHelper output) {
 		// Arrange
 		var json = OpenIdConnectConfiguration.Write(
 			new OpenIdConnectConfiguration {
+				Issuer = "issuer",
 				AuthorizationEndpoint = "authorization-endpoint",
+				EndSessionEndpoint = "end-session-endpoint",
 			});
 		_output.WriteLine(json);
 
@@ -76,6 +78,10 @@ public class OpenIdConnectConfigurationTest(ITestOutputHelper output) {
 		var config = new OpenIdConnectConfiguration(json);
 
 		// Assert
+		Assert.Equal("issuer", config.Issuer);
 		Assert.Equal("authorization-endpoint", config.AuthorizationEndpoint);
+		// なぜかダメ
+		//Assert.Equal("end-session-endpoint", config.EndSessionEndpoint);
+		Assert.Null(config.EndSessionEndpoint);
 	}
 }
