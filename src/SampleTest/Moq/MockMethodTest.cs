@@ -64,7 +64,7 @@ public class MockMethodTest {
 	}
 
 	[Fact]
-	public async void 固定値を返す非同期メソッドをテストする() {
+	public async Task 固定値を返す非同期メソッドをテストする() {
 		// Arrange
 		var mock = new Mock<ITestTarget>();
 

@@ -4,7 +4,7 @@ namespace SampleLib.Threading.Test;
 
 public class TaskExtensionsTest {
 	[Fact]
-	public async void FireAndForget_試してみる() {
+	public async Task FireAndForget_試してみる() {
 		// Arrange
 		// Act
 		// Assert

@@ -22,7 +22,7 @@ public class PeriodicTimerTest {
 	}
 
 	[Fact]
-	public async void WaitForNextTickAsync_戻り値はtrueになる() {
+	public async Task WaitForNextTickAsync_戻り値はtrueになる() {
 		// Arrange
 		using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1));
 
@@ -34,7 +34,7 @@ public class PeriodicTimerTest {
 	}
 
 	[Fact]
-	public async void WaitForNextTickAsync_タイマーをDisposeすると戻り値はfalseになる() {
+	public async Task WaitForNextTickAsync_タイマーをDisposeすると戻り値はfalseになる() {
 		// Arrange
 		using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1));
 		timer.Dispose();
@@ -47,7 +47,7 @@ public class PeriodicTimerTest {
 	}
 
 	[Fact]
-	public async void WaitForNextTickAsync_キャンセル済みのキャンセルトークンを渡して呼び出すとTaskCanceledExceptionが発生する() {
+	public async Task WaitForNextTickAsync_キャンセル済みのキャンセルトークンを渡して呼び出すとTaskCanceledExceptionが発生する() {
 		// Arrange
 		using var tokenSource = new CancellationTokenSource();
 		tokenSource.Cancel();
