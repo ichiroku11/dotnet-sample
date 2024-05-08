@@ -14,7 +14,7 @@ public class PeriodicTimerTest {
 		// Arrange
 		// Act
 		var exception = Record.Exception(() => {
-			new PeriodicTimer(period);
+			var _ = new PeriodicTimer(period);
 		});
 
 		// Assert
