@@ -1,4 +1,4 @@
-namespace SampleTest.xUnit;
+namespace SampleTest.Xunit;
 
 public class AssertTest {
 	[Fact]
