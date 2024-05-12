@@ -42,8 +42,8 @@ public class BasicAuthenticationCredentialsDecoder {
 			return false;
 		}
 
-		userName = credentials.Substring(0, colonIndex);
-		password = credentials.Substring(colonIndex + 1);
+		userName = credentials[..colonIndex];
+		password = credentials[(colonIndex + 1)..];
 		return true;
 	}
 }
