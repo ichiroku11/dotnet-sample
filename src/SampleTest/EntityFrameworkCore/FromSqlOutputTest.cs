@@ -54,7 +54,7 @@ values
 
 	[Fact]
 	public async Task FromSql_output句を使ったinsert文を実行して結果を取得できる() {
-		FormattableString sql = @$"
+		FormattableString sql = $@"
 insert into dbo.Sample(Id, Name)
 output inserted.*
 values ({2}, {"b"})";
@@ -70,7 +70,7 @@ values ({2}, {"b"})";
 
 	[Fact]
 	public async Task FromSql_output句を使ったupdate文を実行して結果を取得できる() {
-		FormattableString sql = @$"
+		FormattableString sql = $@"
 update dbo.Sample
 set Id = {1}, Name = {"c"}
 output inserted.*";
