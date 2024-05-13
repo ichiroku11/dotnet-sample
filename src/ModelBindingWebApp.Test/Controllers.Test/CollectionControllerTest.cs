@@ -97,14 +97,11 @@ public class CollectionControllerTest(ITestOutputHelper output, WebApplicationFa
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Collection(
-			problem.Errors.OrderBy(error => error.Key),
-			entry => {
-				Assert.Equal("values[1]", entry.Key);
-				foreach (var message in entry.Value) {
-					WriteLine(message);
-				}
-			});
+		var entry = Assert.Single(problem.Errors.OrderBy(error => error.Key));
+		Assert.Equal("values[1]", entry.Key);
+		foreach (var message in entry.Value) {
+			WriteLine(message);
+		}
 	}
 
 	[Theory(DisplayName = "空文字やnullもIEnumerable<string>型のvaluesにバインドできるがnullとして扱われる")]

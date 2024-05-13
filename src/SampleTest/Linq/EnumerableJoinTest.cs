@@ -21,12 +21,9 @@ public class EnumerableJoinTest {
 			(outer, inner) => new { outer.Id, outer.Value1, inner.Value2 });
 
 		// Assert
-		Assert.Single(results);
-		Assert.Collection(results,
-			result => {
-				Assert.Equal(2, result.Id);
-				Assert.Equal("b", result.Value1);
-				Assert.Equal("X", result.Value2);
-			});
+		var result = Assert.Single(results);
+		Assert.Equal(2, result.Id);
+		Assert.Equal("b", result.Value1);
+		Assert.Equal("X", result.Value2);
 	}
 }
