@@ -73,38 +73,41 @@ public class IPAddressExtensionsTest {
 		Assert.Equal(expected, actual);
 	}
 
-
-	public static TheoryData<IPAddress, bool> GetTheoryDataForIsIPv4Private() {
+	public static TheoryData<string, bool> GetTheoryData_IsIPv4Private() {
 		return new() {
 			// それぞれの範囲の境界値（含む）
-			{ IPAddress.Parse("10.0.0.0"), true },
-			{ IPAddress.Parse("10.255.255.255"), true },
-			{ IPAddress.Parse("172.16.0.0"), true },
-			{ IPAddress.Parse("172.31.255.255"), true },
-			{ IPAddress.Parse("192.168.0.0"), true },
-			{ IPAddress.Parse("192.168.255.255"), true },
+			{ "10.0.0.0", true },
+			{ "10.255.255.255", true },
+			{ "172.16.0.0", true },
+			{ "172.31.255.255", true },
+			{ "192.168.0.0", true },
+			{ "192.168.255.255", true },
 
 			// それぞれの範囲内の値
-			{ IPAddress.Parse("10.1.1.1"), true },
-			{ IPAddress.Parse("172.17.1.1"), true },
-			{ IPAddress.Parse("192.168.1.1"), true },
+			{ "10.1.1.1", true },
+			{ "172.17.1.1", true },
+			{ "192.168.1.1", true },
 
 			// それぞれの範囲外の値
-			{ IPAddress.Parse("9.255.255.255"), false },
-			{ IPAddress.Parse("11.0.0.0"), false },
-			{ IPAddress.Parse("172.15.255.255"), false },
-			{ IPAddress.Parse("172.32.0.0"), false },
-			{ IPAddress.Parse("192.167.255.255"), false },
-			{ IPAddress.Parse("192.169.0.0"), false },
+			{ "9.255.255.255", false },
+			{ "11.0.0.0", false },
+			{ "172.15.255.255", false },
+			{ "172.32.0.0", false },
+			{ "192.167.255.255", false },
+			{ "192.169.0.0", false },
 		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForIsIPv4Private))]
-	public void IsIPv4Private_プライベートIPアドレスを正しく判定できる(IPAddress address, bool expected) {
+	[MemberData(nameof(GetTheoryData_IsIPv4Private))]
+	public void IsIPv4Private_プライベートIPアドレスを正しく判定できる(string addressText, bool expected) {
 		// Arrange
+		var address = IPAddress.Parse(addressText);
+
 		// Act
+		var actual = address.IsIPv4Private();
+
 		// Assert
-		Assert.Equal(expected, address.IsIPv4Private());
+		Assert.Equal(expected, actual);
 	}
 }
