@@ -4,32 +4,35 @@ using Xunit;
 namespace SampleLib.Net.Test;
 
 public class IPAddressExtensionsTest {
-	public static TheoryData<IPAddress, IPAddress, IPAddress> GetTheoryDataForIPv4LogicalAnd() {
+	public static TheoryData<byte[], byte[], byte[]> GetTheoryData_IPv4LogicalAnd() {
 		return new() {
 			{
-				new IPAddress(new byte[] { 192, 168, 1, 1 }),
-				new IPAddress(new byte[] { 255, 255, 0, 0 }),
-				new IPAddress(new byte[] { 192, 168, 0, 0 })
+				new byte[] { 192, 168, 1, 1 },
+				new byte[] { 255, 255, 0, 0 },
+				new byte[] { 192, 168, 0, 0 }
 			},
 			{
-				new IPAddress(new byte[] { 192, 168, 224, 1 }),
-				new IPAddress(new byte[] { 255, 255, 192, 0 }),
-				new IPAddress(new byte[] { 192, 168, 192, 0 })
+				new byte[] { 192, 168, 224, 1 },
+				new byte[] { 255, 255, 192, 0 },
+				new byte[] { 192, 168, 192, 0 }
 			},
 		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForIPv4LogicalAnd))]
-	public void IPv4LogicalAnd_正しくAND演算できる(IPAddress address, IPAddress mask, IPAddress expected) {
+	[MemberData(nameof(GetTheoryData_IPv4LogicalAnd))]
+	public void IPv4LogicalAnd_正しくAND演算できる(byte[] addressBytes, byte[] maskBytes, byte[] expectedBytes) {
 		// Arrange
+		var address = new IPAddress(addressBytes);
+		var mask = new IPAddress(maskBytes);
+		var expected = new IPAddress(expectedBytes);
+
 		// Act
 		var actual = address.IPv4LogicalAnd(mask);
 
 		// Assert
 		Assert.True(actual.Equals(expected));
 	}
-
 
 	public static TheoryData<IPAddress, IPAddress, IPAddress, bool> GetTheoryDataForIsIPv4InSameSubnet() {
 		return new() {
