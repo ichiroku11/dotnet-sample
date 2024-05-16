@@ -34,41 +34,46 @@ public class IPAddressExtensionsTest {
 		Assert.True(actual.Equals(expected));
 	}
 
-	public static TheoryData<IPAddress, IPAddress, IPAddress, bool> GetTheoryDataForIsIPv4InSameSubnet() {
+	public static TheoryData<byte[], byte[], byte[], bool> GetTheoryData_IsIPv4InSameSubnet() {
 		return new() {
 			// 同じサブネットに属する
 			{
-				new IPAddress(new byte[] { 192, 168, 1, 1 }),
-				new IPAddress(new byte[] { 192, 168, 0, 0 }),
-				new IPAddress(new byte[] { 255, 255, 0, 0 }),
+				new byte[] { 192, 168, 1, 1 },
+				new byte[] { 192, 168, 0, 0 },
+				new byte[] { 255, 255, 0, 0 },
 				true
 			},
 			{
-				new IPAddress(new byte[] { 192, 168, 224, 1 }),
-				new IPAddress(new byte[] { 192, 168, 192, 0 }),
-				new IPAddress(new byte[] { 255, 255, 192, 0 }),
+				new byte[] { 192, 168, 224, 1 },
+				new byte[] { 192, 168, 192, 0 },
+				new byte[] { 255, 255, 192, 0 },
 				true
 			},
 			// 同じサブネットに属さない
 			{
-				new IPAddress(new byte[] { 192, 168, 1, 1 }),
-				new IPAddress(new byte[] { 192, 169, 0, 0 }),
-				new IPAddress(new byte[] { 255, 255, 0, 0 }),
+				new byte[] { 192, 168, 1, 1 },
+				new byte[] { 192, 169, 0, 0 },
+				new byte[] { 255, 255, 0, 0 },
 				false
 			},
 			{
-				new IPAddress(new byte[] { 192, 168, 224, 1 }),
-				new IPAddress(new byte[] { 192, 168, 128, 0 }),
-				new IPAddress(new byte[] { 255, 255, 192, 0 }),
+				new byte[] { 192, 168, 224, 1 },
+				new byte[] { 192, 168, 128, 0 },
+				new byte[] { 255, 255, 192, 0 },
 				false
 			},
 		};
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForIsIPv4InSameSubnet))]
-	public void IsIPv4InSameSubnet_正しく判定できる(IPAddress address, IPAddress subnet, IPAddress mask, bool expected) {
+	[MemberData(nameof(GetTheoryData_IsIPv4InSameSubnet))]
+	public void IsIPv4InSameSubnet_正しく判定できる(byte[] addressBytes, byte[] subnetBytes, byte[] maskBytes, bool expected) {
 		// Arrange
+		var address = new IPAddress(addressBytes);
+		var subnet = new IPAddress(subnetBytes);
+		var mask = new IPAddress(maskBytes);
+
+
 		// Act
 		var actual = address.IsIPv4InSameSubnet(subnet, mask);
 
