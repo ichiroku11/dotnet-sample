@@ -67,7 +67,7 @@ public class DefaultController(ApplicationPartManager manager) : AppController {
 			var area = action.GetCustomAttribute<AreaAttribute>()?.RouteValue
 				?? controller?.GetCustomAttribute<AreaAttribute>()?.RouteValue;
 			var httpMethods = action.GetCustomAttribute<HttpMethodAttribute>()?.HttpMethods
-				?? Enumerable.Empty<string>();
+				?? [];
 
 			content.AppendLine($"{area}, {controller?.Name}, {action.Name}, {string.Join("/", httpMethods)}");
 		}

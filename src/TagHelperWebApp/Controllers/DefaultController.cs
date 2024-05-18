@@ -31,5 +31,5 @@ public class DefaultController(ILogger<DefaultController> logger) : Controller {
 		return RedirectToAction(nameof(Form));
 	}
 
-	public IActionResult ByteArray() => View(new ByteArrayCommand { Bytes = new byte[] { 0x01, 0x02 } });
+	public IActionResult ByteArray() => View(new ByteArrayCommand { Bytes = [0x01, 0x02] });
 }

@@ -15,13 +15,13 @@ public class GraphGetUserSample(IConfiguration config, ILogger<GraphSampleBase> 
 
 		// ユーザーをID指定で取得
 		var user = await client.Users[id].GetAsync(config => {
-			config.QueryParameters.Select = new[] {
+			config.QueryParameters.Select = [
 				"id",
 				"surname",
 				"givenName",
 				"identities",
 				attributeName,
-			};
+			];
 		});
 
 		if (user is not null) {

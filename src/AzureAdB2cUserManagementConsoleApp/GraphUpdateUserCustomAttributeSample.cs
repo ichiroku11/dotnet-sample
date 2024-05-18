@@ -25,7 +25,7 @@ public class GraphUpdateUserCustomAttributeSample(IConfiguration config, ILogger
 
 		// 取得して確認
 		var userUpdated = await client.Users[id].GetAsync(config => {
-			config.QueryParameters.Select = new[] { attributeName };
+			config.QueryParameters.Select = [attributeName];
 		});
 
 		if (userUpdated is not null) {

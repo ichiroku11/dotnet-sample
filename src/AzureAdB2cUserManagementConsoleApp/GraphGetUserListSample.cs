@@ -19,7 +19,7 @@ public class GraphGetUserListSample(IConfiguration config, ILogger<GraphSampleBa
 
 		// ユーザー一覧を取得
 		var response = await client.Users.GetAsync(config => {
-			config.QueryParameters.Select = new[] {
+			config.QueryParameters.Select = [
 				// アカウントが有効かどうか
 				"accountEnabled",
 				// 作成日時
@@ -44,7 +44,7 @@ public class GraphGetUserListSample(IConfiguration config, ILogger<GraphSampleBa
 				"userPrincipalName",
 				// カスタム属性
 				attributeName,
-			};
+			];
 
 			// 以下、フィルターのサンプル
 

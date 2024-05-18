@@ -35,7 +35,7 @@ internal class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILo
 		// 取得して確認
 		var userUpdated = await client.Users[id].GetAsync(
 			config => {
-				config.QueryParameters.Select = new[] { "identities" };
+				config.QueryParameters.Select = ["identities"];
 			});
 		if (userUpdated is not null) {
 			ShowUser(userUpdated);

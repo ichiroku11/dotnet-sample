@@ -29,7 +29,7 @@ public class MessageProviderController : ControllerBase {
 
 	// MissingKeyOrValueAccessorのテスト
 	public class MissingKeyOrValueModel {
-		public Dictionary<string, string> Values { get; init; } = new();
+		public Dictionary<string, string> Values { get; init; } = [];
 	}
 
 	[HttpPost]

@@ -8,5 +8,5 @@ namespace AzureAdB2cWebApi.Controllers;
 [Authorize]
 public class ValueController : ControllerBase {
 	[HttpGet]
-	public IEnumerable<string> Get() => new[] { "a", "b", "c" };
+	public IEnumerable<string> Get() => ["a", "b", "c"];
 }
