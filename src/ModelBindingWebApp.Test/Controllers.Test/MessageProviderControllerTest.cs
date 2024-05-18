@@ -69,22 +69,18 @@ public class MessageProviderControllerTest(ITestOutputHelper output, WebApplicat
 		Assert.Equal(@"""""をバインドできません。", error.Value.Single());
 	}
 
-	public static TheoryData<FormUrlEncodedContent, string> GetTheoryData_MissingKeyOrValue() {
+	public static TheoryData<string, string> GetTheoryData_MissingKeyOrValue() {
 		return new() {
-			// POSTデータにキーは存在するが、バリューが存在しない
+			// POSTデータにキーは存在するがバリューが存在しないので
+			// エラーにバリューを表す文字列が含まれる
 			{
-				new FormUrlEncodedContent(
-					new Dictionary<string, string> {
-						[@"values[0].Key"] = "x",
-					}),
+				"values[0].Key",
 				"Values[0].Value"
 			},
-			// POSTデータにバリューは存在するが、キーが存在しない
+			// POSTデータにバリューは存在するがキーが存在しないので
+			// エラーにキーを表す文字列が含まれる
 			{
-				new FormUrlEncodedContent(
-					new Dictionary<string, string> {
-						[@"values[0].Value"] = "x",
-					}),
+				"values[0].Value",
 				"Values[0].Key"
 			},
 		};
@@ -93,8 +89,12 @@ public class MessageProviderControllerTest(ITestOutputHelper output, WebApplicat
 	[Theory]
 	[MemberData(nameof(GetTheoryData_MissingKeyOrValue))]
 	public async Task MissingKeyOrValue_Dictionaryのキーバリューが見つからないときのエラーメッセージを変更できる(
-		FormUrlEncodedContent content, string expectedKey) {
+		string contentKey, string expectedKey) {
 		// Arrange
+		var content = new FormUrlEncodedContent(
+			new Dictionary<string, string> {
+				[contentKey] = "x",
+			});
 		var client = CreateClient(
 			configure: services => {
 				services.Configure<MvcOptions>(options => {

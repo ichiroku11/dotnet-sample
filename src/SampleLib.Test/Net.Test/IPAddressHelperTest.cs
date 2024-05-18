@@ -16,24 +16,26 @@ public class IPAddressHelperTest {
 		});
 	}
 
-	public static TheoryData<int, IPAddress> GetTheoryDataForGetSubnetMask() {
+	public static TheoryData<int, string> GetTheoryDataForGetSubnetMask() {
 		return new() {
-			{ 0, new IPAddress(new byte[] { 0, 0, 0, 0 }) },
-			{ 4, new IPAddress(new byte[] { 240, 0, 0, 0 }) },
-			{ 8, new IPAddress(new byte[] { 255, 0, 0, 0 }) },
-			{ 12, new IPAddress(new byte[] { 255, 240, 0, 0 }) },
-			{ 16, new IPAddress(new byte[] { 255, 255, 0, 0 }) },
-			{ 18, new IPAddress(new byte[] { 255, 255, 192, 0 }) },
-			{ 24, new IPAddress(new byte[] { 255, 255, 255, 0 }) },
-			{ 25, new IPAddress(new byte[] { 255, 255, 255, 128 }) },
-			{ 32, new IPAddress(new byte[] { 255, 255, 255, 255 }) },
+			{ 0, "0.0.0.0" },
+			{ 4, "240.0.0.0" },
+			{ 8, "255.0.0.0" },
+			{ 12, "255.240.0.0" },
+			{ 16, "255.255.0.0" },
+			{ 18, "255.255.192.0" },
+			{ 24, "255.255.255.0" },
+			{ 25, "255.255.255.128" },
+			{ 32, "255.255.255.255" },
 		};
 	}
 
 	[Theory]
 	[MemberData(nameof(GetTheoryDataForGetSubnetMask))]
-	public void GetSubnetMask_サブネットマスクを取得できる(int prefix, IPAddress expected) {
+	public void GetSubnetMask_サブネットマスクを取得できる(int prefix, string expectedText) {
 		// Arrange
+		var expected = IPAddress.Parse(expectedText);
+
 		// Act
 		var actual = IPAddressHelper.GetSubnetMask(prefix);
 
