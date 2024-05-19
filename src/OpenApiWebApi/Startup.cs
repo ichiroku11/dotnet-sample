@@ -26,7 +26,7 @@ public class Startup {
 		// OpenAPI/Swagger
 		app.UseOpenApi(settings => {
 		});
-		app.UseSwaggerUi3(settings => {
+		app.UseSwaggerUi(settings => {
 		});
 
 		app.UseRouting();

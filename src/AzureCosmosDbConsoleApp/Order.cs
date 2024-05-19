@@ -7,5 +7,5 @@ public class Order {
 
 	public DateTime OrderedAt { get; init; }
 
-	public ICollection<OrderDetail> Details { get; init; } = new List<OrderDetail>();
+	public ICollection<OrderDetail> Details { get; init; } = [];
 }

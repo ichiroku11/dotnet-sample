@@ -36,14 +36,11 @@ public class ValidationRequiredControllerTest(ITestOutputHelper output, WebAppli
 
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-		Assert.Collection(
-			problem!.Errors.OrderBy(error => error.Key),
-			entry => {
-				Assert.Equal("Value", entry.Key);
-				foreach (var message in entry.Value) {
-					WriteLine(message);
-				}
-			});
+		var entry = Assert.Single(problem!.Errors.OrderBy(error => error.Key));
+		Assert.Equal("Value", entry.Key);
+		foreach (var message in entry.Value) {
+			WriteLine(message);
+		}
 	}
 
 	// 参照型
@@ -58,14 +55,11 @@ public class ValidationRequiredControllerTest(ITestOutputHelper output, WebAppli
 
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-		Assert.Collection(
-			problem!.Errors.OrderBy(error => error.Key),
-			entry => {
-				Assert.Equal("Value", entry.Key);
-				foreach (var message in entry.Value) {
-					WriteLine(message);
-				}
-			});
+		var entry = Assert.Single(problem!.Errors.OrderBy(error => error.Key));
+		Assert.Equal("Value", entry.Key);
+		foreach (var message in entry.Value) {
+			WriteLine(message);
+		}
 	}
 
 	// null許容参照型
@@ -80,14 +74,11 @@ public class ValidationRequiredControllerTest(ITestOutputHelper output, WebAppli
 
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-		Assert.Collection(
-			problem!.Errors.OrderBy(error => error.Key),
-			entry => {
-				Assert.Equal("Value", entry.Key);
-				foreach (var message in entry.Value) {
-					WriteLine(message);
-				}
-			});
+		var entry = Assert.Single(problem!.Errors.OrderBy(error => error.Key));
+		Assert.Equal("Value", entry.Key);
+		foreach (var message in entry.Value) {
+			WriteLine(message);
+		}
 	}
 
 	// 試しところ、Required属性に関係ないバリデーションエラーになる様子

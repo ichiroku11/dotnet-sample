@@ -18,7 +18,7 @@ public class ObjectToInferredTypesConverterTest {
 				// double
 				JsonTokenType.Number => reader.GetDouble(),
 				// DateTime
-				JsonTokenType.String when reader.TryGetDateTime(out DateTime datetime) => datetime,
+				JsonTokenType.String when reader.TryGetDateTime(out var datetime) => datetime,
 				// string
 				JsonTokenType.String => reader.GetString(),
 				// 上記以外（たぶんオブジェクトとか配列とか）

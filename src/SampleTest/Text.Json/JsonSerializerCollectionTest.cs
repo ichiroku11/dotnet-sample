@@ -105,13 +105,9 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 		var actual = JsonSerializer.Deserialize<SampleWithEnumerable>(json, _options)!;
 
 		// Assert
-		Assert.Single(actual.Items);
-		Assert.Collection(
-			actual.Items,
-			item => {
-				Assert.Equal(1, item.Number);
-				Assert.Equal("a", item.Text);
-			});
+		var item = Assert.Single(actual.Items);
+		Assert.Equal(1, item.Number);
+		Assert.Equal("a", item.Text);
 	}
 
 	[Fact(DisplayName = "Deserialize_nullが含まれる数値の配列をIEnumerable<int>にデシリアライズできない")]

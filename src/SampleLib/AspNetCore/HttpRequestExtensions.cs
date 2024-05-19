@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using System.Text;
 
 namespace SampleLib.AspNetCore;
@@ -32,9 +33,8 @@ public static class HttpRequestExtensions {
 	/// <param name="request"></param>
 	/// <returns></returns>
 	public static bool IsAjax(this HttpRequest request) {
-		// HeaderNames.XRequestedWithが定義されそう
 		return string.Equals(
-			request.Headers["X-Requested-With"],
+			request.Headers[HeaderNames.XRequestedWith],
 			"XMLHttpRequest",
 			StringComparison.Ordinal);
 	}

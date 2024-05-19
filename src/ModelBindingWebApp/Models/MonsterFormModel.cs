@@ -23,7 +23,7 @@ public class MonsterFormModel : IValidatableObject {
 		if (Category == MonsterCategory.None) {
 			// プロパティのModelMetadataを取得
 			var metadata = metadataProvider.GetMetadataForProperty(GetType(), nameof(Category));
-			yield return new ValidationResult($"{metadata.DisplayName}を選択してください", new[] { nameof(Category) });
+			yield return new ValidationResult($"{metadata.DisplayName}を選択してください", [nameof(Category)]);
 		}
 	}
 }

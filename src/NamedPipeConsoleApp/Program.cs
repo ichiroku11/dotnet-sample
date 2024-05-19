@@ -60,13 +60,13 @@ class Program {
 	}
 
 	static void Main(string[] args) {
-		Task.WaitAll(new[] {
-				// クライアント
-				Client(1, new Message { Id = 10, Content = "あいうえお", }),
-				Client(2, new Message { Id = 20, Content = "かきくけこ", }),
-				// サーバ
-				Server(1, ServerProcess),
-				Server(2, ServerProcess),
-			});
+		Task.WaitAll([
+			// クライアント
+			Client(1, new Message { Id = 10, Content = "あいうえお", }),
+			Client(2, new Message { Id = 20, Content = "かきくけこ", }),
+			// サーバ
+			Server(1, ServerProcess),
+			Server(2, ServerProcess),
+		]);
 	}
 }

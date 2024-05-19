@@ -7,7 +7,7 @@ namespace RazorPageWebApp.Pages.Monsters;
 public class IndexModel(MonsterRepository repository) : PageModel {
 	private readonly MonsterRepository _repository = repository;
 
-	public IList<Monster> Monsters { get; private set; } = new List<Monster>();
+	public IList<Monster> Monsters { get; private set; } = [];
 
 	[BindProperty(SupportsGet = true)]
 	public string Query { get; set; } = "";

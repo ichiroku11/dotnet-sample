@@ -9,7 +9,7 @@ var services = builder.Services;
 
 // AddCheckでCheckを追加しない場合はHealthyだった
 services.AddHealthChecks()
-	.AddCheck<AlwaysHealthyHealthCheck>("AlwaysHealthy", tags: new[] { "tag1" })
+	.AddCheck<AlwaysHealthyHealthCheck>("AlwaysHealthy", tags: ["tag1"])
 	.AddCheck<AlwaysUnhealthyHealthCheck>("AlwaysUnhealthy");
 
 var app = builder.Build();

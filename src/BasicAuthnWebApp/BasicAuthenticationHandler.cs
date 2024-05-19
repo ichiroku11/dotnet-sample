@@ -27,7 +27,7 @@ public class BasicAuthenticationHandler(
 			return AuthenticateResult.NoResult();
 		}
 
-		var encodedCredentials = headerValue.Substring("Basic ".Length).Trim();
+		var encodedCredentials = headerValue["Basic ".Length..].Trim();
 		if (string.IsNullOrEmpty(encodedCredentials)) {
 			return AuthenticateResult.Fail("Missing credentials");
 		}

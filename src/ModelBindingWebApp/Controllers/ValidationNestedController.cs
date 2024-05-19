@@ -26,7 +26,7 @@ public class ValidationNestedController : ControllerBase {
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
 			if (string.IsNullOrEmpty(Value)) {
-				yield return new ValidationResult($"{nameof(ValidatableInnerModel)}.{nameof(Value)} is required.", new[] { nameof(Value) });
+				yield return new ValidationResult($"{nameof(ValidatableInnerModel)}.{nameof(Value)} is required.", [nameof(Value)]);
 			}
 		}
 	}
@@ -36,7 +36,7 @@ public class ValidationNestedController : ControllerBase {
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
 			if (Inner is null) {
-				yield return new ValidationResult($"{nameof(ValidatableOuterModel)}.{nameof(Inner)} is required.", new[] { nameof(Inner) });
+				yield return new ValidationResult($"{nameof(ValidatableOuterModel)}.{nameof(Inner)} is required.", [nameof(Inner)]);
 			}
 		}
 	}

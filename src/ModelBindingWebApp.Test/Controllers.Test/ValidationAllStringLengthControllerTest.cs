@@ -38,13 +38,10 @@ public class ValidationAllStringLengthControllerTest(ITestOutputHelper output, W
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 		Assert.NotNull(problem);
-		Assert.Collection(
-			problem.Errors.OrderBy(error => error.Key),
-			entry => {
-				Assert.Equal("", entry.Key);
-				foreach (var message in entry.Value) {
-					WriteLine(message);
-				}
-			});
+		var entry = Assert.Single(problem.Errors.OrderBy(error => error.Key));
+		Assert.Equal("", entry.Key);
+		foreach (var message in entry.Value) {
+			WriteLine(message);
+		}
 	}
 }
