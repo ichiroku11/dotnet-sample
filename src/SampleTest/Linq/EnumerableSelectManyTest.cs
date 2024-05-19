@@ -6,18 +6,19 @@ public class EnumerableSelectManyTest(ITestOutputHelper output) {
 	[Fact]
 	public void SelectMany_配列の配列を平坦化するサンプル() {
 		// Arrange
+
 		// Act
-		var actual = new[] {
-					new [] { 1, 2, 3 },
-					new [] { 4 },
-					new [] { 5, 6 },
-				}
+		var actual = new int[][] {
+			[1, 2, 3],
+			[4],
+			[5, 6],
+		}
 			.SelectMany(values => values);
 
 		// Assert
 		var expected = new[] {
-				1, 2, 3, 4, 5, 6
-			};
+			1, 2, 3, 4, 5, 6
+		};
 		Assert.Equal(expected, actual);
 	}
 
@@ -43,10 +44,10 @@ public class EnumerableSelectManyTest(ITestOutputHelper output) {
 
 		// Assert
 		var expected = new[] {
-				(0, 1), (0, 2),
-				(1, 1), (1, 2),
-				(2, 1), (2, 2),
-			};
+			(0, 1), (0, 2),
+			(1, 1), (1, 2),
+			(2, 1), (2, 2),
+		};
 		Assert.Equal(expected, actual);
 	}
 
@@ -54,26 +55,25 @@ public class EnumerableSelectManyTest(ITestOutputHelper output) {
 	private class Item(string name, IEnumerable<Item>? children = default) {
 		public string Name { get; } = name;
 
-		public IEnumerable<Item> Children { get; } = children ?? Enumerable.Empty<Item>();
+		public IEnumerable<Item> Children { get; } = children ?? [];
 	}
 
-	private static readonly IEnumerable<Item> _items
-		= new[] {
-				new Item("1a", new[] {
-					new Item("2a", new[] {
-						new Item("3a"),
-						new Item("3b"),
-					}),
-					new Item("2b", new[] {
-						new Item("3c"),
-					}),
-				}),
-				new Item("1b", new[] {
-					new Item("2c", new[] {
-						new Item("3d"),
-					}),
-				}),
-		};
+	private static readonly IEnumerable<Item> _items = [
+		new Item("1a", [
+			new Item("2a", [
+				new Item("3a"),
+				new Item("3b"),
+			]),
+			new Item("2b", [
+				new Item("3c"),
+			]),
+		]),
+		new Item("1b", [
+			new Item("2c", [
+				new Item("3d"),
+			]),
+		]),
+	];
 
 	[Fact]
 	public void SelectMany_あるオブジェクトのコレクションの2階層目を平坦化するサンプル() {
@@ -84,10 +84,7 @@ public class EnumerableSelectManyTest(ITestOutputHelper output) {
 			.Select(item => item.Name);
 
 		// Assert
-		IEnumerable<string> expected = new[] {
-				"2a", "2b", "2c",
-			};
-		Assert.Equal(expected, actual);
+		Assert.Equal(["2a", "2b", "2c",], actual);
 	}
 
 	[Fact]
@@ -100,9 +97,6 @@ public class EnumerableSelectManyTest(ITestOutputHelper output) {
 			.Select(item => item.Name);
 
 		// Assert
-		IEnumerable<string> expected = new[] {
-				"3a", "3b", "3c", "3d"
-			};
-		Assert.Equal(expected, actual);
+		Assert.Equal(["3a", "3b", "3c", "3d"], actual);
 	}
 }
