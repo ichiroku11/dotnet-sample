@@ -57,7 +57,7 @@ public class GraphCreateUserSample(IConfiguration config, ILogger<GraphSampleBas
 		var userAdded = await client.Users.PostAsync(userToAdd);
 
 		if (userAdded is not null) {
-			ShowUser(userAdded);
+			LogInformation(userAdded);
 		}
 	}
 }

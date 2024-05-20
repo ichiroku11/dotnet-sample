@@ -25,7 +25,7 @@ public class GraphGetUserSample(IConfiguration config, ILogger<GraphSampleBase> 
 		});
 
 		if (user is not null) {
-			ShowUser(user);
+			LogInformation(user);
 		}
 	}
 }

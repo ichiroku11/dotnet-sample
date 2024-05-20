@@ -69,7 +69,7 @@ public class GraphGetUserListSample(IConfiguration config, ILogger<GraphSampleBa
 		});
 
 		foreach (var user in response?.Value ?? Enumerable.Empty<User>()) {
-			ShowUser(user);
+			LogInformation(user);
 		}
 	}
 }

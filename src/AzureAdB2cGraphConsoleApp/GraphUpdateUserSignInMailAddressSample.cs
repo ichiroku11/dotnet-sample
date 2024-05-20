@@ -38,7 +38,7 @@ public class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILogg
 				config.QueryParameters.Select = ["identities"];
 			});
 		if (userUpdated is not null) {
-			ShowUser(userUpdated);
+			LogInformation(userUpdated);
 		}
 	}
 }

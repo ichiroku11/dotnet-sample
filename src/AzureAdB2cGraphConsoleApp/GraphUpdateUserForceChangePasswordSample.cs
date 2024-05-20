@@ -33,7 +33,7 @@ public class GraphUpdateUserForceChangePasswordSample(IConfiguration config, ILo
 		// 取得して確認
 		var userUpdated = await client.Users[id].GetAsync();
 		if (userUpdated is not null) {
-			ShowUser(userUpdated);
+			LogInformation(userUpdated);
 		}
 	}
 }

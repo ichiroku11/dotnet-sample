@@ -29,7 +29,7 @@ public class GraphUpdateUserCustomAttributeSample(IConfiguration config, ILogger
 		});
 
 		if (userUpdated is not null) {
-			ShowUser(userUpdated);
+			LogInformation(userUpdated);
 		}
 	}
 }

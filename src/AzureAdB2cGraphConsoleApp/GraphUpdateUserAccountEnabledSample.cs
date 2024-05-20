@@ -24,7 +24,7 @@ public class GraphUpdateUserAccountEnabledSample(IConfiguration config, ILogger<
 			config.QueryParameters.Select = ["accountEnabled"];
 		});
 		if (userUpdated is not null) {
-			ShowUser(userUpdated);
+			LogInformation(userUpdated);
 		}
 	}
 }
