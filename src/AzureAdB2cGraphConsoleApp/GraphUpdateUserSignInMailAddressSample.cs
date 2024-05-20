@@ -1,4 +1,4 @@
-using AzureAdB2cUserManagementConsoleApp;
+using AzureAdB2cGraphConsoleApp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
@@ -7,7 +7,7 @@ using Microsoft.Graph.Models;
 // ユーザーのサインインメールアドレスを変更する
 // 参考
 // - https://learn.microsoft.com/en-us/answers/questions/291598/azure-ad-b2c-update-email-address-clone-existing-u
-internal class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILogger<GraphSampleBase> logger)
+public class GraphUpdateUserSignInMailAddressSample(IConfiguration config, ILogger<GraphSampleBase> logger)
 	: GraphSampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定

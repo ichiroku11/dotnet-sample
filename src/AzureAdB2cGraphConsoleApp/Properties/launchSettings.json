@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AzureAdB2cGraphConsoleApp": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
