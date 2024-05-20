@@ -8,6 +8,7 @@ await Host
 		services
 			.AddHostedService<SampleService>()
 			.AddTransient<GraphCreateUserSample>()
+			.AddTransient<GraphGetDirectoryAuditListSample>()
 			.AddTransient<GraphGetUserListSample>()
 			.AddTransient<GraphGetUserSample>()
 			.AddTransient<GraphUpdateUserAccountEnabledSample>()

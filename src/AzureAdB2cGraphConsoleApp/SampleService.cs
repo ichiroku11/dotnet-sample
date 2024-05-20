@@ -7,26 +7,31 @@ namespace AzureAdB2cGraphConsoleApp;
 
 public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogger<SampleService> logger)
 	: OnceHostedService(host, lifetime, logger) {
+
 	protected override async Task RunAsync(IServiceProvider services) {
+		// 監査ログ一覧
+		await services.RunSampleAsync<GraphGetDirectoryAuditListSample>();
+
+		// たしか「User.ReadWrite.All」のアクセス許可が必要
 		// ユーザー取得
-		//await services.GetRequiredService<GraphGetUserSample>().RunAsync();
+		//await services.RunSampleAsync<GraphGetUserSample>();
 
 		// ユーザー一覧取得
-		await services.GetRequiredService<GraphGetUserListSample>().RunAsync();
+		//await services.RunSampleAsync<GraphGetUserListSample>();
 
 		// ユーザー作成
-		//await services.GetRequiredService<GraphCreateUserSample>().RunAsync();
+		//await services.RunSampleAsync<GraphCreateUserSample>();
 
 		// ユーザー更新（アカウントの有効・無効）
-		//await services.GetRequiredService<GraphUpdateUserAccountEnabledSample>().RunAsync();
+		//await services.RunSampleAsync<GraphUpdateUserAccountEnabledSample>();
 
 		// ユーザー更新（カスタム属性）
-		//await services.GetRequiredService<GraphUpdateUserCustomAttributeSample>().RunAsync();
+		//await services.RunSampleAsync<GraphUpdateUserCustomAttributeSample>();
 
 		// ユーザー更新（パスワードリセット）
-		//await services.GetRequiredService<GraphUpdateUserForceChangePasswordSample>().RunAsync();
+		//await services.RunSampleAsync<GraphUpdateUserForceChangePasswordSample>();
 
 		// ユーザー更新（サインインメールアドレス）
-		//await services.GetRequiredService<GraphUpdateUserSignInMailAddressSample>().RunAsync();
+		//await services.RunSampleAsync<GraphUpdateUserSignInMailAddressSample>();
 	}
 }
