@@ -13,7 +13,6 @@ namespace AzureAdB2cGraphConsoleApp;
 // https://learn.microsoft.com/ja-jp/graph/api/resources/directoryaudit?view=graph-rest-1.0
 // https://learn.microsoft.com/ja-jp/graph/api/resources/auditactivityinitiator?view=graph-rest-1.0
 // https://learn.microsoft.com/ja-jp/graph/api/resources/targetresource?view=graph-rest-1.0
-
 public class GraphGetDirectoryAuditListSample(IConfiguration config, ILogger<GraphSampleBase> logger)
 	: GraphSampleBase(config, logger) {
 
@@ -23,6 +22,15 @@ public class GraphGetDirectoryAuditListSample(IConfiguration config, ILogger<Gra
 		var audits = await client.AuditLogs.DirectoryAudits.GetAsync(config => {
 			// 「IDトークンの発行」=「サインイン」と判断してよさげ
 			config.QueryParameters.Filter = "activityDisplayName eq 'Issue an id_token to the application'";
+
+			// ユーザーのオブジェクトIDでもフィルターする場合
+			/*
+			var activity = "Issue an id_token to the application";
+			var objectId = "";
+			config.QueryParameters.Filter = $"activityDisplayName eq '{activity}' and targetResources/any(s:s/id eq '{objectId}')";
+			*/
+
+			// todo:  orderby
 		});
 
 		foreach (var audit in audits?.Value ?? Enumerable.Empty<DirectoryAudit>()) {
@@ -33,6 +41,9 @@ public class GraphGetDirectoryAuditListSample(IConfiguration config, ILogger<Gra
 				audit.ActivityDisplayName,
 				// サインインしたアプリケーションのクライアントID
 				audit.InitiatedBy?.App?.ServicePrincipalName,
+				// サインインしたユーザーのID
+				// たぶん1つなんだろうけどコレクションなので配列として出力
+				objectIds = audit.TargetResources?.Select(resource => resource.Id),
 			});
 		}
 	}
