@@ -35,12 +35,17 @@ public class GraphGetDirectoryAuditListSample(IConfiguration config, ILogger<Gra
 
 		foreach (var audit in audits?.Value ?? Enumerable.Empty<DirectoryAudit>()) {
 			LogInformation(new {
-				// サインイン日時
+				// アクティビティが実行された日時（UTC）
+				// サインイン日時とする
 				audit.ActivityDateTime,
-				// 'Issue an id_token to the application'
+				// アクティビティ名：'Issue an id_token to the application'
 				audit.ActivityDisplayName,
+				// アクティビティの結果
+				audit.Result,
+				// アクティビティを開始したアプリケーション
 				// サインインしたアプリケーションのクライアントID
 				audit.InitiatedBy?.App?.ServicePrincipalName,
+				// ターゲットリソース
 				// サインインしたユーザーのID
 				// たぶん1つなんだろうけどコレクションなので配列として出力
 				objectIds = audit.TargetResources?.Select(resource => resource.Id),
