@@ -22,6 +22,9 @@ public abstract class GraphSampleBase {
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 			Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
 			WriteIndented = true,
+			Converters = {
+				new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+			}
 		};
 
 	private readonly IConfiguration _config;
