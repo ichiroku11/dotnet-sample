@@ -5,8 +5,8 @@ using Microsoft.Graph;
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーをカスタム属性付きで取得
-public class GraphGetUserSample(IConfiguration config, ILogger<GraphSampleBase> logger)
-	: GraphSampleBase(config, logger) {
+public class UserGetSample(IConfiguration config, ILogger<SampleBase> logger)
+	: SampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

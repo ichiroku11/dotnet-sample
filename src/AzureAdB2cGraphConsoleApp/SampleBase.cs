@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Authentication;
-using Microsoft.Graph.Models;
 using Microsoft.Kiota.Abstractions.Authentication;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -16,7 +15,7 @@ namespace AzureAdB2cGraphConsoleApp;
 // https://github.com/Azure-Samples/ms-identity-dotnetcore-b2c-account-management
 // https://docs.microsoft.com/ja-jp/graph/sdks/choose-authentication-providers?tabs=CS#client-credentials-provider
 
-public abstract class GraphSampleBase {
+public abstract class SampleBase {
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new() {
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -31,7 +30,7 @@ public abstract class GraphSampleBase {
 	private readonly ILogger _logger;
 	private readonly CustomAttributeHelper _customAttributeHelper;
 
-	public GraphSampleBase(IConfiguration config, ILogger<GraphSampleBase> logger) {
+	public SampleBase(IConfiguration config, ILogger<SampleBase> logger) {
 		_config = config;
 		_logger = logger;
 

@@ -6,8 +6,8 @@ using Microsoft.Graph.Models;
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーを作成
-public class GraphCreateUserSample(IConfiguration config, ILogger<GraphSampleBase> logger)
-	: GraphSampleBase(config, logger) {
+public class UserCreateSample(IConfiguration config, ILogger<SampleBase> logger)
+	: SampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		var random = new Random();
 

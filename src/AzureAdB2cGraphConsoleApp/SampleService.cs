@@ -10,7 +10,7 @@ public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogge
 
 	protected override async Task RunAsync(IServiceProvider services) {
 		// 監査ログ一覧
-		await services.RunSampleAsync<GraphGetDirectoryAuditListSample>();
+		await services.RunSampleAsync<DirectoryAuditGetListSample>();
 
 		// たしか「User.ReadWrite.All」のアクセス許可が必要
 		// ユーザー取得

@@ -13,8 +13,8 @@ namespace AzureAdB2cGraphConsoleApp;
 // https://learn.microsoft.com/ja-jp/graph/api/resources/directoryaudit?view=graph-rest-1.0
 // https://learn.microsoft.com/ja-jp/graph/api/resources/auditactivityinitiator?view=graph-rest-1.0
 // https://learn.microsoft.com/ja-jp/graph/api/resources/targetresource?view=graph-rest-1.0
-public class GraphGetDirectoryAuditListSample(IConfiguration config, ILogger<GraphSampleBase> logger)
-	: GraphSampleBase(config, logger) {
+public class DirectoryAuditGetListSample(IConfiguration config, ILogger<SampleBase> logger)
+	: SampleBase(config, logger) {
 
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// AuditLog.Read.Allが必要

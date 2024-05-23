@@ -7,8 +7,8 @@ namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーを仮パスワードでリセット
 // 次回サインイン時に変更が必要
-public class GraphUpdateUserForceChangePasswordSample(IConfiguration config, ILogger<GraphSampleBase> logger)
-	: GraphSampleBase(config, logger) {
+public class UserUpdateForceChangePasswordSample(IConfiguration config, ILogger<SampleBase> logger)
+	: SampleBase(config, logger) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

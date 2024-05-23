@@ -7,13 +7,13 @@ await Host
 	.ConfigureServices(services => {
 		services
 			.AddHostedService<SampleService>()
-			.AddTransient<GraphCreateUserSample>()
-			.AddTransient<GraphGetDirectoryAuditListSample>()
-			.AddTransient<GraphGetUserListSample>()
-			.AddTransient<GraphGetUserSample>()
-			.AddTransient<GraphUpdateUserAccountEnabledSample>()
-			.AddTransient<GraphUpdateUserCustomAttributeSample>()
-			.AddTransient<GraphUpdateUserForceChangePasswordSample>()
-			.AddTransient<GraphUpdateUserSignInMailAddressSample>();
+			.AddTransient<DirectoryAuditGetListSample>()
+			.AddTransient<UserCreateSample>()
+			.AddTransient<UserGetListSample>()
+			.AddTransient<UserGetSample>()
+			.AddTransient<UserUpdateAccountEnabledSample>()
+			.AddTransient<UserUpdateCustomAttributeSample>()
+			.AddTransient<UserUpdateForceChangePasswordSample>()
+			.AddTransient<UserUpdateSignInMailAddressSample>();
 	})
 	.RunConsoleAsync();
