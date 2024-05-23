@@ -30,7 +30,9 @@ public class GraphGetDirectoryAuditListSample(IConfiguration config, ILogger<Gra
 			config.QueryParameters.Filter = $"activityDisplayName eq '{activity}' and targetResources/any(s:s/id eq '{objectId}')";
 			*/
 
-			// todo:  orderby
+			// 指定しなくてもactivityDateTimeの降順になっているようだが、公開ドキュメントからは探せず
+			// 明示的に指定するほうが無難と判断
+			config.QueryParameters.Orderby = ["activityDateTime desc"];
 		});
 
 		foreach (var audit in audits?.Value ?? Enumerable.Empty<DirectoryAudit>()) {
