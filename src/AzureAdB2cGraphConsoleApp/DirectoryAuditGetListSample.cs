@@ -19,7 +19,7 @@ public class DirectoryAuditGetListSample(IConfiguration config, ILogger<SampleBa
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// AuditLog.Read.Allが必要
 		// https://learn.microsoft.com/ja-jp/graph/permissions-reference#auditlogreadall
-		var audits = await client.AuditLogs.DirectoryAudits.GetAsync(config => {
+		var response = await client.AuditLogs.DirectoryAudits.GetAsync(config => {
 			// 「IDトークンの発行」=「サインイン」と判断してよさげ
 			config.QueryParameters.Filter = "activityDisplayName eq 'Issue an id_token to the application'";
 
@@ -35,7 +35,7 @@ public class DirectoryAuditGetListSample(IConfiguration config, ILogger<SampleBa
 			config.QueryParameters.Orderby = ["activityDateTime desc"];
 		});
 
-		foreach (var audit in audits?.Value ?? Enumerable.Empty<DirectoryAudit>()) {
+		foreach (var audit in response?.Value ?? Enumerable.Empty<DirectoryAudit>()) {
 			LogInformation(new {
 				// アクティビティが実行された日時（UTC）
 				// サインイン日時とする
