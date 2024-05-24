@@ -9,8 +9,13 @@ public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogge
 	: OnceHostedService(host, lifetime, logger) {
 
 	protected override async Task RunAsync(IServiceProvider services) {
-		// 監査ログ一覧
-		await services.RunSampleAsync<DirectoryAuditGetListSample>();
+		// Application.Read.Allが必要
+		// アプリケーション一覧取得
+		await services.RunSampleAsync<ApplicationGetListSample>();
+
+		// AuditLog.Read.Allが必要
+		// 監査ログ一覧取得
+		//await services.RunSampleAsync<DirectoryAuditGetListSample>();
 
 		// たしか「User.ReadWrite.All」のアクセス許可が必要
 		// ユーザー取得
