@@ -6,6 +6,8 @@ using Microsoft.Graph.Models;
 namespace AzureAdB2cGraphConsoleApp;
 
 // アプリケーション一覧を取得
+// 参考
+// https://learn.microsoft.com/ja-jp/graph/api/resources/application?view=graph-rest-1.0
 public class ApplicationGetListSample(IConfiguration config, ILogger<SampleBase> logger)
 	: SampleBase(config, logger) {
 
@@ -20,7 +22,12 @@ public class ApplicationGetListSample(IConfiguration config, ILogger<SampleBase>
 		});
 
 		foreach (var app in response?.Value ?? Enumerable.Empty<Application>()) {
-			LogInformation(app);
+			LogInformation(new {
+				// アプリケーションID（クライアントID）
+				app.AppId,
+				// アプリケーションの表示名
+				app.DisplayName,
+			});
 		}
 	}
 }
