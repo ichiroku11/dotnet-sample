@@ -7,6 +7,7 @@ await Host
 	.ConfigureServices(services => {
 		services
 			.AddHostedService<SampleService>()
+			.AddTransient<ApplicationGetListPagingSample>()
 			.AddTransient<ApplicationGetListSample>()
 			.AddTransient<DirectoryAuditGetListSample>()
 			.AddTransient<UserCreateSample>()

@@ -11,7 +11,9 @@ public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogge
 	protected override async Task RunAsync(IServiceProvider services) {
 		// Application.Read.Allが必要
 		// アプリケーション一覧取得
-		await services.RunSampleAsync<ApplicationGetListSample>();
+		//await services.RunSampleAsync<ApplicationGetListSample>();
+
+		await services.RunSampleAsync<ApplicationGetListPagingSample>();
 
 		// AuditLog.Read.Allが必要
 		// 監査ログ一覧取得
