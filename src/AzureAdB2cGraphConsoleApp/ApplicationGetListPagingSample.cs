@@ -29,7 +29,7 @@ public class ApplicationGetListPagingSample(IConfiguration config, ILogger<Sampl
 				// ページングが発生するように、一度に取得する件数を少なくする
 				config.QueryParameters.Top = 2;
 			});
-			LogInformation(response?.Value ?? Enumerable.Empty<Application>());
+			LogInformation(response?.Value ?? []);
 
 			nextLink = response?.OdataNextLink;
 		}
@@ -41,7 +41,7 @@ public class ApplicationGetListPagingSample(IConfiguration config, ILogger<Sampl
 			var response = await client.Applications
 				.WithUrl(nextLink)
 				.GetAsync();
-			LogInformation(response?.Value ?? Enumerable.Empty<Application>());
+			LogInformation(response?.Value ?? []);
 
 			nextLink = response?.OdataNextLink;
 		}

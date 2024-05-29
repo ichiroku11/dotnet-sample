@@ -68,7 +68,7 @@ public class UserGetListSample(IConfiguration config, ILogger<SampleBase> logger
 			//config.QueryParameters.Filter = "identities/any(c:startsWith(c/issuerAssignedId, '{signInName}') and c/issuer eq '{tenant}')";
 		});
 
-		foreach (var user in response?.Value ?? Enumerable.Empty<User>()) {
+		foreach (var user in response?.Value ?? []) {
 			LogInformation(user);
 		}
 	}
