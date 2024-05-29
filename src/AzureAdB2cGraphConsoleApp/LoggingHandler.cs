@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace AzureAdB2cUserManagementConsoleApp;
+namespace AzureAdB2cGraphConsoleApp;
 
 public class LoggingHandler(ILogger logger) : DelegatingHandler {
 	private readonly ILogger _logger = logger;
