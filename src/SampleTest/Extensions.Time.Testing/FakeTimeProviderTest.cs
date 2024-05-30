@@ -12,6 +12,7 @@ public class FakeTimeProviderTest {
 		var provider = new FakeTimeProvider();
 
 		// Assert
+		// デフォルトは、UTCの2000/01/01 00:00:00
 		Assert.Equal(provider.Start, _default);
 		Assert.Equal(TimeSpan.Zero, provider.AutoAdvanceAmount);
 		Assert.Equal(TimeZoneInfo.Utc, provider.LocalTimeZone);
