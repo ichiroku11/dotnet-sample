@@ -13,7 +13,7 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 	private record SampleItem(int Number, string Text);
 
 	private class SampleWithEnumerable {
-		public IEnumerable<SampleItem> Items { get; init; } = Enumerable.Empty<SampleItem>();
+		public IEnumerable<SampleItem> Items { get; init; } = [];
 	}
 
 	private static readonly JsonSerializerOptions _options = new() {
@@ -26,9 +26,9 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Act
 		var sample = new SampleWithEnumerable {
-			Items = new[] {
+			Items = [
 				new SampleItem(1, "a"),
-			},
+			],
 		};
 		var actual = JsonSerializer.Serialize(sample, _options);
 

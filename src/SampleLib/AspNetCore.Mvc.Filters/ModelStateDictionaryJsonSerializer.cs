@@ -62,7 +62,7 @@ internal static class ModelStateDictionaryJsonSerializer {
 	public static ModelStateDictionary Deserialize(string json) {
 		var modelStates = new ModelStateDictionary();
 
-		var entries = JsonSerializer.Deserialize<JsonEntry[]>(json, _jsonSerializerOptions) ?? Enumerable.Empty<JsonEntry>();
+		var entries = JsonSerializer.Deserialize<JsonEntry[]>(json, _jsonSerializerOptions) ?? [];
 		foreach (var entry in entries) {
 			modelStates.SetModelValue(entry.Key, entry.RawValue, entry.AttemptedValue);
 			foreach (var errorMessage in entry.ErrorMessages) {
