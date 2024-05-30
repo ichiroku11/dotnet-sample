@@ -17,4 +17,18 @@ public class FakeTimeProviderTest {
 		Assert.Equal(TimeSpan.Zero, provider.AutoAdvanceAmount);
 		Assert.Equal(TimeZoneInfo.Utc, provider.LocalTimeZone);
 	}
+
+	[Fact]
+	public void Properties_引数を指定してインスタンスを生成した場合のプロパティを確認する() {
+		// Arrange
+		var today = new DateTimeOffset(DateTime.UtcNow.Date);
+
+		// Act
+		var provider = new FakeTimeProvider(today);
+
+		// Assert
+		Assert.Equal(provider.Start, today);
+		Assert.Equal(TimeSpan.Zero, provider.AutoAdvanceAmount);
+		Assert.Equal(TimeZoneInfo.Utc, provider.LocalTimeZone);
+	}
 }
