@@ -60,33 +60,6 @@ public class FakeTimeProviderTest {
 		Assert.Equal(expected, actual);
 	}
 
-	/*
-	[Fact]
-	public void GetUtcNow_引数なしのコンストラクターで生成したインスタンスで呼び出した場合の戻り値はデフォルト日時() {
-		// Arrange
-		var timeProvider = new FakeTimeProvider();
-
-		// Act
-		var actual = timeProvider.GetUtcNow();
-
-		// Assert
-		Assert.Equal(actual, _default);
-	}
-
-	[Fact]
-	public void GetUtcNow_引数ありのコンストラクターで生成したインスタンスで呼び出した場合の戻り値は指定した日時() {
-		// Arrange
-		var today = new DateTimeOffset(DateTime.UtcNow.Date);
-		var timeProvider = new FakeTimeProvider(today);
-
-		// Act
-		var actual = timeProvider.GetUtcNow();
-
-		// Assert
-		Assert.Equal(actual, today);
-	}
-	*/
-
 	public static TheoryData<DateTimeOffset?, long> GetTheoryData_GetTimestamp() {
 		var today = new DateTimeOffset(DateTime.UtcNow.Date);
 
@@ -114,31 +87,4 @@ public class FakeTimeProviderTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
-
-	/*
-	[Fact]
-	public void GetTimestamp_引数なしのコンストラクターで生成したインスタンスで呼び出した場合の戻り値はデフォルト日時のTicks() {
-		// Arrange
-		var timeProvider = new FakeTimeProvider();
-
-		// Act
-		var actual = timeProvider.GetTimestamp();
-
-		// Assert
-		Assert.Equal(actual, _default.Ticks);
-	}
-
-	[Fact]
-	public void GetTimestamp_引数ありのコンストラクターで生成したインスタンスで呼び出した場合の戻り値は指定した日時のTicks() {
-		// Arrange
-		var today = new DateTimeOffset(DateTime.UtcNow.Date);
-		var timeProvider = new FakeTimeProvider(today);
-
-		// Act
-		var actual = timeProvider.GetTimestamp();
-
-		// Assert
-		Assert.Equal(actual, today.Ticks);
-	}
-	*/
 }
