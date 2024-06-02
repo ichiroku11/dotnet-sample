@@ -16,6 +16,7 @@ public class FakeTimeProviderTest {
 		Assert.Equal(provider.Start, _default);
 		Assert.Equal(TimeSpan.Zero, provider.AutoAdvanceAmount);
 		Assert.Equal(TimeZoneInfo.Utc, provider.LocalTimeZone);
+		Assert.Equal(TimeSpan.TicksPerSecond, provider.TimestampFrequency);
 	}
 
 	[Fact]
@@ -30,6 +31,7 @@ public class FakeTimeProviderTest {
 		Assert.Equal(provider.Start, today);
 		Assert.Equal(TimeSpan.Zero, provider.AutoAdvanceAmount);
 		Assert.Equal(TimeZoneInfo.Utc, provider.LocalTimeZone);
+		Assert.Equal(TimeSpan.TicksPerSecond, provider.TimestampFrequency);
 	}
 
 	public static TheoryData<DateTimeOffset?, DateTimeOffset> GetTheoryData_GetUtcNow() {
