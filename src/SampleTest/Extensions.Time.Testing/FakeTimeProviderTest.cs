@@ -89,4 +89,21 @@ public class FakeTimeProviderTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Fact]
+	public void Advance_時間を進めることができることを確認する() {
+		// Arrange
+		var delta = TimeSpan.FromMinutes(1);
+		var timeProvider = new FakeTimeProvider(new DateTimeOffset(DateTime.UtcNow));
+
+		// Act
+		var expected = timeProvider.GetUtcNow() + delta;
+
+		timeProvider.Advance(delta);
+
+		var actual = timeProvider.GetUtcNow();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
