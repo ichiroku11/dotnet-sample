@@ -62,6 +62,54 @@ public class FakeTimeProviderTest {
 		Assert.Equal(expected, actual);
 	}
 
+	[Fact]
+	public void GetUtcNow_AutoAdvanceAmountがデフォルトの場合はメソッドを複数回呼び出しても時間が進まないことを確認する() {
+		// Arrange
+		var now = new DateTimeOffset(DateTime.UtcNow);
+		var timeProvider = new FakeTimeProvider(now) {
+			// わかりやすいようにデフォルトの値を指定している
+			AutoAdvanceAmount = TimeSpan.Zero
+		};
+
+		// Act
+		// GetUtcNowを複数回呼び出しても時間は進まない
+		var actual = new[] {
+			timeProvider.GetUtcNow(),
+			timeProvider.GetUtcNow(),
+			timeProvider.GetUtcNow(),
+		};
+
+		// Assert
+		var expected = new[] { now, now, now, };
+		Assert.Equal(expected, actual);
+	}
+
+	[Fact]
+	public void GetUtcNow_AutoAdvanceAmountを設定しメソッドを複数回呼び出すと時間が進むことを確認する() {
+		// Arrange
+		var now = new DateTimeOffset(DateTime.UtcNow);
+		var advance = TimeSpan.FromMinutes(1);
+		var timeProvider = new FakeTimeProvider(now) {
+			AutoAdvanceAmount = advance
+		};
+
+		// Act
+		// GetUtcNowを複数回呼び出すと時間が進む
+		var actual = new[] {
+			timeProvider.GetUtcNow(),
+			timeProvider.GetUtcNow(),
+			timeProvider.GetUtcNow(),
+		};
+
+		// Assert
+		var expected = new[] {
+			now,
+			now + advance,
+			now + advance * 2,
+		};
+		Assert.Equal(expected, actual);
+	}
+
 	public static TheoryData<DateTimeOffset?, long> GetTheoryData_GetTimestamp() {
 		var today = new DateTimeOffset(DateTime.UtcNow.Date);
 
