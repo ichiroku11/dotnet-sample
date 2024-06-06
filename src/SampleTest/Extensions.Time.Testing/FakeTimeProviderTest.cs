@@ -86,12 +86,8 @@ public class FakeTimeProviderTest {
 		};
 
 		// Act
-		var actual = new[] {
-			// 3回呼び出す
-			timeProvider.GetUtcNow(),
-			timeProvider.GetUtcNow(),
-			timeProvider.GetUtcNow(),
-		};
+		// expectedで指定した配列の長さ分、GetUtcNowを実行する
+		var actual = expected.Select(_ => timeProvider.GetUtcNow());
 
 		// Assert
 		Assert.Equal(expected, actual);
