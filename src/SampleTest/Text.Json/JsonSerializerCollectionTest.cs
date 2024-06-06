@@ -133,7 +133,7 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.NotNull(actual);
-		Assert.Equal(new int?[] { 1, null, 2 }, actual);
+		Assert.Equal([1, null, 2], actual);
 	}
 
 	[Fact(DisplayName = "Deserialize_nullが含まれる文字列の配列をIEnumerable<string>にデシリアライズできる")]
@@ -146,7 +146,7 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.NotNull(actual);
-		Assert.Equal(new string?[] { "a", null, "b" }, actual);
+		Assert.Equal(["a", null, "b"], actual);
 	}
 
 	[Fact(DisplayName = "Deserialize_nullが含まれる文字列の配列をIEnumerable<string?>にデシリアライズできる")]
@@ -159,6 +159,6 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.NotNull(actual);
-		Assert.Equal(new string?[] { "a", null, "b" }, actual);
+		Assert.Equal(["a", null, "b"], actual);
 	}
 }
