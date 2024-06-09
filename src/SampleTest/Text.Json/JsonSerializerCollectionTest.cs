@@ -13,7 +13,7 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 	private record SampleItem(int Number, string Text);
 
 	private class SampleWithEnumerable {
-		public IEnumerable<SampleItem> Items { get; init; } = Enumerable.Empty<SampleItem>();
+		public IEnumerable<SampleItem> Items { get; init; } = [];
 	}
 
 	private static readonly JsonSerializerOptions _options = new() {
@@ -26,9 +26,9 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Act
 		var sample = new SampleWithEnumerable {
-			Items = new[] {
+			Items = [
 				new SampleItem(1, "a"),
-			},
+			],
 		};
 		var actual = JsonSerializer.Serialize(sample, _options);
 
@@ -133,7 +133,7 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.NotNull(actual);
-		Assert.Equal(new int?[] { 1, null, 2 }, actual);
+		Assert.Equal([1, null, 2], actual);
 	}
 
 	[Fact(DisplayName = "Deserialize_nullが含まれる文字列の配列をIEnumerable<string>にデシリアライズできる")]
@@ -146,7 +146,7 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.NotNull(actual);
-		Assert.Equal(new string?[] { "a", null, "b" }, actual);
+		Assert.Equal(["a", null, "b"], actual);
 	}
 
 	[Fact(DisplayName = "Deserialize_nullが含まれる文字列の配列をIEnumerable<string?>にデシリアライズできる")]
@@ -159,6 +159,6 @@ public class JsonSerializerCollectionTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.NotNull(actual);
-		Assert.Equal(new string?[] { "a", null, "b" }, actual);
+		Assert.Equal(["a", null, "b"], actual);
 	}
 }

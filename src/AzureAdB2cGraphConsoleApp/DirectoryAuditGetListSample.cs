@@ -35,7 +35,7 @@ public class DirectoryAuditGetListSample(IConfiguration config, ILogger<SampleBa
 			config.QueryParameters.Orderby = ["activityDateTime desc"];
 		});
 
-		foreach (var audit in response?.Value ?? Enumerable.Empty<DirectoryAudit>()) {
+		foreach (var audit in response?.Value ?? []) {
 			LogInformation(new {
 				// アクティビティが実行された日時（UTC）
 				// サインイン日時とする

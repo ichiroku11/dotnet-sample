@@ -21,7 +21,7 @@ public class ApplicationGetListSample(IConfiguration config, ILogger<SampleBase>
 			//config.QueryParameters.Orderby = ["displayName asc"];
 		});
 
-		foreach (var app in response?.Value ?? Enumerable.Empty<Application>()) {
+		foreach (var app in response?.Value ?? []) {
 			LogInformation(new {
 				// アプリケーションID（クライアントID）
 				app.AppId,
