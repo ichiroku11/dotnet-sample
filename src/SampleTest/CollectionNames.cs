@@ -18,4 +18,9 @@ public static class CollectionNames {
 	/// dbo.Monsterテーブルを使用するコレクション名
 	/// </summary>
 	public const string EfCoreMonster = "EFCore_dbo.Monster";
+
+	/// <summary>
+	/// dbo.TodoItemテーブルを使用するコレクション名
+	/// </summary>
+	public const string EfCoreTodoItem = "EFCore_dbo.TodoItem";
 }
