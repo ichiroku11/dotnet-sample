@@ -7,6 +7,7 @@ public class JsonColumnArrayTest : IDisposable {
 	private class TodoItem {
 		public int Id { get; set; }
 		public string Title { get; set; } = "";
+		// JSON配列としてシリアライズされる
 		public string[] Tags { get; set; } = [];
 	}
 
@@ -42,7 +43,12 @@ create table dbo.TodoItem(
 	Title nvarchar(10) not null,
 	Tags nvarchar(max) not null,
 	constraint PK_Blog primary key(Id)
-);";
+);
+insert into dbo.TodoItem(Id, Title, Tags)
+output inserted.*
+values
+	(1, N'todo-1', N'[""tag-1"",""tag-2""]');
+";
 		_context.Database.ExecuteSqlRaw(sql);
 	}
 
@@ -53,13 +59,16 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
-	public async Task とりあえずここまで動くか() {
+	public async Task JSON配列を文字列のコレクションとして取得できる() {
 		// Arrange
 		// Act
 		var todoItems = await _context.TodoItems
 			.ToListAsync();
 
 		// Assert
-		Assert.Empty(todoItems);
+		var todoItem = Assert.Single(todoItems);
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
 	}
 }
