@@ -71,4 +71,25 @@ drop table if exists dbo.TodoItem;";
 		Assert.Equal("todo-1", todoItem.Title);
 		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
 	}
+
+	[Fact]
+	public async Task JSON配列にシリアライズされてInsertされる() {
+		// Arrange
+		_context.TodoItems.Add(new TodoItem {
+			Id = 2,
+			Title = "todo-2",
+			Tags = ["tag-1", "tag-3"],
+		});
+		await _context.SaveChangesAsync();
+
+		// Act
+		var tags = await _context.Database
+			// 文字列として取得
+			.SqlQuery<string>($"select Tags as Value from dbo.TodoItem where Id = 2")
+			.FirstAsync();
+
+		// Assert
+		// JSON配列の文字列としてシリアライズされていることを確認
+		Assert.Equal(@"[""tag-1"",""tag-3""]", tags);
+	}
 }
