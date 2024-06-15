@@ -29,9 +29,7 @@ public class ExecuteUpdateTest : IDisposable {
 			// この時点で_outputはnullなので注意
 			optionsBuilder.LogTo(
 				action: message => _output.WriteLine(message),
-				categories: new[] {
-					DbLoggerCategory.Database.Command.Name
-				},
+				categories: [DbLoggerCategory.Database.Command.Name],
 				minimumLevel: LogLevel.Information);
 		}
 
