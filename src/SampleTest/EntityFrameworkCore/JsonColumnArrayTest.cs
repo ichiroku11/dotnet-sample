@@ -103,9 +103,8 @@ drop table if exists dbo.TodoItem;";
 				Tag0 = item.Tags[0],
 			})
 			.FirstAsync();
-
 		// 実行されるクエリ
-		// JSON_VALUE関数が使われている
+		// SELECT句において、JSON_VALUE関数が使われている
 		/*
 		SELECT TOP(1) [t].[Id], [t].[Title], JSON_VALUE([t].[Tags], '$[0]') AS [Tag0]
 		FROM [TodoItem] AS [t]
@@ -116,6 +115,29 @@ drop table if exists dbo.TodoItem;";
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
 		Assert.Equal("tag-1", todoItem.Tag0);
+	}
+
+	[Fact]
+	public async Task JSON配列の要素を条件に取得できる() {
+		// Arrange
+		// Act
+		// あまり実用的ではないが、Tagsの1つ目と比較する
+		var todoItem = await _context.TodoItems
+			.Where(item => item.Tags[0] == "tag-1")
+			.FirstAsync();
+
+		// 実行されるクエリ
+		// WHERE句においてJSON_VALUE関数が使われている
+		/*
+		SELECT TOP(1) [t].[Id], [t].[Tags], [t].[Title]
+		FROM [TodoItem] AS [t]
+		WHERE JSON_VALUE([t].[Tags], '$[0]') = N'tag-1'
+		*/
+
+		// Assert
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
 	}
 
 	[Fact]
