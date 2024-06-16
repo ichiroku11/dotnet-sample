@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace SampleTest.EntityFrameworkCore;
 
@@ -12,8 +13,19 @@ public class JsonColumnArrayTest : IDisposable {
 	}
 
 	// https://learn.microsoft.com/ja-jp/ef/core/what-is-new/ef-core-8.0/whatsnew#enhancements-to-json-column-mapping
-	private class SampleDbContext : SqlServerDbContext {
+	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
+		private readonly ITestOutputHelper _output = output;
+
 		public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+			base.OnConfiguring(optionsBuilder);
+
+			optionsBuilder.LogTo(
+				action: message => _output.WriteLine(message),
+				categories: [DbLoggerCategory.Database.Command.Name],
+				minimumLevel: LogLevel.Information);
+		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<TodoItem>()
@@ -21,9 +33,14 @@ public class JsonColumnArrayTest : IDisposable {
 		}
 	}
 
-	private readonly SampleDbContext _context = new();
+	private readonly ITestOutputHelper _output;
+	private readonly SampleDbContext _context;
 
-	public JsonColumnArrayTest() {
+	public JsonColumnArrayTest(ITestOutputHelper output) {
+		_output = output;
+
+		_context = new(_output);
+
 		DropTable();
 		InitTable();
 	}
@@ -74,6 +91,34 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
+	public async Task JSON配列の要素を取得できる() {
+		// Arrange
+		// Act
+		var todoItem = await _context.TodoItems
+			.Where(item => item.Id == 1)
+			.Select(item => new {
+				item.Id,
+				item.Title,
+				// タグの1つ目を取得
+				Tag0 = item.Tags[0],
+			})
+			.FirstAsync();
+
+		// 実行されるクエリ
+		// JSON_VALUE関数が使われている
+		/*
+		SELECT TOP(1) [t].[Id], [t].[Title], JSON_VALUE([t].[Tags], '$[0]') AS [Tag0]
+		FROM [TodoItem] AS [t]
+		WHERE [t].[Id] = 1
+		*/
+
+		// Assert
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal("tag-1", todoItem.Tag0);
+	}
+
+	[Fact]
 	public async Task JSON配列にシリアライズされてInsertされる() {
 		// Arrange
 		_context.TodoItems.Add(new TodoItem {
@@ -93,7 +138,4 @@ drop table if exists dbo.TodoItem;";
 		// JSON配列の文字列としてシリアライズされていることを確認
 		Assert.Equal(@"[""tag-1"",""tag-3""]", tags);
 	}
-
-
-	// todo: タグを含んでいるデータを取得
 }
