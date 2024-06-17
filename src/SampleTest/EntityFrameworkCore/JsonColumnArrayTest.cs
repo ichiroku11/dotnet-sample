@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -138,6 +139,34 @@ drop table if exists dbo.TodoItem;";
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
 		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
+	}
+
+	[Fact]
+	public async Task タグを含んでいるデータを取得したいが例外が発生する() {
+		// Arrange
+		// Act
+		var exception = await Record.ExceptionAsync(async () => {
+			await _context.TodoItems
+				.Where(item => item.Tags.Contains("tag-1"))
+				.ToListAsync();
+		});
+		// 実行されるクエリ
+		// WHERE句においてJSON_VALUE関数が使われている
+		/*
+		SELECT [t].[Id], [t].[Tags], [t].[Title]
+		FROM [TodoItem] AS [t]
+		WHERE N'tag-1' IN (
+			SELECT [t0].[value]
+			FROM OPENJSON([t].[Tags]) WITH ([value] nvarchar(max) '$') AS [t0]
+		)
+		*/
+
+		// Assert
+		_output.WriteLine(exception.Message);
+
+		var sqlException = Assert.IsType<SqlException>(exception);
+		// https://learn.microsoft.com/ja-jp/sql/relational-databases/errors-events/database-engine-events-and-errors-13000-to-13999?view=sql-server-ver16
+		Assert.Equal(13609, sqlException.Number);
 	}
 
 	[Fact]
