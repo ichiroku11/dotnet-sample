@@ -1,4 +1,3 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -66,7 +65,7 @@ insert into dbo.TodoItem(Id, Title, Tags)
 output inserted.*
 values
 	(1, N'todo-1', N'[""tag-1"",""tag-2""]'),
-	(2, N'todo-2', N'[""tag-2""');
+	(2, N'todo-2', N'[""tag-2""]');
 ";
 		_context.Database.ExecuteSqlRaw(sql);
 	}
@@ -126,7 +125,6 @@ drop table if exists dbo.TodoItem;";
 		var todoItem = await _context.TodoItems
 			.Where(item => item.Tags[0] == "tag-1")
 			.FirstAsync();
-
 		// 実行されるクエリ
 		// WHERE句においてJSON_VALUE関数が使われている
 		/*
@@ -142,16 +140,13 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
-	public async Task タグを含んでいるデータを取得したいが例外が発生する() {
+	public async Task JSON配列の要素を含んでいることを条件に取得できる() {
 		// Arrange
 		// Act
-		var exception = await Record.ExceptionAsync(async () => {
-			await _context.TodoItems
-				.Where(item => item.Tags.Contains("tag-1"))
-				.ToListAsync();
-		});
+		var todoItems = await _context.TodoItems
+			.Where(item => item.Tags.Contains("tag-1"))
+			.ToListAsync();
 		// 実行されるクエリ
-		// WHERE句においてJSON_VALUE関数が使われている
 		/*
 		SELECT [t].[Id], [t].[Tags], [t].[Title]
 		FROM [TodoItem] AS [t]
@@ -162,11 +157,10 @@ drop table if exists dbo.TodoItem;";
 		*/
 
 		// Assert
-		_output.WriteLine(exception.Message);
-
-		var sqlException = Assert.IsType<SqlException>(exception);
-		// https://learn.microsoft.com/ja-jp/sql/relational-databases/errors-events/database-engine-events-and-errors-13000-to-13999?view=sql-server-ver16
-		Assert.Equal(13609, sqlException.Number);
+		var todoItem = Assert.Single(todoItems);
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
 	}
 
 	[Fact]
