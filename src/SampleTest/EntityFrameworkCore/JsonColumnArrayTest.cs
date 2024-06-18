@@ -64,8 +64,8 @@ create table dbo.TodoItem(
 insert into dbo.TodoItem(Id, Title, Tags)
 output inserted.*
 values
-	(1, N'todo-1', N'[""tag-1"",""tag-2""]'),
-	(2, N'todo-2', N'[""tag-2""]');
+	(1, N'todo-1', N'[""tag-a"",""tag-b""]'),
+	(2, N'todo-2', N'[""tag-b""]');
 ";
 		_context.Database.ExecuteSqlRaw(sql);
 	}
@@ -87,7 +87,7 @@ drop table if exists dbo.TodoItem;";
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
+		Assert.Equal(new[] { "tag-a", "tag-b" }, todoItem.Tags);
 	}
 
 	[Fact]
@@ -114,7 +114,7 @@ drop table if exists dbo.TodoItem;";
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal("tag-1", todoItem.Tag0);
+		Assert.Equal("tag-a", todoItem.Tag0);
 	}
 
 	[Fact]
@@ -123,20 +123,20 @@ drop table if exists dbo.TodoItem;";
 		// Act
 		// あまり実用的ではないが、Tagsの1つ目と比較する
 		var todoItem = await _context.TodoItems
-			.Where(item => item.Tags[0] == "tag-1")
+			.Where(item => item.Tags[0] == "tag-a")
 			.FirstAsync();
 		// 実行されるクエリ
 		// WHERE句においてJSON_VALUE関数が使われている
 		/*
 		SELECT TOP(1) [t].[Id], [t].[Tags], [t].[Title]
 		FROM [TodoItem] AS [t]
-		WHERE JSON_VALUE([t].[Tags], '$[0]') = N'tag-1'
+		WHERE JSON_VALUE([t].[Tags], '$[0]') = N'tag-a'
 		*/
 
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
+		Assert.Equal(new[] { "tag-a", "tag-b" }, todoItem.Tags);
 	}
 
 	[Fact]
@@ -144,13 +144,13 @@ drop table if exists dbo.TodoItem;";
 		// Arrange
 		// Act
 		var todoItems = await _context.TodoItems
-			.Where(item => item.Tags.Contains("tag-1"))
+			.Where(item => item.Tags.Contains("tag-a"))
 			.ToListAsync();
 		// 実行されるクエリ
 		/*
 		SELECT [t].[Id], [t].[Tags], [t].[Title]
 		FROM [TodoItem] AS [t]
-		WHERE N'tag-1' IN (
+		WHERE N'tag-a' IN (
 			SELECT [t0].[value]
 			FROM OPENJSON([t].[Tags]) WITH ([value] nvarchar(max) '$') AS [t0]
 		)
@@ -160,7 +160,7 @@ drop table if exists dbo.TodoItem;";
 		var todoItem = Assert.Single(todoItems);
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(new[] { "tag-1", "tag-2" }, todoItem.Tags);
+		Assert.Equal(new[] { "tag-a", "tag-b" }, todoItem.Tags);
 	}
 
 	[Fact]
@@ -169,7 +169,7 @@ drop table if exists dbo.TodoItem;";
 		_context.TodoItems.Add(new TodoItem {
 			Id = 3,
 			Title = "todo-3",
-			Tags = ["tag-1", "tag-3"],
+			Tags = ["tag-a", "tag-c"],
 		});
 		await _context.SaveChangesAsync();
 
@@ -181,6 +181,6 @@ drop table if exists dbo.TodoItem;";
 
 		// Assert
 		// JSON配列の文字列としてシリアライズされていることを確認
-		Assert.Equal(@"[""tag-1"",""tag-3""]", tags);
+		Assert.Equal(@"[""tag-a"",""tag-c""]", tags);
 	}
 }
