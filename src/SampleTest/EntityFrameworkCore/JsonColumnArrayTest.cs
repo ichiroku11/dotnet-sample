@@ -59,7 +59,7 @@ create table dbo.TodoItem(
 	Id int not null,
 	Title nvarchar(10) not null,
 	Tags nvarchar(max) not null,
-	constraint PK_Blog primary key(Id)
+	constraint PK_TodoItem primary key(Id)
 );
 insert into dbo.TodoItem(Id, Title, Tags)
 output inserted.*
