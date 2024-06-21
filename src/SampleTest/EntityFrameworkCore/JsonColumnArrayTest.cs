@@ -54,7 +54,7 @@ public class JsonColumnArrayTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.TodoItem(
 	Id int not null,
 	Title nvarchar(10) not null,
@@ -67,13 +67,13 @@ values
 	(1, N'todo-1', N'[""tag-a"",""tag-b""]'),
 	(2, N'todo-2', N'[""tag-b""]');
 ";
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.TodoItem;";
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]
