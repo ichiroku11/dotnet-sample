@@ -117,7 +117,7 @@ public class RelatedDataTest : IDisposable {
 	}
 
 	private int CreateTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.MonsterCategory(
 	Id int not null,
 	Name nvarchar(10) not null,
@@ -149,27 +149,27 @@ create table dbo.MonsterItem(
 		foreign key(ItemId) references dbo.Item(Id)
 );";
 
-		return _context.Database.ExecuteSqlRaw(sql);
+		return _context.Database.ExecuteSql(sql);
 	}
 
 	private int DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.MonsterItem;
 drop table if exists dbo.Item;
 drop table if exists dbo.Monster;
 drop table if exists dbo.MonsterCategory;";
 
-		return _context.Database.ExecuteSqlRaw(sql);
+		return _context.Database.ExecuteSql(sql);
 	}
 
 	private Task<int> InitAsync() {
-		var sql = @"
+		FormattableString sql = $@"
 delete from dbo.MonsterItem;
 delete from dbo.Item;
 delete from dbo.Monster;
 delete from dbo.MonsterCategory;";
 
-		return _context.Database.ExecuteSqlRawAsync(sql);
+		return _context.Database.ExecuteSqlAsync(sql);
 	}
 
 	private static IEnumerable<Monster> GetMonsters()

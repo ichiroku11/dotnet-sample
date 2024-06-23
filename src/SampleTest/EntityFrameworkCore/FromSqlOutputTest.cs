@@ -33,7 +33,7 @@ public class FromSqlOutputTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.Sample(
 	Id int,
 	Name nvarchar(10) not null,
@@ -44,12 +44,15 @@ insert into dbo.Sample(Id, Name)
 output inserted.*
 values
 	(1, N'a');";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"drop table if exists dbo.Sample;";
-		_context.Database.ExecuteSqlRaw(sql);
+		FormattableString sql = $@"
+drop table if exists dbo.Sample;";
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

@@ -12,7 +12,7 @@ public class QueryFilterRelatedTest : IDisposable {
 		public int Id { get; init; }
 		public string Name { get; init; } = "";
 		//public bool Deleted { get; init; }
-		public IList<Post> Posts { get; init; } = new List<Post>();
+		public IList<Post> Posts { get; init; } = [];
 	}
 
 	private class Post {
@@ -53,7 +53,7 @@ public class QueryFilterRelatedTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.Blog(
 	Id int not null,
 	Name nvarchar(10) not null,
@@ -80,14 +80,16 @@ values
 	(1, 1, N'Post A-1', 0),
 	(2, 1, N'Post A-2', 1),
 	(3, 1, N'Post A-3', 0);";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.Post;
 drop table if exists dbo.Blog;";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

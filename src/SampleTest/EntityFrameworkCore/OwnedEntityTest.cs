@@ -58,7 +58,7 @@ public class OwnedEntityTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.Mail(
 	Id int not null,
 	FromAddress nvarchar(20) not null,
@@ -73,14 +73,14 @@ output inserted.*
 values
 	(1, N'from@example.jp', N'送信元', N'to@example.jp', N'宛先');";
 
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.Mail;";
 
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

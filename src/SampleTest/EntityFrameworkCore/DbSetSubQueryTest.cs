@@ -40,7 +40,7 @@ public class DbSetSubQueryTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.MenuItem(
 	Id int not null,
 	Name nvarchar(6) not null,
@@ -58,12 +58,15 @@ values
 	(4, N'串カツ', N'揚げ物', 400),
 	(5, N'ポテトフライ', N'揚げ物', 200),
 	(6, N'レンコン揚げ', N'揚げ物', 300);";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"drop table if exists dbo.MenuItem;";
-		_context.Database.ExecuteSqlRaw(sql);
+		FormattableString sql = $@"
+drop table if exists dbo.MenuItem;";
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]
