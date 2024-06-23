@@ -46,7 +46,7 @@ public class CompositeKeyTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.Sample(
 	Id1 int not null,
 	Id2 int not null,
@@ -71,14 +71,16 @@ output inserted.*
 values
 	(1, 2, 1, N'a-1'),
 	(1, 2, 2, N'a-2');";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.SampleDetail;
 drop table if exists dbo.Sample;";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

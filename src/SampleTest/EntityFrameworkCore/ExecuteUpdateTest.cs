@@ -29,9 +29,7 @@ public class ExecuteUpdateTest : IDisposable {
 			// この時点で_outputはnullなので注意
 			optionsBuilder.LogTo(
 				action: message => _output.WriteLine(message),
-				categories: new[] {
-					DbLoggerCategory.Database.Command.Name
-				},
+				categories: [DbLoggerCategory.Database.Command.Name],
 				minimumLevel: LogLevel.Information);
 		}
 
@@ -61,7 +59,7 @@ public class ExecuteUpdateTest : IDisposable {
 	}
 
 	private void CreateTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.[Sample](
 	Id int not null,
 	Name nvarchar(10) not null,
@@ -70,13 +68,14 @@ create table dbo.[Sample](
 	constraint PK_Sample primary key(Id)
 );";
 
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = "drop table if exists dbo.[Sample];";
+		FormattableString sql = $@"
+drop table if exists dbo.[Sample];";
 
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

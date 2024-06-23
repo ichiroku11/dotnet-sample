@@ -36,7 +36,7 @@ public class DbSetToQueryStringTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.Sample(
 	Id int,
 	Name nvarchar(10) not null,
@@ -48,12 +48,15 @@ output inserted.*
 values
 	(1, N'a'),
 	(2, N'b');";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"drop table if exists dbo.Sample;";
-		_context.Database.ExecuteSqlRaw(sql);
+		FormattableString sql = $@"
+drop table if exists dbo.Sample;";
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

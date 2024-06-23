@@ -32,7 +32,7 @@ public class GroupJoinTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.[Outer](
 	Id int not null,
 	Value nvarchar(10) not null,
@@ -56,7 +56,7 @@ values
 	(1, N'A'),
 	(4, N'D');";
 
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 
 		// 投入されたデータに対してleft outer joinすると
 		/*
@@ -74,11 +74,11 @@ values
 	}
 
 	private void DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.[Outer];
 drop table if exists dbo.[Inner];";
 
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]

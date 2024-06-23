@@ -63,10 +63,10 @@ public class RelatedDataTest : IDisposable {
 		};
 
 	private static readonly IReadOnlyCollection<Monster> _monsters
-		= new[] {
+		= [
 			new Monster { Id = 1, CategoryId = 1, Name = "スライム", },
 			new Monster { Id = 2, CategoryId = 2, Name = "ドラキー", },
-		};
+		];
 
 	private static readonly IReadOnlyDictionary<int, Item> _items
 		= new Dictionary<int, Item> {
@@ -76,14 +76,14 @@ public class RelatedDataTest : IDisposable {
 		};
 
 	private static readonly IReadOnlyCollection<MonsterItem> _monsterItems
-		= new[] {
+		= [
 			// スライム => やくそう、スライムゼリー
 			new MonsterItem { MonsterId = 1, ItemId = 1, },
 			new MonsterItem { MonsterId = 1, ItemId = 2, },
 			// ドラキー => やくそう、キメラのつばさ
 			new MonsterItem { MonsterId = 2, ItemId = 1, },
 			new MonsterItem { MonsterId = 2, ItemId = 3, },
-		};
+		];
 
 	private class MonsterDbContext : SqlServerDbContext {
 		public DbSet<MonsterCategory> MonsterCategories => Set<MonsterCategory>();
@@ -117,7 +117,7 @@ public class RelatedDataTest : IDisposable {
 	}
 
 	private int CreateTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.MonsterCategory(
 	Id int not null,
 	Name nvarchar(10) not null,
@@ -149,27 +149,27 @@ create table dbo.MonsterItem(
 		foreign key(ItemId) references dbo.Item(Id)
 );";
 
-		return _context.Database.ExecuteSqlRaw(sql);
+		return _context.Database.ExecuteSql(sql);
 	}
 
 	private int DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.MonsterItem;
 drop table if exists dbo.Item;
 drop table if exists dbo.Monster;
 drop table if exists dbo.MonsterCategory;";
 
-		return _context.Database.ExecuteSqlRaw(sql);
+		return _context.Database.ExecuteSql(sql);
 	}
 
 	private Task<int> InitAsync() {
-		var sql = @"
+		FormattableString sql = $@"
 delete from dbo.MonsterItem;
 delete from dbo.Item;
 delete from dbo.Monster;
 delete from dbo.MonsterCategory;";
 
-		return _context.Database.ExecuteSqlRawAsync(sql);
+		return _context.Database.ExecuteSqlAsync(sql);
 	}
 
 	private static IEnumerable<Monster> GetMonsters()

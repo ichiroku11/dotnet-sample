@@ -15,7 +15,7 @@ public class ConcurrencyConflictTest : IDisposable {
 		public string Value { get; set; } = "";
 
 		[Timestamp]
-		public byte[] Version { get; set; } = Array.Empty<byte>();
+		public byte[] Version { get; set; } = [];
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
@@ -45,7 +45,7 @@ public class ConcurrencyConflictTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.Sample(
 	Id int not null,
 	Value nvarchar(10) not null,
@@ -57,12 +57,15 @@ insert into dbo.Sample(Id, Value)
 output inserted.*
 values
 	(1, N'a');";
-		_context.Database.ExecuteSqlRaw(sql);
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"drop table if exists dbo.Sample;";
-		_context.Database.ExecuteSqlRaw(sql);
+		FormattableString sql = $@"
+drop table if exists dbo.Sample;";
+
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]
@@ -139,7 +142,7 @@ values
 		var sample2 = new Sample {
 			Id = sample1.Id,
 			Value = sample1.Value,
-			Version = sample1.Version.ToArray(),
+			Version = [.. sample1.Version],
 		};
 		_output.WriteLine(sample1.Version.ToHexString());
 		_output.WriteLine(sample2.Version.ToHexString());

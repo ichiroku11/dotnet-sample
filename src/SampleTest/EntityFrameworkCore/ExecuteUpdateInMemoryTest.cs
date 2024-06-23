@@ -11,9 +11,7 @@ public class ExecuteUpdateInMemoryTest(ITestOutputHelper output) {
 		public string Name { get; init; } = "";
 	}
 
-	private class SampleDbContext(ITestOutputHelper output) : AppDbContext {
-		private readonly ITestOutputHelper _output = output;
-
+	private class SampleDbContext : AppDbContext {
 		public DbSet<Sample> Samples => Set<Sample>();
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
@@ -30,7 +28,7 @@ public class ExecuteUpdateInMemoryTest(ITestOutputHelper output) {
 	[Fact]
 	public async Task ExecuteUpdateAsync_インメモリデータベースでは例外が発生する() {
 		// Arrange
-		var context = new SampleDbContext(_output);
+		using var context = new SampleDbContext();
 		context.Samples.Add(new Sample { Id = 1, Name = "abc" });
 		await context.SaveChangesAsync();
 
