@@ -15,7 +15,7 @@ public class ConcurrencyConflictTest : IDisposable {
 		public string Value { get; set; } = "";
 
 		[Timestamp]
-		public byte[] Version { get; set; } = Array.Empty<byte>();
+		public byte[] Version { get; set; } = [];
 	}
 
 	private class SampleDbContext : SqlServerDbContext {
@@ -142,7 +142,7 @@ drop table if exists dbo.Sample;";
 		var sample2 = new Sample {
 			Id = sample1.Id,
 			Value = sample1.Value,
-			Version = sample1.Version.ToArray(),
+			Version = [.. sample1.Version],
 		};
 		_output.WriteLine(sample1.Version.ToHexString());
 		_output.WriteLine(sample2.Version.ToHexString());

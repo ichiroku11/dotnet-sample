@@ -63,10 +63,10 @@ public class RelatedDataTest : IDisposable {
 		};
 
 	private static readonly IReadOnlyCollection<Monster> _monsters
-		= new[] {
+		= [
 			new Monster { Id = 1, CategoryId = 1, Name = "スライム", },
 			new Monster { Id = 2, CategoryId = 2, Name = "ドラキー", },
-		};
+		];
 
 	private static readonly IReadOnlyDictionary<int, Item> _items
 		= new Dictionary<int, Item> {
@@ -76,14 +76,14 @@ public class RelatedDataTest : IDisposable {
 		};
 
 	private static readonly IReadOnlyCollection<MonsterItem> _monsterItems
-		= new[] {
+		= [
 			// スライム => やくそう、スライムゼリー
 			new MonsterItem { MonsterId = 1, ItemId = 1, },
 			new MonsterItem { MonsterId = 1, ItemId = 2, },
 			// ドラキー => やくそう、キメラのつばさ
 			new MonsterItem { MonsterId = 2, ItemId = 1, },
 			new MonsterItem { MonsterId = 2, ItemId = 3, },
-		};
+		];
 
 	private class MonsterDbContext : SqlServerDbContext {
 		public DbSet<MonsterCategory> MonsterCategories => Set<MonsterCategory>();
