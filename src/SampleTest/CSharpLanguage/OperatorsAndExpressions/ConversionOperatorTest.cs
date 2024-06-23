@@ -1,4 +1,4 @@
-namespace SampleTest.CSharpLanguage.Operators;
+namespace SampleTest.CSharpLanguage.OperatorsAndExpressions;
 
 // implicit/explicit演算子のテスト
 // https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/statements-expressions-operators/using-conversion-operators

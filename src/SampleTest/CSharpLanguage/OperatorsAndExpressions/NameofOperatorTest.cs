@@ -1,4 +1,4 @@
-namespace SampleTest.CSharpLanguage.Operators;
+namespace SampleTest.CSharpLanguage.OperatorsAndExpressions;
 
 public class NameofOperatorTest {
 	// https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/nameof
