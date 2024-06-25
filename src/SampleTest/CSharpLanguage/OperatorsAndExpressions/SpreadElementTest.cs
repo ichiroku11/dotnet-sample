@@ -26,14 +26,16 @@ public class SpreadElementTest {
 	[Fact]
 	public void SpreadElement_値がコピーされることを確認する() {
 		// Arrange
-		int[] values = [1, 2];
+		int[] actual = [1, 2];
 
 		// Act
-		int[] actual = [.. values];
-		actual[0] = 0;
+		// 値がコピーされるので変更しても
+		int[] temp = [.. actual];
+		temp[0] = 0;
 
 		// Assert
-		int[] expected = [0, 2];
+		// 元の配列の値は変わらない
+		int[] expected = [1, 2];
 		Assert.Equal(expected, actual);
 	}
 }
