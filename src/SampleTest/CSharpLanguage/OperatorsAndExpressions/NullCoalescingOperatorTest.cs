@@ -1,4 +1,4 @@
-namespace SampleTest.CSharpLanguage.Operators;
+namespace SampleTest.CSharpLanguage.OperatorsAndExpressions;
 
 // null合体演算子のテスト
 public class NullCoalescingOperatorTest {

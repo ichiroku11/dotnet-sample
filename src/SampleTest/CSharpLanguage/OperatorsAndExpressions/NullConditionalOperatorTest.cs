@@ -1,4 +1,4 @@
-namespace SampleTest.CSharpLanguage.Operators;
+namespace SampleTest.CSharpLanguage.OperatorsAndExpressions;
 
 // null条件演算子のテスト
 public class NullConditionalOperatorTest {

@@ -1,4 +1,4 @@
-namespace SampleTest.CSharpLanguage.Operators;
+namespace SampleTest.CSharpLanguage.OperatorsAndExpressions;
 
 public class AsOperatorTest {
 	[Fact]
