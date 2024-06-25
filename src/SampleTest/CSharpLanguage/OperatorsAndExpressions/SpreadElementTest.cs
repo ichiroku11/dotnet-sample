@@ -1,6 +1,3 @@
-using System.Linq.Expressions;
-using System;
-
 namespace SampleTest.CSharpLanguage.OperatorsAndExpressions;
 
 // https://learn.microsoft.com/ja-jp/dotnet/csharp/language-reference/operators/collection-expressions#spread-element
@@ -23,6 +20,20 @@ public class SpreadElementTest {
 
 		// Assert
 		int[] expected = [1, 2, 3, 4, 5];
+		Assert.Equal(expected, actual);
+	}
+
+	[Fact]
+	public void SpreadElement_値がコピーされることを確認する() {
+		// Arrange
+		int[] values = [1, 2];
+
+		// Act
+		int[] actual = [.. values];
+		actual[0] = 0;
+
+		// Assert
+		int[] expected = [0, 2];
 		Assert.Equal(expected, actual);
 	}
 }
