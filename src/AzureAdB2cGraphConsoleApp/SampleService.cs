@@ -24,6 +24,7 @@ public class SampleService(IHost host, IHostApplicationLifetime lifetime, ILogge
 
 		// ユーザー一覧取得
 		//await services.RunSampleAsync<UserGetListSample>();
+		await services.RunSampleAsync<UserGetListSignInActivitySample>();
 
 		// ユーザー作成
 		//await services.RunSampleAsync<UserCreateSample>();

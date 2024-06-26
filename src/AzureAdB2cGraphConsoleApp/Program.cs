@@ -12,6 +12,7 @@ await Host
 			.AddTransient<DirectoryAuditGetListSample>()
 			.AddTransient<UserCreateSample>()
 			.AddTransient<UserGetListSample>()
+			.AddTransient<UserGetListSignInActivitySample>()
 			.AddTransient<UserGetSample>()
 			.AddTransient<UserUpdateAccountEnabledSample>()
 			.AddTransient<UserUpdateCustomAttributeSample>()
