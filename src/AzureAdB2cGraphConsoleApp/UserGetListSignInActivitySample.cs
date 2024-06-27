@@ -33,7 +33,7 @@ public class UserGetListSignInActivitySample(IConfiguration config, ILogger<Samp
 				return null;
 			}
 
-			// Azure.Identity 1.11.3では、専用のプロパティはなくAdditionalDataに含まれている
+			// Microsoft.Graph 5.53.0では、専用のプロパティはなくAdditionalDataに含まれている
 			return signInActivity.AdditionalData.TryGetValue("lastSuccessfulSignInDateTime", out var value)
 				? value as DateTime?
 				: null;
