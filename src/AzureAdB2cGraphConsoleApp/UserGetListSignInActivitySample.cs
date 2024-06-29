@@ -27,6 +27,7 @@ public class UserGetListSignInActivitySample(IConfiguration config, ILogger<Samp
 			];
 		});
 
+		/*
 		// 最新の成功したサインイン日時を取得
 		static DateTime? getLastSuccessfulSignInDateTime(SignInActivity? signInActivity) {
 			if (signInActivity is null) {
@@ -38,6 +39,7 @@ public class UserGetListSignInActivitySample(IConfiguration config, ILogger<Samp
 				? value as DateTime?
 				: null;
 		}
+		*/
 
 		foreach (var user in response?.Value ?? []) {
 			LogInformation(new {
@@ -46,7 +48,9 @@ public class UserGetListSignInActivitySample(IConfiguration config, ILogger<Samp
 				user.GivenName,
 
 				// 最新の成功したサインイン日時
-				LastSuccessfulSignInDateTime = getLastSuccessfulSignInDateTime(user.SignInActivity),
+				// おそらくMicrosoft.Graph 5.55.0から対応
+				user.SignInActivity?.LastSuccessfulSignInDateTime,
+				//LastSuccessfulSignInDateTime = getLastSuccessfulSignInDateTime(user.SignInActivity),
 
 				// 最新のサインインを試みた日時（成功または失敗）
 				user.SignInActivity?.LastSignInDateTime,
