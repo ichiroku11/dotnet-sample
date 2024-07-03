@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using SampleLib.AspNetCore.Authentication.Basic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Authorization;
 

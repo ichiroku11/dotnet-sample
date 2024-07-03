@@ -1,3 +1,4 @@
+using SampleLib.AspNetCore.Authentication.Basic;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
 using System.Net;
