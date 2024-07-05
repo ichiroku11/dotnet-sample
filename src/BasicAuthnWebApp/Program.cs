@@ -17,12 +17,11 @@ services
 	});
 
 // 承認
-services.AddAuthorization(options => {
+services.AddAuthorizationBuilder()
 	// 認証ポリシー
-	options.AddPolicy("Authenticated", builder => {
+	.AddPolicy("Authenticated", builder => {
 		builder.RequireAuthenticatedUser();
 	});
-});
 
 // MVC（コントローラのみ）
 services.AddControllers(options => {
