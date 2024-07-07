@@ -1,3 +1,4 @@
+using SampleLib.AspNetCore.Authentication.Basic;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
 using System.Net;
@@ -5,9 +6,9 @@ using Xunit;
 
 namespace BasicAuthnWebApp.Test;
 
-public class BasicAuthnWebAppTest(WebApplicationFactory<Startup> factory)
-	: IClassFixture<WebApplicationFactory<Startup>>, IDisposable {
-	private readonly WebApplicationFactory<Startup> _factory = factory;
+public class BasicAuthnWebAppTest(WebApplicationFactory<Program> factory)
+	: IClassFixture<WebApplicationFactory<Program>>, IDisposable {
+	private readonly WebApplicationFactory<Program> _factory = factory;
 
 	public void Dispose() {
 	}
