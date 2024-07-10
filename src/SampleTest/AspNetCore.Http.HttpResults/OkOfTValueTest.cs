@@ -4,7 +4,7 @@ namespace SampleTest.AspNetCore.Http.HttpResults;
 
 public class OkOfTValueTest {
 	[Fact]
-	public void Value_生成されるインスタンスを確認する() {
+	public void Properties_インスタンスのプロパティを確認する() {
 		// Arrange
 		var value = new { };
 

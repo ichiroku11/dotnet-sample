@@ -8,7 +8,7 @@ namespace SampleTest.AspNetCore.Http.HttpResults;
 
 public class OkTest {
 	[Fact]
-	public void StatusCode_生成されるインスタンスを確認する() {
+	public void Properties_インスタンスのプロパティを確認する() {
 		// Arrange
 
 		// Act
