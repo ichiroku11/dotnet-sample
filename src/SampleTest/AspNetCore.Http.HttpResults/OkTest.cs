@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SampleTest.AspNetCore.Http.HttpResults;
 
@@ -17,5 +20,23 @@ public class OkTest {
 		Assert.Equal(200, result.StatusCode);
 	}
 
-	// todo: result.ExecuteAsync
+	[Fact]
+	public async Task ExecuteAsync_レスポンスを確認する() {
+		// Arrange
+		var result = TypedResults.Ok();
+
+		var services = new ServiceCollection();
+		services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+
+		var context = new DefaultHttpContext {
+			RequestServices = services.BuildServiceProvider(),
+		};
+
+		// Act
+		await result.ExecuteAsync(context);
+
+		// Assert
+		Assert.Equal(200, context.Response.StatusCode);
+		Assert.Same(Stream.Null, context.Response.Body);
+	}
 }
