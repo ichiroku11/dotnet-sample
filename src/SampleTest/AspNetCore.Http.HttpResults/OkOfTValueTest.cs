@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SampleTest.AspNetCore.Http.HttpResults;
 
@@ -18,5 +21,25 @@ public class OkOfTValueTest {
 		Assert.Same(value, result.Value);
 	}
 
-	// todo: result.ExecuteAsync
+	[Fact]
+	public async Task ExecuteAsync_レスポンスを確認する() {
+		// Arrange
+		var value = new { };
+		var result = TypedResults.Ok(value);
+
+		var services = new ServiceCollection();
+		services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+
+		var context = new DefaultHttpContext {
+			RequestServices = services.BuildServiceProvider(),
+		};
+
+		// Act
+		await result.ExecuteAsync(context);
+
+		// Assert
+		Assert.Equal(200, context.Response.StatusCode);
+		// todo:
+		Assert.Same(Stream.Null, context.Response.Body);
+	}
 }
