@@ -3,42 +3,68 @@ using Microsoft.AspNetCore.Http.Features;
 
 namespace SampleTest.AspNetCore.Http;
 
-public class DefaultHttpContextTest {
-	[Fact]
-	public void Properties_生成したインスタンスのプロパティを確認する() {
+public class DefaultHttpContextTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
+	[Theory]
+	[InlineData(false)]
+	[InlineData(true)]
+	public void RequestServices_インスタンスを生成しただけではnull(bool useFeatureCollection) {
 		// Arrange
-		var context = new DefaultHttpContext();
+		var context = useFeatureCollection
+			? new DefaultHttpContext(new FeatureCollection())
+			: new DefaultHttpContext();
 
 		// Act
 		// Assert
 		Assert.Null(context.RequestServices);
-
-		Assert.NotNull(context.Request);
-		// Request.BodyはStream.Null
-		Assert.Same(Stream.Null, context.Request.Body);
-
-		Assert.NotNull(context.Response);
-		// Response.BodyはStream.Null
-		Assert.Same(Stream.Null, context.Response.Body);
 	}
 
-	[Fact]
-	public void Properties_FeatureCollectionを指定して生成したインスタンスのプロパティを確認する() {
+	[Theory]
+	[InlineData(false)]
+	[InlineData(true)]
+	public void RequestBody_コンストラクター引数の有無によってStreamNullになるか例外が発生するか(bool useFeatureCollection) {
 		// Arrange
-		var context = new DefaultHttpContext(new FeatureCollection());
+		var context = useFeatureCollection
+			? new DefaultHttpContext(new FeatureCollection())
+			: new DefaultHttpContext();
 
 		// Act
 		// Assert
-		Assert.Null(context.RequestServices);
-
 		Assert.NotNull(context.Request);
-		// Request.Bodyを取得しようとすると例外
-		var exception = Record.Exception(() => context.Request.Body);
-		Assert.IsType<NullReferenceException>(exception);
 
+		if (useFeatureCollection) {
+			// Request.Bodyを取得しようとすると例外
+			var exception = Record.Exception(() => context.Request.Body);
+			Assert.IsType<NullReferenceException>(exception);
+			_output.WriteLine(exception.Message);
+		} else {
+			// Request.BodyはStream.Null
+			Assert.Same(Stream.Null, context.Request.Body);
+		}
+	}
+
+	[Theory]
+	[InlineData(false)]
+	[InlineData(true)]
+	public void ResponseBody_コンストラクター引数の有無によってStreamNullになるか例外が発生するか(bool useFeatureCollection) {
+		// Arrange
+		var context = useFeatureCollection
+			? new DefaultHttpContext(new FeatureCollection())
+			: new DefaultHttpContext();
+
+		// Act
+		// Assert
 		Assert.NotNull(context.Response);
-		// Response.Bodyを取得しようとすると例外
-		exception = Record.Exception(() => context.Response.Body);
-		Assert.IsType<NullReferenceException>(exception);
+
+		if (useFeatureCollection) {
+			// Response.Bodyを取得しようとすると例外
+			var exception = Record.Exception(() => context.Response.Body);
+			Assert.IsType<NullReferenceException>(exception);
+			_output.WriteLine(exception.Message);
+		} else {
+			// Response.BodyはStream.Null
+			Assert.Same(Stream.Null, context.Response.Body);
+		}
 	}
 }
