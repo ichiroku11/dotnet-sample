@@ -67,4 +67,27 @@ public class DefaultHttpContextTest(ITestOutputHelper output) {
 			Assert.Same(Stream.Null, context.Response.Body);
 		}
 	}
+
+	[Fact]
+	public void ResponseBody_レスポンスBodyを指定して確認する() {
+		// Arrange
+		var responseBody = new MemoryStream();
+		var context = new DefaultHttpContext();
+
+		// Response.Bodyを指定する
+		context.Response.Body = responseBody;
+
+		// Act
+		// Assert
+		Assert.NotNull(context.Response);
+
+		// 指定したStreamと同じインスタンス
+		Assert.Same(responseBody, context.Response.Body);
+
+		var feature = context.Features.Get<IHttpResponseBodyFeature>();
+		Assert.NotNull(feature);
+
+		// 指定したStreamと同じインスタンス
+		Assert.Same(responseBody, feature.Stream);
+	}
 }
