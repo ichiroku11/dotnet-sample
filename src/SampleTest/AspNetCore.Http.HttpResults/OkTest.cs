@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SampleTest.AspNetCore.Http.HttpResults;
 
@@ -25,18 +22,16 @@ public class OkTest {
 		// Arrange
 		var result = TypedResults.Ok();
 
-		var services = new ServiceCollection();
-		services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
-
-		var context = new DefaultHttpContext {
-			RequestServices = services.BuildServiceProvider(),
-		};
+		var context = HttpContextHelper.CreateWithResponseBody();
 
 		// Act
 		await result.ExecuteAsync(context);
 
 		// Assert
 		Assert.Equal(200, context.Response.StatusCode);
-		Assert.Same(Stream.Null, context.Response.Body);
+		Assert.Null(context.Response.ContentType);
+
+		var responseBody = await context.Response.ReadBodyAsString();
+		Assert.Equal("", responseBody);
 	}
 }
