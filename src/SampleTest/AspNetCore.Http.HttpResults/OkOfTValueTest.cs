@@ -24,17 +24,10 @@ public class OkOfTValueTest {
 	[Fact]
 	public async Task ExecuteAsync_レスポンスを確認する() {
 		// Arrange
-		var value = new {};
+		var value = new { };
 		var result = TypedResults.Ok(value);
 
-		var services = new ServiceCollection();
-		services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
-
-		using var responseBodyStream = new MemoryStream();
-		var context = new DefaultHttpContext {
-			RequestServices = services.BuildServiceProvider(),
-		};
-		context.Response.Body = responseBodyStream;
+		var context = HttpContextHelper.CreateWithResponseBody();
 
 		// Act
 		await result.ExecuteAsync(context);
@@ -43,9 +36,7 @@ public class OkOfTValueTest {
 		Assert.Equal(200, context.Response.StatusCode);
 		Assert.Equal("application/json; charset=utf-8", context.Response.ContentType);
 
-		responseBodyStream.Position = 0;
-		using var responseBodyReader = new StreamReader(responseBodyStream);
-		var responseBody = await responseBodyReader.ReadToEndAsync();
+		var responseBody = await context.Response.ReadBodyAsString();
 		Assert.Equal("{}", responseBody);
 	}
 }
