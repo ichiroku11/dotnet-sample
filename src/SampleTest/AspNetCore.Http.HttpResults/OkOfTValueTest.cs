@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SampleTest.AspNetCore.Http.HttpResults;
 
@@ -22,7 +19,7 @@ public class OkOfTValueTest {
 	}
 
 	[Fact]
-	public async Task ExecuteAsync_レスポンスを確認する() {
+	public async Task ExecuteAsync_レスポンスを確認する_空のオブジェクト() {
 		// Arrange
 		var value = new { };
 		var result = TypedResults.Ok(value);
@@ -38,5 +35,24 @@ public class OkOfTValueTest {
 
 		var responseBody = await context.Response.ReadBodyAsString();
 		Assert.Equal("{}", responseBody);
+	}
+
+	[Fact]
+	public async Task ExecuteAsync_レスポンスを確認する_プロパティを持つオブジェクト() {
+		// Arrange
+		var value = new { x = 1, y = "abc" };
+		var result = TypedResults.Ok(value);
+
+		var context = HttpContextHelper.CreateWithResponseBody();
+
+		// Act
+		await result.ExecuteAsync(context);
+
+		// Assert
+		Assert.Equal(200, context.Response.StatusCode);
+		Assert.Equal("application/json; charset=utf-8", context.Response.ContentType);
+
+		var responseBody = await context.Response.ReadBodyAsString();
+		Assert.Equal(@"{""x"":1,""y"":""abc""}", responseBody);
 	}
 }
