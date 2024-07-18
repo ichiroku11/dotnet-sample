@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SampleTest.AspNetCore.Http.HttpResults;
 
@@ -14,6 +15,7 @@ public class OkOfTValueTest {
 		// Assert
 		// Ok<TValue>型が生成される
 		Assert.True(result.GetType().IsGenericType);
+		Assert.Equal(typeof(Ok<>), result.GetType().GetGenericTypeDefinition());
 		Assert.Equal(200, result.StatusCode);
 		Assert.Same(value, result.Value);
 	}
