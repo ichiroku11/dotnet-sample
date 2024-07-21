@@ -18,22 +18,20 @@ public class Startup {
 			});
 
 		// 承認
-		services.AddAuthorization(options => {
-			options.AddPolicy(PolicyNames.Authenticated, builder => {
+		services
+			.AddAuthorizationBuilder()
+			.AddPolicy(PolicyNames.Authenticated, builder => {
 				builder.RequireAuthenticatedUser();
-			});
-
-			options.AddPolicy(PolicyNames.AdminRole, builder => {
+			})
+			.AddPolicy(PolicyNames.AdminRole, builder => {
 				builder.RequireRole("admin");
 			});
-
-			// todo:
-			/*
-			options.AddPolicy("AreaRoles", builder => {
+		// todo:
+		/*
+			.AddPolicy("AreaRoles", builder => {
 				builder.RequireAreaRoles(area: "Admin", roles: "admin");
 			});
-			*/
-		});
+		*/
 
 		// MVC
 		services.AddControllers(options => {
