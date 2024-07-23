@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SampleTest;
 
 public class SpanTest {
@@ -33,5 +27,18 @@ public class SpanTest {
 		Assert.False(span.IsEmpty);
 		Assert.Equal(3, span.Length);
 		Assert.Equal([2, 3, 4], span);
+	}
+
+	[Fact]
+	public void Indexer_配列の要素が書き換わることを確認する() {
+		// Arrange
+		var values = new int[] { 1, 2, 3 };
+		var span = new Span<int>(values);
+
+		// Act
+		span[1] = 9;
+
+		// Assert
+		Assert.Equal(new[] { 1, 9, 3 }, values);
 	}
 }
