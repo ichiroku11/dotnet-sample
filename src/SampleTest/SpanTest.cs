@@ -18,5 +18,20 @@ public class SpanTest {
 		// Assert
 		Assert.False(span.IsEmpty);
 		Assert.Equal(3, span.Length);
+		Assert.Equal([1, 2, 3], span);
+	}
+
+	[Fact]
+	public void Properties_配列と開始位置と長さを受け取るコンストラクターで生成したインスタンスのプロパティを確認する() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
+
+		// Act
+		var span = new Span<int>(values, 1, 3);
+
+		// Assert
+		Assert.False(span.IsEmpty);
+		Assert.Equal(3, span.Length);
+		Assert.Equal([2, 3, 4], span);
 	}
 }
