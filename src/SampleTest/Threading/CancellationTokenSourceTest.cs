@@ -94,4 +94,21 @@ public class CancellationTokenSourceTest(ITestOutputHelper output) : IDisposable
 		});
 	}
 	*/
+
+	[Fact]
+	public void CreateLinkedTokenSource_動きを確認する() {
+		// Arrange
+		// Act
+		var tokenSource1 = new CancellationTokenSource();
+		var tokenSource2 = CancellationTokenSource.CreateLinkedTokenSource(tokenSource1.Token);
+		var token1 = tokenSource1.Token;
+		var token2 = tokenSource2.Token;
+
+		// 1つめをキャンセルする
+		tokenSource1.Cancel();
+
+		// Assert
+		Assert.True(token1.IsCancellationRequested);
+		Assert.True(token2.IsCancellationRequested);
+	}
 }
