@@ -94,6 +94,17 @@ public class DateTimeTest {
 	}
 
 	[Fact]
+	public void TryParse_変換失敗した時のresultはMinValueになる() {
+		// Arrange
+		// Act
+		var parsed = DateTime.TryParse("", out var result);
+
+		// Assert
+		Assert.False(parsed);
+		Assert.Equal(DateTime.MinValue, result);
+	}
+
+	[Fact]
 	public void UnixEpoch_値を確認する() {
 		// Arrange
 		// Act
