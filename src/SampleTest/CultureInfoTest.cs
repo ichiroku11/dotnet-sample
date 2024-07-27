@@ -5,27 +5,34 @@ namespace SampleTest;
 public class CultureInfoTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
+	public static TheoryData<string, DateTime> GetTheoryData_DateTime_TryParse_JapaneseCulture() {
+		var today = DateTime.Today;
+
+		return new() {
+			// 想定通り
+			{ today.ToString("yyyy/MM/dd"), today },
+			{ today.ToString("yyyy-MM-dd"), today },
+			// ちょっと不思議
+			{ today.ToString("MM/dd/yyyy"), today },
+			{ today.ToString("yyyy.MM.dd"), today },
+			// 想定通り
+			{ today.ToString("yyyy年M月d日"), today },
+			{ today.ToString("yyyy年MM月dd日"), today },
+		};
+	}
+
 	[Theory]
-	// 想定通り
-	[InlineData("2024/07/27", true)]
-	// 想定通り
-	[InlineData("2024-07-27", true)]
-	// ちょっと不思議
-	[InlineData("07/27/2024", true)]
-	// ちょっと不思議
-	[InlineData("2024.07.27", true)]
-	// 想定通り
-	[InlineData("2024年7月27日", true)]
-	public void DateTime_TryParse_JapaneseCulture_文字列を日付に変換できる(string text, bool expected) {
+	[MemberData(nameof(GetTheoryData_DateTime_TryParse_JapaneseCulture))]
+	public void DateTime_TryParse_JapaneseCulture_文字列を日付に変換できる(string text, DateTime expected) {
 		// Arrange
 		var culture = new CultureInfo("ja-JP");
 
 		// Act
-		var actual = DateTime.TryParse(text, culture, out var result);
+		var result = DateTime.TryParse(text, culture, out var actual);
 		_output.WriteLine(result.ToString());
 
 		// Assert
+		Assert.True(result);
 		Assert.Equal(expected, actual);
-		Assert.Equal(new DateTime(2024, 7, 27), result);
 	}
 }
