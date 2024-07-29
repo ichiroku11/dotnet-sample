@@ -14,23 +14,27 @@ public class CultureInfoTest(ITestOutputHelper output) {
 		};
 
 		return new() {
-			// 想定通り
+			// "ja-JP"では想定通りだが、InvariantCultureではちょっと不思議
 			{ today.ToString("yyyy/MM/dd"), cultures.Japanese, true, today },
-			// ちょっと不思議
 			{ today.ToString("yyyy/MM/dd"), cultures.Invariant, true, today },
 
-			// 想定通り
+			// どちらも想定通り
 			{ today.ToString("yyyy-MM-dd"), cultures.Japanese, true, today },
-			// 想定通り
 			{ today.ToString("yyyy-MM-dd"), cultures.Invariant, true, today },
 
-			// todo:
-			// ちょっと不思議
+			// "ja-JP"ではちょっと不思議だが、InvariantCultureでは想定通り
 			{ today.ToString("MM/dd/yyyy"), cultures.Japanese, true, today },
+			{ today.ToString("MM/dd/yyyy"), cultures.Invariant, true, today },
+
+			// どちらも不思議といえば不思議
 			{ today.ToString("yyyy.MM.dd"), cultures.Japanese, true, today },
-			// 想定通り
+			{ today.ToString("yyyy.MM.dd"), cultures.Invariant, true, today },
+
+			// InvariantCultureでもパースできるのか
 			{ today.ToString("yyyy年M月d日"), cultures.Japanese, true, today },
+			{ today.ToString("yyyy年M月d日"), cultures.Invariant, true, today },
 			{ today.ToString("yyyy年MM月dd日"), cultures.Japanese, true, today },
+			{ today.ToString("yyyy年MM月dd日"), cultures.Invariant, true, today },
 		};
 	}
 
@@ -40,6 +44,7 @@ public class CultureInfoTest(ITestOutputHelper output) {
 		var culture = string.IsNullOrWhiteSpace(cultureName)
 			? CultureInfo.InvariantCulture
 			: new CultureInfo("ja-JP");
+		_output.WriteLine(culture.Name);
 
 		// Act
 		var actualParsed = DateTime.TryParse(text, culture, out var actualResult);
