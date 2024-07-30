@@ -43,7 +43,7 @@ public class CultureInfoTest(ITestOutputHelper output) {
 		// Arrange
 		var culture = string.IsNullOrWhiteSpace(cultureName)
 			? CultureInfo.InvariantCulture
-			: new CultureInfo("ja-JP");
+			: new CultureInfo(cultureName);
 		_output.WriteLine(culture.Name);
 
 		// Act
@@ -53,5 +53,32 @@ public class CultureInfoTest(ITestOutputHelper output) {
 		// Assert
 		Assert.Equal(expectedParsed, actualParsed);
 		Assert.Equal(expectedResult, actualResult);
+	}
+
+	public static TheoryData<string, string> GetTheoryData_Convert_ToString() {
+		return new() {
+			// "ja-JP"
+			{ "ja-JP", "yyyy/MM/dd H:mm:ss" },
+			// InvariantCulture
+			{ "", "MM/dd/yyyy HH:mm:ss" },
+		};
+	}
+
+	[Theory, MemberData(nameof(GetTheoryData_Convert_ToString))]
+	public void Convert_ToString_日付から変換した文字列を確認する(string cultureName, string expectedFormat) {
+		// Arrange
+		var culture = string.IsNullOrWhiteSpace(cultureName)
+			? CultureInfo.InvariantCulture
+			: new CultureInfo(cultureName);
+		_output.WriteLine(culture.Name);
+
+		var today = DateTime.Today;
+
+		// Act
+		var actual = Convert.ToString(today, culture);
+
+		// Assert
+		var expected = today.ToString(expectedFormat);
+		Assert.Equal(expected, actual);
 	}
 }
