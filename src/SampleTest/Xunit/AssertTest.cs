@@ -17,4 +17,11 @@ public class AssertTest {
 			throw new InvalidOperationException();
 		});
 	}
+
+	[Fact]
+	public void Contains_コレクションについて検証する() {
+		// コレクションの中に含まれているか
+		Assert.Contains(1, new[] { 1, 2, 3 });
+		Assert.Contains("a", new[] { "a", "b", "c" });
+	}
 }
