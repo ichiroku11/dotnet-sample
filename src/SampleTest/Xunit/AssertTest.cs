@@ -19,15 +19,32 @@ public class AssertTest {
 	}
 
 	[Fact]
-	public void Contains_色々な使い方() {
-		// 文字列が含まれているか
-		Assert.Contains("cde", "abcdefg");
+	public void Contains_DoesNotContain_文字列が含まれているか含まれていないかを検証する() {
+		var text = "abcdefg";
 
-		// 要素がコレクションに含まれているか
-		Assert.Contains(1, new[] { 1, 2, 3 });
-		Assert.Contains("a", new[] { "a", "b", "c" });
+		Assert.Contains("cde", text);
+		Assert.DoesNotContain("fgh", text);
+	}
 
-		// コレクションの要素が条件を満たすか
-		Assert.Contains(new[] { 1, 2, 3 }, value => value == 2);
+	[Fact]
+	public void Contains_DoesNotContain_コレクションに要素が含まれているか含まれていないかを検証する() {
+		{
+			// IEnumerable<int>
+			var values = new[] { 1 };
+			Assert.Contains(1, values);
+			Assert.DoesNotContain(2, values);
+		}
+		{
+			// IEnumerable<string>
+			var values = new[] { "a" };
+			Assert.Contains("a", values);
+			Assert.DoesNotContain("b", values);
+		}
+		{
+			// 条件を満たす要素が存在するか、存在しないか
+			var values = new[] { 1 };
+			Assert.Contains(values, value => value % 2 == 1);
+			Assert.DoesNotContain(values, value => value % 2 == 0);
+		}
 	}
 }
