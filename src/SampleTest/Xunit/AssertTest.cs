@@ -19,9 +19,15 @@ public class AssertTest {
 	}
 
 	[Fact]
-	public void Contains_コレクションについて検証する() {
-		// コレクションの中に含まれているか
+	public void Contains_色々な使い方() {
+		// 文字列が含まれているか
+		Assert.Contains("cde", "abcdefg");
+
+		// 要素がコレクションに含まれているか
 		Assert.Contains(1, new[] { 1, 2, 3 });
 		Assert.Contains("a", new[] { "a", "b", "c" });
+
+		// コレクションの要素が条件を満たすか
+		Assert.Contains(new[] { 1, 2, 3 }, value => value == 2);
 	}
 }
