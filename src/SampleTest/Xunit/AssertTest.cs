@@ -28,23 +28,39 @@ public class AssertTest {
 
 	[Fact]
 	public void Contains_DoesNotContain_コレクションに要素が含まれているか含まれていないかを検証する() {
+		// IEnumerable<int>
 		{
-			// IEnumerable<int>
 			var values = new[] { 1 };
 			Assert.Contains(1, values);
 			Assert.DoesNotContain(2, values);
 		}
+
+		// IEnumerable<string>
 		{
-			// IEnumerable<string>
 			var values = new[] { "a" };
 			Assert.Contains("a", values);
 			Assert.DoesNotContain("b", values);
 		}
+
+		// 条件を満たす要素が存在するか、存在しないか
 		{
-			// 条件を満たす要素が存在するか、存在しないか
 			var values = new[] { 1 };
 			Assert.Contains(values, value => value % 2 == 1);
 			Assert.DoesNotContain(values, value => value % 2 == 0);
+		}
+
+		// HashSet<int>
+		{
+			var set = new HashSet<int> { 1 };
+			Assert.Contains(1, set);
+			Assert.DoesNotContain(2, set);
+		}
+
+		// SortedSet<int>
+		{
+			var set = new SortedSet<int> { 1 };
+			Assert.Contains(1, set);
+			Assert.DoesNotContain(2, set);
 		}
 	}
 }
