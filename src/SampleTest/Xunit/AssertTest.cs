@@ -28,15 +28,17 @@ public class AssertTest {
 
 	[Fact]
 	public void Contains_DoesNotContain_コレクションに要素が含まれているか含まれていないかを検証する() {
-		// IEnumerable<int>
+		// IEnumerable<T>
 		{
+			// 数値
 			var values = new[] { 1 };
 			Assert.Contains(1, values);
 			Assert.DoesNotContain(2, values);
 		}
 
-		// IEnumerable<string>
+		// IEnumerable<T>
 		{
+			// 文字列
 			var values = new[] { "a" };
 			Assert.Contains("a", values);
 			Assert.DoesNotContain("b", values);
@@ -49,18 +51,25 @@ public class AssertTest {
 			Assert.DoesNotContain(values, value => value % 2 == 0);
 		}
 
-		// HashSet<int>
+		// HashSet<T>
 		{
 			var set = new HashSet<int> { 1 };
 			Assert.Contains(1, set);
 			Assert.DoesNotContain(2, set);
 		}
 
-		// SortedSet<int>
+		// SortedSet<T>
 		{
 			var set = new SortedSet<int> { 1 };
 			Assert.Contains(1, set);
 			Assert.DoesNotContain(2, set);
+		}
+
+		// Dictionary<TKey, TValue>のキー
+		{
+			var dictionary = new Dictionary<int, string> { [1] = "" };
+			Assert.Contains(1, dictionary);
+			Assert.DoesNotContain(2, dictionary);
 		}
 	}
 }
