@@ -94,4 +94,20 @@ public class AssertTest {
 		// Dictionary<TKey, TValue>のキー
 		Assert.DoesNotContain(2, new Dictionary<int, string> { [1] = "" });
 	}
+
+	[Fact]
+	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.StartsWith("abc", "abcdefg");
+	}
+
+	[Fact]
+	public void EndsWith_文字列が指定した部分文字列で終わっているか() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.EndsWith("efg", "abcdefg");
+	}
 }
