@@ -116,14 +116,27 @@ public class AssertTest {
 		// Arrange
 		// Act
 		// Assert
-		// 文字列
-		Assert.Same("abc", "abc");
 
 		// オブジェクト
 		var obj = new { };
 		Assert.Same(obj, obj);
+
+		// 文字列
+		Assert.Same("abc", "abc");
 	}
 
+	[Fact]
+	public void NotSame() {
+		// Arrange
+		// Act
+		// Assert
+		// オブジェクト
+		Assert.NotSame(new { }, new { });
+
+		// 値型だとWarning
+		// https://xunit.net/xunit.analyzers/rules/xUnit2005
+		//Assert.NotSame(1, 1);
+	}
 
 	// todo: Single
 	// todo: InRange/NotInRange
