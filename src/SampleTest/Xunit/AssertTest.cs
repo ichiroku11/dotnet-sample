@@ -111,6 +111,20 @@ public class AssertTest {
 		Assert.EndsWith("efg", "abcdefg");
 	}
 
+	[Fact]
+	public void Same_オブジェクトが同じインスタンスかどうか検証する() {
+		// Arrange
+		// Act
+		// Assert
+		// 文字列
+		Assert.Same("abc", "abc");
+
+		// オブジェクト
+		var obj = new { };
+		Assert.Same(obj, obj);
+	}
+
+
 	// todo: Single
 	// todo: InRange/NotInRange
 	// todo: Distinct
