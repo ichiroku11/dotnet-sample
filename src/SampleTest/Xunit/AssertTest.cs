@@ -110,4 +110,11 @@ public class AssertTest {
 		// Assert
 		Assert.EndsWith("efg", "abcdefg");
 	}
+
+	// todo: Single
+	// todo: InRange/NotInRange
+	// todo: Distinct
+	// todo: Same/NotSame
+	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
+	// todo: Equivalent
 }
