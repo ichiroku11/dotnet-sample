@@ -96,6 +96,14 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void Distinct_同じ要素が存在しないことを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Distinct(new[] { 1, 2, 3 });
+	}
+
+	[Fact]
 	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
 		// Arrange
 		// Act
@@ -140,8 +148,6 @@ public class AssertTest {
 
 	// todo: Single
 	// todo: InRange/NotInRange
-	// todo: Distinct
-	// todo: Same/NotSame
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
 	// todo: Equivalent
 }
