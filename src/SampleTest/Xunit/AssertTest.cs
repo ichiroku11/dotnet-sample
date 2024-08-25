@@ -114,6 +114,16 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void IsNotRange_指定した値が範囲内ではないかを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		// 境界値を含まない
+		Assert.NotInRange(actual: -1, low: 0, high: 1);
+		Assert.NotInRange(actual: 2, low: 0, high: 1);
+	}
+
+	[Fact]
 	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
 		// Arrange
 		// Act
