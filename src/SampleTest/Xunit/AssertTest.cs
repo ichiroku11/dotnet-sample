@@ -124,7 +124,7 @@ public class AssertTest {
 	}
 
 	[Fact]
-	public void Same_オブジェクトが同じインスタンスかどうか検証する() {
+	public void Same_オブジェクトが同じインスタンスかどうかを検証する() {
 		// Arrange
 		// Act
 		// Assert
@@ -138,7 +138,7 @@ public class AssertTest {
 	}
 
 	[Fact]
-	public void NotSame() {
+	public void NotSame_オブジェクトが同じインスタンスではないかを検証する() {
 		// Arrange
 		// Act
 		// Assert
