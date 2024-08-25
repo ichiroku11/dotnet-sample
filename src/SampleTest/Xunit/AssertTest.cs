@@ -124,22 +124,6 @@ public class AssertTest {
 	}
 
 	[Fact]
-	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.StartsWith("abc", "abcdefg");
-	}
-
-	[Fact]
-	public void EndsWith_文字列が指定した部分文字列で終わっているか() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.EndsWith("efg", "abcdefg");
-	}
-
-	[Fact]
 	public void Same_オブジェクトが同じインスタンスかどうか検証する() {
 		// Arrange
 		// Act
@@ -166,6 +150,21 @@ public class AssertTest {
 		//Assert.NotSame(1, 1);
 	}
 
+	[Fact]
+	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.StartsWith("abc", "abcdefg");
+	}
+
+	[Fact]
+	public void EndsWith_文字列が指定した部分文字列で終わっているか() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.EndsWith("efg", "abcdefg");
+	}
 
 	// todo: Single
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
