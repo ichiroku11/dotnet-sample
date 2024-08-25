@@ -104,6 +104,16 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void IsRange_指定した値が範囲内かどうかを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		// 境界値を含む
+		Assert.InRange(actual: 0, low: 0, high: 1);
+		Assert.InRange(actual: 1, low: 0, high: 1);
+	}
+
+	[Fact]
 	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
 		// Arrange
 		// Act
@@ -146,8 +156,8 @@ public class AssertTest {
 		//Assert.NotSame(1, 1);
 	}
 
+
 	// todo: Single
-	// todo: InRange/NotInRange
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
 	// todo: Equivalent
 }
