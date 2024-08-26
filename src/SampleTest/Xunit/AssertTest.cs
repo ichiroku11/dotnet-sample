@@ -151,6 +151,18 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void Single_コレクションの要素が1つかどうかを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		// 要素が1つかどうか
+		Assert.Single(new[] { 1 });
+
+		// 条件を満たす要素が1つかどうか
+		Assert.Single(new[] { 1, 2, 3 }, value => value % 2 == 0);
+	}
+
+	[Fact]
 	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
 		// Arrange
 		// Act
@@ -166,7 +178,6 @@ public class AssertTest {
 		Assert.EndsWith("efg", "abcdefg");
 	}
 
-	// todo: Single
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
 	// todo: Equivalent
 }
