@@ -10,6 +10,17 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void Equal_文字列が等しいか検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Equal("x", "x");
+
+		// 大文字小文字の違いを無視する
+		Assert.Equal("x", "X", ignoreCase: true);
+	}
+
+	[Fact]
 	public void NotEqual_文字列の比較は大文字小文字を区別する() {
 		// Arrange
 		// Act
@@ -178,6 +189,7 @@ public class AssertTest {
 		Assert.EndsWith("efg", "abcdefg");
 	}
 
+	// todo: Empty
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
 	// todo: Equivalent
 }
