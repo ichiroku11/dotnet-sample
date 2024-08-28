@@ -15,6 +15,8 @@ public class AssertTest {
 		// Act
 		// Assert
 		Assert.Empty(Enumerable.Empty<int>());
+		Assert.Empty(new int[] { });
+		Assert.Empty(new List<int> { });
 	}
 
 	[Fact]
