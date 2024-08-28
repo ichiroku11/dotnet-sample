@@ -10,6 +10,14 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void Empty_コレクションが空かどうかを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Empty(Enumerable.Empty<int>());
+	}
+
+	[Fact]
 	public void Equal_文字列が等しいか検証する() {
 		// Arrange
 		// Act
@@ -189,7 +197,6 @@ public class AssertTest {
 		Assert.EndsWith("efg", "abcdefg");
 	}
 
-	// todo: Empty
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
 	// todo: Equivalent
 }
