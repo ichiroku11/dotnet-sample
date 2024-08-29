@@ -20,6 +20,23 @@ public class AssertTest {
 	}
 
 	[Fact]
+	public void Empty_文字列が空かどうかを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Empty("");
+	}
+
+	[Fact]
+	public void NotEmpty_文字列が空でないかどうかを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.NotEmpty("a");
+		Assert.NotEmpty(" ");
+	}
+
+	[Fact]
 	public void Equal_文字列が等しいか検証する() {
 		// Arrange
 		// Act
