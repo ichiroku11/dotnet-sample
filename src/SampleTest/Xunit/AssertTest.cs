@@ -20,42 +20,6 @@ public class AssertTest {
 	}
 
 	[Fact]
-	public void Empty_文字列が空かどうかを検証する() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.Empty("");
-	}
-
-	[Fact]
-	public void NotEmpty_文字列が空でないかどうかを検証する() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.NotEmpty("a");
-		Assert.NotEmpty(" ");
-	}
-
-	[Fact]
-	public void Equal_文字列が等しいか検証する() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.Equal("x", "x");
-
-		// 大文字小文字の違いを無視する
-		Assert.Equal("x", "X", ignoreCase: true);
-	}
-
-	[Fact]
-	public void NotEqual_文字列の比較は大文字小文字を区別する() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.NotEqual("x", "X");
-	}
-
-	[Fact]
 	public async Task ThrowsAsync_例外の発生をテストする() {
 		// Arrange
 		// Act
@@ -63,22 +27,6 @@ public class AssertTest {
 		var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => {
 			throw new InvalidOperationException();
 		});
-	}
-
-	[Fact]
-	public void Contains_文字列が含まれているか検証する() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.Contains("cde", "abcdefg");
-	}
-
-	[Fact]
-	public void DoesNotContain_文字列が含まれていないか検証する() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.DoesNotContain("fgh", "abcdefg");
 	}
 
 	[Fact]
@@ -198,22 +146,6 @@ public class AssertTest {
 
 		// 条件を満たす要素が1つかどうか
 		Assert.Single(new[] { 1, 2, 3 }, value => value % 2 == 0);
-	}
-
-	[Fact]
-	public void StartsWith_文字列が指定した部分文字列で始まっているか() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.StartsWith("abc", "abcdefg");
-	}
-
-	[Fact]
-	public void EndsWith_文字列が指定した部分文字列で終わっているか() {
-		// Arrange
-		// Act
-		// Assert
-		Assert.EndsWith("efg", "abcdefg");
 	}
 
 	// todo: Equal/StrictEqual/NotEqual/NotStrictEqual
