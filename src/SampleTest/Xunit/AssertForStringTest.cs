@@ -1,5 +1,6 @@
 namespace SampleTest.Xunit;
 
+// 文字列に対するAssertion
 public class AssertForStringTest {
 	[Fact]
 	public void Contains_文字列が含まれていることを検証する() {
