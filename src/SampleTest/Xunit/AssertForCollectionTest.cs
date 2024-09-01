@@ -76,7 +76,7 @@ public class AssertForCollectionTest {
 		// Act
 		// Assert
 		Assert.Empty(Enumerable.Empty<int>());
-		Assert.Empty(new int[] { });
+		Assert.Empty(Array.Empty<int>());
 		Assert.Empty(new List<int> { });
 	}
 
@@ -88,6 +88,22 @@ public class AssertForCollectionTest {
 		Assert.NotEmpty(Enumerable.Repeat(1, 1));
 		Assert.NotEmpty(new int[] { 1 });
 		Assert.NotEmpty(new List<int> { 1 });
+	}
+
+	[Fact]
+	public void Equal_コレクションが等しいことを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Equal([1, 2, 3], Enumerable.Range(1, 3));
+	}
+
+	[Fact]
+	public void Equal_コレクションが等しくないことを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.NotEqual([1, 2, 3], Enumerable.Range(1, 3).Reverse());
 	}
 
 	[Fact]
