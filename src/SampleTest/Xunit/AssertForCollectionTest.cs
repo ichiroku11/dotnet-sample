@@ -81,6 +81,16 @@ public class AssertForCollectionTest {
 	}
 
 	[Fact]
+	public void NotEmpty_コレクションが空でないことを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.NotEmpty(Enumerable.Repeat(1, 1));
+		Assert.NotEmpty(new int[] { 1 });
+		Assert.NotEmpty(new List<int> { 1 });
+	}
+
+	[Fact]
 	public void Single_コレクションの要素が1つかであることを検証する() {
 		// Arrange
 		// Act
