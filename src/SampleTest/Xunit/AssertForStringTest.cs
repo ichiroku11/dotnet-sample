@@ -44,6 +44,11 @@ public class AssertForStringTest {
 
 		// 大文字小文字の違いを無視する
 		Assert.Equal("x", "X", ignoreCase: true);
+
+		// 空白を無視する
+		Assert.Equal("xy", " x y", ignoreAllWhiteSpace: true);
+		// 行末の空白は無視できない？
+		// Assert.Equal("xy", " x y ", ignoreAllWhiteSpace: true);
 	}
 
 	[Fact]
