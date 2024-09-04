@@ -11,6 +11,17 @@ public class AssertForCollectionTest {
 	}
 
 	[Fact]
+	public void Collection_すべての要素がパスすることを検証する() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Collection(new[] { 1, 2, 3 },
+			value => Assert.Equal(1, value),
+			value => Assert.Equal(2, value),
+			value => Assert.Equal(3, value));
+	}
+
+	[Fact]
 	public void Contains_コレクションに要素が含まれていることを検証する() {
 		// Arrange
 		// Act
