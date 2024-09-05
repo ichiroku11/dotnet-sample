@@ -99,4 +99,29 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 		Assert.Equal(Options.DefaultName, exception.OptionsName);
 		Assert.Equal(typeof(SampleOptions), exception.OptionsType);
 	}
+
+	[Fact]
+	public void ValidateOnStart_プログラム起動時にランタイムから呼び出されて検証される() {
+		var services = new ServiceCollection();
+		services
+			.AddOptions<SampleOptions>()
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var recorded = Record.Exception(() => {
+			// ASP.NET Coreでは起動時に呼ばれるらしい
+			provider.GetRequiredService<IStartupValidator>().Validate();
+		});
+
+		// Assert
+		var exception = Assert.IsType<OptionsValidationException>(recorded);
+		// バリデーション失敗のメッセージ
+		var failure = Assert.Single(exception.Failures);
+		_output.WriteLine(failure);
+
+		Assert.Equal(Options.DefaultName, exception.OptionsName);
+		Assert.Equal(typeof(SampleOptions), exception.OptionsType);
+	}
 }
