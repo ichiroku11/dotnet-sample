@@ -102,6 +102,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 	[Fact]
 	public void ValidateOnStart_プログラム起動時にランタイムから呼び出されて検証される() {
+		// Arrange
 		var services = new ServiceCollection();
 		services
 			.AddOptions<SampleOptions>()
