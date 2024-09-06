@@ -14,6 +14,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 	[Fact]
 	public void Validate_IValidateOptionsが登録されている() {
+		// Arrange
 		var services = new ServiceCollection();
 		var validated = false;
 
@@ -34,6 +35,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 	[Fact]
 	public void Validate_OptionsFactory経由でオプションを生成するとValidateは呼び出される() {
+		// Arrange
 		var services = new ServiceCollection();
 		var validated = false;
 
@@ -58,6 +60,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 	[Fact]
 	public void Validate_オプションの検証エラーになるとOptionsValidationExceptionが発生する() {
+		// Arrange
 		var services = new ServiceCollection();
 		services
 			.AddOptions<SampleOptions>()
@@ -69,16 +72,18 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
 
 		// Act
-		// Assert
-		var exception = Assert.Throws<OptionsValidationException>(() => {
+		var recorded = Record.Exception(() => {
 			factory.Create(Options.DefaultName);
 		});
 
+		// Assert
+		var exception = Assert.IsType<OptionsValidationException>(recorded);
 		_output.WriteLine(exception.Message);
 	}
 
 	[Fact]
 	public void ValidateDataAnnotations_属性による検証エラーでOptionsValidationExceptionが発生する() {
+		// Arrange
 		var services = new ServiceCollection();
 		services
 			.AddOptions<SampleOptions>()
@@ -87,10 +92,12 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
 
 		// Act
-		// Assert
-		var exception = Assert.Throws<OptionsValidationException>(() => {
+		var recorded = Record.Exception(() => {
 			factory.Create(Options.DefaultName);
 		});
+
+		// Assert
+		var exception = Assert.IsType<OptionsValidationException>(recorded);
 
 		// バリデーション失敗のメッセージ
 		var failure = Assert.Single(exception.Failures);
