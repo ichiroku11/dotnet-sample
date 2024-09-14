@@ -30,6 +30,24 @@ public class UriTest {
 	}
 
 	[Theory]
+	// ポートを省略した場合はデフォルトポートになる
+	[InlineData("https://example.jp", true)]
+	// 80はデフォルトポートではない
+	[InlineData("https://example.jp:80", false)]
+	// 443はデフォルトポート
+	[InlineData("https://example.jp:443", true)]
+	public void IsDefaultPort_デフォルトポートかどうかを判断する(string url, bool expected) {
+		// Arrange
+		var uri = new Uri(url);
+
+		// Act
+		var actual = uri.IsDefaultPort;
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
 	[InlineData("http://example.jp", "http")]
 	[InlineData("https://example.jp", "https")]
 	public void Scheme_スキーマを取得できる(string url, string scheme) {
