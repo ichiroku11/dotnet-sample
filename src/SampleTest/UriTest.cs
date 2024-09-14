@@ -30,6 +30,44 @@ public class UriTest {
 	}
 
 	[Theory]
+	[InlineData("", UriHostNameType.Unknown)]
+	[InlineData(default(string), UriHostNameType.Unknown)]
+	[InlineData("localhost", UriHostNameType.Dns)]
+	[InlineData("www.example.jp", UriHostNameType.Dns)]
+	public void CheckHostName_取得できるUriHostNameTypeを確認する(string? name, UriHostNameType expected) {
+		// Arrange
+		// Act
+		var actual = Uri.CheckHostName(name);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	[InlineData("", false)]
+	[InlineData(default(string), false)]
+	[InlineData("https", true)]
+	public void CheckSchemeName_取得できる値を確認する(string? name, bool expected) {
+		// Arrange
+		// Act
+		var actual = Uri.CheckSchemeName(name);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	[InlineData("https://example.jp#fragment", "#fragment")]
+	public void Fragment_フラグメントを取得できる(string url, string fragment) {
+		// Arrange
+		var uri = new Uri(url);
+
+		// Act
+		// Assert
+		Assert.Equal(fragment, uri.Fragment);
+	}
+
+	[Theory]
 	// ポートを省略した場合はデフォルトポートになる
 	[InlineData("https://example.jp", true)]
 	// 80はデフォルトポートではない
@@ -45,6 +83,19 @@ public class UriTest {
 
 		// Assert
 		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	[InlineData("https://example.jp?a=1&b=2", "?a=1&b=2")]
+	[InlineData("https://example.jp", "")]
+	[InlineData("https://example.jp?", "?")]
+	public void Query_クエリ文字列を取得できる(string url, string query) {
+		// Arrange
+		var uri = new Uri(url);
+
+		// Act
+		// Assert
+		Assert.Equal(query, uri.Query);
 	}
 
 	[Theory]
@@ -102,57 +153,6 @@ public class UriTest {
 		// Act
 		// Assert
 		Assert.Equal(segments, uri.Segments);
-	}
-
-	[Theory]
-	[InlineData("https://example.jp#fragment", "#fragment")]
-	public void Fragment_フラグメントを取得できる(string url, string fragment) {
-		// Arrange
-		var uri = new Uri(url);
-
-		// Act
-		// Assert
-		Assert.Equal(fragment, uri.Fragment);
-	}
-
-	[Theory]
-	[InlineData("https://example.jp?a=1&b=2", "?a=1&b=2")]
-	[InlineData("https://example.jp", "")]
-	[InlineData("https://example.jp?", "?")]
-	public void Query_クエリ文字列を取得できる(string url, string query) {
-		// Arrange
-		var uri = new Uri(url);
-
-		// Act
-		// Assert
-		Assert.Equal(query, uri.Query);
-	}
-
-	[Theory]
-	[InlineData("", UriHostNameType.Unknown)]
-	[InlineData(default(string), UriHostNameType.Unknown)]
-	[InlineData("localhost", UriHostNameType.Dns)]
-	[InlineData("www.example.jp", UriHostNameType.Dns)]
-	public void CheckHostName_取得できるUriHostNameTypeを確認する(string? name, UriHostNameType expected) {
-		// Arrange
-		// Act
-		var actual = Uri.CheckHostName(name);
-
-		// Assert
-		Assert.Equal(expected, actual);
-	}
-
-	[Theory]
-	[InlineData("", false)]
-	[InlineData(default(string), false)]
-	[InlineData("https", true)]
-	public void CheckSchemeName_取得できる値を確認する(string? name, bool expected) {
-		// Arrange
-		// Act
-		var actual = Uri.CheckSchemeName(name);
-
-		// Assert
-		Assert.Equal(expected, actual);
 	}
 
 	[Fact]
