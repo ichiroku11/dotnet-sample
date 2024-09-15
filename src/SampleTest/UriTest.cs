@@ -67,6 +67,18 @@ public class UriTest {
 		Assert.Equal(fragment, uri.Fragment);
 	}
 
+	[Fact]
+	public void IsAbsoluteUri_絶対URL文字列でインスタンスを生成するとtrueを返す() {
+		// Arrange
+		var uri = new Uri("https://example.jp");
+
+		// Act
+		var actual = uri.IsAbsoluteUri;
+
+		// Assert
+		Assert.True(actual);
+	}
+
 	[Theory]
 	// ポートを省略した場合はデフォルトポートになる
 	[InlineData("https://example.jp", true)]
