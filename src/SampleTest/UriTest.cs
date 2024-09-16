@@ -32,6 +32,16 @@ public class UriTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Constructor_相対URLの文字列を指定すると例外が発生する() {
+		// Arrange
+		// Act
+		var exception = Record.Exception(() => new Uri("/path"));
+
+		// Assert
+		Assert.IsType<UriFormatException>(exception);
+	}
+
+	[Fact]
 	public void Constructor_絶対URLの文字列とUriKindのRelativeを指定すると例外が発生する() {
 		// Arrange
 		// Act
