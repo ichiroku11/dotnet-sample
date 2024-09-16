@@ -1,6 +1,8 @@
 namespace SampleTest;
 
-public class UriTest {
+public class UriTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Theory]
 	[InlineData("http://example.jp", "", "http://example.jp/")]
 	[InlineData("http://example.jp", "/", "http://example.jp/")]
@@ -27,6 +29,17 @@ public class UriTest {
 
 		// Assert
 		Assert.Equal(expectedUri, actualUri.AbsoluteUri);
+	}
+
+	[Fact]
+	public void Constructor_絶対URLの文字列とUriKindのRelativeを指定すると例外が発生する() {
+		// Arrange
+		// Act
+		var exception = Record.Exception(() => new Uri("https://example.jp", UriKind.Relative));
+
+		// Assert
+		Assert.IsType<UriFormatException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 
 	[Theory]
