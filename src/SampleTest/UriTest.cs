@@ -180,7 +180,7 @@ public class UriTest(ITestOutputHelper output) {
 	[InlineData("https://example.jp/")]
 	[InlineData("https://example.jp/app")]
 	[InlineData("file://example.jp/app")]
-	public void TryCreate_絶対URLの成功する(string url) {
+	public void TryCreate_絶対URLの作成に成功する(string url) {
 		// Arrange
 		// Act
 		var result = Uri.TryCreate(url, UriKind.Absolute, out var _);
