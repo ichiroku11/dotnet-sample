@@ -100,6 +100,27 @@ public class UriTest(ITestOutputHelper output) {
 		Assert.Equal(fragment, uri.Fragment);
 	}
 
+	[Theory]
+	[InlineData("https://example.jp", UriComponents.Scheme, "https")]
+	[InlineData("https://example.jp", UriComponents.UserInfo, "")]
+	[InlineData("https://example.jp", UriComponents.Host, "example.jp")]
+	[InlineData("https://example.jp", UriComponents.Port, "")]
+	[InlineData("https://example.jp", UriComponents.SchemeAndServer, "https://example.jp")]
+	[InlineData("https://example.jp", UriComponents.Path, "")]
+	[InlineData("https://example.jp", UriComponents.Query, "")]
+	[InlineData("https://example.jp", UriComponents.Fragment, "")]
+	[InlineData("https://example.jp", UriComponents.PathAndQuery, "/")]
+	public void GetComponents_URLの書くコンポーネントを取得する(string url, UriComponents components, string expected) {
+		// Arrange
+		var uri = new Uri(url);
+
+		// Act
+		var actual = uri.GetComponents(components, UriFormat.Unescaped);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	[Fact]
 	public void IsAbsoluteUri_絶対URL文字列でインスタンスを生成するとtrueを返す() {
 		// Arrange
