@@ -115,7 +115,7 @@ public class UriTest(ITestOutputHelper output) {
 	[InlineData("https://example.jp/p?q=1#f", UriComponents.Query, "q=1")]
 	[InlineData("https://example.jp/p?q=1#f", UriComponents.PathAndQuery, "/p?q=1")]
 	[InlineData("https://example.jp/p?q=1#f", UriComponents.Fragment, "f")]
-	public void GetComponents_URLの書くコンポーネントを取得する(string url, UriComponents components, string expected) {
+	public void GetComponents_URLの各コンポーネントを取得する(string url, UriComponents components, string expected) {
 		// Arrange
 		var uri = new Uri(url);
 
