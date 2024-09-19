@@ -115,7 +115,7 @@ public class UriTest(ITestOutputHelper output) {
 	[InlineData("https://example.jp/p?q=1#f", UriComponents.Query, "q=1")]
 	[InlineData("https://example.jp/p?q=1#f", UriComponents.PathAndQuery, "/p?q=1")]
 	[InlineData("https://example.jp/p?q=1#f", UriComponents.Fragment, "f")]
-	public void GetComponents_URLの各コンポーネントを取得する(string url, UriComponents components, string expected) {
+	public void GetComponents_絶対URLの各コンポーネントを取得する(string url, UriComponents components, string expected) {
 		// Arrange
 		var uri = new Uri(url);
 
@@ -124,6 +124,24 @@ public class UriTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	[InlineData(UriComponents.Scheme)]
+	[InlineData(UriComponents.UserInfo)]
+	[InlineData(UriComponents.Host)]
+	[InlineData(UriComponents.Port)]
+	[InlineData(UriComponents.SchemeAndServer)]
+	public void GetComponents_相対URLに対して呼び出すと例外が発生する(UriComponents components) {
+		// Arrange
+		var uri = new Uri("/path", UriKind.Relative);
+
+		// Act
+		var exception = Record.Exception(() => uri.GetComponents(components, UriFormat.Unescaped));
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 
 	[Fact]
