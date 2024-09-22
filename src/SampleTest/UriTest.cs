@@ -147,7 +147,22 @@ public class UriTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 	}
 
-	// todo: GetLeftPart Absolute
+	[Theory]
+	[InlineData("https://example.jp/p?q=1#f", UriPartial.Scheme, "https://")]
+	[InlineData("https://example.jp/p?q=1#f", UriPartial.Authority, "https://example.jp")]
+	[InlineData("https://example.jp/p?q=1#f", UriPartial.Path, "https://example.jp/p")]
+	[InlineData("https://example.jp/p?q=1#f", UriPartial.Query, "https://example.jp/p?q=1")]
+	public void GetLeftPart_絶対URLのLeftPartを取得する(string url, UriPartial partial, string expected) {
+		// Arrange
+		var uri = new Uri(url);
+
+		// Act
+		var actual = uri.GetLeftPart(partial);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	// todo: GetLeftPart Relative
 
 	[Fact]
