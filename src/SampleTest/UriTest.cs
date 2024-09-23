@@ -163,7 +163,22 @@ public class UriTest(ITestOutputHelper output) {
 		Assert.Equal(expected, actual);
 	}
 
-	// todo: GetLeftPart Relative
+	[Theory]
+	[InlineData(UriPartial.Scheme)]
+	[InlineData(UriPartial.Authority)]
+	[InlineData(UriPartial.Path)]
+	[InlineData(UriPartial.Query)]
+	public void GetLeftPart_相対URLに対して呼び出すと例外が発生する(UriPartial partial) {
+		// Arrange
+		var uri = new Uri("/path", UriKind.Relative);
+
+		// Act
+		var exception = Record.Exception(() => uri.GetLeftPart(partial));
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
+	}
 
 	[Fact]
 	public void IsAbsoluteUri_絶対URL文字列でインスタンスを生成するとtrueを返す() {
