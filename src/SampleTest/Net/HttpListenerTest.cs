@@ -31,4 +31,21 @@ public class HttpListenerTest(ITestOutputHelper output) {
 		Assert.IsType<InvalidOperationException>(exception);
 		_output.WriteLine(exception.Message);
 	}
+
+	[Fact]
+	public void GetContext_Startするだけでは例外が発生する() {
+		// Arrange
+		using var listener = new HttpListener();
+
+		listener.Start();
+
+		// Act
+		var exception = Record.Exception(() => listener.GetContext());
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+		_output.WriteLine(exception.Message);
+
+		listener.Stop();
+	}
 }
