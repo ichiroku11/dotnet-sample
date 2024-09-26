@@ -48,4 +48,21 @@ public class HttpListenerTest(ITestOutputHelper output) {
 
 		listener.Stop();
 	}
+
+	[Fact]
+	public void IsListening_StartするとtrueになりStopするとfalseになる() {
+		// Arrange
+		using var listener = new HttpListener();
+
+		// Act
+		listener.Start();
+		var actualStarted = listener.IsListening;
+
+		listener.Stop();
+		var actualStopped = listener.IsListening;
+
+		// Assert
+		Assert.True(actualStarted);
+		Assert.False(actualStopped);
+	}
 }
