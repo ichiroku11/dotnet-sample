@@ -65,4 +65,18 @@ public class HttpListenerTest(ITestOutputHelper output) {
 		Assert.True(actualStarted);
 		Assert.False(actualStopped);
 	}
+
+	[Fact]
+	public void Start_管理者権限で実行しないとHttpListenerExceptionが発生するらしい() {
+		// Arrange
+		using var listener = new HttpListener();
+		listener.Prefixes.Add("http://localhost/");
+
+		// Act
+		var exception = Record.Exception(() => listener.Start());
+
+		// Assert
+		Assert.IsType<HttpListenerException>(exception);
+		_output.WriteLine(exception.Message);
+	}
 }
