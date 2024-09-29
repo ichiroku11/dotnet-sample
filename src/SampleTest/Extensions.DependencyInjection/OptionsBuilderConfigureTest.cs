@@ -18,6 +18,10 @@ public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 		public int GetValue() => _options.Value;
 	}
 
+	private class Dependency {
+		public int Value { get; } = 1;
+	}
+
 	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
@@ -235,6 +239,29 @@ public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 			value => Assert.Equal("pc1-2", value),
 			value => Assert.Equal("pc2-3", value));
 		Assert.Equal(4, options.Value);
+	}
+
+	[Fact]
+	public void Configure_Dependencyを利用してオプションを構成する() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		services
+			.AddSingleton<Dependency>();
+		services
+			.AddOptions<SampleOptions>()
+			// 他のIOptions<TOptions>やサービスを使って構成することができる様子
+			.Configure<Dependency>((options, dependency) => {
+				options.Value = dependency.Value;
+			});
+
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var options = provider.GetRequiredService<IOptions<SampleOptions>>().Value;
+
+		// Assert
+		Assert.Equal(1, options.Value);
 	}
 
 	[Fact]
