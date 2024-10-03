@@ -24,10 +24,26 @@ public class TestServerTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Properties_WebHostBuilderを使う場合() {
+		// Arrange
+		var builder = new WebHostBuilder().UseStartup<Startup>();
+		using var server = new TestServer(builder);
+
+		// Act
+		// Assert
+		Assert.False(server.AllowSynchronousIO);
+		Assert.NotNull(server.Features);
+		Assert.NotNull(server.Host);
+		Assert.Equal("http://localhost/", server.BaseAddress.AbsoluteUri);
+		Assert.False(server.PreserveExecutionContext);
+		Assert.NotNull(server.Services);
+	}
+
+	[Fact]
 	public void Properties_WebHostBuilderを使わない場合() {
 		// Arrange
 		var services = new ServiceCollection().BuildServiceProvider();
-		var server = new TestServer(services);
+		using var server = new TestServer(services);
 
 		// Act
 		// Assert
