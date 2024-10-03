@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
 namespace SampleTest.AspNetCore.TestHost;
@@ -20,6 +21,23 @@ public class TestServerTest(ITestOutputHelper output) {
 				return Task.CompletedTask;
 			});
 		}
+	}
+
+	[Fact]
+	public void Properties_WebHostBuilderを使わない場合() {
+		// Arrange
+		var services = new ServiceCollection().BuildServiceProvider();
+		var server = new TestServer(services);
+
+		// Act
+		// Assert
+		Assert.False(server.AllowSynchronousIO);
+		Assert.NotNull(server.Features);
+		// 例外が発生
+		//Assert.NotNull(server.Host);
+		Assert.Equal("http://localhost/", server.BaseAddress.AbsoluteUri);
+		Assert.False(server.PreserveExecutionContext);
+		Assert.Same(services, server.Services);
 	}
 
 	[Fact]
