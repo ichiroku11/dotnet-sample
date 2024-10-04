@@ -57,6 +57,19 @@ public class TestServerTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Host_WebHostBuilderを使わない場合は例外が発生する() {
+		// Arrange
+		var services = new ServiceCollection().BuildServiceProvider();
+		using var server = new TestServer(services);
+
+		// Act
+		var exception = Record.Exception(() => server.Host);
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+	}
+
+	[Fact]
 	public async Task WebHostBuilderを使ってインスタンスを生成して使ってみる() {
 		// Arrange
 		using var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
