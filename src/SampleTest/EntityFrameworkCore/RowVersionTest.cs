@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SampleTest.EntityFrameworkCore;
 
+// うまくいかない
 [Collection(CollectionNames.EfCoreSample)]
 public class RowVersionTest : IDisposable {
 	private class Sample {
