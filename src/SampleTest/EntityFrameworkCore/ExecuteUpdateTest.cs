@@ -85,6 +85,7 @@ drop table if exists dbo.[Sample];";
 		await _context.SaveChangesAsync();
 
 		// Act
+		// ExecuteUpdateAsyncを呼び出すと、SaveChangesAsyncは不要
 		var result = await _context.Samples
 			// 条件にIDを指定する
 			// Timestamp属性が設定されたカラムがあるからといって、条件に含まれることはない
@@ -178,7 +179,6 @@ drop table if exists dbo.[Sample];";
 		Assert.Equal(description, actual.Description);
 	}
 
-
 	// 楽観的同時実行制御
 	[Fact]
 	public async Task ExecuteUpdateAsync_条件にIDとバージョンを指定して更新する() {
@@ -213,5 +213,44 @@ drop table if exists dbo.[Sample];";
 		Assert.Equal(id, actual.Id);
 		Assert.Equal(name, actual.Name);
 		Assert.NotEqual(version, actual.Version);
+	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_条件にIDとバージョンを指定して更新するがバージョンが異なるので更新されない場合() {
+		// Arrange
+		var sampleToAdd = new Sample { Id = 1, Name = "abc" };
+		_context.Samples.Add(sampleToAdd);
+		await _context.SaveChangesAsync();
+
+		// 更新する条件
+		var id = 1;
+		var version = new byte[sampleToAdd.Version.Length];
+
+		// 更新する値
+		var name = "efg";
+
+		// Act
+		// 結果が0件となる
+		// 楽観的同時実行制御を行うには、結果が0件かどうかを確認し例外をスローすることになるか
+		var result = await _context.Samples
+			.Where(sample => sample.Id == id && sample.Version == version)
+			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, name));
+
+		// 実行されるSQL
+		/*
+		UPDATE [s]
+		SET [s].[Name] = @__name_2
+		FROM [Sample] AS [s]
+		WHERE [s].[Id] = @__id_0 AND [s].[Version] = @__version_1
+		*/
+
+		var actual = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Assert
+		// 更新されていない
+		Assert.Equal(0, result);
+		Assert.Equal(id, actual.Id);
+		Assert.Equal(sampleToAdd.Name, actual.Name);
+		Assert.Equal(sampleToAdd.Version, actual.Version);
 	}
 }
