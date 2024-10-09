@@ -27,4 +27,23 @@ public class StringTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	[Theory]
+	[InlineData("abc-", '-', "abc")]
+	// 末尾に対象の文字が複数ある場合もすべて削除される
+	[InlineData("abc--", '-', "abc")]
+	[InlineData("ab-c--", '-', "ab-c")]
+	public void TrimEnd_末尾の文字列を削除できる(string src, char trimChar, string expected) {
+		// Arrange
+		// Act
+		var actual = src.TrimEnd(trimChar);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	// https://learn.microsoft.com/ja-jp/dotnet/api/system.string.trimend?view=net-8.0
+	// todo: トリミングできない場合は同じインスタンス
+	// todo: トリミングした場合はsrcは変更されない
+	// todo: 複数のcharを渡す場合
 }
