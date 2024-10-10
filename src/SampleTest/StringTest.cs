@@ -28,6 +28,7 @@ public class StringTest {
 		Assert.Equal(expected, actual);
 	}
 
+	// https://learn.microsoft.com/ja-jp/dotnet/api/system.string.trimend?view=net-8.0
 	[Theory]
 	[InlineData("abc-", '-', "abc")]
 	// 末尾に対象の文字が複数ある場合もすべて削除される
@@ -42,8 +43,29 @@ public class StringTest {
 		Assert.Equal(expected, actual);
 	}
 
-	// https://learn.microsoft.com/ja-jp/dotnet/api/system.string.trimend?view=net-8.0
-	// todo: トリミングできない場合は同じインスタンス
-	// todo: トリミングした場合はsrcは変更されない
+	[Fact]
+	public void TrimEnd_メソッドを呼び出したインスタンスは変更されない() {
+		// Arrange
+		var src = "abc-";
+
+		// Act
+		var _ = src.TrimEnd('-');
+
+		// Assert
+		Assert.Equal("abc-", src);
+	}
+
+	[Fact]
+	public void TrimEnd_トリミングできない場合の戻り値は同じインスタンス() {
+		// Arrange
+		var src = "abc";
+
+		// Act
+		var actual = src.TrimEnd('-');
+
+		// Assert
+		Assert.Same(src, actual);
+	}
+
 	// todo: 複数のcharを渡す場合
 }
