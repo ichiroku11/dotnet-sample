@@ -67,5 +67,16 @@ public class StringTest {
 		Assert.Same(src, actual);
 	}
 
-	// todo: 複数のcharを渡す場合
+	[Theory]
+	// 末尾に対象の文字が複数表れる場合もすべて削除される
+	[InlineData("abc_-", new[] { '-', '_' }, "abc")]
+	[InlineData("ab-_c_-", new[] { '-', '_' }, "ab-_c")]
+	public void TrimEnd_複数charを渡す場合も末尾の文字列を削除できる(string src, char[] trimChars, string expected) {
+		// Arrange
+		// Act
+		var actual = src.TrimEnd(trimChars);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
