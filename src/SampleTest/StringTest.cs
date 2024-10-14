@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace SampleTest;
 
 public class StringTest {
@@ -11,6 +13,21 @@ public class StringTest {
 		// Arrange
 		// Act
 		var actual = string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	// 全角英数字 => 半角英数字
+	[InlineData("０１２３４", "01234")]
+	[InlineData("ａｂｃｄｅ", "abcde")]
+	// 半角カタカナ => 全角カタカナ
+	[InlineData("ｱｲｳｴｵ", "アイウエオ")]
+	public void Normalize_Unicode正規形の文字列を取得する(string src, string expected) {
+		// Arrange
+		// Act
+		var actual = src.Normalize(NormalizationForm.FormKC);
 
 		// Assert
 		Assert.Equal(expected, actual);
