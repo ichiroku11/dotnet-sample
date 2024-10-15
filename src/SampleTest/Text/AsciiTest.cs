@@ -4,7 +4,7 @@ namespace SampleTest.Text;
 
 public class AsciiTest {
 	[Theory]
-	[InlineData("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", true)]
+	[InlineData(" !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", true)]
 	[InlineData("0123456789", true)]
 	[InlineData("abcdefghijklmnopqrstuvwxyz", true)]
 	[InlineData("ABCDEFGHIJKLMNOPQRSTUVWXYZ", true)]
