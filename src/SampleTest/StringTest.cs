@@ -22,9 +22,12 @@ public class StringTest {
 	// 全角英数字 => 半角英数字
 	[InlineData("０１２３４", "01234")]
 	[InlineData("ａｂｃｄｅ", "abcde")]
+	[InlineData("ＡＢＣＤＥ", "ABCDE")]
 	// 半角カタカナ => 全角カタカナ
 	[InlineData("ｱｲｳｴｵ", "アイウエオ")]
-	public void Normalize_Unicode正規形の文字列を取得する(string src, string expected) {
+	// 囲み数字 => 半角数字
+	[InlineData("①②③", "123")]
+	public void Normalize_FormKC_Unicode正規形の文字列を取得する(string src, string expected) {
 		// Arrange
 		// Act
 		var actual = src.Normalize(NormalizationForm.FormKC);
