@@ -5,7 +5,7 @@ namespace SampleTest.EntityFrameworkCore;
 // https://docs.microsoft.com/ja-jp/ef/core/querying/related-data/eager#filtered-include
 
 // グローバルフィルターがIncludeにも適用されるか確認する
-// todo:
+
 [Collection(CollectionNames.EfCoreBlog)]
 public class QueryFilterRelatedTest : IDisposable {
 	private class Blog {
