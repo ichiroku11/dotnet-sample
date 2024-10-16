@@ -27,6 +27,8 @@ public class StringTest {
 	[InlineData("ｱｲｳｴｵ", "アイウエオ")]
 	// 囲み数字 => 半角数字
 	[InlineData("①②③", "123")]
+	// 
+	[InlineData("㍍", "メートル")]
 	public void Normalize_FormKC_Unicode正規形の文字列を取得する(string src, string expected) {
 		// Arrange
 		// Act
