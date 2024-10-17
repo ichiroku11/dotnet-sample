@@ -19,6 +19,26 @@ public class StringTest {
 	}
 
 	[Theory]
+	// 全角英数字
+	[InlineData("０", false)]
+	[InlineData("ａ", false)]
+	[InlineData("Ａ", false)]
+	// 半角カタカナ
+	[InlineData("ｱ", false)]
+	// 囲み数字
+	[InlineData("①", false)]
+	// 
+	[InlineData("㍍", false)]
+	public void IsNormalized_FormKC_Unicode正規形の文字列かどうかを判定できる(string src, bool expected) {
+		// Arrange
+		// Act
+		var actual = src.IsNormalized(NormalizationForm.FormKC);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
 	// 全角英数字 => 半角英数字
 	[InlineData("０１２３４", "01234")]
 	[InlineData("ａｂｃｄｅ", "abcde")]
