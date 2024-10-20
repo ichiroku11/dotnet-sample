@@ -72,7 +72,12 @@ public abstract class SampleBase {
 		// スコープ
 		var scopes = new[] { "https://graph.microsoft.com/.default" };
 
-		return new AzureIdentityAuthenticationProvider(credential: credential, scopes: scopes);
+		return new AzureIdentityAuthenticationProvider(
+			credential: credential,
+			allowedHosts: null,
+			observabilityOptions: null,
+			isCaeEnabled: true,
+			scopes: scopes);
 	}
 
 	// サンプルの実行

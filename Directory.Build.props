@@ -2,5 +2,6 @@
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <SatelliteResourceLanguages>en-US;ja</SatelliteResourceLanguages>
   </PropertyGroup>
 </Project>
