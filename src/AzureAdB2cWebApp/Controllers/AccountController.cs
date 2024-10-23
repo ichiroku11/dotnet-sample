@@ -15,7 +15,20 @@ public class AccountController(IConfiguration config, IOptions<MicrosoftIdentity
 	private readonly IConfiguration _config = config;
 	private readonly MicrosoftIdentityOptions _options = options.Value;
 
-	// SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
+	// SignUpSignIn、SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
+	[AllowAnonymous]
+	public IActionResult SignUpSignIn(string? prompt = null) {
+		var properties = new AuthenticationProperties {
+			RedirectUri = Url.Action("Claim", "Home"),
+		};
+
+		properties.SetPromptIfValid(prompt);
+		// ポリシーは変更しなくてよいはず
+		//properties.SetPolicy(_options.SignUpSignInPolicyId);
+
+		return Challenge(properties, _scheme);
+	}
+
 	[AllowAnonymous]
 	public IActionResult SignIn(string? prompt = null) {
 		var properties = new AuthenticationProperties {
