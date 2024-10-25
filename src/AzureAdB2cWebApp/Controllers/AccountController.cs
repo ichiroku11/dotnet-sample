@@ -15,6 +15,8 @@ public class AccountController(IConfiguration config, IOptions<MicrosoftIdentity
 	private readonly IConfiguration _config = config;
 	private readonly MicrosoftIdentityOptions _options = options.Value;
 
+	private ChallengeResult ChallengeOpenIdConnect(AuthenticationProperties properties) => Challenge(properties, _scheme);
+
 	// SignUpSignIn、SignIn、SignUp、ResetPassword、EditProfileのコードの共通化はあえてしていない
 	[AllowAnonymous]
 	public IActionResult SignUpSignIn(string? prompt = null) {
@@ -26,7 +28,7 @@ public class AccountController(IConfiguration config, IOptions<MicrosoftIdentity
 		// ポリシーは変更しなくてよいはず
 		//properties.SetPolicy(_options.SignUpSignInPolicyId);
 
-		return Challenge(properties, _scheme);
+		return ChallengeOpenIdConnect(properties);
 	}
 
 	[AllowAnonymous]
@@ -39,20 +41,18 @@ public class AccountController(IConfiguration config, IOptions<MicrosoftIdentity
 			.SetPromptIfValid(prompt)
 			.SetPolicy(_config["AzureAdB2c:SignInPolicyId"]);
 
-		return Challenge(properties, _scheme);
+		return ChallengeOpenIdConnect(properties);
 	}
 
 	[AllowAnonymous]
-	public IActionResult SignUp(string? prompt = null) {
+	public IActionResult SignUp() {
 		var properties = new AuthenticationProperties {
 			RedirectUri = Url.Action("Claim", "Home"),
 		};
 
-		properties
-			.SetPromptIfValid(prompt)
-			.SetPolicy(_config["AzureAdB2c:SignUpPolicyId"]);
+		properties.SetPolicy(_config["AzureAdB2c:SignUpPolicyId"]);
 
-		return Challenge(properties, _scheme);
+		return ChallengeOpenIdConnect(properties);
 	}
 
 	[AllowAnonymous]
@@ -63,7 +63,7 @@ public class AccountController(IConfiguration config, IOptions<MicrosoftIdentity
 
 		properties.SetPolicy(_options.ResetPasswordPolicyId);
 
-		return Challenge(properties, _scheme);
+		return ChallengeOpenIdConnect(properties);
 	}
 
 	public IActionResult EditProfile() {
@@ -73,7 +73,7 @@ public class AccountController(IConfiguration config, IOptions<MicrosoftIdentity
 
 		properties.SetPolicy(_options.EditProfilePolicyId);
 
-		return Challenge(properties, _scheme);
+		return ChallengeOpenIdConnect(properties);
 	}
 
 	// 親クラスでSignOutメソッドが定義されているため
