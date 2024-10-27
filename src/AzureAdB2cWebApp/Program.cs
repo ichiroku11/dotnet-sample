@@ -17,8 +17,12 @@ services.AddMicrosoftIdentityWebAppAuthentication(
 	// OpenIdConnectEventsのデバッグログの出力
 	subscribeToOpenIdConnectMiddlewareDiagnosticsEvents: true);
 
+// OnRemoteFailureを上書きできない様子なので、別の方法を考える
 var handlers = new OpenIdConnectEventHandlers();
 services.PostConfigure<MicrosoftIdentityOptions>(options => {
+//services.Configure<MicrosoftIdentityOptions>(options => {
+//services.PostConfigure<OpenIdConnectOptions>(options => {
+//services.Configure<OpenIdConnectOptions>(options => {
 	// Microsoft.Identity.Web.UIを使わず動きを確認したいため、
 	// デフォルトの動きを上書きする
 	// https://github.com/AzureAD/microsoft-identity-web/blob/master/src/Microsoft.Identity.Web/AzureADB2COpenIDConnectEventHandlers.cs
