@@ -1,4 +1,3 @@
-using AzureAdB2cWebApp;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +26,7 @@ services.AddMicrosoftIdentityWebAppAuthentication(
 	subscribeToOpenIdConnectMiddlewareDiagnosticsEvents: true);
 
 // OnRemoteFailureを上書きできない様子なので、別の方法を考える
+/*
 var handlers = new OpenIdConnectEventHandlers();
 services.PostConfigure<MicrosoftIdentityOptions>(options => {
 //services.Configure<MicrosoftIdentityOptions>(options => {
@@ -37,6 +37,7 @@ services.PostConfigure<MicrosoftIdentityOptions>(options => {
 	// https://github.com/AzureAD/microsoft-identity-web/blob/master/src/Microsoft.Identity.Web/AzureADB2COpenIDConnectEventHandlers.cs
 	options.Events.OnRemoteFailure = handlers.OnRemoteFailure;
 });
+*/
 
 services.Configure<RouteOptions>(options => {
 	options.LowercaseUrls = true;
