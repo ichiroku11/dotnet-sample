@@ -9,6 +9,15 @@ var services = builder.Services;
 
 services.AddControllersWithViews();
 
+// コードではErrorPathを変更できないのか？
+// 下記ではうまくいかず
+/*
+services.Configure<MicrosoftIdentityOptions>(options => {
+//services.PostConfigure<MicrosoftIdentityOptions>(options => {
+	options.ErrorPath = "/account/error";
+});
+*/
+
 // Azure AD B2C認証
 // Microsoft.Identity.Webを使う
 services.AddMicrosoftIdentityWebAppAuthentication(
