@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace AzureAdB2cWebApp;
 
+// OnRemoteFailureを上書きできない様子だったので、この方法は使えない
+/*
 public class OpenIdConnectEventHandlers {
 	// Microsoft.Identity.Web.UIを使わず動きを確認したいため、
 	// 以下を参考にリダイレクト先のURLを変更する
@@ -31,3 +33,4 @@ public class OpenIdConnectEventHandlers {
 		return Task.CompletedTask;
 	}
 }
+*/

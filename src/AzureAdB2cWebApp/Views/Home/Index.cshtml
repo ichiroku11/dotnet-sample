@@ -2,3 +2,16 @@
 	ViewBag.Title = "Home";
 }
 <p>@ViewBag.Title</p>
+
+<h3>Sign up/Sign in</h3>
+<ul>
+	<li><a asp-controller="Account" asp-action="SignUpSignIn">no prompt</a></li>
+	<li><a asp-controller="Account" asp-action="SignUpSignIn" asp-route-prompt="login">prompt="login"</a></li>
+	<li><a asp-controller="Account" asp-action="SignUpSignIn" asp-route-prompt="none">prompt="none"</a></li>
+</ul>
+<h3>Sign in</h3>
+<ul>
+	<li><a asp-controller="Account" asp-action="SignIn">no prompt</a></li>
+	<li><a asp-controller="Account" asp-action="SignIn" asp-route-prompt="login">prompt="login"</a></li>
+	<li><a asp-controller="Account" asp-action="SignIn" asp-route-prompt="none">prompt="none"</a></li>
+</ul>
