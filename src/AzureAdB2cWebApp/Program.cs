@@ -1,3 +1,4 @@
+using AzureAdB2cWebApp;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,11 @@ services.Configure<MicrosoftIdentityOptions>(options => {
 	options.ErrorPath = "/account/error";
 });
 */
+
+// Azure AD B2C認証より先に登録する
+// フレームワーク内では、TryAddSingletonをしているので上書きされないはず
+// https://github.com/AzureAD/microsoft-identity-web/blob/195328cc509e3d964bb47f1877a8946b6f136f81/src/Microsoft.Identity.Web/WebAppExtensions/MicrosoftIdentityWebAppAuthenticationBuilderExtensions.cs#L261-L275
+services.AddSingleton<ILoginErrorAccessor, TempDataLoginErrorAccessor>();
 
 // Azure AD B2C認証
 // Microsoft.Identity.Webを使う
