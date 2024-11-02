@@ -10,9 +10,8 @@ namespace AzureCosmosDbConsoleApp;
 // 参考
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ContainerManagement/Program.cs
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ItemManagement/Program.cs
-public class CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
-	private readonly string _connectionString = config.GetConnectionString(Constants.ConnectionStringName)
-		?? throw new InvalidOperationException();
+public class CosmosSqlApiSample(CosmosClient client, ILogger<CosmosSqlApiSample> logger) {
+	private readonly CosmosClient _client = client;
 	private readonly ILogger _logger = logger;
 
 	// コンテナー一覧表示
@@ -133,14 +132,8 @@ public class CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSampl
 	}
 
 	public async Task RunAsync() {
-		using var client = new CosmosClientBuilder(_connectionString)
-			.WithSerializerOptions(new CosmosSerializationOptions {
-				PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
-			})
-			.Build();
-
 		// databaseはDatabaseResponse型
-		var database = await client.CreateDatabaseIfNotExistsAsync(Constants.TestDatabase.Id);
+		var database = await _client.CreateDatabaseIfNotExistsAsync(Constants.TestDatabase.Id);
 
 		// DatabaseResponse型はDatabase型に暗黙的にキャストできる
 		await ListContainerAsync(database);
