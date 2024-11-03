@@ -1,11 +1,10 @@
 using Azure.Storage.Blobs;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace AzureStorageConsoleApp;
 
-public class BlobSample(IConfiguration config, ILogger<BlobSample> logger) {
-	private readonly string _connectionString = config.GetConnectionString("Storage") ?? throw new InvalidOperationException();
+public class BlobSample(BlobServiceClient serviceClient, ILogger<BlobSample> logger) {
+	private readonly BlobServiceClient _serviceClient = serviceClient;
 	private readonly ILogger _logger = logger;
 
 	public async Task RunAsync() {
@@ -13,9 +12,7 @@ public class BlobSample(IConfiguration config, ILogger<BlobSample> logger) {
 		// 参考
 		// https://docs.microsoft.com/ja-jp/azure/storage/blobs/storage-quickstart-blobs-dotnet
 
-		var serviceClient = new BlobServiceClient(_connectionString);
-
-		var containerClient = serviceClient.GetBlobContainerClient("sample");
+		var containerClient = _serviceClient.GetBlobContainerClient("sample");
 
 		await containerClient.CreateIfNotExistsAsync();
 
