@@ -1,4 +1,3 @@
-// See https://aka.ms/new-console-template for more information
 using AzureCosmosDbConsoleApp;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
