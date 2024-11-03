@@ -29,12 +29,21 @@ public class CosmosSqlApiSample(CosmosClient client, ILogger<CosmosSqlApiSample>
 	}
 
 	private async Task<Container> CreateContainerAsync(Database database)
-	=> await database.CreateContainerAsync(
-		id: Constants.OrderContainer.Id,
-		partitionKeyPath: Constants.OrderContainer.PartitionKeyPath);
+		=> await database.CreateContainerAsync(
+			id: Constants.OrderContainer.Id,
+			partitionKeyPath: Constants.OrderContainer.PartitionKeyPath);
 
-	private Task DeleteContainerAsync(Database database)
-		=> database.GetContainer(Constants.OrderContainer.Id).DeleteContainerAsync();
+	private async Task DeleteContainerAsync(Database database) {
+		var container = database.GetContainer(Constants.OrderContainer.Id);
+
+		try {
+			await container.DeleteContainerAsync();
+		} catch (CosmosException exception) {
+			// 存在していない場合に404が返ってくる
+			_logger.LogInformation("{statusCode}", exception.StatusCode);
+			_logger.LogInformation(exception, message: "");
+		}
+	}
 
 	// アイテムの追加
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-create-item#create-an-item-asynchronously
