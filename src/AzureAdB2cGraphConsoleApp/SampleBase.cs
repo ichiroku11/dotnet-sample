@@ -34,13 +34,13 @@ public abstract class SampleBase {
 		_config = config;
 		_logger = logger;
 
-		_customAttributeHelper = new CustomAttributeHelper(_config["ExtensionAppClientId"] ?? throw new InvalidOperationException());
+		_customAttributeHelper = new CustomAttributeHelper(_config["AzureAdB2cGraph:ExtensionAppClientId"] ?? throw new InvalidOperationException());
 	}
 
 	protected ILogger Logger => _logger;
 
 	// テナントID（作成時に必要）
-	protected string TenantId => _config["TenantId"] ?? throw new InvalidOperationException();
+	protected string TenantId => _config["AzureAdB2cGraph:TenantId"] ?? throw new InvalidOperationException();
 
 	// カスタム属性の名前を取得
 	protected string GetCustomAttributeFullName(string attributeName) => _customAttributeHelper.GetFullName(attributeName);
@@ -63,8 +63,8 @@ public abstract class SampleBase {
 		// クレデンシャル
 		var credential = new ClientSecretCredential(
 			tenantId: TenantId,
-			clientId: _config["ClientId"],
-			clientSecret: _config["ClientSecret"],
+			clientId: _config["AzureAdB2cGraph:ClientId"],
+			clientSecret: _config["AzureAdB2cGraph:ClientSecret"],
 			options: new TokenCredentialOptions {
 				AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
 			});
