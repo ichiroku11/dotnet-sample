@@ -9,7 +9,7 @@ namespace AzureAdB2cGraphConsoleApp;
 public class UserCreateSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
 	: UserSampleBase(client, logger, options) {
 
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		var random = new Random();
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
@@ -55,7 +55,7 @@ public class UserCreateSample(GraphServiceClient client, ILogger<SampleBase> log
 		Logger.LogInformation("{mail}", mail);
 		Logger.LogInformation("{password}", password);
 
-		var userAdded = await client.Users.PostAsync(userToAdd);
+		var userAdded = await Client.Users.PostAsync(userToAdd);
 
 		if (userAdded is not null) {
 			LogInformation(userAdded);

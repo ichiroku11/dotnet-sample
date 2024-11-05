@@ -9,7 +9,7 @@ namespace AzureAdB2cGraphConsoleApp;
 // 次回サインイン時に変更が必要
 public class UserUpdateForceChangePasswordSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
 	: UserSampleBase(client, logger, options) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		// IDを指定
 		var id = "{id}";
 
@@ -26,12 +26,12 @@ public class UserUpdateForceChangePasswordSample(GraphServiceClient client, ILog
 				Password = password,
 			},
 		};
-		await client.Users[id].PatchAsync(userToUpdate);
+		await Client.Users[id].PatchAsync(userToUpdate);
 
 		Logger.LogInformation("{password}", password);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id].GetAsync();
+		var userUpdated = await Client.Users[id].GetAsync();
 		if (userUpdated is not null) {
 			LogInformation(userUpdated);
 		}

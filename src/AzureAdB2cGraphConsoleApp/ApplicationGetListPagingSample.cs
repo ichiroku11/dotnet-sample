@@ -20,11 +20,11 @@ public class ApplicationGetListPagingSample(GraphServiceClient client, ILogger<S
 		}
 	}
 
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		var nextLink = "";
 
 		{
-			var response = await client.Applications.GetAsync(config => {
+			var response = await Client.Applications.GetAsync(config => {
 				// ページングが発生するように、一度に取得する件数を少なくする
 				config.QueryParameters.Top = 2;
 			});
@@ -37,7 +37,7 @@ public class ApplicationGetListPagingSample(GraphServiceClient client, ILogger<S
 			LogInformation(new { nextLink });
 
 			// 次のページのデータを取得する
-			var response = await client.Applications
+			var response = await Client.Applications
 				.WithUrl(nextLink)
 				.GetAsync();
 			LogInformation(response?.Value ?? []);

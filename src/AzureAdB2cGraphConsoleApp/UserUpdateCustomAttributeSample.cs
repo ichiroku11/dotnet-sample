@@ -8,7 +8,7 @@ namespace AzureAdB2cGraphConsoleApp;
 // ユーザーのカスタム属性を更新
 public class UserUpdateCustomAttributeSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
 	: UserSampleBase(client, logger, options) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		// IDを指定
 		var id = "{id}";
 
@@ -21,10 +21,10 @@ public class UserUpdateCustomAttributeSample(GraphServiceClient client, ILogger<
 				[attributeName] = attributeValue,
 			},
 		};
-		await client.Users[id].PatchAsync(userToUpdate);
+		await Client.Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id].GetAsync(config => {
+		var userUpdated = await Client.Users[id].GetAsync(config => {
 			config.QueryParameters.Select = [attributeName];
 		});
 

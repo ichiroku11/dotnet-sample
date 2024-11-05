@@ -14,10 +14,10 @@ namespace AzureAdB2cGraphConsoleApp;
 public class DirectoryAuditGetListSample(GraphServiceClient client, ILogger<SampleBase> logger)
 	: SampleBase(client, logger) {
 
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		// AuditLog.Read.Allが必要
 		// https://learn.microsoft.com/ja-jp/graph/permissions-reference#auditlogreadall
-		var response = await client.AuditLogs.DirectoryAudits.GetAsync(config => {
+		var response = await Client.AuditLogs.DirectoryAudits.GetAsync(config => {
 			// 「IDトークンの発行」=「サインイン」と判断してよさげ
 			config.QueryParameters.Filter = "activityDisplayName eq 'Issue an id_token to the application'";
 

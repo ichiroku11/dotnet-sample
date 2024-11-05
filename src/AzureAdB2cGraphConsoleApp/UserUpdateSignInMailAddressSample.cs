@@ -10,7 +10,7 @@ namespace AzureAdB2cGraphConsoleApp;
 // - https://learn.microsoft.com/en-us/answers/questions/291598/azure-ad-b2c-update-email-address-clone-existing-u
 public class UserUpdateSignInMailAddressSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
 	: UserSampleBase(client, logger, options) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		// IDを指定
 		var id = "{id}";
 		// 変更後のメールアドレスを指定
@@ -31,10 +31,10 @@ public class UserUpdateSignInMailAddressSample(GraphServiceClient client, ILogge
 
 		Logger.LogInformation("{mail}", mail);
 
-		await client.Users[id].PatchAsync(userToUpdate);
+		await Client.Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id].GetAsync(
+		var userUpdated = await Client.Users[id].GetAsync(
 			config => {
 				config.QueryParameters.Select = ["identities"];
 			});

@@ -14,11 +14,11 @@ namespace AzureAdB2cGraphConsoleApp;
 // ログインのメールアドレスは、identitiesコレクション内のsignInTypeが"emailAddress"のissurAssignedIdに含まれる様子
 public class UserGetListSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
 	: UserSampleBase(client, logger, options) {
-		protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		// ユーザー一覧を取得
-		var response = await client.Users.GetAsync(config => {
+		var response = await Client.Users.GetAsync(config => {
 			config.QueryParameters.Select = [
 				// アカウントが有効かどうか
 				"accountEnabled",

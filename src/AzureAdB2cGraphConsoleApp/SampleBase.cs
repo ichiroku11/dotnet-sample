@@ -25,18 +25,17 @@ public abstract class SampleBase(GraphServiceClient client, ILogger<SampleBase> 
 	private readonly GraphServiceClient _client = client;
 	private readonly ILogger _logger = logger;
 
-	// todo: やめる
+	protected GraphServiceClient Client => _client;
 	protected ILogger Logger => _logger;
 
 	// JSON形式でログ出力
 	protected void LogInformation<TValue>(TValue value) => _logger.LogInformation("{value}", JsonSerializer.Serialize(value, _jsonSerializerOptions));
 
 	// サンプルの実行
-	protected abstract Task RunCoreAsync(GraphServiceClient client);
+	protected abstract Task RunCoreAsync();
 
 	// サンプルの実行
 	public async Task RunAsync() {
-		// todo: loggerもわたす
-		await RunCoreAsync(_client);
+		await RunCoreAsync();
 	}
 }

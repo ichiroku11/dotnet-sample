@@ -12,9 +12,9 @@ namespace AzureAdB2cGraphConsoleApp;
 // https://learn.microsoft.com/ja-jp/graph/api/resources/signinactivity?view=graph-rest-1.0
 public class UserGetListSignInActivitySample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
 	: UserSampleBase(client, logger, options) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		// ユーザー一覧を取得
-		var response = await client.Users.GetAsync(config => {
+		var response = await Client.Users.GetAsync(config => {
 			config.QueryParameters.Select = [
 				// 名
 				"givenName",
