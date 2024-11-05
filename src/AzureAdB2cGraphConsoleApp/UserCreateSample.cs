@@ -1,13 +1,14 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーを作成
-public class UserCreateSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
+public class UserCreateSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
+
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		var random = new Random();
 

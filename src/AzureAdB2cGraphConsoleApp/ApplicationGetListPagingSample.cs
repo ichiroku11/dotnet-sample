@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
@@ -7,8 +6,8 @@ namespace AzureAdB2cGraphConsoleApp;
 
 // アプリケーション一覧をページングで取得
 // 題材（取得するデータ）は何でもよいが
-public class ApplicationGetListPagingSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
+public class ApplicationGetListPagingSample(GraphServiceClient client, ILogger<SampleBase> logger)
+	: SampleBase(client, logger) {
 
 	private void LogInformation(IEnumerable<Application> apps) {
 		foreach (var app in apps) {

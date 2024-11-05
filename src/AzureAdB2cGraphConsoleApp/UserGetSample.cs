@@ -1,12 +1,12 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーをカスタム属性付きで取得
-public class UserGetSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
+public class UserGetSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

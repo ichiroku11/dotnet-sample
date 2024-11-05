@@ -1,13 +1,13 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーのカスタム属性を更新
-public class UserUpdateCustomAttributeSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
+public class UserUpdateCustomAttributeSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
 	protected override async Task RunCoreAsync(GraphServiceClient client) {
 		// IDを指定
 		var id = "{id}";

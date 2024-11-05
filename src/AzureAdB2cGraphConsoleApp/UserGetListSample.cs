@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
@@ -12,9 +12,9 @@ namespace AzureAdB2cGraphConsoleApp;
 // https://docs.microsoft.com/ja-jp/graph/api/resources/user?view=graph-rest-1.0
 // https://docs.microsoft.com/ja-jp/graph/api/resources/objectidentity?view=graph-rest-1.0
 // ログインのメールアドレスは、identitiesコレクション内のsignInTypeが"emailAddress"のissurAssignedIdに含まれる様子
-public class UserGetListSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+public class UserGetListSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
+		protected override async Task RunCoreAsync(GraphServiceClient client) {
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		// ユーザー一覧を取得
