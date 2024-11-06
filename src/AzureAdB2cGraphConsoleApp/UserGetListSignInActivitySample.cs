@@ -14,7 +14,7 @@ public class UserGetListSignInActivitySample(GraphServiceClient client, ILogger<
 	: UserSampleBase(client, logger, options) {
 	protected override async Task RunCoreAsync() {
 		// ユーザー一覧を取得
-		var response = await Client.Users.GetAsync(config => {
+		var response = await Users.GetAsync(config => {
 			config.QueryParameters.Select = [
 				// 名
 				"givenName",

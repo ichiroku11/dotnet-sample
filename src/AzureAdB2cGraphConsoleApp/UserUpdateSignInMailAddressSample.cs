@@ -31,10 +31,10 @@ public class UserUpdateSignInMailAddressSample(GraphServiceClient client, ILogge
 
 		Logger.LogInformation("{mail}", mail);
 
-		await Client.Users[id].PatchAsync(userToUpdate);
+		await Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await Client.Users[id].GetAsync(
+		var userUpdated = await Users[id].GetAsync(
 			config => {
 				config.QueryParameters.Select = ["identities"];
 			});

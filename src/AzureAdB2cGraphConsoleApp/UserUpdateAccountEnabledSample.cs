@@ -17,10 +17,10 @@ public class UserUpdateAccountEnabledSample(GraphServiceClient client, ILogger<S
 			// アカウントを無効にする
 			AccountEnabled = false,
 		};
-		await Client.Users[id].PatchAsync(userToUpdate);
+		await Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await Client.Users[id].GetAsync(config => {
+		var userUpdated = await Users[id].GetAsync(config => {
 			config.QueryParameters.Select = ["accountEnabled"];
 		});
 		if (userUpdated is not null) {

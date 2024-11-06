@@ -14,7 +14,7 @@ public class UserGetSample(GraphServiceClient client, ILogger<SampleBase> logger
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		// ユーザーをID指定で取得
-		var user = await Client.Users[id].GetAsync(config => {
+		var user = await Users[id].GetAsync(config => {
 			config.QueryParameters.Select = [
 				"id",
 				"surname",

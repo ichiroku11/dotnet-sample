@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
+using Microsoft.Graph.Users;
 
 namespace AzureAdB2cGraphConsoleApp;
 
@@ -16,4 +17,7 @@ public abstract class UserSampleBase(GraphServiceClient client, ILogger<SampleBa
 
 	// カスタム属性の名前を取得
 	protected string GetCustomAttributeFullName(string attributeName) => _customAttributeHelper.GetFullName(attributeName);
+
+	// ユーザー一覧
+	protected UsersRequestBuilder Users => Client.Users;
 }

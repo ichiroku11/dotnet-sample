@@ -18,7 +18,7 @@ public class UserGetListSample(GraphServiceClient client, ILogger<SampleBase> lo
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
 
 		// ユーザー一覧を取得
-		var response = await Client.Users.GetAsync(config => {
+		var response = await Users.GetAsync(config => {
 			config.QueryParameters.Select = [
 				// アカウントが有効かどうか
 				"accountEnabled",

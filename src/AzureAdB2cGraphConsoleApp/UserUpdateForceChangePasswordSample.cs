@@ -26,12 +26,12 @@ public class UserUpdateForceChangePasswordSample(GraphServiceClient client, ILog
 				Password = password,
 			},
 		};
-		await Client.Users[id].PatchAsync(userToUpdate);
+		await Users[id].PatchAsync(userToUpdate);
 
 		Logger.LogInformation("{password}", password);
 
 		// 取得して確認
-		var userUpdated = await Client.Users[id].GetAsync();
+		var userUpdated = await Users[id].GetAsync();
 		if (userUpdated is not null) {
 			LogInformation(userUpdated);
 		}

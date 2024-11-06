@@ -55,7 +55,7 @@ public class UserCreateSample(GraphServiceClient client, ILogger<SampleBase> log
 		Logger.LogInformation("{mail}", mail);
 		Logger.LogInformation("{password}", password);
 
-		var userAdded = await Client.Users.PostAsync(userToAdd);
+		var userAdded = await Users.PostAsync(userToAdd);
 
 		if (userAdded is not null) {
 			LogInformation(userAdded);
