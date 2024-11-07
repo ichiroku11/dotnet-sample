@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
@@ -10,11 +10,11 @@ namespace AzureAdB2cGraphConsoleApp;
 // 参考
 // https://learn.microsoft.com/ja-jp/entra/fundamentals/whats-new#general-availability---lastsuccessfulsignin
 // https://learn.microsoft.com/ja-jp/graph/api/resources/signinactivity?view=graph-rest-1.0
-public class UserGetListSignInActivitySample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+public class UserGetListSignInActivitySample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
+	protected override async Task RunCoreAsync() {
 		// ユーザー一覧を取得
-		var response = await client.Users.GetAsync(config => {
+		var response = await Users.GetAsync(config => {
 			config.QueryParameters.Select = [
 				// 名
 				"givenName",

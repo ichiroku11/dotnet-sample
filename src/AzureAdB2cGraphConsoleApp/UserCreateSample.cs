@@ -1,14 +1,15 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーを作成
-public class UserCreateSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+public class UserCreateSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
+
+	protected override async Task RunCoreAsync() {
 		var random = new Random();
 
 		var attributeName = GetCustomAttributeFullName(CustomAttributeNames.TestNumber);
@@ -54,7 +55,7 @@ public class UserCreateSample(IConfiguration config, ILogger<SampleBase> logger)
 		Logger.LogInformation("{mail}", mail);
 		Logger.LogInformation("{password}", password);
 
-		var userAdded = await client.Users.PostAsync(userToAdd);
+		var userAdded = await Users.PostAsync(userToAdd);
 
 		if (userAdded is not null) {
 			LogInformation(userAdded);

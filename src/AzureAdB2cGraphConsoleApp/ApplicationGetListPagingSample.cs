@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
@@ -7,8 +6,8 @@ namespace AzureAdB2cGraphConsoleApp;
 
 // アプリケーション一覧をページングで取得
 // 題材（取得するデータ）は何でもよいが
-public class ApplicationGetListPagingSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
+public class ApplicationGetListPagingSample(GraphServiceClient client, ILogger<SampleBase> logger)
+	: SampleBase(client, logger) {
 
 	private void LogInformation(IEnumerable<Application> apps) {
 		foreach (var app in apps) {
@@ -21,11 +20,11 @@ public class ApplicationGetListPagingSample(IConfiguration config, ILogger<Sampl
 		}
 	}
 
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+	protected override async Task RunCoreAsync() {
 		var nextLink = "";
 
 		{
-			var response = await client.Applications.GetAsync(config => {
+			var response = await Client.Applications.GetAsync(config => {
 				// ページングが発生するように、一度に取得する件数を少なくする
 				config.QueryParameters.Top = 2;
 			});
@@ -38,7 +37,7 @@ public class ApplicationGetListPagingSample(IConfiguration config, ILogger<Sampl
 			LogInformation(new { nextLink });
 
 			// 次のページのデータを取得する
-			var response = await client.Applications
+			var response = await Client.Applications
 				.WithUrl(nextLink)
 				.GetAsync();
 			LogInformation(response?.Value ?? []);

@@ -10,9 +10,8 @@ namespace AzureCosmosDbConsoleApp;
 // 参考
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ContainerManagement/Program.cs
 // https://github.com/Azure/azure-cosmos-dotnet-v3/blob/master/Microsoft.Azure.Cosmos.Samples/Usage/ItemManagement/Program.cs
-public class CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSample> logger) {
-	private readonly string _connectionString = config.GetConnectionString(Constants.ConnectionStringName)
-		?? throw new InvalidOperationException();
+public class CosmosSqlApiSample(CosmosClient client, ILogger<CosmosSqlApiSample> logger) {
+	private readonly CosmosClient _client = client;
 	private readonly ILogger _logger = logger;
 
 	// コンテナー一覧表示
@@ -30,12 +29,21 @@ public class CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSampl
 	}
 
 	private async Task<Container> CreateContainerAsync(Database database)
-	=> await database.CreateContainerAsync(
-		id: Constants.OrderContainer.Id,
-		partitionKeyPath: Constants.OrderContainer.PartitionKeyPath);
+		=> await database.CreateContainerAsync(
+			id: Constants.OrderContainer.Id,
+			partitionKeyPath: Constants.OrderContainer.PartitionKeyPath);
 
-	private Task DeleteContainerAsync(Database database)
-		=> database.GetContainer(Constants.OrderContainer.Id).DeleteContainerAsync();
+	private async Task DeleteContainerAsync(Database database) {
+		var container = database.GetContainer(Constants.OrderContainer.Id);
+
+		try {
+			await container.DeleteContainerAsync();
+		} catch (CosmosException exception) {
+			// 存在していない場合に404が返ってくる
+			_logger.LogInformation("{statusCode}", exception.StatusCode);
+			_logger.LogInformation(exception, message: "");
+		}
+	}
 
 	// アイテムの追加
 	// https://docs.microsoft.com/ja-jp/azure/cosmos-db/sql/how-to-dotnet-create-item#create-an-item-asynchronously
@@ -133,14 +141,8 @@ public class CosmosSqlApiSample(IConfiguration config, ILogger<CosmosSqlApiSampl
 	}
 
 	public async Task RunAsync() {
-		using var client = new CosmosClientBuilder(_connectionString)
-			.WithSerializerOptions(new CosmosSerializationOptions {
-				PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
-			})
-			.Build();
-
 		// databaseはDatabaseResponse型
-		var database = await client.CreateDatabaseIfNotExistsAsync(Constants.TestDatabase.Id);
+		var database = await _client.CreateDatabaseIfNotExistsAsync(Constants.TestDatabase.Id);
 
 		// DatabaseResponse型はDatabase型に暗黙的にキャストできる
 		await ListContainerAsync(database);

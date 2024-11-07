@@ -1,14 +1,14 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
 namespace AzureAdB2cGraphConsoleApp;
 
 // ユーザーを無効にする
-public class UserUpdateAccountEnabledSample(IConfiguration config, ILogger<SampleBase> logger)
-	: SampleBase(config, logger) {
-	protected override async Task RunCoreAsync(GraphServiceClient client) {
+public class UserUpdateAccountEnabledSample(GraphServiceClient client, ILogger<SampleBase> logger, IOptions<GraphServiceOptions> options)
+	: UserSampleBase(client, logger, options) {
+	protected override async Task RunCoreAsync() {
 		// IDを指定
 		var id = "{id}";
 
@@ -17,10 +17,10 @@ public class UserUpdateAccountEnabledSample(IConfiguration config, ILogger<Sampl
 			// アカウントを無効にする
 			AccountEnabled = false,
 		};
-		await client.Users[id].PatchAsync(userToUpdate);
+		await Users[id].PatchAsync(userToUpdate);
 
 		// 取得して確認
-		var userUpdated = await client.Users[id].GetAsync(config => {
+		var userUpdated = await Users[id].GetAsync(config => {
 			config.QueryParameters.Select = ["accountEnabled"];
 		});
 		if (userUpdated is not null) {
