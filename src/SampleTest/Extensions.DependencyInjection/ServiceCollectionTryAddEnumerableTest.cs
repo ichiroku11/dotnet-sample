@@ -56,6 +56,24 @@ public class ServiceCollectionTryAddEnumerableTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void AddScoped_同じ実装を複数追加した場合は後勝ちで取得できる様子() {
+		// Arrange
+		var services = new ServiceCollection();
+
+		// Act
+		services
+			.AddScoped<IService, ServiceB>()
+			.AddScoped<IService, ServiceA>();
+
+		var provider = services.BuildServiceProvider();
+
+		// Assert
+		var service = provider.GetRequiredService<IService>();
+
+		Assert.IsType<ServiceA>(service);
+	}
+
+	[Fact]
 	public void TryAddScoped_同じ実装を複数追加できない() {
 		// Arrange
 		var services = new ServiceCollection();
