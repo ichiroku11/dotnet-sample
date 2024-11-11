@@ -82,7 +82,7 @@ public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 
 		// Act
 		Assert.False(configured);
-		var options = factory.Create(Options.DefaultName);
+		var options = factory.CreateDefault();
 
 		// Assert
 		Assert.NotNull(options);
@@ -155,7 +155,7 @@ public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
 
 		// Act
-		var options = factory.Create(Options.DefaultName);
+		var options = factory.CreateDefault();
 
 		// Assert
 		Assert.Equal(1, options.Value);
@@ -179,10 +179,10 @@ public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 		// Assert
 		Assert.Equal(0, count);
 
-		var options = factory.Create(Options.DefaultName);
+		var options = factory.CreateDefault();
 		Assert.Equal(1, count);
 
-		options = factory.Create(Options.DefaultName);
+		options = factory.CreateDefault();
 		Assert.Equal(2, count);
 	}
 
@@ -228,7 +228,7 @@ public class OptionsBuilderConfigureTest(ITestOutputHelper output) {
 		var factory = provider.GetRequiredService<IOptionsFactory<SampleOptions>>();
 
 		// Act
-		var options = factory.Create(Options.DefaultName);
+		var options = factory.CreateDefault();
 
 		// Assert
 		// Configure同士、PostConfigure同士では登録した順に実行される
