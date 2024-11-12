@@ -32,16 +32,16 @@ public class HttpMessageHandlerTest {
 
 	[Fact]
 	public async Task SendAsync_オーバーライドして前後に処理をはさむ() {
-		using (var client = new HttpClient(new SampleHandler())) {
-			// Arrange
-			// Act
-			var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
-			var response = await client.SendAsync(request, CancellationToken.None);
+		// Arrange
+		using var client = new HttpClient(new SampleHandler());
+		var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal("Request", request.Headers.GetValues("X-SampleHandler").Single());
-			Assert.Equal("Response", response.Headers.GetValues("X-SampleHandler").Single());
-		}
+		// Act
+		var response = await client.SendAsync(request, CancellationToken.None);
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.Equal("Request", request.Headers.GetValues("X-SampleHandler").Single());
+		Assert.Equal("Response", response.Headers.GetValues("X-SampleHandler").Single());
 	}
 }
