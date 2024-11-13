@@ -34,4 +34,19 @@ public class ServiceCollectionHttpClientTest {
 		// Assert
 		Assert.IsAssignableFrom<IHttpClientFactory>(factory);
 	}
+
+	[Fact]
+	public void AddHttpClient_IHttpMessageHandlerFactoryを実装するインスタンスを取得できる() {
+		// Arrange
+		var services = new ServiceCollection();
+		services.AddHttpClient();
+
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var factory = provider.GetRequiredService<IHttpMessageHandlerFactory>();
+
+		// Assert
+		Assert.IsAssignableFrom<IHttpMessageHandlerFactory>(factory);
+	}
 }
