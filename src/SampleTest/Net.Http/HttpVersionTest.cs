@@ -12,5 +12,4 @@ public class HttpVersionTest {
 		Assert.Equal(new Version(2, 0), HttpVersion.Version20);
 		Assert.Equal(new Version(3, 0), HttpVersion.Version30);
 	}
-
 }
