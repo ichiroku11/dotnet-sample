@@ -204,6 +204,18 @@ public class UriTest(ITestOutputHelper output) {
 		Assert.False(actual);
 	}
 
+	[Fact]
+	public void IsAbsoluteUri_UriKindのRelativeOrAbsoluteを指定するとfalseを返す() {
+		// Arrange
+		var uri = new Uri("/path", UriKind.RelativeOrAbsolute);
+
+		// Act
+		var actual = uri.IsAbsoluteUri;
+
+		// Assert
+		Assert.False(actual);
+	}
+
 	[Theory]
 	// ポートを省略した場合はデフォルトポートになる
 	[InlineData("https://example.jp", true)]
