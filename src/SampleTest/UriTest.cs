@@ -186,34 +186,20 @@ public class UriTest(ITestOutputHelper output) {
 		var uri = new Uri("https://example.jp");
 
 		// Act
-		var actual = uri.IsAbsoluteUri;
-
 		// Assert
-		Assert.True(actual);
+		Assert.True(uri.IsAbsoluteUri);
 	}
 
-	[Fact]
-	public void IsAbsoluteUri_UriKindのRelativeを指定するちfalseを返す() {
+	[Theory]
+	[InlineData(UriKind.Relative)]
+	[InlineData(UriKind.RelativeOrAbsolute)]
+	public void IsAbsoluteUri_相対パスを指定してインスタンスを生成するとfalseを返す(UriKind kind) {
 		// Arrange
-		var uri = new Uri("/path", UriKind.Relative);
+		var uri = new Uri("/path", kind);
 
 		// Act
-		var actual = uri.IsAbsoluteUri;
-
 		// Assert
-		Assert.False(actual);
-	}
-
-	[Fact]
-	public void IsAbsoluteUri_UriKindのRelativeOrAbsoluteを指定するとfalseを返す() {
-		// Arrange
-		var uri = new Uri("/path", UriKind.RelativeOrAbsolute);
-
-		// Act
-		var actual = uri.IsAbsoluteUri;
-
-		// Assert
-		Assert.False(actual);
+		Assert.False(uri.IsAbsoluteUri);
 	}
 
 	[Theory]
