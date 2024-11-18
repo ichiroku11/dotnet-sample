@@ -62,11 +62,16 @@ public class UriTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 	}
 
-	[Fact]
-	public void Constructor_空文字列とUriKindのRelativeを指定してインスタンスを生成できる() {
+	[Theory]
+	[InlineData("/", UriKind.Relative)]
+	[InlineData("/", UriKind.RelativeOrAbsolute)]
+	// 空文字もOK
+	[InlineData("", UriKind.Relative)]
+	[InlineData("", UriKind.RelativeOrAbsolute)]
+	public void Constructor_相対URLの文字列を指定してインスタンスを生成できる(string path, UriKind kind) {
 		// Arrange
 		// Act
-		var uri =  new Uri("", UriKind.Relative);
+		var uri =  new Uri(path, kind);
 
 		// Assert
 		Assert.False(uri.IsAbsoluteUri);
