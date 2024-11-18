@@ -62,6 +62,17 @@ public class UriTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 	}
 
+	[Fact]
+	public void Constructor_空文字列とUriKindのRelativeを指定してインスタンスを生成できる() {
+		// Arrange
+		// Act
+		var uri =  new Uri("", UriKind.Relative);
+
+		// Assert
+		Assert.False(uri.IsAbsoluteUri);
+		// ほかの各プロパティを呼び出すとエラーになる様子
+	}
+
 	[Theory]
 	[InlineData("", UriHostNameType.Unknown)]
 	[InlineData(default(string), UriHostNameType.Unknown)]
