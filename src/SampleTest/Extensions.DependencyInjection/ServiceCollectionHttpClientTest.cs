@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Options;
 
 namespace SampleTest.Extensions.DependencyInjection;
 
@@ -62,5 +64,22 @@ public class ServiceCollectionHttpClientTest {
 
 		// Assert
 		Assert.IsAssignableFrom<IHttpMessageHandlerFactory>(factory);
+	}
+
+	[Fact]
+	public void AddHttpClient_HttpClientFactoryOptionsのインスタンスを取得できる() {
+		// Arrange
+		var services = new ServiceCollection();
+		services.AddHttpClient();
+
+		var provider = services.BuildServiceProvider();
+		// Act
+
+		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
+
+		// Assert
+		Assert.NotNull(options);
+		Assert.Empty(options.HttpClientActions);
+		Assert.Empty(options.HttpMessageHandlerBuilderActions);
 	}
 }
