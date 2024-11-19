@@ -73,6 +73,40 @@ public class ServiceCollectionServiceLifetimeTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void AddSingleton_サービスを最初に取得するときだけファクトリーメソッドが呼び出される() {
+		// Arrange
+		var count = 0;
+		var services = new ServiceCollection();
+		var countSnapshot = new List<int>();
+
+		// Act
+		services.AddSingleton(provider => {
+			count++;
+			return new Service();
+		});
+
+		// IServiceProviderを受け取らないFuncを指定すると、
+		// Func<Sample>を生成するとして扱われるので注意
+		//services.AddSingleton(() => new Sample());
+		var provider = services.BuildServiceProvider();
+
+		countSnapshot.Add(count);
+
+		// ファクトリーメソッドが呼び出される
+		var actual1 = provider.GetRequiredService<Service>();
+		countSnapshot.Add(count);
+
+		// もう1度取得してもファクトリーメソッドは呼び出されない
+		var actual2 = provider.GetRequiredService<Service>();
+		countSnapshot.Add(count);
+
+		// Assert
+		Assert.Equal([0, 1, 1], countSnapshot);
+		Assert.Same(actual1, actual2);
+		Assert.Equal(actual1.Value, actual2.Value);
+	}
+
+	[Fact]
 	public void AddScoped_同じスコープ内では同じインスタンスを取得できる() {
 		// Arrange
 		var services = new ServiceCollection();

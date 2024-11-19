@@ -12,7 +12,7 @@ public class CosmosEfCoreSample(CosmosDbContext context, ILogger<CosmosEfCoreSam
 	// Orderを削除
 	private async Task DeleteOrdersAsync() {
 		var orders = await _context.Orders.ToListAsync();
-		if (orders.Any()) {
+		if (orders.Count > 0) {
 			_logger.LogInformation("{orders}", orders.ToJson());
 			_context.Orders.RemoveRange(orders);
 			await _context.SaveChangesAsync();

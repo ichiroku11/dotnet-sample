@@ -63,6 +63,22 @@ public class UriTest(ITestOutputHelper output) {
 	}
 
 	[Theory]
+	[InlineData("/", UriKind.Relative)]
+	[InlineData("/", UriKind.RelativeOrAbsolute)]
+	// 空文字もOK
+	[InlineData("", UriKind.Relative)]
+	[InlineData("", UriKind.RelativeOrAbsolute)]
+	public void Constructor_相対URLの文字列を指定してインスタンスを生成できる(string path, UriKind kind) {
+		// Arrange
+		// Act
+		var uri =  new Uri(path, kind);
+
+		// Assert
+		Assert.False(uri.IsAbsoluteUri);
+		// ほかの各プロパティを呼び出すとエラーになる様子
+	}
+
+	[Theory]
 	[InlineData("", UriHostNameType.Unknown)]
 	[InlineData(default(string), UriHostNameType.Unknown)]
 	[InlineData("localhost", UriHostNameType.Dns)]
@@ -186,22 +202,20 @@ public class UriTest(ITestOutputHelper output) {
 		var uri = new Uri("https://example.jp");
 
 		// Act
-		var actual = uri.IsAbsoluteUri;
-
 		// Assert
-		Assert.True(actual);
+		Assert.True(uri.IsAbsoluteUri);
 	}
 
-	[Fact]
-	public void IsAbsoluteUri_UriKindのRelativeを指定するちfalseを返す() {
+	[Theory]
+	[InlineData(UriKind.Relative)]
+	[InlineData(UriKind.RelativeOrAbsolute)]
+	public void IsAbsoluteUri_相対パスを指定してインスタンスを生成するとfalseを返す(UriKind kind) {
 		// Arrange
-		var uri = new Uri("/path", UriKind.Relative);
+		var uri = new Uri("/path", kind);
 
 		// Act
-		var actual = uri.IsAbsoluteUri;
-
 		// Assert
-		Assert.False(actual);
+		Assert.False(uri.IsAbsoluteUri);
 	}
 
 	[Theory]

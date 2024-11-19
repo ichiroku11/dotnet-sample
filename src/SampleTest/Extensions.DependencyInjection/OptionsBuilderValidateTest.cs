@@ -51,7 +51,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 		// Act
 		Assert.False(validated);
-		var options = factory.Create(Options.DefaultName);
+		var options = factory.CreateDefault();
 
 		// Assert
 		Assert.NotNull(options);
@@ -73,7 +73,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 		// Act
 		var recorded = Record.Exception(() => {
-			factory.Create(Options.DefaultName);
+			factory.CreateDefault();
 		});
 
 		// Assert
@@ -93,7 +93,7 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 		// Act
 		var recorded = Record.Exception(() => {
-			factory.Create(Options.DefaultName);
+			factory.CreateDefault();
 		});
 
 		// Assert
@@ -103,7 +103,9 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 		var failure = Assert.Single(exception.Failures);
 		_output.WriteLine(failure);
 
-		Assert.Equal(Options.DefaultName, exception.OptionsName);
+		// CS0234
+		//Assert.Equal(Options.DefaultName, exception.OptionsName);
+		Assert.Empty(exception.OptionsName);
 		Assert.Equal(typeof(SampleOptions), exception.OptionsType);
 	}
 
@@ -125,11 +127,14 @@ public class OptionsBuilderValidateTest(ITestOutputHelper output) {
 
 		// Assert
 		var exception = Assert.IsType<OptionsValidationException>(recorded);
+
 		// バリデーション失敗のメッセージ
 		var failure = Assert.Single(exception.Failures);
 		_output.WriteLine(failure);
 
-		Assert.Equal(Options.DefaultName, exception.OptionsName);
+		// CS0234
+		//Assert.Equal(Options.DefaultName, exception.OptionsName);
+		Assert.Empty(exception.OptionsName);
 		Assert.Equal(typeof(SampleOptions), exception.OptionsType);
 	}
 }
