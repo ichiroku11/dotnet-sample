@@ -67,7 +67,7 @@ public class ServiceCollectionHttpClientTest {
 	}
 
 	[Fact]
-	public void AddHttpClient_HttpClientFactoryOptionsのインスタンスを取得できる() {
+	public void AddHttpClient_HttpClientFactoryOptionsを取得できる() {
 		// Arrange
 		var services = new ServiceCollection();
 		services.AddHttpClient();
