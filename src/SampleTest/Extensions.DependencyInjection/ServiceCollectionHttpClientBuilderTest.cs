@@ -5,12 +5,18 @@ using Microsoft.Extensions.Options;
 namespace SampleTest.Extensions.DependencyInjection;
 
 public class ServiceCollectionHttpClientBuilderTest {
-	[Fact]
-	public void ConfigurePrimaryHttpMessageHandler_HttpMessageHandlerBuilderActionsに追加される() {
+	[Theory]
+	[InlineData(true)]
+	[InlineData(false)]
+	public void ConfigurePrimaryHttpMessageHandler_HttpMessageHandlerBuilderActionsに追加される(bool pattern) {
 		// Arrange
 		var services = new ServiceCollection();
 		services.ConfigureHttpClientDefaults(builder => {
-			builder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler());
+			if (pattern) {
+				builder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler());
+			} else {
+				builder.ConfigurePrimaryHttpMessageHandler<HttpClientHandler>();
+			}
 		});
 
 		var provider = services.BuildServiceProvider();
