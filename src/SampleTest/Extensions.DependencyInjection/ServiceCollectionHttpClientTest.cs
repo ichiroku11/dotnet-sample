@@ -110,6 +110,7 @@ public class ServiceCollectionHttpClientTest {
 		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
 
 		// Assert
+		Assert.NotNull(options);
 		Assert.Empty(options.HttpClientActions);
 		Assert.Empty(options.HttpMessageHandlerBuilderActions);
 	}

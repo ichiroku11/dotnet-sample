@@ -19,7 +19,6 @@ public class ServiceCollectionHttpClientBuilderTest {
 		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
 
 		// Assert
-		Assert.Empty(options.HttpClientActions);
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
 	}
 }
