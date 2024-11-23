@@ -49,4 +49,23 @@ public class ServiceCollectionHttpClientBuilderTest {
 		// Assert
 		Assert.Equal(count, options.HttpClientActions.Count);
 	}
+
+	[Fact]
+	public void ConfigureHttpClient_HttpClientを名前解決するとコールバックが呼ばれる() {
+		// Arrange
+		var called = false;
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			builder.ConfigureHttpClient(client => {
+				called = true;
+			});
+		});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var client = provider.GetRequiredService<HttpClient>();
+
+		// Assert
+		Assert.True(called);
+	}
 }
