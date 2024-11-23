@@ -8,7 +8,7 @@ public class ServiceCollectionHttpClientBuilderTest {
 	[Theory]
 	[InlineData(true)]
 	[InlineData(false)]
-	public void ConfigurePrimaryHttpMessageHandler_HttpMessageHandlerBuilderActionsに追加される(bool pattern) {
+	public void ConfigurePrimaryHttpMessageHandler_HttpClientFactoryOptionsのHttpMessageHandlerBuilderActionsに追加される(bool pattern) {
 		// Arrange
 		var services = new ServiceCollection();
 		services.ConfigureHttpClientDefaults(builder => {
@@ -26,5 +26,22 @@ public class ServiceCollectionHttpClientBuilderTest {
 
 		// Assert
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
+	}
+
+	[Fact]
+	public void ConfigureHttpClient_HttpClientFactoryOptionsのHttpClientActionsが追加される() {
+		// Arrange
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			builder.ConfigureHttpClient(client => {
+			});
+		});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
+
+		// Assert
+		Assert.Single(options.HttpClientActions);
 	}
 }
