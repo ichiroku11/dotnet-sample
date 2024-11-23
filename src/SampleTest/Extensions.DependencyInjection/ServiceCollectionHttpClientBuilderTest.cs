@@ -28,13 +28,18 @@ public class ServiceCollectionHttpClientBuilderTest {
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
 	}
 
-	[Fact]
-	public void ConfigureHttpClient_HttpClientFactoryOptionsのHttpClientActionsが追加される() {
+	[Theory]
+	[InlineData(1)]
+	[InlineData(2)]
+	public void ConfigureHttpClient_HttpClientFactoryOptionsのHttpClientActionsが追加される(int count) {
 		// Arrange
 		var services = new ServiceCollection();
 		services.ConfigureHttpClientDefaults(builder => {
-			builder.ConfigureHttpClient(client => {
-			});
+			// ConfigureHttpClientを呼び出した回数分、HttpClientActionsに追加される
+			foreach (var index in Enumerable.Range(0, count)) {
+				builder.ConfigureHttpClient(client => {
+				});
+			}
 		});
 		var provider = services.BuildServiceProvider();
 
@@ -42,6 +47,6 @@ public class ServiceCollectionHttpClientBuilderTest {
 		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
 
 		// Assert
-		Assert.Single(options.HttpClientActions);
+		Assert.Equal(count, options.HttpClientActions.Count);
 	}
 }
