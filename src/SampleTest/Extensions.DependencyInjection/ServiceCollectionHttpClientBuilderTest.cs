@@ -5,6 +5,31 @@ using Microsoft.Extensions.Options;
 namespace SampleTest.Extensions.DependencyInjection;
 
 public class ServiceCollectionHttpClientBuilderTest {
+	private class TestHandler : DelegatingHandler {
+	}
+
+	[Theory]
+	[InlineData(true)]
+	[InlineData(false)]
+	public void AddHttpMessageHandler_HttpClientFactoryOptionsのHttpMessageHandlerBuilderActionsが追加される(bool pattern) {
+		// Arrange
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			if (pattern) {
+				builder.AddHttpMessageHandler(() => new TestHandler());
+			} else {
+				builder.AddHttpMessageHandler<TestHandler>();
+			}
+		});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
+
+		// Assert
+		Assert.Single(options.HttpMessageHandlerBuilderActions);
+	}
+
 	[Theory]
 	[InlineData(true)]
 	[InlineData(false)]
@@ -63,35 +88,10 @@ public class ServiceCollectionHttpClientBuilderTest {
 		var provider = services.BuildServiceProvider();
 
 		// Act
+		// Assert
+		Assert.False(called);
 		var client = provider.GetRequiredService<HttpClient>();
-
-		// Assert
 		Assert.True(called);
-	}
-
-	private class TestHandler : DelegatingHandler {
-	}
-
-	[Theory]
-	[InlineData(true)]
-	[InlineData(false)]
-	public void AddHttpMessageHandler_HttpClientFactoryOptionsのHttpMessageHandlerBuilderActionsが追加される(bool pattern) {
-		// Arrange
-		var services = new ServiceCollection();
-		services.ConfigureHttpClientDefaults(builder => {
-			if (pattern) {
-				builder.AddHttpMessageHandler(() => new TestHandler());
-			} else {
-				builder.AddHttpMessageHandler<TestHandler>();
-			}
-		});
-		var provider = services.BuildServiceProvider();
-
-		// Act
-		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
-
-		// Assert
-		Assert.Single(options.HttpMessageHandlerBuilderActions);
 	}
 
 	[Fact]
