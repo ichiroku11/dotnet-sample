@@ -93,4 +93,21 @@ public class ServiceCollectionHttpClientBuilderTest {
 		// Assert
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
 	}
+
+	[Fact]
+	public void ConfigureAdditionalHttpMessageHandlers_HttpClientFactoryOptionsのHttpMessageHandlerBuilderActionsが追加される() {
+		// Arrange
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			builder.ConfigureAdditionalHttpMessageHandlers((handlers, provider) => {
+			});
+		});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		var options = provider.GetRequiredService<IOptions<HttpClientFactoryOptions>>().Value;
+
+		// Assert
+		Assert.Single(options.HttpMessageHandlerBuilderActions);
+	}
 }
