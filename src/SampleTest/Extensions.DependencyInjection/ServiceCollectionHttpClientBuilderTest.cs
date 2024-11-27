@@ -90,7 +90,7 @@ public class ServiceCollectionHttpClientBuilderTest {
 		// Act
 		// Assert
 		Assert.False(called);
-		var client = provider.GetRequiredService<HttpClient>();
+		var _ = provider.GetRequiredService<HttpClient>();
 		Assert.True(called);
 	}
 
@@ -109,5 +109,24 @@ public class ServiceCollectionHttpClientBuilderTest {
 
 		// Assert
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
+	}
+
+	[Fact]
+	public void ConfigureAdditionalHttpMessageHandlers_HttpClientを名前解決するとコールバックが呼ばれる() {
+		// Arrange
+		var called = false;
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			builder.ConfigureAdditionalHttpMessageHandlers((handlers, provider) => {
+				called = true;
+			});
+		});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		// Assert
+		Assert.False(called);
+		var _ = provider.GetRequiredService<HttpClient>();
+		Assert.True(called);
 	}
 }
