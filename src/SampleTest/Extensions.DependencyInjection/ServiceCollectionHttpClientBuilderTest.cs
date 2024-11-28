@@ -53,6 +53,52 @@ public class ServiceCollectionHttpClientBuilderTest {
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
 	}
 
+	[Fact]
+	public void ConfigurePrimaryHttpMessageHandler_HttpClientを名前解決するとコールバックが呼ばれる() {
+		// Arrange
+		var called = false;
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			builder.ConfigurePrimaryHttpMessageHandler(() => {
+				called = true;
+				return new HttpClientHandler();
+			});
+		});
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		// Assert
+		Assert.False(called);
+		var _ = provider.GetRequiredService<HttpClient>();
+		Assert.True(called);
+	}
+
+	[Fact]
+	public void ConfigurePrimaryHttpMessageHandler_HttpClientを名前解決すると登録順にコールバックが呼ばれる() {
+		// Arrange
+		var called = new List<int>();
+		var services = new ServiceCollection();
+		services.ConfigureHttpClientDefaults(builder => {
+			builder.ConfigurePrimaryHttpMessageHandler(() => {
+				called.Add(1);
+				return new HttpClientHandler();
+			});
+
+			builder.ConfigurePrimaryHttpMessageHandler(() => {
+				called.Add(2);
+				return new HttpClientHandler();
+			});
+		});
+
+		var provider = services.BuildServiceProvider();
+
+		// Act
+		// Assert
+		Assert.Empty(called);
+		var _ = provider.GetRequiredService<HttpClient>();
+		Assert.Equal([1, 2], called);
+	}
+
 	[Theory]
 	[InlineData(1)]
 	[InlineData(2)]
