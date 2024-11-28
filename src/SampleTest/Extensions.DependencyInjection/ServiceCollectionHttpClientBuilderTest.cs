@@ -53,25 +53,6 @@ public class ServiceCollectionHttpClientBuilderTest {
 		Assert.Single(options.HttpMessageHandlerBuilderActions);
 	}
 
-	[Fact]
-	public void ConfigurePrimaryHttpMessageHandler_HttpClientを名前解決するとコールバックが呼ばれる() {
-		// Arrange
-		var called = false;
-		var services = new ServiceCollection();
-		services.ConfigureHttpClientDefaults(builder => {
-			builder.ConfigurePrimaryHttpMessageHandler(() => {
-				called = true;
-				return new HttpClientHandler();
-			});
-		});
-		var provider = services.BuildServiceProvider();
-
-		// Act
-		// Assert
-		Assert.False(called);
-		var _ = provider.GetRequiredService<HttpClient>();
-		Assert.True(called);
-	}
 
 	[Fact]
 	public void ConfigurePrimaryHttpMessageHandler_HttpClientを名前解決すると登録順にコールバックが呼ばれる() {
@@ -83,7 +64,6 @@ public class ServiceCollectionHttpClientBuilderTest {
 				called.Add(1);
 				return new HttpClientHandler();
 			});
-
 			builder.ConfigurePrimaryHttpMessageHandler(() => {
 				called.Add(2);
 				return new HttpClientHandler();
@@ -122,22 +102,25 @@ public class ServiceCollectionHttpClientBuilderTest {
 	}
 
 	[Fact]
-	public void ConfigureHttpClient_HttpClientを名前解決するとコールバックが呼ばれる() {
+	public void ConfigureHttpClient_HttpClientを名前解決すると登録順にコールバックが呼ばれる() {
 		// Arrange
-		var called = false;
+		var called = new List<int>();
 		var services = new ServiceCollection();
 		services.ConfigureHttpClientDefaults(builder => {
 			builder.ConfigureHttpClient(client => {
-				called = true;
+				called.Add(1);
+			});
+			builder.ConfigureHttpClient(client => {
+				called.Add(2);
 			});
 		});
 		var provider = services.BuildServiceProvider();
 
 		// Act
 		// Assert
-		Assert.False(called);
+		Assert.Empty(called);
 		var _ = provider.GetRequiredService<HttpClient>();
-		Assert.True(called);
+		Assert.Equal([1, 2], called);
 	}
 
 	[Fact]
@@ -158,21 +141,25 @@ public class ServiceCollectionHttpClientBuilderTest {
 	}
 
 	[Fact]
-	public void ConfigureAdditionalHttpMessageHandlers_HttpClientを名前解決するとコールバックが呼ばれる() {
+	public void ConfigureAdditionalHttpMessageHandlers_HttpClientを名前解決すると登録順にコールバックが呼ばれる() {
 		// Arrange
-		var called = false;
+		var called = new List<int>();
 		var services = new ServiceCollection();
 		services.ConfigureHttpClientDefaults(builder => {
 			builder.ConfigureAdditionalHttpMessageHandlers((handlers, provider) => {
-				called = true;
+				called.Add(1);
+			});
+			builder.ConfigureAdditionalHttpMessageHandlers((handlers, provider) => {
+				called.Add(2);
 			});
 		});
+
 		var provider = services.BuildServiceProvider();
 
 		// Act
 		// Assert
-		Assert.False(called);
+		Assert.Empty(called);
 		var _ = provider.GetRequiredService<HttpClient>();
-		Assert.True(called);
+		Assert.Equal([1, 2], called);
 	}
 }
