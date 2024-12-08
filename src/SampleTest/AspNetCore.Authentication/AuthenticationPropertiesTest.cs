@@ -27,6 +27,7 @@ public class AuthenticationPropertiesTest {
 
 		// Assert
 		var item = Assert.Single(properties.Items);
+		// キーはこの文字列っぽい
 		Assert.Equal(".redirect", item.Key);
 		Assert.Equal("redirect-uri", item.Value);
 	}
