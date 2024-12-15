@@ -55,7 +55,7 @@ public class OpenIdConnectConfigurationTest(ITestOutputHelper output) {
 			config.ClaimsSupported);
 	}
 
-	[Fact(Skip = "dotnet-9-failed")]
+	[Fact]
 	public void Properties_Writeメソッドで書き込んだJSONから生成したインスタンスの各プロパティの値を確認する() {
 		// Arrange
 		var json = OpenIdConnectConfiguration.Write(
@@ -72,8 +72,6 @@ public class OpenIdConnectConfigurationTest(ITestOutputHelper output) {
 		// Assert
 		Assert.Equal("issuer", config.Issuer);
 		Assert.Equal("authorization-endpoint", config.AuthorizationEndpoint);
-		// なぜかダメ
-		//Assert.Equal("end-session-endpoint", config.EndSessionEndpoint);
-		Assert.Null(config.EndSessionEndpoint);
+		Assert.Equal("end-session-endpoint", config.EndSessionEndpoint);
 	}
 }
