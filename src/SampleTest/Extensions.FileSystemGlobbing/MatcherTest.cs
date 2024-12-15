@@ -97,8 +97,8 @@ public class MatcherTest {
 		Assert.Equal(expectedStem, match.Stem);
 	}
 
-	[Fact(Skip = "dotnet-9-failed")]
-	public void Match_ルートディレクトリを指定した場合は相対ファイルパスはマッチしない() {
+	[Fact]
+	public void Match_ルートディレクトリを指定した場合は相対ファイルパスはマッチする() {
 		// Arrange
 		var matcher = new Matcher();
 		matcher.AddInclude("*.md");
@@ -106,7 +106,14 @@ public class MatcherTest {
 		// Act
 		var result = matcher.Match(@"c:\temp", @"readme.md");
 
-		Assert.False(result.HasMatches);
+		// Assert
+		// .NET 8ではマッチしなかったが
+		//Assert.False(result.HasMatches);
+		// .NET 9ではマッチするようになった
+		Assert.True(result.HasMatches);
+		var match = Assert.Single(result.Files);
+		Assert.Equal("readme.md", match.Path);
+		Assert.Equal("readme.md", match.Stem);
 	}
 
 	[Fact]
@@ -118,6 +125,7 @@ public class MatcherTest {
 		// Act
 		var result = matcher.Match(@"c:\temp", @"c:\temp\readme.md");
 
+		// Assert
 		Assert.True(result.HasMatches);
 		var match = Assert.Single(result.Files);
 		Assert.Equal("readme.md", match.Path);
