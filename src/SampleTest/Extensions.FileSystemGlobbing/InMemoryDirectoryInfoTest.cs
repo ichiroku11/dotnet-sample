@@ -36,8 +36,8 @@ public class InMemoryDirectoryInfoTest(ITestOutputHelper output) {
 		_output.WriteLine(root);
 
 		var files = new List<string> {
-				"readme.md"
-			};
+			"readme.md"
+		};
 		var dirInfo = new InMemoryDirectoryInfo(root, files);
 
 		// Act
@@ -51,21 +51,27 @@ public class InMemoryDirectoryInfoTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
-	public void EnumerateFileSystemInfos_適当なフォルダをルートに指定するとファイルを列挙できない() {
+	public void EnumerateFileSystemInfos_適当なフォルダをルートに指してもファイルを列挙できる() {
 		// Arrange
 		var root = @"c:\temp";
 		_output.WriteLine(root);
 
 		var files = new List<string> {
-				"readme.md"
-			};
+			"readme.md"
+		};
 		var dirInfo = new InMemoryDirectoryInfo(root, files);
 
 		// Act
 		var fileInfos = dirInfo.EnumerateFileSystemInfos();
 
 		// Assert
-		Assert.Empty(fileInfos);
+		// .NET 8では列挙できなかったが
+		//Assert.Empty(fileInfos);
+		// .NET 9では列挙できるようになった
+		var fileInfo = Assert.Single(fileInfos);
+		_output.WriteLine(fileInfo.FullName);
+
+		Assert.Equal("readme.md", fileInfo.Name);
 	}
 
 	[Fact]
@@ -75,8 +81,8 @@ public class InMemoryDirectoryInfoTest(ITestOutputHelper output) {
 		_output.WriteLine(root);
 
 		var files = new List<string> {
-				@"c:\temp\readme.md"
-			};
+			@"c:\temp\readme.md"
+		};
 		var dirInfo = new InMemoryDirectoryInfo(root, files);
 
 		// Act

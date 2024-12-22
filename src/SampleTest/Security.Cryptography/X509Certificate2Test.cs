@@ -15,7 +15,7 @@ public class X509Certificate2Test {
 		}
 
 		// Act
-		using var certificate2 = new X509Certificate2(certificate1.Export(X509ContentType.Cert));
+		using var certificate2 = X509CertificateLoader.LoadCertificate(certificate1.Export(X509ContentType.Cert));
 
 		// Assert
 		Assert.True(certificate1.HasPrivateKey);
