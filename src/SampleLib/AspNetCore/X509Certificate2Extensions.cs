@@ -4,5 +4,5 @@ namespace SampleLib.AspNetCore;
 
 public static class X509Certificate2Extensions {
 	public static X509Certificate2 RemovePrivateKey(this X509Certificate2 certificate)
-		=> new(certificate.Export(X509ContentType.Cert));
+		=> X509CertificateLoader.LoadCertificate(certificate.Export(X509ContentType.Cert));
 }
