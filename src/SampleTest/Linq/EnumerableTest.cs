@@ -54,7 +54,7 @@ public class EnumerableTest {
 		var actual = source.Prepend(1);
 
 		// Assert
-		Assert.Equal(new[] { 1, 2, 3, 4 }, actual);
+		Assert.Equal([1, 2, 3, 4], actual);
 	}
 
 	[Fact]
@@ -66,7 +66,7 @@ public class EnumerableTest {
 		var actual = source.Append(5);
 
 		// Assert
-		Assert.Equal(new[] { 2, 3, 4, 5 }, actual);
+		Assert.Equal([2, 3, 4, 5], actual);
 	}
 
 	[Fact]
@@ -118,7 +118,7 @@ public class EnumerableTest {
 		var actual = source.Take(2..4);
 
 		// Assert
-		Assert.Equal(new[] { 2, 3 }, actual);
+		Assert.Equal([2, 3], actual);
 	}
 
 	[Fact]

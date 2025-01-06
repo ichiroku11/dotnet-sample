@@ -10,7 +10,7 @@ public class EnumerableDefaultIfEmptyTest {
 		var actual = values.DefaultIfEmpty();
 
 		// Assert
-		Assert.Equal(new[] { 0 }, actual);
+		Assert.Equal([0], actual);
 	}
 
 	[Fact]
@@ -22,7 +22,7 @@ public class EnumerableDefaultIfEmptyTest {
 		var actual = values.DefaultIfEmpty(-1);
 
 		// Assert
-		Assert.Equal(new[] { -1 }, actual);
+		Assert.Equal([-1], actual);
 	}
 
 	[Fact]
@@ -34,6 +34,6 @@ public class EnumerableDefaultIfEmptyTest {
 		var actual = values.DefaultIfEmpty();
 
 		// Assert
-		Assert.Equal(new[] { 1 }, actual);
+		Assert.Equal([1], actual);
 	}
 }
