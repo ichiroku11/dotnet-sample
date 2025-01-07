@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace SampleTest.Linq;
 
 public class EnumerableToListTest {
