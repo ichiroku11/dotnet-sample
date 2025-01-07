@@ -15,7 +15,7 @@ public class EnumerableSequenceEqualTest {
 		});
 	}
 
-	public static TheoryData<IEnumerable<int>, IEnumerable<int>, bool> GetTheoryData_SequenceEqual()
+	public static TheoryData<int[], int[], bool> GetTheoryData_SequenceEqual()
 		=> new() {
 			{ [0], [0], true },
 			// お互い空の場合は等しい
@@ -26,7 +26,7 @@ public class EnumerableSequenceEqualTest {
 
 	[Theory]
 	[MemberData(nameof(GetTheoryData_SequenceEqual))]
-	public void SequenceEqual_いろいろな比較を試す(IEnumerable<int> first, IEnumerable<int> second, bool expected) {
+	public void SequenceEqual_いろいろな比較を試す(int[] first, int[] second, bool expected) {
 		// Arrange
 		// Act
 		var actual = Enumerable.SequenceEqual(first, second);
