@@ -70,6 +70,34 @@ public class StringTest {
 		Assert.Equal(expected, actual);
 	}
 
+	public static TheoryData<string, string, StringSplitOptions, string[]> GetTheoryData_Split() {
+		const string source = "a,b,, c ,";
+		const string separator = ",";
+
+		return new() {
+			// 空白を含む文字列が分割される場合
+			// 空白がそのまま残る
+			{ source, separator, StringSplitOptions.None, new[] { "a", "b", "", " c ", "" } },
+			// 空白だけの文字列が削除される
+			{ source, separator, StringSplitOptions.RemoveEmptyEntries, new[] { "a", "b", " c " } },
+			// 各文字列がTrimされる
+			{ source, separator, StringSplitOptions.TrimEntries, new[] { "a", "b", "", "c", "" } },
+			// 空白だけの文字列が削除される、かつ、各文字列がTrimされる
+			{ source, separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries, new[] { "a", "b", "c" } },
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Split))]
+	public void Split_StringSplitOptionsの違いを確認する(string source, string separator, StringSplitOptions options, string[] expected) {
+		// Arrange
+		// Act
+		var actual = source.Split(separator, options);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	// https://learn.microsoft.com/ja-jp/dotnet/api/system.string.trimend?view=net-8.0
 	[Theory]
 	[InlineData("abc-", '-', "abc")]
