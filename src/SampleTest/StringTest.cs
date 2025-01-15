@@ -70,12 +70,38 @@ public class StringTest {
 		Assert.Equal(expected, actual);
 	}
 
+	// 空文字列の場合
+	public static TheoryData<string, string, StringSplitOptions, string[]> GetTheoryData_Split_Empty() {
+		const string source = "";
+		const string separator = ",";
+
+		return new() {
+			{ source, separator, StringSplitOptions.None, new[] { "" } },
+			{ source, separator, StringSplitOptions.RemoveEmptyEntries, Array.Empty<string>() },
+			{ source, separator, StringSplitOptions.TrimEntries, new[] { "" } },
+			{ source, separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries, Array.Empty<string>() },
+		};
+	}
+
+	// 空白の場合
+	public static TheoryData<string, string, StringSplitOptions, string[]> GetTheoryData_Split_WhiteSpace() {
+		const string source = " ";
+		const string separator = ",";
+
+		return new() {
+			{ source, separator, StringSplitOptions.None, new[] { " " } },
+			{ source, separator, StringSplitOptions.RemoveEmptyEntries, new[] { " " } },
+			{ source, separator, StringSplitOptions.TrimEntries, new[] { "" } },
+			{ source, separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries, Array.Empty<string>() },
+		};
+	}
+
+	// 分割すると空文字や空白を含む場合
 	public static TheoryData<string, string, StringSplitOptions, string[]> GetTheoryData_Split() {
 		const string source = "a,b,, c ,";
 		const string separator = ",";
 
 		return new() {
-			// 空白を含む文字列が分割される場合
 			// 空白がそのまま残る
 			{ source, separator, StringSplitOptions.None, new[] { "a", "b", "", " c ", "" } },
 			// 空白だけの文字列が削除される
@@ -88,6 +114,8 @@ public class StringTest {
 	}
 
 	[Theory]
+	[MemberData(nameof(GetTheoryData_Split_Empty))]
+	[MemberData(nameof(GetTheoryData_Split_WhiteSpace))]
 	[MemberData(nameof(GetTheoryData_Split))]
 	public void Split_StringSplitOptionsの違いを確認する(string source, string separator, StringSplitOptions options, string[] expected) {
 		// Arrange
