@@ -10,12 +10,12 @@ public class EnumerableToLookupTest {
 
 	private record Monster(string Name, MonsterCategory Category);
 
-	private static readonly IEnumerable<Monster> _monsters = new[] {
-			new Monster("スライム", MonsterCategory.Slime),
-			new Monster("ドラキー", MonsterCategory.Fly),
-			new Monster("ホイミスライム", MonsterCategory.Slime),
-			new Monster("ももんじゃ", MonsterCategory.Animal),
-		};
+	private static readonly IEnumerable<Monster> _monsters = [
+		new Monster("スライム", MonsterCategory.Slime),
+		new Monster("ドラキー", MonsterCategory.Fly),
+		new Monster("ホイミスライム", MonsterCategory.Slime),
+		new Monster("ももんじゃ", MonsterCategory.Animal),
+	];
 
 	// ToLookupメソッドで取得できるILookupは、
 	// IGroupingのコレクションにインデクサやContainsメソッドなどを追加したインターフェイス
