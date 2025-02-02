@@ -46,4 +46,11 @@ public class OrderedDictionaryTest {
 		// Assert
 		Assert.Equal([0, 1, 2], actual);
 	}
+
+	// todo: IListを継承している
+	// todo: foreachで列挙できる
+
+	// todo: SetAt
+	// todo: RemoveAt
+	// todo: InsertAt
 }
