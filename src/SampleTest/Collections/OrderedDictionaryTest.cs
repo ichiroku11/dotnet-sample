@@ -26,4 +26,24 @@ public class OrderedDictionaryTest {
 		};
 		Assert.Equal(expected, actual);
 	}
+
+	[Fact]
+	public void IndexOf_指定した要素のインデックスを取得できる() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+			["a"] = 1,
+			["b"] = 2,
+			["c"] = 3,
+		};
+
+		// Act
+		var actual = new[] {
+			dictionary.IndexOf("a"),
+			dictionary.IndexOf("b"),
+			dictionary.IndexOf("c"),
+		};
+
+		// Assert
+		Assert.Equal([0, 1, 2], actual);
+	}
 }
