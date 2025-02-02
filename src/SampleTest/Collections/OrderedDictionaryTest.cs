@@ -47,6 +47,19 @@ public class OrderedDictionaryTest {
 		Assert.Equal([0, 1, 2], actual);
 	}
 
+	[Fact]
+	public void IndexOf_指定した要素が見つからない場合() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+		};
+
+		// Act
+		var actual = dictionary.IndexOf("");
+
+		// Assert
+		Assert.Equal(-1, actual);
+	}
+
 	// todo: IListを継承している
 	// todo: foreachで列挙できる
 
