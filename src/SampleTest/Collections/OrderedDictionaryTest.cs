@@ -1,7 +1,17 @@
-
 namespace SampleTest.Collections;
 
 public class OrderedDictionaryTest {
+	[Fact]
+	public void IListを実装している() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+		};
+
+		// Act
+		// Assert
+		Assert.IsAssignableFrom<IList<KeyValuePair<string, int>>>(dictionary);
+	}
+
 	[Fact]
 	public void GetAt_インデックス指定でKeyValuePairを取得できる() {
 		// Arrange
@@ -60,7 +70,6 @@ public class OrderedDictionaryTest {
 		Assert.Equal(-1, actual);
 	}
 
-	// todo: IListを継承している
 	// todo: foreachで列挙できる
 
 	// todo: SetAt
