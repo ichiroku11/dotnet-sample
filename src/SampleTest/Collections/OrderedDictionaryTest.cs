@@ -2,7 +2,7 @@ namespace SampleTest.Collections;
 
 public class OrderedDictionaryTest {
 	[Fact]
-	public void IListを実装している() {
+	public void OrderedDictionaryはIListを実装している() {
 		// Arrange
 		var dictionary = new OrderedDictionary<string, int> {
 		};
@@ -10,6 +10,30 @@ public class OrderedDictionaryTest {
 		// Act
 		// Assert
 		Assert.IsAssignableFrom<IList<KeyValuePair<string, int>>>(dictionary);
+	}
+
+	[Fact]
+	public void OrderedDictionaryはforeachで列挙できる() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+			["a"] = 1,
+			["b"] = 2,
+			["c"] = 3,
+		};
+
+		// Act
+		var actual = new List<KeyValuePair<string, int>>();
+		foreach (var item in dictionary) {
+			actual.Add(item);
+		}
+
+		// Assert
+		var expected = new[] {
+			KeyValuePair.Create("a", 1),
+			KeyValuePair.Create("b", 2),
+			KeyValuePair.Create("c", 3),
+		};
+		Assert.Equal(expected, actual);
 	}
 
 	[Fact]
@@ -69,8 +93,6 @@ public class OrderedDictionaryTest {
 		// Assert
 		Assert.Equal(-1, actual);
 	}
-
-	// todo: foreachで列挙できる
 
 	// todo: SetAt
 	// todo: RemoveAt
