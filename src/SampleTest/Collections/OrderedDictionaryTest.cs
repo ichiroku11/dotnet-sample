@@ -62,6 +62,29 @@ public class OrderedDictionaryTest {
 	}
 
 	[Fact]
+	public void SetAt_インデックス指定でKeyValuePairを設定できる() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+			["a"] = 1,
+			["b"] = 2,
+			["c"] = 3,
+		};
+
+		// Act
+		// ["b"] = 2 が ["d"] = 4 に変更する
+		dictionary.SetAt(1, "d", 4);
+
+		// Assert
+		var expected = new[] {
+			KeyValuePair.Create("a", 1),
+			// ["b"] = 2 が ["d"] = 4 に変更されている
+			KeyValuePair.Create("d", 4),
+			KeyValuePair.Create("c", 3),
+		};
+		Assert.Equal(expected, dictionary);
+	}
+
+	[Fact]
 	public void IndexOf_指定した要素のインデックスを取得できる() {
 		// Arrange
 		var dictionary = new OrderedDictionary<string, int> {
@@ -94,7 +117,6 @@ public class OrderedDictionaryTest {
 		Assert.Equal(-1, actual);
 	}
 
-	// todo: SetAt
 	// todo: RemoveAt
 	// todo: InsertAt
 }
