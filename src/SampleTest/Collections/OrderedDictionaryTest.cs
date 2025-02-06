@@ -117,6 +117,25 @@ public class OrderedDictionaryTest {
 		Assert.Equal(-1, actual);
 	}
 
-	// todo: RemoveAt
+	[Fact]
+	public void RemoveAt_インデックス指定で削除できる() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+			["a"] = 1,
+			["b"] = 2,
+			["c"] = 3,
+		};
+
+		// Act
+		dictionary.RemoveAt(1);
+
+		// Assert
+		var expected = new[] {
+			KeyValuePair.Create("a", 1),
+			KeyValuePair.Create("c", 3),
+		};
+		Assert.Equal(expected, dictionary);
+	}
+
 	// todo: InsertAt
 }
