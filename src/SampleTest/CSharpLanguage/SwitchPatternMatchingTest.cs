@@ -75,6 +75,30 @@ public class SwitchPatternMatchingTest {
 	}
 
 	[Theory]
+	[InlineData(new int[] { }, "empty")]
+	[InlineData(new int[] { 1 }, "1")]
+	[InlineData(new int[] { 1, 2 }, "1,2")]
+	[InlineData(new int[] { 1, 2, 3 }, "more")]
+	public void Switch_リストパターンを試す(int[] values, string expected) {
+		// Arrange
+
+		// Act
+		var actual = values switch {
+			// 空
+			[] => "empty",
+			// 要素が1つ
+			[var first] => $"{first}",
+			// 要素が2つ
+			[var first, var second] => $"{first},{second}",
+			// 要素が3つ以上
+			_ => "more",
+		};
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
 	[InlineData(null, null, 1)]
 	[InlineData(1, null, 2)]
 	[InlineData(null, 2, 3)]
