@@ -118,6 +118,26 @@ public class OrderedDictionaryTest {
 	}
 
 	[Fact]
+	public void Insert_インデックス指定で要素を挿入できる() {
+		// Arrange
+		var dictionary = new OrderedDictionary<string, int> {
+			["a"] = 1,
+			["c"] = 3,
+		};
+
+		// Act
+		dictionary.Insert(1, "b", 2);
+
+		// Assert
+		var expected = new[] {
+			KeyValuePair.Create("a", 1),
+			KeyValuePair.Create("b", 2),
+			KeyValuePair.Create("c", 3),
+		};
+		Assert.Equal(expected, dictionary);
+	}
+
+	[Fact]
 	public void RemoveAt_インデックス指定で削除できる() {
 		// Arrange
 		var dictionary = new OrderedDictionary<string, int> {
@@ -136,6 +156,4 @@ public class OrderedDictionaryTest {
 		};
 		Assert.Equal(expected, dictionary);
 	}
-
-	// todo: InsertAt
 }
