@@ -13,7 +13,7 @@ public class OrderedDictionaryTest {
 	}
 
 	[Fact]
-	public void OrderedDictionaryはforeachで列挙できる() {
+	public void OrderedDictionaryはインデックスの順番にforeachで列挙できる() {
 		// Arrange
 		var dictionary = new OrderedDictionary<string, int> {
 			["a"] = 1,
