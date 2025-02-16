@@ -8,11 +8,13 @@ public class QueueTest {
 		var queue = new Queue<string>();
 		queue.Enqueue("a");
 		queue.Enqueue("b");
+		queue.Dequeue();
+		queue.Enqueue("a");
 
 		// Act
 		var actual = queue.ToArray();
 
 		// Assert
-		Assert.Equal(["a", "b"], actual);
+		Assert.Equal(["b", "a"], actual);
 	}
 }
