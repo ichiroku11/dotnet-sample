@@ -3,7 +3,7 @@ namespace SampleTest.Collections;
 
 public class QueueTest {
 	[Fact]
-	public void ToArray_Enqueueの順に格納された配列を取得できる() {
+	public void ToArray_Enqueueした順に格納された配列を取得できる() {
 		// Arrange
 		var queue = new Queue<string>();
 		queue.Enqueue("a");
