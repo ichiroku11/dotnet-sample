@@ -1,7 +1,9 @@
 
 namespace SampleTest.Collections;
 
-public class QueueTest {
+public class QueueTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Fact]
 	public void Enqueue_Dequeue_Enqueueした順にDequeueできる() {
 		// Arrange
@@ -17,6 +19,21 @@ public class QueueTest {
 
 		// Assert
 		Assert.Equal(["a", "b"], actual);
+	}
+
+	[Fact]
+	public void Dequeue_空の状態で呼び出すとInvalidOperationExceptionが発生する() {
+		// Arrange
+		var queue = new Queue<string>();
+
+		// Act
+		var exception = Record.Exception(() => queue.Dequeue());
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+
+		// Queue empty.
+		_output.WriteLine(exception.Message);
 	}
 
 	[Fact]
