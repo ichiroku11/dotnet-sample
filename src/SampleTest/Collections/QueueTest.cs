@@ -37,6 +37,19 @@ public class QueueTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void TryDequeue_空の状態で呼び出すと戻り値はfalseになりout引数はnullになる() {
+		// Arrange
+		var queue = new Queue<string>();
+
+		// Act
+		var actual = queue.TryDequeue(out var result);
+
+		// Assert
+		Assert.False(actual);
+		Assert.Null(result);
+	}
+
+	[Fact]
 	public void ToArray_Enqueueした順に格納された配列を取得できる() {
 		// Arrange
 		var queue = new Queue<string>();
