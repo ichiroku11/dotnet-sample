@@ -1,23 +1,28 @@
 namespace SampleTest.Collections;
 
-public class StackTest {
+public class StackTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Fact]
-	public void Pop_空の場合に呼び出すとInvalidOperationException() {
+	public void Pop_空の状態で呼び出すとInvalidOperationExceptionが発生する() {
 		// Arrange
-		// Act
 		var stack = new Stack<int>();
 
+		// Act
+		var exception = Record.Exception(() => stack.Pop());
+
 		// Assert
-		Assert.Throws<InvalidOperationException>(() => {
-			stack.Pop();
-		});
+		Assert.IsType<InvalidOperationException>(exception);
+
+		// Stack empty.
+		_output.WriteLine(exception.Message);
 	}
 
 	[Fact]
-	public void Pop_コンストラクタで指定したコレクションの逆順で取得できる() {
+	public void Pop_コンストラクターで指定したコレクションの逆順で取得できる() {
 		// Arrange
 		// Act
-		var stack = new Stack<int>(new[] { 1, 2, 3 });
+		var stack = new Stack<int>([1, 2, 3]);
 
 		// Assert
 		Assert.Equal(3, stack.Pop());
