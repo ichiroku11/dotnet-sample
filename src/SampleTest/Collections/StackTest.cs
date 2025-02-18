@@ -18,7 +18,7 @@ public class StackTest(ITestOutputHelper output) {
 	[Fact]
 	public void Pop_空の状態で呼び出すとInvalidOperationExceptionが発生する() {
 		// Arrange
-		var stack = new Stack<int>();
+		var stack = new Stack<string>();
 
 		// Act
 		var exception = Record.Exception(() => stack.Pop());
@@ -28,5 +28,18 @@ public class StackTest(ITestOutputHelper output) {
 
 		// Stack empty.
 		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
+	public void TryPop_空の状態で呼び出すと戻り値はfalseになりout引数はnullになる() {
+		// Arrange
+		var queue = new Stack<string>();
+
+		// Act
+		var actual = queue.TryPop(out var result);
+
+		// Assert
+		Assert.False(actual);
+		Assert.Null(result);
 	}
 }
