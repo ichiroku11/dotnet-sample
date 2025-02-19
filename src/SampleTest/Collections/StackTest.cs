@@ -19,6 +19,23 @@ public class StackTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Pop_Pushした逆順で取得できる() {
+		// Arrange
+		var queue = new Stack<string>();
+		queue.Push("a");
+		queue.Push("b");
+
+		// Act
+		var actual = new string[] {
+			queue.Pop(),
+			queue.Pop(),
+		};
+
+		// Assert
+		Assert.Equal(["b", "a"], actual);
+	}
+
+	[Fact]
 	public void Pop_空の状態で呼び出すとInvalidOperationExceptionが発生する() {
 		// Arrange
 		var stack = new Stack<string>();
