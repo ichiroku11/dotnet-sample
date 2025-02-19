@@ -6,13 +6,16 @@ public class StackTest(ITestOutputHelper output) {
 	[Fact]
 	public void Pop_コンストラクターで指定したコレクションの逆順で取得できる() {
 		// Arrange
+		var stack = new Stack<string>(["a", "b"]);
+
 		// Act
-		var stack = new Stack<int>([1, 2, 3]);
+		var actual = new string[] {
+			stack.Pop(),
+			stack.Pop(),
+		};
 
 		// Assert
-		Assert.Equal(3, stack.Pop());
-		Assert.Equal(2, stack.Pop());
-		Assert.Equal(1, stack.Pop());
+		Assert.Equal(["b", "a"], actual);
 	}
 
 	[Fact]
@@ -31,7 +34,7 @@ public class StackTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
-	public void TryPop_空の状態で呼び出すと戻り値はfalseになりout引数はnullになる() {
+	public void TryPop_空の状態で呼び出すと戻り値はfalseになりout引数はデフォルト値になる() {
 		// Arrange
 		var queue = new Stack<string>();
 

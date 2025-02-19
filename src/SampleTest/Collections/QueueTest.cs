@@ -5,7 +5,22 @@ public class QueueTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
-	public void Enqueue_Dequeue_Enqueueした順にDequeueできる() {
+	public void Dequeue_コンストラクターで指定したコレクションの順で取得できる() {
+		// Arrange
+		var queue = new Queue<string>(["a", "b"]);
+
+		// Act
+		var actual = new string[] {
+			queue.Dequeue(),
+			queue.Dequeue(),
+		};
+
+		// Assert
+		Assert.Equal(["a", "b"], actual);
+	}
+
+	[Fact]
+	public void Dequeue_Enqueueした順に取得できる() {
 		// Arrange
 		var queue = new Queue<string>();
 		queue.Enqueue("a");
@@ -37,7 +52,7 @@ public class QueueTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
-	public void TryDequeue_空の状態で呼び出すと戻り値はfalseになりout引数はnullになる() {
+	public void TryDequeue_空の状態で呼び出すと戻り値はfalseになりout引数はデフォルト値になる() {
 		// Arrange
 		var queue = new Queue<string>();
 
