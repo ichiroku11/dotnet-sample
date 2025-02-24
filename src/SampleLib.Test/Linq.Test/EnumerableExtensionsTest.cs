@@ -30,4 +30,32 @@ public class EnumerableExtensionsTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	public static TheoryData<int[], (int, int)[]> GetTheoryData_DenseRankDescending() {
+		return new TheoryData<int[], (int, int)[]>
+		{
+			// 同じ順位がない
+			{
+				new int[] { 10, 20, 30 },
+				new (int, int)[] { (10, 3), (20, 2), (30, 1) }
+			},
+			// 同じ順位がある
+			{
+				new int[] { 10, 20, 30, 30, 40 },
+				new (int, int)[] { (10, 4), (20, 3), (30, 2), (30, 2), (40, 1) }
+			}
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_DenseRankDescending))]
+	public void DenseRankDescending(int[] values, (int, int)[] expected) {
+		// Arrange
+
+		// Act
+		var actual = values.DenseRankDescending();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
