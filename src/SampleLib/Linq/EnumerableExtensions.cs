@@ -1,23 +1,6 @@
 namespace SampleLib.Linq;
 
 public static class EnumerableExtensions {
-	/// <summary>
-	/// 2つのシーケンスが等しいか
-	/// </summary>
-	/// <typeparam name="TSource"></typeparam>
-	/// <typeparam name="TKey"></typeparam>
-	/// <param name="first"></param>
-	/// <param name="second"></param>
-	/// <param name="compareKeySelector"></param>
-	/// <returns></returns>
-	public static bool SequenceEqual<TSource, TKey>(
-		this IEnumerable<TSource> first,
-		IEnumerable<TSource> second,
-		Func<TSource, TKey> compareKeySelector)
-		where TSource : notnull
-		where TKey : notnull
-		=> first.SequenceEqual(second, new EqualityComparer<TSource, TKey>(compareKeySelector));
-
 	private static IOrderedEnumerable<TSource> Order<TSource>(this IEnumerable<TSource> source, bool ascending)
 		where TSource : notnull
 		=> ascending ? source.Order() : source.OrderDescending();
@@ -42,6 +25,7 @@ public static class EnumerableExtensions {
 	/// <typeparam name="TSource"></typeparam>
 	/// <param name="source"></param>
 	/// <returns></returns>
+	/// <remarks><paramref name="source"/>は並び替えられない</remarks>
 	public static IEnumerable<(TSource Item, int Rank)> DenseRank<TSource>(this IEnumerable<TSource> source)
 		where TSource : notnull
 		=> source.DenseRankCore(true);
@@ -52,6 +36,7 @@ public static class EnumerableExtensions {
 	/// <typeparam name="TSource"></typeparam>
 	/// <param name="source"></param>
 	/// <returns></returns>
+	/// <remarks><paramref name="source"/>は並び替えられない</remarks>
 	public static IEnumerable<(TSource Item, int Rank)> DenseRankDescending<TSource>(this IEnumerable<TSource> source)
 		where TSource : notnull
 		=> source.DenseRankCore(false);
