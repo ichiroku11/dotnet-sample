@@ -4,8 +4,7 @@ namespace SampleLib.Linq.Test;
 
 public class EnumerableExtensionsTest {
 	public static TheoryData<int[], (int, int)[]> GetTheoryData_DenseRank() {
-		return new TheoryData<int[], (int, int)[]>
-		{
+		return new TheoryData<int[], (int, int)[]> {
 			// 同じ順位がない
 			{
 				new int[] { 10, 20, 30 },
@@ -16,7 +15,8 @@ public class EnumerableExtensionsTest {
 				new int[] { 10, 20, 20, 30, 40 },
 				new (int, int)[] { (10, 1), (20, 2), (20, 2), (30, 3), (40, 4) }
 			},
-			// 同じ順位があり、順番は適当
+			// 同じ順位があり、シーケンスの並び順は適当
+			// => シーケンスの並びは変わらない
 			{
 				new int[] { 30, 40, 20, 10, 20 },
 				new (int, int)[] { (30, 3), (40, 4), (20, 2), (10, 1), (20, 2) }
@@ -37,8 +37,7 @@ public class EnumerableExtensionsTest {
 	}
 
 	public static TheoryData<int[], (int, int)[]> GetTheoryData_DenseRankDescending() {
-		return new TheoryData<int[], (int, int)[]>
-		{
+		return new TheoryData<int[], (int, int)[]> {
 			// 同じ順位がない
 			{
 				new int[] { 10, 20, 30 },
@@ -49,10 +48,11 @@ public class EnumerableExtensionsTest {
 				new int[] { 10, 20, 30, 30, 40 },
 				new (int, int)[] { (10, 4), (20, 3), (30, 2), (30, 2), (40, 1) }
 			},
-			// 同じ順位があり、順番は適当
+			// 同じ順位があり、シーケンスの並び順は適当
+			// => シーケンスの並びは変わらない
 			{
 				new int[] { 30, 40, 30, 10, 20 },
-				new (int, int)[] { (30, 2), (40, 1), (30, 2), (10, 4), (20, 3) }
+				new (int, int)[] { (30, 2), (40, 1), (30, 2), (10, 5), (20, 4) }
 			},
 		};
 	}
