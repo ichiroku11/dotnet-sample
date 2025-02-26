@@ -68,4 +68,26 @@ public class EnumerableExtensionsTest {
 		// Assert
 		Assert.Equal(expected, actual);
 	}
+
+	public static TheoryData<int[], (int, int)[]> GetTheoryData_Rank() {
+		return new TheoryData<int[], (int, int)[]> {
+			// 同じ順位がない
+			{
+				new int[] { 10, 20, 30 },
+				new (int, int)[] { (10, 1), (20, 2), (30, 3) }
+			},
+		};
+	}
+
+	[Theory]
+	[MemberData(nameof(GetTheoryData_Rank))]
+	public void Rank(int[] values, (int, int)[] expected) {
+		// Arrange
+
+		// Act
+		var actual = values.Rank();
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }

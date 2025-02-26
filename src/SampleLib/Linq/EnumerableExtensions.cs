@@ -25,7 +25,10 @@ public static class EnumerableExtensions {
 	/// <typeparam name="TSource"></typeparam>
 	/// <param name="source"></param>
 	/// <returns></returns>
-	/// <remarks><paramref name="source"/>は並び替えられない</remarks>
+	/// <remarks>
+	/// 同じ順位がある場合でも順位は飛び飛びにならない
+	/// <paramref name="source"/>は並び替えられない
+	/// </remarks>
 	public static IEnumerable<(TSource Item, int Rank)> DenseRank<TSource>(this IEnumerable<TSource> source)
 		where TSource : notnull
 		=> source.DenseRankCore(true);
@@ -36,8 +39,67 @@ public static class EnumerableExtensions {
 	/// <typeparam name="TSource"></typeparam>
 	/// <param name="source"></param>
 	/// <returns></returns>
-	/// <remarks><paramref name="source"/>は並び替えられない</remarks>
+	/// <remarks>
+	/// 同じ順位がある場合でも順位は飛び飛びにならない
+	/// <paramref name="source"/>は並び替えられない
+	/// </remarks>
 	public static IEnumerable<(TSource Item, int Rank)> DenseRankDescending<TSource>(this IEnumerable<TSource> source)
 		where TSource : notnull
 		=> source.DenseRankCore(false);
+
+	private static IOrderedEnumerable<KeyValuePair<TSource, int>> Order<TSource>(this IEnumerable<KeyValuePair<TSource, int>> source, bool ascending)
+		where TSource : notnull
+		=> ascending
+			? source.OrderBy(item => item.Key)
+			: source.OrderByDescending(item => item.Key);
+
+	private static IEnumerable<(TSource Item, int Rank)> RankCore<TSource>(this IEnumerable<TSource> source, bool ascending)
+		where TSource : notnull {
+
+		var rank = new Dictionary<TSource, int>();
+		var _ = source
+			.CountBy(value => value)
+			.Order(ascending)
+			// seedとaccumlatedは順位を表す
+			.Aggregate(
+				// 最初の順位：1位
+				seed: 1,
+				func: (accumlated, item) => {
+					// 集計しながら順位を登録していく
+					rank[item.Key] = accumlated;
+
+					// 次の順位：今の順位 + 今の順位の個数
+					return accumlated + item.Value;
+				});
+
+		return source.Select(item => (item, rank[item]));
+	}
+
+	/// <summary>
+	/// 要素を昇順で並び替えた順位を含むタプルのシーケンスを取得する
+	/// </summary>
+	/// <typeparam name="TSource"></typeparam>
+	/// <param name="source"></param>
+	/// <returns></returns>
+	/// <remarks>
+	/// 同じ順位がある場合、それ以降の順位は詰められない（順位が飛び飛びになる）
+	/// <paramref name="source"/>は並び替えられない
+	/// </remarks>
+	public static IEnumerable<(TSource Item, int Rank)> Rank<TSource>(this IEnumerable<TSource> source)
+		where TSource : notnull
+		=> source.RankCore(true);
+
+	/// <summary>
+	/// 要素を降順で並び替えた順位を含むタプルのシーケンスを取得する
+	/// </summary>
+	/// <typeparam name="TSource"></typeparam>
+	/// <param name="source"></param>
+	/// <returns></returns>
+	/// <remarks>
+	/// 同じ順位がある場合、それ以降の順位は詰められない（順位が飛び飛びになる）
+	/// <paramref name="source"/>は並び替えられない
+	/// </remarks>
+	public static IEnumerable<(TSource Item, int Rank)> RankDescending<TSource>(this IEnumerable<TSource> source)
+		where TSource : notnull
+		=> source.RankCore(false);
 }
