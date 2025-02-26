@@ -1,16 +1,19 @@
 namespace SampleLib.Linq;
 
 public static class EnumerableExtensions {
-	private static IOrderedEnumerable<TSource> Order<TSource>(this IEnumerable<TSource> source, bool ascending)
+	private static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+		this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending)
 		where TSource : notnull
-		=> ascending ? source.Order() : source.OrderDescending();
+		=> ascending
+			? source.OrderBy(keySelector)
+			: source.OrderByDescending(keySelector);
 
 	private static IEnumerable<(TSource Item, int Rank)> DenseRankCore<TSource>(this IEnumerable<TSource> source, bool ascending)
 		where TSource : notnull {
 
 		var rank = source
 			.Distinct()
-			.Order(ascending)
+			.OrderBy(item => item, ascending)
 			.Index()
 			.ToDictionary(
 				keySelector: item => item.Item,
@@ -47,19 +50,13 @@ public static class EnumerableExtensions {
 		where TSource : notnull
 		=> source.DenseRankCore(false);
 
-	private static IOrderedEnumerable<KeyValuePair<TSource, int>> Order<TSource>(this IEnumerable<KeyValuePair<TSource, int>> source, bool ascending)
-		where TSource : notnull
-		=> ascending
-			? source.OrderBy(item => item.Key)
-			: source.OrderByDescending(item => item.Key);
-
 	private static IEnumerable<(TSource Item, int Rank)> RankCore<TSource>(this IEnumerable<TSource> source, bool ascending)
 		where TSource : notnull {
 
 		var rank = new Dictionary<TSource, int>();
 		var _ = source
-			.CountBy(value => value)
-			.Order(ascending)
+			.CountBy(item => item)
+			.OrderBy(item => item.Key, ascending)
 			// seedとaccumlatedは順位を表す
 			.Aggregate(
 				// 最初の順位：1位
