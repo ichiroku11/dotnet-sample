@@ -11,11 +11,10 @@ public static class EnumerableExtensions {
 	private static IEnumerable<(TSource Item, int Rank)> DenseRankCore<TSource>(this IEnumerable<TSource> source, bool ascending)
 		where TSource : notnull {
 
+		// T-SQLのDENSE_RANK関数と同じ挙動になるようにする
 		var rank = source
 			.Distinct()
-			// 昇順の場合、1位は最も大きい値なので、降順に並び替えて順位付けしていく
-			// 降順の場合、1位は最も小さい値なので、昇順に並び替えて順位付けしていく
-			.OrderBy(item => item, !ascending)
+			.OrderBy(item => item, ascending)
 			.Index()
 			.ToDictionary(
 				keySelector: item => item.Item,
@@ -31,7 +30,7 @@ public static class EnumerableExtensions {
 	/// <param name="source"></param>
 	/// <returns></returns>
 	/// <remarks>
-	/// 最も大きい値が1位となる
+	/// 最も小さい値が1位となる
 	/// 同じ順位がある場合でも順位は飛び飛びにならない
 	/// <paramref name="source"/>は並び替えられない
 	/// </remarks>
@@ -46,7 +45,7 @@ public static class EnumerableExtensions {
 	/// <param name="source"></param>
 	/// <returns></returns>
 	/// <remarks>
-	/// 最も小さい値が1位となる
+	/// 最も大きい値が1位となる
 	/// 同じ順位がある場合でも順位は飛び飛びにならない
 	/// <paramref name="source"/>は並び替えられない
 	/// </remarks>
@@ -57,12 +56,11 @@ public static class EnumerableExtensions {
 	private static IEnumerable<(TSource Item, int Rank)> RankCore<TSource>(this IEnumerable<TSource> source, bool ascending)
 		where TSource : notnull {
 
+		// T-SQLのRANK関数と同じ挙動になるようにする
 		var rank = new Dictionary<TSource, int>();
 		var _ = source
 			.CountBy(item => item)
-			// 昇順の場合、1位は最も大きい値なので、降順に並び替えて順位付けしていく
-			// 降順の場合、1位は最も小さい値なので、昇順に並び替えて順位付けしていく
-			.OrderBy(item => item.Key, !ascending)
+			.OrderBy(item => item.Key, ascending)
 			// seedとaccumlatedは順位を表す
 			.Aggregate(
 				// 最初の順位：1位
@@ -85,7 +83,7 @@ public static class EnumerableExtensions {
 	/// <param name="source"></param>
 	/// <returns></returns>
 	/// <remarks>
-	/// 最も大きい値が1位となる
+	/// 最も小さい値が1位となる
 	/// 同じ順位がある場合、それ以降の順位は詰められない（順位が飛び飛びになる）
 	/// <paramref name="source"/>は並び替えられない
 	/// </remarks>
@@ -100,7 +98,7 @@ public static class EnumerableExtensions {
 	/// <param name="source"></param>
 	/// <returns></returns>
 	/// <remarks>
-	/// 最も小さい値が1位となる
+	/// 最も大きい値が1位となる
 	/// 同じ順位がある場合、それ以降の順位は詰められない（順位が飛び飛びになる）
 	/// <paramref name="source"/>は並び替えられない
 	/// </remarks>
