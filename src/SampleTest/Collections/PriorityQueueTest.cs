@@ -29,4 +29,22 @@ public class PriorityQueueTest {
 		Assert.Equal(["b", "a"], actual);
 	}
 
+	[Fact]
+	public void Dequeue_Enqueueした順に取得できる() {
+		// Arrange
+		var queue = new PriorityQueue<string, int>();
+		// 優先度も指定してEnqueueする
+		queue.Enqueue("a", 2);
+		queue.Enqueue("b", 1);
+
+		// Act
+		var actual = new string[] {
+			queue.Dequeue(),
+			queue.Dequeue(),
+		};
+
+		// Assert
+		// 優先度順（値が小さい順）に取り出される
+		Assert.Equal(["b", "a"], actual);
+	}
 }
