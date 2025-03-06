@@ -1,6 +1,8 @@
 namespace SampleTest.Collections;
 
-public class PriorityQueueTest {
+public class PriorityQueueTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Fact]
 	public void Properties_生成したインスタンスのプロパティを確認する() {
 		// Arrange
@@ -46,5 +48,20 @@ public class PriorityQueueTest {
 		// Assert
 		// 優先度順（値が小さい順）に取り出される
 		Assert.Equal(["b", "a"], actual);
+	}
+
+	[Fact]
+	public void Dequeue_空の状態で呼び出すとInvalidOperationExceptionが発生する() {
+		// Arrange
+		var queue = new PriorityQueue<string, int>();
+
+		// Act
+		var exception = Record.Exception(() => queue.Dequeue());
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+
+		// Queue empty.
+		_output.WriteLine(exception.Message);
 	}
 }
