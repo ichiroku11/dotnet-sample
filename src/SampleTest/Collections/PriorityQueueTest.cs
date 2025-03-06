@@ -64,4 +64,19 @@ public class PriorityQueueTest(ITestOutputHelper output) {
 		// Queue empty.
 		_output.WriteLine(exception.Message);
 	}
+
+	[Fact]
+	public void DequeueEnqueue_Enqueueの前にDequeueする() {
+		// Arrange
+		var queue = new PriorityQueue<string, int>();
+		queue.Enqueue("a", 2);
+		queue.Enqueue("b", 1);
+
+		// Act
+		var actual = queue.DequeueEnqueue("c", 1);
+
+		// Assert
+		Assert.Equal("b", actual);
+		Assert.Equal(2, queue.Count);
+	}
 }
