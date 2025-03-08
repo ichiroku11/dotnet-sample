@@ -79,4 +79,21 @@ public class PriorityQueueTest(ITestOutputHelper output) {
 		Assert.Equal("b", actual);
 		Assert.Equal(2, queue.Count);
 	}
+
+	[Fact]
+	public void EnqueueDequeue_Dequeueの前にEnqueueする() {
+		// Arrange
+		var queue = new PriorityQueue<string, int>();
+		queue.Enqueue("a", 2);
+		queue.Enqueue("b", 1);
+
+		// Act
+		// 優先度を1にすると、"b"が取り出される保証はなさそう
+		var actual = queue.EnqueueDequeue("c", 3);
+
+		// Assert
+		Assert.Equal("b", actual);
+		Assert.Equal(2, queue.Count);
+	}
+
 }
