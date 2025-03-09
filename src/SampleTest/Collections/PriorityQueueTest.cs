@@ -111,5 +111,16 @@ public class PriorityQueueTest(ITestOutputHelper output) {
 		Assert.Equal(2, queue.Count);
 	}
 
-	// todo: EnqueueDequeue_空の状態でもエラーにならいない？
+	[Fact]
+	public void EnqueueDequeue_空の状態で呼び出してもEnqueueした要素を取得できて例外も発生しない() {
+		// Arrange
+		var queue = new PriorityQueue<string, int>();
+
+		// Act
+		var actual = queue.EnqueueDequeue("a", 1);
+
+		// Assert
+		Assert.Equal("a", actual);
+		Assert.Equal(0, queue.Count);
+	}
 }
