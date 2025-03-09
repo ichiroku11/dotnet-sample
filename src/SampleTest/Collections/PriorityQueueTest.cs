@@ -81,6 +81,21 @@ public class PriorityQueueTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void DequeueEnqueue_空の状態で呼び出すとInvalidOperationExceptionが発生する() {
+		// Arrange
+		var queue = new PriorityQueue<string, int>();
+
+		// Act
+		var exception = Record.Exception(() => queue.DequeueEnqueue("a", 1));
+
+		// Assert
+		Assert.IsType<InvalidOperationException>(exception);
+
+		// Queue empty.
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
 	public void EnqueueDequeue_Dequeueの前にEnqueueする() {
 		// Arrange
 		var queue = new PriorityQueue<string, int>();
@@ -96,4 +111,5 @@ public class PriorityQueueTest(ITestOutputHelper output) {
 		Assert.Equal(2, queue.Count);
 	}
 
+	// todo: EnqueueDequeue_空の状態でもエラーにならいない？
 }
