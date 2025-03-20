@@ -1,0 +1,45 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>AntiForgery</title>
+</head>
+<body>
+	<div>
+		@*
+			postメソッドのform要素には、
+			name="__RequestVerificationToken"の
+			トークンを埋め込んだinput（type="hidden"）要素が生成される
+		*@
+		<h4>post ~/default/validatetoken asp-antiforgery属性なし</h4>
+		<form asp-action="ValidateToken" method="post">
+			<button>Save</button>
+		</form>
+	</div>
+	<div>
+		@* トークンが埋め込まれていないので400 BadRequest *@
+		<h4>post ~/default/validatetoken asp-antiforgery="false"</h4>
+		<form asp-action="Validate" asp-antiforgery="false" method="post">
+			<button>Save</button>
+		</form>
+	</div>
+	<div>
+		@* トークンが埋め込まれているがIgnoreAntiforgeryToken属性なので検証されない *@
+		<h4>post ~/default/ignoretoken asp-antiforgery属性なし</h4>
+		<form asp-action="IgnoreToken" method="post">
+			<button>Save</button>
+		</form>
+	</div>
+	<div>
+		@* トークンが埋め込まれていないが、IgnoreAntiforgeryToken属性なので検証されない *@
+		<h4>post ~/default/ignoretoken asp-antiforgery="false"</h4>
+		<form asp-action="IgnoreToken" asp-antiforgery="false" method="post">
+			<button>Save</button>
+		</form>
+	</div>
+</body>
+</html>
