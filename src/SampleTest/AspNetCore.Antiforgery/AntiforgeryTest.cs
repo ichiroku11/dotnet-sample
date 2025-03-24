@@ -38,4 +38,24 @@ public class AntiforgeryTest {
 		Assert.Equal(antiforgeryOptions.FormFieldName, actual.FormFieldName);
 		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
 	}
+
+	[Fact]
+	public void GetAndStoreTokens_戻り値を確認する() {
+		// Arrange
+		var context = CreateHttpContext();
+		var antiforgery = GetAntiforgery(context);
+		var antiforgeryOptions = GetAntiforgeryOptions(context);
+
+		// Act
+		var actual = antiforgery.GetAndStoreTokens(context);
+
+		// Assert
+		Assert.NotNull(actual.RequestToken);
+		Assert.NotNull(actual.CookieToken);
+		Assert.Equal(antiforgeryOptions.FormFieldName, actual.FormFieldName);
+		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
+	}
+
+	// todo: GetTokensでResponseにCookieが設定されない
+	// todo: GetAndStoreTokensでResponseにCookieが設定される
 }
