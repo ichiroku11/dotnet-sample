@@ -6,19 +6,28 @@ using Microsoft.Extensions.Options;
 namespace SampleTest.AspNetCore.Antiforgery;
 
 public class AntiforgeryTest {
-	[Fact]
-	public void GetTokens_戻り値を確認する() {
-		// Arrange
+	private static DefaultHttpContext CreateHttpContext() {
 		var services = new ServiceCollection();
 		services.AddLogging();
 		services.AddAntiforgery();
 
-		var context = new DefaultHttpContext {
+		return new DefaultHttpContext {
 			RequestServices = services.BuildServiceProvider(),
 		};
+	}
 
-		var antiforgery = context.RequestServices.GetRequiredService<IAntiforgery>();
-		var options = context.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>().Value;
+	private static IAntiforgery GetAntiforgery(HttpContext context)
+		=> context.RequestServices.GetRequiredService<IAntiforgery>();
+
+	private static AntiforgeryOptions GetAntiforgeryOptions(HttpContext context)
+		=> context.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>().Value;
+
+	[Fact]
+	public void GetTokens_戻り値を確認する() {
+		// Arrange
+		var context = CreateHttpContext();
+		var antiforgery = GetAntiforgery(context);
+		var antiforgeryOptions = GetAntiforgeryOptions(context);
 
 		// Act
 		var actual = antiforgery.GetTokens(context);
@@ -26,11 +35,7 @@ public class AntiforgeryTest {
 		// Assert
 		Assert.NotNull(actual.RequestToken);
 		Assert.NotNull(actual.CookieToken);
-		Assert.Equal(options.FormFieldName, actual.FormFieldName);
-		Assert.Equal(options.HeaderName, actual.HeaderName);
+		Assert.Equal(antiforgeryOptions.FormFieldName, actual.FormFieldName);
+		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
 	}
-
-	// todo: GetAndStoreTokens
-	// todo: GetTokensでResponseにCookieが設定されない
-	// todo: GetAndStoreTokensでResponseにCookieが設定される
 }
