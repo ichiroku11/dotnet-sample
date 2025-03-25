@@ -5,7 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace SampleTest.AspNetCore.Antiforgery;
 
-public class AntiforgeryTest {
+public class AntiforgeryTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	private static DefaultHttpContext CreateHttpContext() {
 		var services = new ServiceCollection();
 		services.AddLogging();
@@ -39,6 +41,8 @@ public class AntiforgeryTest {
 		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
 	}
 
+	// todo: GetTokensでResponseにCookieが設定されない
+
 	[Fact]
 	public void GetAndStoreTokens_戻り値を確認する() {
 		// Arrange
@@ -56,6 +60,18 @@ public class AntiforgeryTest {
 		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
 	}
 
-	// todo: GetTokensでResponseにCookieが設定されない
-	// todo: GetAndStoreTokensでResponseにCookieが設定される
+	[Fact]
+	public void GetAndStoreTokens_ResponseにCookieが設定される() {
+		// Arrange
+		var context = CreateHttpContext();
+		var antiforgery = GetAntiforgery(context);
+
+		// Act
+		var _ = antiforgery.GetAndStoreTokens(context);
+		var headers = context.Response.GetTypedHeaders();
+
+		// Assert
+		var headerValue = Assert.Single(headers.SetCookie);
+		_output.WriteLine(headerValue.ToString());
+	}
 }
