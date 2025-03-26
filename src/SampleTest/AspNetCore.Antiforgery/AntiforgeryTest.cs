@@ -29,7 +29,7 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Arrange
 		var context = CreateHttpContext();
 		var antiforgery = GetAntiforgery(context);
-		var antiforgeryOptions = GetAntiforgeryOptions(context);
+		var options = GetAntiforgeryOptions(context);
 
 		// Act
 		var actual = antiforgery.GetTokens(context);
@@ -37,8 +37,8 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Assert
 		Assert.NotNull(actual.RequestToken);
 		Assert.NotNull(actual.CookieToken);
-		Assert.Equal(antiforgeryOptions.FormFieldName, actual.FormFieldName);
-		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
+		Assert.Equal(options.FormFieldName, actual.FormFieldName);
+		Assert.Equal(options.HeaderName, actual.HeaderName);
 	}
 
 	// todo: GetTokensでResponseにCookieが設定されない
@@ -48,7 +48,7 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Arrange
 		var context = CreateHttpContext();
 		var antiforgery = GetAntiforgery(context);
-		var antiforgeryOptions = GetAntiforgeryOptions(context);
+		var options = GetAntiforgeryOptions(context);
 
 		// Act
 		var actual = antiforgery.GetAndStoreTokens(context);
@@ -56,8 +56,8 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Assert
 		Assert.NotNull(actual.RequestToken);
 		Assert.NotNull(actual.CookieToken);
-		Assert.Equal(antiforgeryOptions.FormFieldName, actual.FormFieldName);
-		Assert.Equal(antiforgeryOptions.HeaderName, actual.HeaderName);
+		Assert.Equal(options.FormFieldName, actual.FormFieldName);
+		Assert.Equal(options.HeaderName, actual.HeaderName);
 	}
 
 	[Fact]
@@ -65,13 +65,23 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Arrange
 		var context = CreateHttpContext();
 		var antiforgery = GetAntiforgery(context);
+		var options = GetAntiforgeryOptions(context);
 
 		// Act
 		var _ = antiforgery.GetAndStoreTokens(context);
 		var headers = context.Response.GetTypedHeaders();
 
 		// Assert
+		// Cookieが1つ設定されている
 		var headerValue = Assert.Single(headers.SetCookie);
 		_output.WriteLine(headerValue.ToString());
+
+		// AntiforgeryOptionsのクッキー設定が反映されている
+		Assert.Equal(options.Cookie.Name, headerValue.Name);
+		Assert.Equal(options.Cookie.HttpOnly, headerValue.HttpOnly);
+		Assert.Equal(options.Cookie.Domain, headerValue.Domain);
+		// todo:
+		//Assert.Equal(options.Cookie.Path, headerValue.Path);
+		//Assert.Equal(options.Cookie.SameSite, headerValue.SameSite);
 	}
 }
