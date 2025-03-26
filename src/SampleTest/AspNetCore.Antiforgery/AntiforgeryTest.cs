@@ -41,7 +41,21 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		Assert.Equal(options.HeaderName, actual.HeaderName);
 	}
 
-	// todo: GetTokensでResponseにCookieが設定されない
+	[Fact]
+	public void GetTokens_ResponseにCookieが設定されない() {
+		// Arrange
+		var context = CreateHttpContext();
+		var antiforgery = GetAntiforgery(context);
+		var options = GetAntiforgeryOptions(context);
+
+		// Act
+		var _ = antiforgery.GetTokens(context);
+		var headers = context.Response.GetTypedHeaders();
+
+		// Assert
+		// Cookieは設定されない
+		Assert.Empty(headers.SetCookie);
+	}
 
 	[Fact]
 	public void GetAndStoreTokens_戻り値を確認する() {
