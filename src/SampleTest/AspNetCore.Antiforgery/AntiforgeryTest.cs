@@ -94,8 +94,12 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		Assert.Equal(options.Cookie.Name, headerValue.Name);
 		Assert.Equal(options.Cookie.HttpOnly, headerValue.HttpOnly);
 		Assert.Equal(options.Cookie.Domain, headerValue.Domain);
-		// todo:
-		//Assert.Equal(options.Cookie.Path, headerValue.Path);
-		//Assert.Equal(options.Cookie.SameSite, headerValue.SameSite);
+
+		Assert.Equal("/", headerValue.Path);
+
+		// 名前空間が異なるため数値で比較する
+		// https://learn.microsoft.com/ja-jp/dotnet/api/microsoft.aspnetcore.http.samesitemode?view=aspnetcore-9.0
+		// https://learn.microsoft.com/ja-jp/dotnet/api/microsoft.net.http.headers.samesitemode?view=aspnetcore-9.0
+		Assert.Equal((int)options.Cookie.SameSite, (int)headerValue.SameSite);
 	}
 }
