@@ -46,7 +46,6 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Arrange
 		var context = CreateHttpContext();
 		var antiforgery = GetAntiforgery(context);
-		var options = GetAntiforgeryOptions(context);
 
 		// Act
 		var _ = antiforgery.GetTokens(context);
