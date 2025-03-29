@@ -20,6 +20,18 @@ public class DefaultHttpContextTest(ITestOutputHelper output) {
 		Assert.Null(context.RequestServices);
 	}
 
+	[Fact]
+	public void Request_インスタンスを生成したときのメソッドは空文字列() {
+		// Arrange
+		var context = new DefaultHttpContext();
+
+		// Act
+		// Assert
+		Assert.NotNull(context.Request);
+		Assert.NotNull(context.Request.Method);
+		Assert.Empty(context.Request.Method);
+	}
+
 	[Theory]
 	[InlineData(false)]
 	[InlineData(true)]
