@@ -102,11 +102,11 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		Assert.Equal((int)options.Cookie.SameSite, (int)headerValue.SameSite);
 	}
 
-	// todo: GET以外もある様子
 	[Fact]
 	public async Task IsRequestValidAsync_GETメソッドではtrueを返す() {
 		// Arrange
 		var context = CreateHttpContext();
+		// GET以外にHEAD、OPTIONS、TRACEもtrueを返す様子
 		context.Request.Method = HttpMethods.Get;
 
 		var antiforgery = GetAntiforgery(context);
@@ -116,5 +116,21 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.True(actual);
+	}
+
+	[Fact]
+	public async Task IsRequestValidAsync_POSTメソッドではfalseを返す() {
+		// Arrange
+		// Cookie、ヘッダーやPOSTデータが存在しない場合
+		var context = CreateHttpContext();
+		context.Request.Method = HttpMethods.Post;
+
+		var antiforgery = GetAntiforgery(context);
+
+		// Act
+		var actual = await antiforgery.IsRequestValidAsync(context);
+
+		// Assert
+		Assert.False(actual);
 	}
 }
