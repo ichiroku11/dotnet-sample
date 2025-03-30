@@ -101,4 +101,20 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// https://learn.microsoft.com/ja-jp/dotnet/api/microsoft.net.http.headers.samesitemode?view=aspnetcore-9.0
 		Assert.Equal((int)options.Cookie.SameSite, (int)headerValue.SameSite);
 	}
+
+	// todo: GET以外もある様子
+	[Fact]
+	public async Task IsRequestValidAsync_GETメソッドではtrueを返す() {
+		// Arrange
+		var context = CreateHttpContext();
+		context.Request.Method = HttpMethods.Get;
+
+		var antiforgery = GetAntiforgery(context);
+
+		// Act
+		var actual = await antiforgery.IsRequestValidAsync(context);
+
+		// Assert
+		Assert.True(actual);
+	}
 }
