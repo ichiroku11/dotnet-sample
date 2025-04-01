@@ -103,6 +103,24 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void GetAndStoreTokens_2回呼び出しても同じトークンセットを取得できる() {
+		// Arrange
+		var context = CreateHttpContext();
+		var antiforgery = GetAntiforgery(context);
+
+		// Act
+		var first = antiforgery.GetAndStoreTokens(context);
+		var second = antiforgery.GetAndStoreTokens(context);
+
+		// Assert
+		Assert.NotSame(first, second);
+		Assert.Equal(first.RequestToken, second.RequestToken);
+		Assert.Equal(first.CookieToken, second.CookieToken);
+		Assert.Equal(first.FormFieldName, second.FormFieldName);
+		Assert.Equal(first.HeaderName, second.HeaderName);
+	}
+
+	[Fact]
 	public async Task IsRequestValidAsync_GETメソッドではtrueを返す() {
 		// Arrange
 		var context = CreateHttpContext();
