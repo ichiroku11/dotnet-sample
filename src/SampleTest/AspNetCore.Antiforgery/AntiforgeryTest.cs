@@ -79,10 +79,10 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		var context = CreateHttpContext();
 		var antiforgery = GetAntiforgery(context);
 		var options = GetAntiforgeryOptions(context);
+		var headers = context.Response.GetTypedHeaders();
 
 		// Act
 		var _ = antiforgery.GetAndStoreTokens(context);
-		var headers = context.Response.GetTypedHeaders();
 
 		// Assert
 		// Cookieが1つ設定されている
@@ -118,6 +118,23 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		Assert.Equal(first.CookieToken, second.CookieToken);
 		Assert.Equal(first.FormFieldName, second.FormFieldName);
 		Assert.Equal(first.HeaderName, second.HeaderName);
+	}
+
+	[Fact]
+	public void GetAndStoreTokens_2回呼び出しても設定されるクッキーは1つ() {
+		// Arrange
+		var context = CreateHttpContext();
+		var antiforgery = GetAntiforgery(context);
+		var headers = context.Response.GetTypedHeaders();
+
+		// Act
+		antiforgery.GetAndStoreTokens(context);
+		antiforgery.GetAndStoreTokens(context);
+
+		// Assert
+		// Cookieが1つ設定されている
+		var headerValue = Assert.Single(headers.SetCookie);
+		_output.WriteLine(headerValue.ToString());
 	}
 
 	[Fact]
