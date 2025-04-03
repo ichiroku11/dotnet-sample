@@ -125,16 +125,20 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		// Arrange
 		var context = CreateHttpContext();
 		var antiforgery = GetAntiforgery(context);
-		var headers = context.Response.GetTypedHeaders();
+		var headers = context.Response.Headers;
 
 		// Act
-		antiforgery.GetAndStoreTokens(context);
-		antiforgery.GetAndStoreTokens(context);
-
 		// Assert
-		// Cookieが1つ設定されている
-		var headerValue = Assert.Single(headers.SetCookie);
-		_output.WriteLine(headerValue.ToString());
+		Assert.Equal(0, headers.SetCookie.Count);
+
+		antiforgery.GetAndStoreTokens(context);
+		var headerValue1 = Assert.Single(headers.SetCookie);
+
+		antiforgery.GetAndStoreTokens(context);
+		var headerValue2 = Assert.Single(headers.SetCookie);
+
+		Assert.Equal(headerValue1, headerValue2);
+		_output.WriteLine(headerValue1 as string);
 	}
 
 	[Fact]
