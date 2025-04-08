@@ -16,20 +16,24 @@ public class TokenSetControllerTest(WebApplicationFactory<Program> factory) : IC
 	}
 
 	[Fact]
-	public async Task GetTokens() {
+	public async Task GetTokens_レスポンスを確認する() {
 		// Arrange
 		var client = _factory.CreateClient();
 
 		// Act
 		var response = await client.GetAsync("/tokenset/gettokens");
-		var tokens = await response.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+		var tokenSet = await response.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-		Assert.NotNull(tokens);
-		Assert.NotNull(tokens.RequestToken);
-		Assert.NotNull(tokens.FormFieldName);
-		Assert.NotNull(tokens.HeaderName);
-		Assert.NotNull(tokens.CookieToken);
+
+		Assert.NotNull(tokenSet);
+
+		// リクエストトークンとクッキートークンが生成される
+		Assert.NotNull(tokenSet.RequestToken);
+		Assert.NotNull(tokenSet.CookieToken);
+
+		Assert.NotNull(tokenSet.FormFieldName);
+		Assert.NotNull(tokenSet.HeaderName);
 	}
 }
