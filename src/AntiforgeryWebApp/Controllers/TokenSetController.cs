@@ -10,7 +10,8 @@ public class TokenSetController(IAntiforgery antiforgery, ILogger<TokenSetContro
 	public IActionResult GetTokens() {
 		var tokenSet = _antiforgery.GetTokens(HttpContext);
 
-		_logger.LogInformation("SetCookie: {setCookie}", (string?)Response.Headers.SetCookie);
+		_logger.LogInformation("{method} cookie: {cookie}", nameof(GetTokens), Request.Headers.Cookie);
+		_logger.LogInformation("{method} set-cookie: {setCookie}", nameof(GetTokens), Response.Headers.SetCookie);
 
 		return Json(tokenSet);
 	}
@@ -18,7 +19,8 @@ public class TokenSetController(IAntiforgery antiforgery, ILogger<TokenSetContro
 	public IActionResult GetAndStoreTokens() {
 		var tokenSet = _antiforgery.GetAndStoreTokens(HttpContext);
 
-		_logger.LogInformation("SetCookie: {setCookie}", (string?)Response.Headers.SetCookie);
+		_logger.LogInformation("{method} cookie: {cookie}", nameof(GetAndStoreTokens), Request.Headers.Cookie);
+		_logger.LogInformation("{method} set-cookie: {setCookie}", nameof(GetAndStoreTokens), Response.Headers.SetCookie);
 
 		return Json(tokenSet);
 	}
