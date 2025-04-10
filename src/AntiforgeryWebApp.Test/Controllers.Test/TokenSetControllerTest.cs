@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit.Abstractions;
@@ -56,5 +57,21 @@ public class TokenSetControllerTest(
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Empty(response.Headers);
+		Assert.False(response.Headers.Contains(HeaderNames.SetCookie));
+	}
+
+	[Fact]
+	public async Task GetAndStoreTokens_レスポンスのクッキーヘッダーが存在することを確認する() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response = await client.GetAsync("/tokenset/getandstoretokens");
+		_output.WriteLine(response.ToString());
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotEmpty(response.Headers);
+		Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
 	}
 }
