@@ -21,13 +21,18 @@ public class TokenSetControllerTest(
 		public string? CookieToken { get; init; }
 	}
 
+	private class Paths {
+		public const string GetTokens = "/tokenset/gettokens";
+		public const string GetAndStoreTokens = "/tokenset/getandstoretokens";
+	}
+
 	[Fact]
 	public async Task GetTokens_レスポンスを確認する() {
 		// Arrange
 		var client = _factory.CreateClient();
 
 		// Act
-		var response = await client.GetAsync("/tokenset/gettokens");
+		var response = await client.GetAsync(Paths.GetTokens);
 		_output.WriteLine(response.ToString());
 
 		var tokenSet = await response.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
@@ -46,12 +51,12 @@ public class TokenSetControllerTest(
 	}
 
 	[Fact]
-	public async Task GetTokens_レスポンスのクッキーヘッダーが存在しないことを確認する() {
+	public async Task GetTokens_レスポンスにSetCookieヘッダーが存在しないことを確認する() {
 		// Arrange
 		var client = _factory.CreateClient();
 
 		// Act
-		var response = await client.GetAsync("/tokenset/gettokens");
+		var response = await client.GetAsync(Paths.GetTokens);
 		_output.WriteLine(response.ToString());
 
 		// Assert
@@ -61,12 +66,12 @@ public class TokenSetControllerTest(
 	}
 
 	[Fact]
-	public async Task GetAndStoreTokens_レスポンスのクッキーヘッダーが存在することを確認する() {
+	public async Task GetAndStoreTokens_レスポンスにSetCookieヘッダーが存在することを確認する() {
 		// Arrange
 		var client = _factory.CreateClient();
 
 		// Act
-		var response = await client.GetAsync("/tokenset/getandstoretokens");
+		var response = await client.GetAsync(Paths.GetAndStoreTokens);
 		_output.WriteLine(response.ToString());
 
 		// Assert
