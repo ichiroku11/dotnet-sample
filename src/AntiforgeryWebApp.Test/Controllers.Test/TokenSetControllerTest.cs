@@ -79,4 +79,32 @@ public class TokenSetControllerTest(
 		Assert.NotEmpty(response.Headers);
 		Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
 	}
+
+	[Fact]
+	public async Task GetAndStoreTokens_2回呼び出した場合をレスポンスを確認する() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response1.ToString());
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+
+		var response2 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response2.ToString());
+		var tokenSet2 = await response2.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+		Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+
+		Assert.NotNull(tokenSet1);
+		Assert.NotNull(tokenSet1.CookieToken);
+		Assert.NotEmpty(tokenSet1.CookieToken);
+
+		Assert.NotNull(tokenSet2);
+		Assert.Null(tokenSet2.CookieToken);
+
+		// todo: tokenSet1とtokenSet2ではRequestTokenが違う
+	}
 }
