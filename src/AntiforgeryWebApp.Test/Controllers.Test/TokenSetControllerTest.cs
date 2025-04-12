@@ -98,13 +98,17 @@ public class TokenSetControllerTest(
 		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
 		Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
 
+		// クッキートークンが含まれる
 		Assert.NotNull(tokenSet1);
 		Assert.NotNull(tokenSet1.CookieToken);
 		Assert.NotEmpty(tokenSet1.CookieToken);
 
+		// 2回目の呼び出しではクッキートークンは含まれない
+		// リクエストにCookieヘッダーが含まれるからだと思われる
 		Assert.NotNull(tokenSet2);
 		Assert.Null(tokenSet2.CookieToken);
 
-		// todo: tokenSet1とtokenSet2ではRequestTokenが違う
+		// リクエストトークンは異なる
+		Assert.NotEqual(tokenSet1.RequestToken, tokenSet2.RequestToken);
 	}
 }
