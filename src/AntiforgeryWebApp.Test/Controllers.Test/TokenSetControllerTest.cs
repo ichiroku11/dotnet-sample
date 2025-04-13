@@ -108,7 +108,44 @@ public class TokenSetControllerTest(
 		Assert.NotNull(tokenSet2);
 		Assert.Null(tokenSet2.CookieToken);
 
-		// リクエストトークンは異なる
+		// 1回目と2回目でリクエストトークンは異なる
 		Assert.NotEqual(tokenSet1.RequestToken, tokenSet2.RequestToken);
+	}
+
+	[Fact]
+	public async Task GetAndStoreTokens_Cookieヘッダーを付与せず2回呼び出した場合をレスポンスを確認する() {
+		// Arrange
+		var client = _factory.CreateClient(new WebApplicationFactoryClientOptions {
+			HandleCookies = false,
+		});
+
+		// Act
+		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response1.ToString());
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+
+		var response2 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response2.ToString());
+		var tokenSet2 = await response2.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+		Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+
+		// クッキートークンが含まれる
+		Assert.NotNull(tokenSet1);
+		Assert.NotNull(tokenSet1.CookieToken);
+		Assert.NotEmpty(tokenSet1.CookieToken);
+
+		// 2回目の呼び出しでもクッキートークンは含まれる
+		Assert.NotNull(tokenSet2);
+		Assert.NotNull(tokenSet2.CookieToken);
+		Assert.NotEmpty(tokenSet2.CookieToken);
+
+		// 1回目と2回目でリクエストトークンは異なる
+		Assert.NotEqual(tokenSet1.RequestToken, tokenSet2.RequestToken);
+
+		// 1回目と2回目でクッキートークンも異なる
+		Assert.NotEqual(tokenSet1.CookieToken, tokenSet2.CookieToken);
 	}
 }
