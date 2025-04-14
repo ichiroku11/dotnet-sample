@@ -24,4 +24,18 @@ public class AntiforgeryController(IAntiforgery antiforgery, ILogger<Antiforgery
 
 		return Json(tokenSet);
 	}
+
+	public async Task<IActionResult> ValidateRequestAsync() {
+		try {
+			await _antiforgery.ValidateRequestAsync(HttpContext);
+		} catch (AntiforgeryValidationException exception) {
+			_logger.LogInformation("{method} exception: {exception}", nameof(ValidateRequestAsync), exception.Message);
+			return BadRequest(new {
+				type = nameof(AntiforgeryValidationException),
+				message = exception.Message
+			});
+		}
+
+		return Ok();
+	}
 }
