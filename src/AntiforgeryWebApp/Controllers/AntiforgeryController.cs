@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AntiforgeryWebApp.Controllers;
 
-public class TokenSetController(IAntiforgery antiforgery, ILogger<TokenSetController> logger) : Controller {
+public class AntiforgeryController(IAntiforgery antiforgery, ILogger<AntiforgeryController> logger) : Controller {
 	private readonly IAntiforgery _antiforgery = antiforgery;
-	private readonly ILogger<TokenSetController> _logger = logger;
+	private readonly ILogger<AntiforgeryController> _logger = logger;
 
 	public IActionResult GetTokens() {
 		var tokenSet = _antiforgery.GetTokens(HttpContext);

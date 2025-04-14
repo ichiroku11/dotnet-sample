@@ -6,15 +6,13 @@ using Xunit.Abstractions;
 
 namespace AntiforgeryWebApp.Controllers.Test;
 
-public class TokenSetControllerTest(
-	ITestOutputHelper output,
-	WebApplicationFactory<Program> factory)
+public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationFactory<Program> factory)
 	: IClassFixture<WebApplicationFactory<Program>> {
 
 	private readonly ITestOutputHelper _output = output;
 	private readonly WebApplicationFactory<Program> _factory = factory;
 
-	private class AntiforgeryTokenSet {
+	private class TokenSet {
 		public string? RequestToken { get; init; }
 		public string FormFieldName { get; init; } = "";
 		public string? HeaderName { get; init; }
@@ -22,8 +20,8 @@ public class TokenSetControllerTest(
 	}
 
 	private class Paths {
-		public const string GetTokens = "/tokenset/gettokens";
-		public const string GetAndStoreTokens = "/tokenset/getandstoretokens";
+		public const string GetTokens = "/antiforgery/gettokens";
+		public const string GetAndStoreTokens = "/antiforgery/getandstoretokens";
 	}
 
 	[Fact]
@@ -35,7 +33,7 @@ public class TokenSetControllerTest(
 		var response = await client.GetAsync(Paths.GetTokens);
 		_output.WriteLine(response.ToString());
 
-		var tokenSet = await response.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+		var tokenSet = await response.Content.ReadFromJsonAsync<TokenSet>();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -88,11 +86,11 @@ public class TokenSetControllerTest(
 		// Act
 		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
 		_output.WriteLine(response1.ToString());
-		var tokenSet1 = await response1.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
 
 		var response2 = await client.GetAsync(Paths.GetAndStoreTokens);
 		_output.WriteLine(response2.ToString());
-		var tokenSet2 = await response2.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+		var tokenSet2 = await response2.Content.ReadFromJsonAsync<TokenSet>();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
@@ -122,11 +120,11 @@ public class TokenSetControllerTest(
 		// Act
 		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
 		_output.WriteLine(response1.ToString());
-		var tokenSet1 = await response1.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
 
 		var response2 = await client.GetAsync(Paths.GetAndStoreTokens);
 		_output.WriteLine(response2.ToString());
-		var tokenSet2 = await response2.Content.ReadFromJsonAsync<AntiforgeryTokenSet>();
+		var tokenSet2 = await response2.Content.ReadFromJsonAsync<TokenSet>();
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
