@@ -22,6 +22,7 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 	private class Paths {
 		public const string GetTokens = "/antiforgery/gettokens";
 		public const string GetAndStoreTokens = "/antiforgery/getandstoretokens";
+		public const string ValidateRequest = "/antiforgery/validaterequest";
 	}
 
 	[Fact]
@@ -145,5 +146,25 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 
 		// 1回目と2回目でクッキートークンも異なる
 		Assert.NotEqual(tokenSet1.CookieToken, tokenSet2.CookieToken);
+	}
+
+	[Fact]
+	public async Task ValidateRequestAsync_リクエストにクッキーが含まれないのでBadRequest() {
+		// Arrange
+		var client = _factory.CreateClient(new WebApplicationFactoryClientOptions {
+			HandleCookies = false,
+		});
+
+		// Act
+		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response1.ToString());
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
+
+		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
+		_output.WriteLine(response2.ToString());
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
 	}
 }
