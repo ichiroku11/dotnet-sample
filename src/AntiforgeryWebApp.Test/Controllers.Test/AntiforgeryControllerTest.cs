@@ -149,7 +149,7 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 	}
 
 	[Fact]
-	public async Task ValidateRequestAsync_リクエストにクッキーが含まれないのでBadRequest() {
+	public async Task ValidateRequestAsync_リクエストにクッキートークンが含まれないのでレスポンスはBadRequest() {
 		// Arrange
 		var client = _factory.CreateClient(new WebApplicationFactoryClientOptions {
 			HandleCookies = false,
@@ -162,6 +162,28 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 
 		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
 		_output.WriteLine(response2.ToString());
+		var content2 = await response2.Content.ReadAsStringAsync();
+		_output.WriteLine(content2);
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+	}
+
+	[Fact]
+	public async Task ValidateRequestAsync_リクエストにクッキートークンが含まれているがリクエストトークンが存在しないのでレスポンスはBadRequest() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response1.ToString());
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
+
+		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
+		_output.WriteLine(response2.ToString());
+		var content2 = await response2.Content.ReadAsStringAsync();
+		_output.WriteLine(content2);
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
