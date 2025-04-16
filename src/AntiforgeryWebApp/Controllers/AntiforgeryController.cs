@@ -25,6 +25,7 @@ public class AntiforgeryController(IAntiforgery antiforgery, ILogger<Antiforgery
 		return Json(tokenSet);
 	}
 
+	[HttpPost]
 	[IgnoreAntiforgeryToken]
 	public async Task<IActionResult> ValidateRequestAsync() {
 		try {
