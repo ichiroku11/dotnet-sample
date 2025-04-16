@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace AntiforgeryWebApp.Controllers.Test;
@@ -149,7 +150,7 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 	}
 
 	[Fact]
-	public async Task ValidateRequestAsync_リクエストにクッキートークンが含まれないのでレスポンスはBadRequest() {
+	public async Task ValidateRequestAsync_リクエストヘッダーにクッキートークンが含まれないのでレスポンスはBadRequest() {
 		// Arrange
 		var client = _factory.CreateClient(new WebApplicationFactoryClientOptions {
 			HandleCookies = false,
@@ -157,12 +158,13 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 
 		// Act
 		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
-		_output.WriteLine(response1.ToString());
 		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
+		_output.WriteLine(response1.ToString());
+		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
 
 		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
-		_output.WriteLine(response2.ToString());
 		var content2 = await response2.Content.ReadAsStringAsync();
+		_output.WriteLine(response2.ToString());
 		_output.WriteLine(content2);
 
 		// Assert
@@ -171,18 +173,20 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 	}
 
 	[Fact]
-	public async Task ValidateRequestAsync_リクエストにクッキートークンが含まれているがリクエストトークンが存在しないのでレスポンスはBadRequest() {
+	public async Task ValidateRequestAsync_リクエストヘッダーにクッキートークンが含まれているがポストデータにリクエストトークンが含まれないのでレスポンスはBadRequest() {
 		// Arrange
 		var client = _factory.CreateClient();
 
 		// Act
 		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
-		_output.WriteLine(response1.ToString());
 		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
+		Assert.NotNull(tokenSet1);
+		_output.WriteLine(response1.ToString());
+		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
 
 		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
-		_output.WriteLine(response2.ToString());
 		var content2 = await response2.Content.ReadAsStringAsync();
+		_output.WriteLine(response2.ToString());
 		_output.WriteLine(content2);
 
 		// Assert
