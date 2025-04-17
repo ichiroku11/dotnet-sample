@@ -184,6 +184,7 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		_output.WriteLine(response1.ToString());
 		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
 
+		// POSTデータにリクエストトークンを含めない
 		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
 		var content2 = await response2.Content.ReadAsStringAsync();
 		_output.WriteLine(response2.ToString());
@@ -192,5 +193,35 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
 		Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+	}
+
+	[Fact]
+	public async Task ValidateRequestAsync_リクエストヘッダーにクッキートークンが含まれポストデータにリクエストトークンが含めるとレスポンスはOK() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
+		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
+		Assert.NotNull(tokenSet1);
+		_output.WriteLine(response1.ToString());
+		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
+
+		// POSTデータにリクエストトークンを含める
+		var response2 = await client.PostAsync(
+			Paths.ValidateRequest,
+			new FormUrlEncodedContent(new Dictionary<string, string> {
+				[tokenSet1.FormFieldName] = tokenSet1.RequestToken ?? "",
+			}));
+		var content2 = await response2.Content.ReadAsStringAsync();
+		_output.WriteLine(response2.ToString());
+		_output.WriteLine(content2);
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+		Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+
+		// POSTした結果のレスポンスにSetCookieヘッダーは存在しない
+		Assert.False(response2.Headers.Contains(HeaderNames.SetCookie));
 	}
 }
