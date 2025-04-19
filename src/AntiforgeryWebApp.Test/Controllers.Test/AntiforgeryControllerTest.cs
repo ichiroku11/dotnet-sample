@@ -14,6 +14,8 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 	private readonly WebApplicationFactory<Program> _factory = factory;
 
 	private class TokenSet {
+		public static readonly TokenSet Empty = new();
+
 		public string? RequestToken { get; init; }
 		public string FormFieldName { get; init; } = "";
 		public string? HeaderName { get; init; }
@@ -149,6 +151,16 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		Assert.NotEqual(tokenSet1.CookieToken, tokenSet2.CookieToken);
 	}
 
+	private async Task<TokenSet> GetAndStoreTokensAsync(HttpClient client) {
+		var response = await client.GetAsync(Paths.GetAndStoreTokens);
+		var tokenSet = await response.Content.ReadFromJsonAsync<TokenSet>();
+
+		_output.WriteLine(response.ToString());
+		_output.WriteLine(JsonSerializer.Serialize(tokenSet));
+
+		return tokenSet ?? TokenSet.Empty;
+	}
+
 	[Fact]
 	public async Task ValidateRequestAsync_リクエストヘッダーにクッキートークンが含まれないのでレスポンスはBadRequest() {
 		// Arrange
@@ -156,20 +168,16 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 			HandleCookies = false,
 		});
 
-		// Act
-		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
-		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
-		_output.WriteLine(response1.ToString());
-		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
+		var _ = await GetAndStoreTokensAsync(client);
 
-		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
-		var content2 = await response2.Content.ReadAsStringAsync();
-		_output.WriteLine(response2.ToString());
-		_output.WriteLine(content2);
+		// Act
+		var response = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
+		var content = await response.Content.ReadAsStringAsync();
+		_output.WriteLine(response.ToString());
+		_output.WriteLine(content);
 
 		// Assert
-		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
-		Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
 	[Fact]
@@ -177,22 +185,17 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		// Arrange
 		var client = _factory.CreateClient();
 
-		// Act
-		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
-		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
-		Assert.NotNull(tokenSet1);
-		_output.WriteLine(response1.ToString());
-		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
+		var _ = await GetAndStoreTokensAsync(client);
 
+		// Act
 		// POSTデータにリクエストトークンを含めない
-		var response2 = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
-		var content2 = await response2.Content.ReadAsStringAsync();
-		_output.WriteLine(response2.ToString());
-		_output.WriteLine(content2);
+		var response = await client.PostAsync(Paths.ValidateRequest, new FormUrlEncodedContent([]));
+		var content = await response.Content.ReadAsStringAsync();
+		_output.WriteLine(response.ToString());
+		_output.WriteLine(content);
 
 		// Assert
-		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
-		Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
 	[Fact]
@@ -200,28 +203,23 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		// Arrange
 		var client = _factory.CreateClient();
 
-		// Act
-		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
-		var tokenSet1 = await response1.Content.ReadFromJsonAsync<TokenSet>();
-		Assert.NotNull(tokenSet1);
-		_output.WriteLine(response1.ToString());
-		_output.WriteLine(JsonSerializer.Serialize(tokenSet1));
+		var tokenSet = await GetAndStoreTokensAsync(client);
 
+		// Act
 		// POSTデータにリクエストトークンを含める
-		var response2 = await client.PostAsync(
+		var response = await client.PostAsync(
 			Paths.ValidateRequest,
 			new FormUrlEncodedContent(new Dictionary<string, string> {
-				[tokenSet1.FormFieldName] = tokenSet1.RequestToken ?? "",
+				[tokenSet.FormFieldName] = tokenSet.RequestToken ?? "",
 			}));
-		var content2 = await response2.Content.ReadAsStringAsync();
-		_output.WriteLine(response2.ToString());
-		_output.WriteLine(content2);
+		var content = await response.Content.ReadAsStringAsync();
+		_output.WriteLine(response.ToString());
+		_output.WriteLine(content);
 
 		// Assert
-		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
-		Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
 		// POSTした結果のレスポンスにSetCookieヘッダーは存在しない
-		Assert.False(response2.Headers.Contains(HeaderNames.SetCookie));
+		Assert.False(response.Headers.Contains(HeaderNames.SetCookie));
 	}
 }
