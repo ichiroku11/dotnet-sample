@@ -83,6 +83,31 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 	}
 
 	[Fact]
+	public async Task GetAndStoreTokens_2回目の呼び出しに対応するレスポンスにSetCookieヘッダーが存在しないことを確認する() {
+		// Arrange
+		var client = _factory.CreateClient();
+
+		// Act
+		var response1 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response1.ToString());
+
+		// 2回目の呼び出し
+		var response2 = await client.GetAsync(Paths.GetAndStoreTokens);
+		_output.WriteLine(response2.ToString());
+
+		// Assert
+		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+		Assert.NotEmpty(response1.Headers);
+		// 1回目の呼び出しのレスポンスにはSetCookieヘッダーが存在する
+		Assert.True(response1.Headers.Contains(HeaderNames.SetCookie));
+
+		Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+		Assert.NotEmpty(response2.Headers);
+		// 2回目の呼び出しのレスポンスにはSetCookieヘッダーは存在しない
+		Assert.False(response2.Headers.Contains(HeaderNames.SetCookie));
+	}
+
+	[Fact]
 	public async Task GetAndStoreTokens_2回呼び出した場合をレスポンスを確認する() {
 		// Arrange
 		var client = _factory.CreateClient();
@@ -178,6 +203,9 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+		// POSTした結果のレスポンスにSetCookieヘッダーは存在しない
+		Assert.False(response.Headers.Contains(HeaderNames.SetCookie));
 	}
 
 	[Fact]
@@ -196,6 +224,9 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 
 		// Assert
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+		// POSTした結果のレスポンスにSetCookieヘッダーは存在しない
+		Assert.False(response.Headers.Contains(HeaderNames.SetCookie));
 	}
 
 	[Fact]
