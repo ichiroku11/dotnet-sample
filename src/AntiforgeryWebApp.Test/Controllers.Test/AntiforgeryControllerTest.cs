@@ -80,6 +80,12 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.NotEmpty(response.Headers);
 		Assert.True(response.Headers.Contains(HeaderNames.SetCookie));
+
+		// SetCookieヘッダーの値を確認する
+		var headerValue = response.Headers.GetValues(HeaderNames.SetCookie).Single();
+		Assert.NotNull(headerValue);
+		Assert.NotEmpty(headerValue);
+		_output.WriteLine(headerValue);
 	}
 
 	[Fact]
