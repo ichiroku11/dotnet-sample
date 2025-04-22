@@ -86,6 +86,12 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		Assert.NotNull(headerValue);
 		Assert.NotEmpty(headerValue);
 		_output.WriteLine(headerValue);
+
+		var tokenSet = await response.Content.ReadFromJsonAsync<TokenSet>();
+		Assert.NotNull(tokenSet);
+		// レスポンスに含まれるクッキートークンとSetCookieヘッダーの値が一致することを確認する
+		var setCookieHeaderValue = SetCookieHeaderValue.Parse(headerValue);
+		Assert.Equal(tokenSet.CookieToken, setCookieHeaderValue.Value);
 	}
 
 	[Fact]
