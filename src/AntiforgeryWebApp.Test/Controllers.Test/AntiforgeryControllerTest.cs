@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
 using System.Net;
@@ -89,8 +90,12 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 
 		var tokenSet = await response.Content.ReadFromJsonAsync<TokenSet>();
 		Assert.NotNull(tokenSet);
-		// レスポンスに含まれるクッキートークンとSetCookieヘッダーの値が一致することを確認する
+
 		var setCookieHeaderValue = SetCookieHeaderValue.Parse(headerValue);
+		// SetCookieヘッダーの名前
+		Assert.Contains(AntiforgeryOptions.DefaultCookiePrefix, setCookieHeaderValue.Name);
+		// SetCookieヘッダーの値
+		// レスポンスに含まれるクッキートークンと一致する
 		Assert.Equal(tokenSet.CookieToken, setCookieHeaderValue.Value);
 	}
 
