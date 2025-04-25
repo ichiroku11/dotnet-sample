@@ -20,6 +20,28 @@ public class DefaultHttpContextTest(ITestOutputHelper output) {
 		Assert.Null(context.RequestServices);
 	}
 
+	[Fact]
+	public void RequestMethod_インスタンスを生成したときのメソッドは空文字列() {
+		// Arrange
+		var context = new DefaultHttpContext();
+
+		// Act
+		// Assert
+		Assert.NotNull(context.Request);
+		Assert.NotNull(context.Request.Method);
+		Assert.Empty(context.Request.Method);
+	}
+
+	[Fact]
+	public void RequestHasFormContentType_インスタンスを生成したときはfalseを返す() {
+		// Arrange
+		var context = new DefaultHttpContext();
+
+		// Act
+		// Assert
+		Assert.False(context.Request.HasFormContentType);
+	}
+
 	[Theory]
 	[InlineData(false)]
 	[InlineData(true)]

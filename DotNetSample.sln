@@ -123,6 +123,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureAdB2cApiConnectorWebAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiforgeryWebApp", "src\AntiforgeryWebApp\AntiforgeryWebApp.csproj", "{669E9458-427F-449C-8E56-788045735BB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiforgeryWebApp.Test", "src\AntiforgeryWebApp.Test\AntiforgeryWebApp.Test.csproj", "{3B2BCA2E-097D-4724-9685-05113F24D5A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -349,6 +351,10 @@ Global
 		{669E9458-427F-449C-8E56-788045735BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{669E9458-427F-449C-8E56-788045735BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{669E9458-427F-449C-8E56-788045735BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B2BCA2E-097D-4724-9685-05113F24D5A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B2BCA2E-097D-4724-9685-05113F24D5A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B2BCA2E-097D-4724-9685-05113F24D5A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B2BCA2E-097D-4724-9685-05113F24D5A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -406,6 +412,7 @@ Global
 		{D6604E96-8541-42B6-9895-11F66186597C} = {798EF2B5-D82E-49ED-8EDE-BD3B20040D59}
 		{6357B815-4237-4BCE-854C-49F5DD024383} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 		{669E9458-427F-449C-8E56-788045735BB1} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
+		{3B2BCA2E-097D-4724-9685-05113F24D5A4} = {512A5E50-BE18-4761-BA83-E56F4EC43B9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8A5A7FA-225F-46ED-9227-A5AB57BDF755}
