@@ -40,4 +40,25 @@ public class HybridCacheTest {
 		// Assert
 		Assert.Equal("value", value);
 	}
+
+	[Fact]
+	public async Task GetOrCreateAsync_factoryで指定した関数が最初だけ呼ばれることを確認する() {
+		// Arrange
+		var cache = GetHybridCache();
+
+		var count = 0;
+		ValueTask<string> factory(CancellationToken token) {
+			count++;
+			return ValueTask.FromResult("value");
+		}
+
+		// Act
+		var value1 = await cache.GetOrCreateAsync(key: "key", factory: factory);
+		var value2 = await cache.GetOrCreateAsync(key: "key", factory: factory);
+
+		// Assert
+		Assert.Equal(1, count);
+		Assert.Equal("value", value1);
+		Assert.Equal("value", value2);
+	}
 }
