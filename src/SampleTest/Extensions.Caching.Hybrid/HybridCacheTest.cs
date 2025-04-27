@@ -7,7 +7,7 @@ public class HybridCacheTest {
 	// HybridCacheクラスは抽象クラスなのでインスタンス化できない
 	// DIで取得する必要がある
 	[Fact]
-	public void Constructor_DIで取得する必要がある() {
+	public void Constructor_インスタンスはDIで取得する必要がある() {
 		// Arrange
 		var services = new ServiceCollection();
 		services.AddHybridCache();
