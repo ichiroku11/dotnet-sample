@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 
 namespace SampleTest.Extensions.Caching.Hybrid;
 
@@ -42,7 +43,7 @@ public class HybridCacheTest {
 	}
 
 	[Fact]
-	public async Task GetOrCreateAsync_factoryで指定した関数が最初だけ呼ばれることを確認する() {
+	public async Task GetOrCreateAsync_factoryで指定した関数が1回だけ呼ばれることを確認する() {
 		// Arrange
 		var cache = GetHybridCache();
 
@@ -60,5 +61,34 @@ public class HybridCacheTest {
 		Assert.Equal(1, count);
 		Assert.Equal("value", value1);
 		Assert.Equal("value", value2);
+	}
+
+	[Fact]
+	public async Task GetOrCreateAsync_ほぼ同時に何度もfactoryで指定した関数を呼び出しても1回だけ呼ばれることを確認する() {
+		// Arrange
+		var cache = GetHybridCache();
+
+		var count = 0;
+		var tasks = new ConcurrentBag<ValueTask<object>>();
+
+		// Act
+		await Parallel.ForEachAsync(Enumerable.Range(0, 10), (_, token) => {
+			var task = cache.GetOrCreateAsync(
+				key: "key",
+				factory: token => {
+					count++;
+					return ValueTask.FromResult(new object());
+				},
+				cancellationToken: token);
+
+			tasks.Add(task);
+
+			return ValueTask.CompletedTask;
+		});
+
+		await Task.WhenAll(tasks.Select(task => task.AsTask()));
+
+		// Assert
+		Assert.Equal(1, count);
 	}
 }
