@@ -91,4 +91,35 @@ public class HybridCacheTest {
 		// Assert
 		Assert.Equal(1, count);
 	}
+
+	[Fact]
+	public async Task RemoveByTagAsync_タグ文字列を使って削除する() {
+		// Arrange
+		var cache = GetHybridCache();
+
+		// キャッシュを作る
+		await cache.GetOrCreateAsync("key1", token => ValueTask.FromResult(""), tags: ["tag"]);
+		await cache.GetOrCreateAsync("key2", token => ValueTask.FromResult(""), tags: ["tag"]);
+
+		// Act
+		// タグ文字列を使って削除する
+		await cache.RemoveByTagAsync("tag");
+
+		// 新たにキャッシュエントリが作られる
+		var createdKey1 = false;
+		await cache.GetOrCreateAsync("key1", token => {
+			createdKey1 = true;
+			return ValueTask.FromResult("");
+		});
+
+		var createdKey2 = false;
+		await cache.GetOrCreateAsync("key2", token => {
+			createdKey2 = true;
+			return ValueTask.FromResult("");
+		});
+
+		// Assert
+		Assert.True(createdKey1);
+		Assert.True(createdKey2);
+	}
 }
