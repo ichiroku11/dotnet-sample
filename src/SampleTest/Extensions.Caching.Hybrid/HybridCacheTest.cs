@@ -105,6 +105,18 @@ public class HybridCacheTest {
 	}
 
 	[Fact]
+	public async Task RemoveByTagAsync_タグが存在しなくてもエラーにならないことを確認する() {
+		// Arrange
+		var cache = GetHybridCache();
+
+		// Act
+		await cache.RemoveByTagAsync("tag");
+
+		// Assert
+		Assert.True(true);
+	}
+
+	[Fact]
 	public async Task RemoveByTagAsync_タグ文字列を使って削除する() {
 		// Arrange
 		var cache = GetHybridCache();
