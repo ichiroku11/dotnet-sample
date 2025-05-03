@@ -98,8 +98,6 @@ public class HybridCacheTest {
 		// Arrange
 		var cache = GetHybridCache();
 
-		var called = false;
-
 		// Act
 		// キャッシュを登録する
 		await cache.SetAsync(key: "key", value: "value");
@@ -108,12 +106,11 @@ public class HybridCacheTest {
 			key: "key",
 			// すでにキャッシュが存在するためfactoryは呼ばれない
 			factory: token => {
-				called = true;
+				Assert.Fail();
 				return ValueTask.FromResult("");
 			});
 
 		// Assert
-		Assert.False(called);
 		Assert.Equal("value", value);
 	}
 
