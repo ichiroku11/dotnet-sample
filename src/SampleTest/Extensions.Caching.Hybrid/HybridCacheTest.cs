@@ -63,6 +63,7 @@ public class HybridCacheTest {
 		Assert.Equal("value", value2);
 	}
 
+	// スタンピード保護を確認したいが、このコードで確認できているかは不明
 	[Fact]
 	public async Task GetOrCreateAsync_ほぼ同時に何度もfactoryで指定した関数を呼び出しても1回だけ呼ばれることを確認する() {
 		// Arrange
@@ -90,6 +91,30 @@ public class HybridCacheTest {
 
 		// Assert
 		Assert.Equal(1, count);
+	}
+
+	[Fact]
+	public async Task SetAsync_キャッシュを登録する() {
+		// Arrange
+		var cache = GetHybridCache();
+
+		var called = false;
+
+		// Act
+		// キャッシュを登録する
+		await cache.SetAsync(key: "key", value: "value");
+
+		var value = await cache.GetOrCreateAsync(
+			key: "key",
+			// すでにキャッシュが存在するためfactoryは呼ばれない
+			factory: token => {
+				called = true;
+				return ValueTask.FromResult("");
+			});
+
+		// Assert
+		Assert.False(called);
+		Assert.Equal("value", value);
 	}
 
 	[Fact]
