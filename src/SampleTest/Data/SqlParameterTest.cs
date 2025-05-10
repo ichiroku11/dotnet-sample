@@ -1,5 +1,5 @@
-
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace SampleTest.Data;
 
@@ -22,5 +22,15 @@ public class SqlParameterTest {
 		// Act
 		// Assert
 		Assert.Equal("p", parameter.ParameterName);
+	}
+
+	[Fact]
+	public void Value_値を設定しない場合はnullになる() {
+		// Arrange
+		var parameter = new SqlParameter("p", SqlDbType.Int);
+
+		// Act
+		// Assert
+		Assert.Null(parameter.Value);
 	}
 }
