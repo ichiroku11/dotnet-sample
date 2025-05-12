@@ -35,7 +35,7 @@ public class ExecuteSqlRawTest : IDisposable {
 	}
 
 	[Fact]
-	public async Task ExecuteSqlRawAsync_DirectionのOuputを使って値を取得する() {
+	public async Task ExecuteSqlRawAsync_DirectionのOutputを使って値を取得する() {
 		// Arrange
 		const string sql = "set @p = 1";
 		var param = new SqlParameter("p", SqlDbType.Int) {
@@ -50,5 +50,25 @@ public class ExecuteSqlRawTest : IDisposable {
 		Assert.Equal(-1, result);
 		// SQLでsetした値を取得できる
 		Assert.Equal(1, param.Value);
+	}
+
+	[Fact]
+	public async Task ExecuteSqlRawAsync_DirectionのOutputを使う必要があるのに使わないとSqlExceptionが発生する() {
+		// Arrange
+		const string sql = "set @p = 1";
+		var param = new SqlParameter("p", SqlDbType.Int);
+
+		// Act
+		var exception = await Record.ExceptionAsync(async () => {
+			await _context.Database.ExecuteSqlRawAsync(sql, param);
+		});
+
+		// Assert
+		Assert.NotNull(exception);
+		Assert.IsType<SqlException>(exception);
+		_output.WriteLine(exception.Message);
+		// パラメーター化クエリ '(@p int)set @p = 1' に必要なパラメーター '@p' が指定されていません。
+
+		Assert.Null(param.Value);
 	}
 }
