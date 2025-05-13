@@ -121,5 +121,8 @@ public class ExecuteSqlRawTest : IDisposable {
 		Assert.IsType<SqlException>(exception);
 		_output.WriteLine(exception.Message);
 		// '=' 付近に不適切な構文があります。
+
+		// nullではない？
+		//Assert.Null(param.Value);
 	}
 }
