@@ -26,11 +26,43 @@ public class ExecuteSqlRawSequenceTest : IDisposable {
 		_output = output;
 
 		_context = new SampleDbContext(_output);
+
+		DropSequence();
+		InitSequence();
+	}
+
+	private void InitSequence() {
+		_context.Database.ExecuteSql($"create sequence dbo.SQ_Sample as bigint start with 1");
+	}
+
+	private void DropSequence() {
+		_context.Database.ExecuteSql($"drop sequence if exists dbo.SQ_Sample");
+
 	}
 
 	public void Dispose() {
+		DropSequence();
+
 		_context.Dispose();
 
 		GC.SuppressFinalize(this);
+	}
+
+	[Fact]
+	public async Task ExecuteSqlRawAsync_DirectionのOutputを使ってシーケンスの値を取得する() {
+		// Arrange
+		const string sql = "set @p = next value for dbo.SQ_Sample";
+		var param = new SqlParameter("p", SqlDbType.Int) {
+			Direction = ParameterDirection.Output,
+		};
+
+		// Act
+		var result = await _context.Database.ExecuteSqlRawAsync(sql, param);
+		// 実行されるSQL
+		// set @p = next value for dbo.SQ_Sample
+
+		// Assert
+		Assert.Equal(-1, result);
+		Assert.Equal(1, param.Value);
 	}
 }
