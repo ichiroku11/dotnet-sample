@@ -53,16 +53,17 @@ public class ExecuteSqlRawSequenceTest : IDisposable {
 	public async Task ExecuteSqlRawAsync_DirectionのOutputを使ってシーケンスの値を取得する() {
 		// Arrange
 		const string sql = "set @next = next value for dbo.SQ_Sample";
-		var param = new SqlParameter("next", SqlDbType.Int) {
+
+		var next = new SqlParameter("next", SqlDbType.Int) {
 			Direction = ParameterDirection.Output,
 		};
 
 		// Act
-		var result = await _context.Database.ExecuteSqlRawAsync(sql, param);
+		var result = await _context.Database.ExecuteSqlRawAsync(sql, next);
 
 		// Assert
 		Assert.Equal(-1, result);
-		Assert.Equal(1, param.Value);
+		Assert.Equal(1, next.Value);
 	}
 
 	// https://learn.microsoft.com/ja-jp/sql/relational-databases/system-stored-procedures/sp-sequence-get-range-transact-sql
