@@ -59,11 +59,53 @@ public class ExecuteSqlRawSequenceTest : IDisposable {
 
 		// Act
 		var result = await _context.Database.ExecuteSqlRawAsync(sql, param);
-		// 実行されるSQL
-		// set @next = next value for dbo.SQ_Sample
 
 		// Assert
 		Assert.Equal(-1, result);
 		Assert.Equal(1, param.Value);
+	}
+
+	// https://learn.microsoft.com/ja-jp/sql/relational-databases/system-stored-procedures/sp-sequence-get-range-transact-sql
+	[Fact]
+	public async Task ExecuteSqlRawAsync_sp_sequence_get_rangeを使ってシーケンスの値を取得する() {
+		// Arrange
+		const string sql = @"
+execute sp_sequence_get_range
+	@sequence_name = @name,
+	@range_size = @size,
+	@range_first_Value = @first output,
+	@range_last_Value = @last output,
+	@sequence_increment = @increment output";
+
+		var first = new SqlParameter("first", SqlDbType.Variant) {
+			Direction = ParameterDirection.Output
+		};
+
+		var last = new SqlParameter("last", SqlDbType.Variant) {
+			Direction = ParameterDirection.Output
+		};
+
+		var increment = new SqlParameter("increment", SqlDbType.Variant) {
+			Direction = ParameterDirection.Output
+		};
+
+		// Act
+		var result = await _context.Database.ExecuteSqlRawAsync(sql,
+			// シーケンスオブジェクト名
+			new SqlParameter("name", "dbo.SQ_Sample"),
+			// 取得する値の数
+			new SqlParameter("size", 5L),
+			first,
+			last,
+			increment);
+
+		// Assert
+		Assert.Equal(-1, result);
+		// シーケンスの型がbigintなのでlongと比較する必要がある様子
+		Assert.Equal(1L, first.Value);
+		Assert.Equal(5L, last.Value);
+		Assert.Equal(1L, increment.Value);
+		// sizeを指定しているのでfirstとincrementがわかれば
+		// 生成されたシーケンスの値を導き出せるはず
 	}
 }
