@@ -5,6 +5,7 @@ using System.Data;
 
 namespace SampleTest.EntityFrameworkCore;
 
+[Collection(CollectionNames.EfCoreSampleSequence)]
 public class ExecuteSqlRawSequenceTest : IDisposable {
 	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
 		private readonly ITestOutputHelper _output = output;
