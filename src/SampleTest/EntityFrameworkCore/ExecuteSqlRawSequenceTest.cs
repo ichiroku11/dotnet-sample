@@ -108,5 +108,34 @@ execute sp_sequence_get_range
 		Assert.Equal(1L, increment.Value);
 		// sizeを指定しているのでfirstとincrementがわかれば
 		// 生成されたシーケンスの値を導き出せるはず
+		// dbo.SQ_Sampleではincrement（増分）が1とわかっていることにすると、
+		// 取得する必要はないかもしれない
+	}
+
+	[Fact]
+	public async Task ExecuteSqlRawAsync_sp_sequence_get_rangeを使ってシーケンスの値を2回取得する() {
+		// Arrange
+		const string sql = @"
+execute sp_sequence_get_range
+	@sequence_name = @name,
+	@range_size = @size,
+	@range_first_Value = @first output";
+
+		var name = new SqlParameter("name", "dbo.SQ_Sample");
+		var size = new SqlParameter("size", 5L);
+		var first = new SqlParameter("first", SqlDbType.Variant) {
+			Direction = ParameterDirection.Output
+		};
+
+		// Act
+		await _context.Database.ExecuteSqlRawAsync(sql, name, size, first);
+		var first1 = first.Value;
+
+		await _context.Database.ExecuteSqlRawAsync(sql, name, size, first);
+		var first2 = first.Value;
+
+		// Assert
+		Assert.Equal(1L, first1);
+		Assert.Equal(6L, first2);
 	}
 }
