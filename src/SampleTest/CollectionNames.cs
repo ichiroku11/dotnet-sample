@@ -15,6 +15,11 @@ public static class CollectionNames {
 	public const string EfCoreSample = "EFCore_dbo.Sample";
 
 	/// <summary>
+	/// dbo.SQ_Sampleシーケンスを使用するコレクション名
+	/// </summary>
+	public const string EfCoreSampleSequence = "EFCore_dbo.SQ_Sample";
+
+	/// <summary>
 	/// dbo.Monsterテーブルを使用するコレクション名
 	/// </summary>
 	public const string EfCoreMonster = "EFCore_dbo.Monster";
