@@ -10,4 +10,27 @@ public class TimeSpanTest {
 		// Assert
 		Assert.Equal(0, actual);
 	}
+
+	[Fact]
+	public void MaxValue_Days_最大値の値を確認する() {
+		// Arrange
+
+		// Act
+		var actual = TimeSpan.MaxValue.Days;
+
+		// Assert
+		Assert.Equal(10675199, actual);
+	}
+
+	[Fact]
+	public void MaxValue_TotalDays_最大値の値を確認する() {
+		// Arrange
+
+		// Act
+		var actual = TimeSpan.MaxValue.TotalDays;
+
+		// Assert
+		// intではなくdouble
+		Assert.Equal(10675199.116730064, actual);
+	}
 }
