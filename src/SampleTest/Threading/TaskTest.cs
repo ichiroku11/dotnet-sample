@@ -1,6 +1,23 @@
 namespace SampleTest.Threading;
 
-public class TaskTest {
+public class TaskTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
+	[Fact]
+	public async Task Delay_マイナスの値を指定すると例外が発生する() {
+		// Arrange
+		// Act
+		var actual = await Record.ExceptionAsync(async () => {
+			await Task.Delay(-2);
+			// -1だと無限に待機する様子
+		});
+
+		// Assert
+		Assert.IsType<ArgumentOutOfRangeException>(actual);
+		_output.WriteLine(actual.Message);
+	}
+
+	// todo: use Record
 	[Fact]
 	public async Task FromCanceled_キャンセルされたCancellationTokenを渡す() {
 		// Arrange
