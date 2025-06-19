@@ -15,6 +15,22 @@ public class TaskTest(ITestOutputHelper output) {
 		// Assert
 		Assert.IsType<ArgumentOutOfRangeException>(actual);
 		_output.WriteLine(actual.Message);
+		// The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer. (Parameter 'millisecondsDelay')
+	}
+
+	[Fact]
+	public async Task Delay_マイナスのTimeSpan値を指定すると例外が発生する() {
+		// Arrange
+		// Act
+		var actual = await Record.ExceptionAsync(async () => {
+			await Task.Delay(TimeSpan.FromMilliseconds(-2L));
+			// -1Lだと無限に待機する様子
+		});
+
+		// Assert
+		Assert.IsType<ArgumentOutOfRangeException>(actual);
+		_output.WriteLine(actual.Message);
+		// The value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0, or a positive integer less than or equal to the maximum allowed timer duration. (Parameter 'delay')
 	}
 
 	// todo: use Record
