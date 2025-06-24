@@ -7,14 +7,14 @@ public class TaskTest(ITestOutputHelper output) {
 	public async Task Delay_マイナスの値を指定すると例外が発生する() {
 		// Arrange
 		// Act
-		var actual = await Record.ExceptionAsync(async () => {
+		var exception = await Record.ExceptionAsync(async () => {
 			await Task.Delay(-2);
 			// -1だと無限に待機する様子
 		});
 
 		// Assert
-		Assert.IsType<ArgumentOutOfRangeException>(actual);
-		_output.WriteLine(actual.Message);
+		Assert.IsType<ArgumentOutOfRangeException>(exception);
+		_output.WriteLine(exception.Message);
 		// The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer. (Parameter 'millisecondsDelay')
 	}
 
@@ -22,50 +22,62 @@ public class TaskTest(ITestOutputHelper output) {
 	public async Task Delay_マイナスのTimeSpan値を指定すると例外が発生する() {
 		// Arrange
 		// Act
-		var actual = await Record.ExceptionAsync(async () => {
+		var exception = await Record.ExceptionAsync(async () => {
 			await Task.Delay(TimeSpan.FromMilliseconds(-2L));
 			// -1Lだと無限に待機する様子
 		});
 
 		// Assert
-		Assert.IsType<ArgumentOutOfRangeException>(actual);
-		_output.WriteLine(actual.Message);
+		Assert.IsType<ArgumentOutOfRangeException>(exception);
+		_output.WriteLine(exception.Message);
 		// The value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0, or a positive integer less than or equal to the maximum allowed timer duration. (Parameter 'delay')
 	}
 
-	// todo: use Record
 	[Fact]
 	public async Task FromCanceled_キャンセルされたCancellationTokenを渡す() {
 		// Arrange
 		// Act
 		// キャンセルされたCancellationTokenを渡す必要がある
-		var task = Task.FromCanceled(new CancellationToken(true));
+		var exception = await Record.ExceptionAsync(async () => {
+			await Task.FromCanceled(new CancellationToken(true));
+		});
 
 		// Assert
-		await Assert.ThrowsAsync<TaskCanceledException>(async () => await task);
+		Assert.IsType<TaskCanceledException>(exception);
+		_output.WriteLine(exception.Message);
+		// A task was canceled.
 	}
 
 	[Fact]
-	public async Task FromCanceled_キャンセルされていないCancellationTokenを渡すとArgumentOutOfRangeException() {
+	public void FromCanceled_キャンセルされていないCancellationTokenを渡すとArgumentOutOfRangeException() {
 		// Arrange
 		// Act
-		// Assert
-		await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => {
+		var exception = Record.Exception(() => {
 			// キャンセルされていないCancellationTokenを渡すと例外
-			return Task.FromCanceled(new CancellationToken(false));
+			Task.FromCanceled(new CancellationToken(false));
 		});
+
+		// Assert
+		Assert.IsType<ArgumentOutOfRangeException>(exception);
+		_output.WriteLine(exception.Message);
+		// Specified argument was out of the range of valid values. (Parameter 'cancellationToken')
 	}
 
 	[Fact]
 	public async Task FromException_引数に指定した例外が発生するタスクを作る() {
 		// Arrange
 		// Act
-		var task = Task.FromException(new ArgumentException());
+		var exception = await Record.ExceptionAsync(async () => {
+			await Task.FromException(new ArgumentException("テスト"));
+		});
 
 		// Assert
-		await Assert.ThrowsAsync<ArgumentException>(async () => await task);
+		Assert.IsType<ArgumentException>(exception);
+		Assert.Equal("テスト", exception.Message);
+		_output.WriteLine(exception.Message);
 	}
 
+	// todo:
 	[Fact]
 	public void Wait_例外はAggregateExceptionに集約される() {
 		// Arrange
