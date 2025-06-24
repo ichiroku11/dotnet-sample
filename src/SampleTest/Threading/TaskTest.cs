@@ -77,16 +77,18 @@ public class TaskTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 	}
 
-	// todo:
 	[Fact]
 	public void Wait_例外はAggregateExceptionに集約される() {
 		// Arrange
 		// Act
-		var task = Task.FromCanceled(new CancellationToken(true));
+		var exception = Record.Exception(() => {
+			var task = Task.FromCanceled(new CancellationToken(true));
+			task.Wait();
+		});
 
 		// Assert
-		var exception = Assert.Throws<AggregateException>(() => task.Wait());
-		Assert.Single(exception.InnerExceptions);
+		var aggregateException = Assert.IsType<AggregateException>(exception);
+		Assert.Single(aggregateException.InnerExceptions);
 		Assert.IsType<TaskCanceledException>(exception.InnerException);
 	}
 }
