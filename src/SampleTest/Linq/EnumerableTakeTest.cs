@@ -1,13 +1,15 @@
 namespace SampleTest.Linq;
 
 public class EnumerableTakeTest {
-	[Fact]
-	public void Take_引数にマイナスの値を指定すると空のシーケンスが返ってくる() {
+	[Theory]
+	[InlineData(-1)]
+	[InlineData(0)]
+	public void Take_引数にマイナスの値や0を指定すると空のシーケンスが返ってくる(int count) {
 		// Arrange
 		var source = new[] { 1, 2, 3 };
 
 		// Act
-		var actual = source.Take(-1);
+		var actual = source.Take(count);
 
 		// Assert
 		Assert.Empty(actual);
