@@ -12,7 +12,13 @@ using Xunit.Abstractions;
 
 namespace MiscWebApi;
 
-public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<Program>> {
+public abstract class ControllerTestBase(
+	ITestOutputHelper output, WebApplicationFactory<Program> factory)
+	: IClassFixture<WebApplicationFactory<Program>> {
+
+	private readonly ITestOutputHelper _output = output;
+	private readonly WebApplicationFactory<Program> _factory = factory;
+
 	private static readonly JsonSerializerOptions _jsonSerializerOptions
 		= new() {
 			PropertyNameCaseInsensitive = true,
@@ -28,14 +34,6 @@ public abstract class ControllerTestBase : IClassFixture<WebApplicationFactory<P
 		var json = await response.Content.ReadAsStringAsync();
 		var model = JsonSerializer.Deserialize<TModel>(json, _jsonSerializerOptions);
 		return model;
-	}
-
-	private readonly ITestOutputHelper _output;
-	private readonly WebApplicationFactory<Program> _factory;
-
-	protected ControllerTestBase(ITestOutputHelper output, WebApplicationFactory<Program> factory) {
-		_output = output;
-		_factory = factory;
 	}
 
 	protected void WriteLine(string message) => _output.WriteLine(message);
