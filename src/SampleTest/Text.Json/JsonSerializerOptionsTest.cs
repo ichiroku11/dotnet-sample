@@ -165,6 +165,17 @@ public class JsonSerializerOptionsTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Web_取得できるインスタンスのプロパティを確認する() {
+		// Arrange
+		var options = JsonSerializerOptions.Web;
+
+		// Act
+		// Assert
+		Assert.Equal(JsonNamingPolicy.CamelCase, options.PropertyNamingPolicy);
+		Assert.True(options.PropertyNameCaseInsensitive);
+	}
+
+	[Fact]
 	public void WriteIndented_整形してシリアライズする() {
 		// Arrange
 		var model = new { Number = 1, Text = "Abc" };

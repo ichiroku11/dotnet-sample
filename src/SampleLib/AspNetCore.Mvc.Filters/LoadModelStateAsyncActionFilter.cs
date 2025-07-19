@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace SampleLib.AspNetCore.Mvc.Filters;
@@ -11,7 +10,7 @@ namespace SampleLib.AspNetCore.Mvc.Filters;
 /// <see cref="ITempDataDictionary"/>に保存された<see cref="ModelStateDictionary"/>を読み出す
 /// </summary>
 /// <remarks>
-/// Razor Pagesでのみ利用可
+/// MVCでのみ利用可
 /// </remarks>
 public class LoadModelStateAsyncActionFilter : IAsyncActionFilter {
 	public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
