@@ -3,6 +3,7 @@ namespace SampleTest.Threading;
 public class TaskTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
+	// -2ms以下の値を指定すると例外が発生する
 	// -1msだと無限に待機する様子
 	[Theory]
 	[InlineData(-2)]
@@ -19,8 +20,8 @@ public class TaskTest(ITestOutputHelper output) {
 		// The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer. (Parameter 'millisecondsDelay')
 	}
 
+	// -2ms以下の値を指定すると例外が発生する
 	// doubleをlongに変換して-1msだと無限に待機する様子
-	// -1msより小さい値を指定すると例外が発生する
 	[Theory]
 	[InlineData(-2.0)]
 	public async Task Delay_マイナスのTimeSpanを指定すると例外が発生する(double milliseconds) {
