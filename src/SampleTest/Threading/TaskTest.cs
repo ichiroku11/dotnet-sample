@@ -3,13 +3,14 @@ namespace SampleTest.Threading;
 public class TaskTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
-	[Fact]
-	public async Task Delay_マイナスの値を指定すると例外が発生する() {
+	// -1msだと無限に待機する様子
+	[Theory]
+	[InlineData(-2)]
+	public async Task Delay_マイナスの値を指定すると例外が発生する(int milliseconds) {
 		// Arrange
 		// Act
 		var exception = await Record.ExceptionAsync(async () => {
-			await Task.Delay(-2);
-			// -1だと無限に待機する様子
+			await Task.Delay(millisecondsDelay: milliseconds);
 		});
 
 		// Assert
@@ -18,13 +19,15 @@ public class TaskTest(ITestOutputHelper output) {
 		// The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer. (Parameter 'millisecondsDelay')
 	}
 
-	[Fact]
-	public async Task Delay_マイナスのTimeSpan値を指定すると例外が発生する() {
+	// doubleをlongに変換して-1msだと無限に待機する様子
+	// -1msより小さい値を指定すると例外が発生する
+	[Theory]
+	[InlineData(-2.0)]
+	public async Task Delay_マイナスのTimeSpanを指定すると例外が発生する(double milliseconds) {
 		// Arrange
 		// Act
 		var exception = await Record.ExceptionAsync(async () => {
-			await Task.Delay(TimeSpan.FromMilliseconds(-2L));
-			// -1Lだと無限に待機する様子
+			await Task.Delay(delay: TimeSpan.FromMilliseconds(milliseconds));
 		});
 
 		// Assert
