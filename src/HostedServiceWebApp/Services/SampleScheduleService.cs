@@ -3,7 +3,8 @@ using NCrontab;
 namespace HostedServiceWebApp.Services;
 
 // スケジュールにしたがって定期的な処理を実行する
-public class SampleScheduleService(ILogger<SampleScheduleService> logger) : BackgroundService {
+public class SampleScheduleService(IConfiguration config, ILogger<SampleScheduleService> logger) : BackgroundService {
+	private readonly IConfiguration _config = config;
 	private readonly ILogger<SampleScheduleService> _logger = logger;
 	private int _count;
 
@@ -13,8 +14,7 @@ public class SampleScheduleService(ILogger<SampleScheduleService> logger) : Back
 		stoppingToken.Register(() => _logger.LogInformation($"{nameof(ExecuteAsync)} Canceled"));
 
 		// 毎時5分
-		var expression = "5 * * * *";
-
+		var expression = _config["Schedule:Sample"];
 		var schedule = CrontabSchedule.Parse(expression);
 
 		while (!stoppingToken.IsCancellationRequested) {
