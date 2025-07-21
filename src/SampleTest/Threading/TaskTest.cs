@@ -37,6 +37,22 @@ public class TaskTest(ITestOutputHelper output) {
 		// The value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0, or a positive integer less than or equal to the maximum allowed timer duration. (Parameter 'delay')
 	}
 
+	// -1ms ~ 0の間は例外は発生しない
+	[Theory]
+	[InlineData(-1L * 10_000 + 1)]
+	[InlineData(-1L)]
+	[InlineData(0)]
+	public async Task Delay_マイナスのTimeSpanを指定しても例外が発生しない(long ticks) {
+		// Arrange
+		// Act
+		var actual = await Record.ExceptionAsync(async () => {
+			await Task.Delay(TimeSpan.FromTicks(ticks));
+		});
+
+		// Assert
+		Assert.Null(actual);
+	}
+
 	[Fact]
 	public async Task FromCanceled_キャンセルされたCancellationTokenを渡す() {
 		// Arrange
