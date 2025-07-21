@@ -13,7 +13,7 @@ public class SampleBackgroundService(ILogger<SampleBackgroundService> logger) : 
 		while (!stoppingToken.IsCancellationRequested) {
 			// 何か定期的に実行する処理
 			var count = Interlocked.Increment(ref _count);
-			_logger.LogInformation($"Loop {nameof(count)} = {count}");
+			_logger.LogInformation("Loop {name} = {count}", nameof(count), count);
 
 			// 5秒待機
 			await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);

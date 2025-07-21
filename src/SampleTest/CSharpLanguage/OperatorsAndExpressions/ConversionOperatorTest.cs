@@ -80,4 +80,19 @@ public class ConversionOperatorTest {
 		// コンストラクタ内でスローさせている例外
 		Assert.Throws<ArgumentOutOfRangeException>(() => (Digit)src);
 	}
+
+	[Theory]
+	[InlineData(1.0, 1L)]
+	// -1～-2は-1Lとなる
+	[InlineData(-1.0, -1L)]
+	[InlineData(-1.9, -1L)]
+	public void ExplicitOperator_doubleをlongに変換する(double value, long expected) {
+		// Arrange
+
+		// Act
+		var actual = (long)value;
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }

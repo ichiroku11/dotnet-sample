@@ -4,6 +4,10 @@ namespace HostedServiceWebApp;
 
 public class Startup {
 	public void ConfigureServices(IServiceCollection services) {
+		// スケジュールに従って定期的な処理を実行するサンプル
+		services
+			.AddHostedService<SampleScheduleService>();
+
 		// AddScopedで追加されたサービスをIHostedServiceから呼び出すサンプル
 		services
 			.AddScoped<SampleScopedService>()
