@@ -21,10 +21,15 @@ public class SampleScheduleService(ILogger<SampleScheduleService> logger) : Back
 			var now = DateTime.Now;
 			var next = schedule.GetNextOccurrence(now);
 
+			// NCrontabで取得できる次の日時は未来の日時になる様子だが、
+			// マイナスの値だと例外が発生し、また万が一-1msを指定すると無限に待機してしまうため、マイナスは除外する
+			var delay = next - now;
+			if (delay < TimeSpan.Zero) {
+				continue;
+			}
+
 			_logger.LogInformation("Next {next}", next);
 
-			// todo: delayがマイナスの場合を考慮する必要あり
-			var delay = next - now;
 			await Task.Delay(delay, stoppingToken);
 
 			// 何か定期的に実行する処理
