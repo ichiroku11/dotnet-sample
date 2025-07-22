@@ -24,7 +24,7 @@ public class UrlHelperTest {
 	}
 
 	// IServiceProvider（サービス一覧）を生成
-	private static IServiceProvider CreateServiceProvider() {
+	private static ServiceProvider CreateServiceProvider() {
 		var services = new ServiceCollection();
 
 		services
@@ -39,8 +39,8 @@ public class UrlHelperTest {
 		return services.BuildServiceProvider();
 	}
 
-	// HttpContextを生成
-	private static HttpContext CreateHttpContext(
+	// DefaultHttpContextを生成
+	private static DefaultHttpContext CreateHttpContext(
 		IServiceProvider services,
 		string scheme,
 		string host,
@@ -61,8 +61,8 @@ public class UrlHelperTest {
 	private static ActionContext CreateActionContext(HttpContext httpContext, RouteData? routeData = default)
 		=> new(httpContext, routeData ?? new RouteData(), new ActionDescriptor());
 
-	// IRouteBuilderを生成
-	private static IRouteBuilder CreateRouteBuilder(IServiceProvider services) {
+	// RouteBuilderを生成
+	private static RouteBuilder CreateRouteBuilder(IServiceProvider services) {
 		var app = new Mock<IApplicationBuilder>();
 
 		app.SetupGet(a => a.ApplicationServices)
