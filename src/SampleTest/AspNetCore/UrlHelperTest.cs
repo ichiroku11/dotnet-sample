@@ -125,4 +125,21 @@ public class UrlHelperTest {
 		// Assert
 		Assert.Equal(expected: expected, actual);
 	}
+
+	[Theory]
+	// nullや空白文字列ではfalseになる（例外が発生しない）
+	[InlineData(null)]
+	[InlineData("")]
+	[InlineData(" ")]
+	[InlineData("　")]
+	public void IsLocalUrl_nullや空白文字列はfalseになる(string? url) {
+		// Arrange
+		var urlHelper = CreateUrlHelper("https", "example.jp", "");
+
+		// Act
+		var actual = urlHelper.IsLocalUrl(url);
+
+		// Assert
+		Assert.False(actual);
+	}
 }
