@@ -94,7 +94,7 @@ public class UrlHelperTest {
 		return new UrlHelper(actionContext);
 	}
 
-	public static TheoryData<string, string, string?, string?, object?, string> GetTheoryDataForActionLink() {
+	public static TheoryData<string, string, string?, string?, object?, string> GetTheoryData_ActionLink() {
 		return new() {
 			{ "example.jp", "", null, null, null, "https://example.jp/" },
 			// appあり
@@ -111,7 +111,7 @@ public class UrlHelperTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForActionLink))]
+	[MemberData(nameof(GetTheoryData_ActionLink))]
 	public void ActionLink_絶対URLを生成できる(
 		string host, string app,
 		string? action, string? contoller, object? values,
