@@ -1,4 +1,5 @@
 
+using Microsoft.Extensions.Options;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,13 +26,37 @@ app.MapGet("/session", async context => {
 	}
 });
 
+// セッションID
+app.MapGet("/session/id", async context => {
+	await context.Response.WriteAsync(context.Session.Id);
+});
+
+// セッションをクリア
+app.MapGet("/session/clear", context => {
+	// セッションクッキーは削除されない
+	context.Session.Clear();
+
+	return Task.CompletedTask;
+});
+
+// セッションクッキーを削除
+app.MapGet("/session/cookie/delete/", context => {
+	// セッションクッキーは削除される
+
+	var options = context.RequestServices.GetRequiredService<IOptions<SessionOptions>>();
+	var key = options.Value.Cookie.Name ?? throw new InvalidOperationException();
+	context.Response.Cookies.Delete(key);
+	// SetCookieが設定される
+
+	return Task.CompletedTask;
+});
+
 // セッションに設定
 app.MapGet("/session/set/{key}:{value}", async context => {
 	var session = context.Session;
 
-	var key = context.Request.RouteValues["key"] as string;
-	var value = context.Request.RouteValues["value"] as string;
-	if (key is null || value is null) {
+	if (context.Request.RouteValues["key"] is not string key ||
+		context.Request.RouteValues["value"] is not string value) {
 		context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 		return;
 	}
@@ -45,8 +70,7 @@ app.MapGet("/session/set/{key}:{value}", async context => {
 app.MapGet("/session/remove/{key}", async context => {
 	var session = context.Session;
 
-	var key = context.Request.RouteValues["key"] as string;
-	if (key is null) {
+	if (context.Request.RouteValues["key"] is not string key) {
 		context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 		return;
 	}
