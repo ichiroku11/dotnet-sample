@@ -40,7 +40,7 @@ app.MapGet("/session/clear", context => {
 });
 
 // セッションクッキーを削除
-app.MapGet("/session/cookie/delete/", context => {
+app.MapGet("/session/cookie/delete", context => {
 	// セッションクッキーは削除される
 
 	var options = context.RequestServices.GetRequiredService<IOptions<SessionOptions>>();
@@ -52,11 +52,10 @@ app.MapGet("/session/cookie/delete/", context => {
 });
 
 // セッションに設定
-app.MapGet("/session/set/{key}:{value}", async context => {
+app.MapGet("/session/set/{key}:{value}", async (HttpContext context, string? key, string? value) => {
 	var session = context.Session;
 
-	if (context.Request.RouteValues["key"] is not string key ||
-		context.Request.RouteValues["value"] is not string value) {
+	if (key is null || value is null) {
 		context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 		return;
 	}
@@ -67,10 +66,10 @@ app.MapGet("/session/set/{key}:{value}", async context => {
 });
 
 // セッションから削除
-app.MapGet("/session/remove/{key}", async context => {
+app.MapGet("/session/remove/{key}", async (HttpContext context, string? key) => {
 	var session = context.Session;
 
-	if (context.Request.RouteValues["key"] is not string key) {
+	if (key is null) {
 		context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 		return;
 	}
