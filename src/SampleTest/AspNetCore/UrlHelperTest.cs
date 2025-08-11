@@ -24,7 +24,7 @@ public class UrlHelperTest {
 	}
 
 	// IServiceProvider（サービス一覧）を生成
-	private static IServiceProvider CreateServiceProvider() {
+	private static ServiceProvider CreateServiceProvider() {
 		var services = new ServiceCollection();
 
 		services
@@ -39,8 +39,8 @@ public class UrlHelperTest {
 		return services.BuildServiceProvider();
 	}
 
-	// HttpContextを生成
-	private static HttpContext CreateHttpContext(
+	// DefaultHttpContextを生成
+	private static DefaultHttpContext CreateHttpContext(
 		IServiceProvider services,
 		string scheme,
 		string host,
@@ -61,8 +61,8 @@ public class UrlHelperTest {
 	private static ActionContext CreateActionContext(HttpContext httpContext, RouteData? routeData = default)
 		=> new(httpContext, routeData ?? new RouteData(), new ActionDescriptor());
 
-	// IRouteBuilderを生成
-	private static IRouteBuilder CreateRouteBuilder(IServiceProvider services) {
+	// RouteBuilderを生成
+	private static RouteBuilder CreateRouteBuilder(IServiceProvider services) {
 		var app = new Mock<IApplicationBuilder>();
 
 		app.SetupGet(a => a.ApplicationServices)
@@ -94,7 +94,7 @@ public class UrlHelperTest {
 		return new UrlHelper(actionContext);
 	}
 
-	public static TheoryData<string, string, string?, string?, object?, string> GetTheoryDataForActionLink() {
+	public static TheoryData<string, string, string?, string?, object?, string> GetTheoryData_ActionLink() {
 		return new() {
 			{ "example.jp", "", null, null, null, "https://example.jp/" },
 			// appあり
@@ -111,7 +111,7 @@ public class UrlHelperTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForActionLink))]
+	[MemberData(nameof(GetTheoryData_ActionLink))]
 	public void ActionLink_絶対URLを生成できる(
 		string host, string app,
 		string? action, string? contoller, object? values,
@@ -124,5 +124,22 @@ public class UrlHelperTest {
 
 		// Assert
 		Assert.Equal(expected: expected, actual);
+	}
+
+	[Theory]
+	// nullや空白文字列ではfalseになる（例外が発生しない）
+	[InlineData(null)]
+	[InlineData("")]
+	[InlineData(" ")]
+	[InlineData("　")]
+	public void IsLocalUrl_nullや空白文字列はfalseになる(string? url) {
+		// Arrange
+		var urlHelper = CreateUrlHelper("https", "example.jp", "");
+
+		// Act
+		var actual = urlHelper.IsLocalUrl(url);
+
+		// Assert
+		Assert.False(actual);
 	}
 }

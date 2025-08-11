@@ -4,7 +4,7 @@ using Microsoft.Extensions.Primitives;
 namespace SampleTest.AspNetCore;
 
 public class QueryHelpersTest {
-	public static TheoryData<string, IEnumerable<KeyValuePair<string, string>>, string> GetTheoryDataForAddQueryString() {
+	public static TheoryData<string, IEnumerable<KeyValuePair<string, string>>, string> GetTheoryData_AddQueryString() {
 		return new() {
 			{
 				"https://example.jp",
@@ -45,7 +45,7 @@ public class QueryHelpersTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForAddQueryString))]
+	[MemberData(nameof(GetTheoryData_AddQueryString))]
 	public void AddQueryString_クエリ文字列を追加できる(string url, IEnumerable<KeyValuePair<string, string?>> query, string expected) {
 		// Arrange
 		// Act
@@ -65,7 +65,7 @@ public class QueryHelpersTest {
 		Assert.Equal("https://example.jp/login?returnUrl=https%3A%2F%2Fexample.jp", actual);
 	}
 
-	public static TheoryData<string, Dictionary<string, StringValues>> GetTheoryDataForParseQuery() {
+	public static TheoryData<string, Dictionary<string, StringValues>> GetTheoryData_ParseQuery() {
 		return new() {
 			// 先頭が「?」で始まる
 			{
@@ -90,7 +90,7 @@ public class QueryHelpersTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForParseQuery))]
+	[MemberData(nameof(GetTheoryData_ParseQuery))]
 	public void ParseQuery_パースできる(string query, Dictionary<string, StringValues> expected) {
 		// Arrange
 		// Act
@@ -100,7 +100,7 @@ public class QueryHelpersTest {
 		Assert.Equal(expected, actual);
 	}
 
-	public static TheoryData<string, Dictionary<string, StringValues>?> GetTheoryDataForParseNullableQuery() {
+	public static TheoryData<string, Dictionary<string, StringValues>?> GetTheoryData_ParseNullableQuery() {
 		return new() {
 			// 先頭が「?」で始まる
 			{
@@ -127,7 +127,7 @@ public class QueryHelpersTest {
 	}
 
 	[Theory]
-	[MemberData(nameof(GetTheoryDataForParseNullableQuery))]
+	[MemberData(nameof(GetTheoryData_ParseNullableQuery))]
 	public void ParseNullableQuery_パースできる(string query, Dictionary<string, StringValues>? expected) {
 		// Arrange
 		// Act
