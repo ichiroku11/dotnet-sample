@@ -51,11 +51,9 @@ public class OwnedEntityStampTest : IDisposable {
 		}
 	}
 
-	private readonly ITestOutputHelper _output;
 	private readonly SampleDbContext _context;
 
 	public OwnedEntityStampTest(ITestOutputHelper output) {
-		_output = output;
 		_context = new(output);
 
 		DropTable();
@@ -93,8 +91,8 @@ create table dbo.Post(
 			Id = 1L,
 			Title = "title1",
 			Content = "content1",
-			Created = new Stamp { By = 1L, At = now },
-			Updated = new Stamp { By = 1L, At = now },
+			Created = new(1L, now),
+			Updated = new(1L, now),
 		});
 		_context.SaveChanges();
 	}
