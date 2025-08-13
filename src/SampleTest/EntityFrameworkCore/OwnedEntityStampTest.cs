@@ -32,9 +32,8 @@ public class OwnedEntityStampTest : IDisposable {
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
-			modelBuilder.Entity<Post>().ToTable(nameof(Post));
-
 			modelBuilder.Entity<Post>()
+				.ToTable(nameof(Post))
 				.OwnsOne(entity => entity.Created, navigationBuilder => {
 					setColumnName(navigationBuilder, nameof(Post.Created));
 				})
@@ -84,7 +83,8 @@ create table dbo.Post(
 	UpdatedAt datetime not null,
 	DeletedBy bigint,
 	DeletedAt datetime,
-	constraint PK_Post primary key(Id));";
+	constraint PK_Post primary key(Id)
+);";
 
 		_context.Database.ExecuteSql(sql);
 
