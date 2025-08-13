@@ -119,5 +119,6 @@ drop table if exists dbo.Post;";
 		Assert.Equal(1L, post.Created.By);
 		Assert.Equal(1L, post.Updated.By);
 		Assert.True(post.Created.At == post.Updated.At);
+		Assert.Null(post.Deleted);
 	}
 }
