@@ -119,4 +119,34 @@ drop table if exists dbo.Post;";
 		Assert.True(post.Created.At == post.Updated.At);
 		Assert.Null(post.Deleted);
 	}
+
+	[Fact]
+	public async Task Add_FirstAsync_エンティティを追加して取得できる() {
+		// Arrange
+		var now = DateTime.Today.AddHours(1);
+
+		// Act
+		_context.Posts.Add(new Post {
+			Id = 2L,
+			Title = "title2",
+			Content = "content2",
+			Created = new(2L, now),
+			Updated = new(2L, now),
+		});
+		var changes = await _context.SaveChangesAsync();
+
+		var added = await _context.Posts.FirstAsync(post => post.Id == 2L);
+
+		// Assert
+		Assert.Equal(1, changes);
+
+		Assert.Equal(2L, added.Id);
+		Assert.Equal("title2", added.Title);
+		Assert.Equal("content2", added.Content);
+		Assert.Equal(2L, added.Created.By);
+		Assert.Equal(now, added.Updated.At);
+		Assert.Equal(2L, added.Updated.By);
+		Assert.Equal(now, added.Updated.At);
+		Assert.Null(added.Deleted);
+	}
 }
