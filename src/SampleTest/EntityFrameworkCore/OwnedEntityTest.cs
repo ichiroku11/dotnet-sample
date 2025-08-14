@@ -5,6 +5,7 @@ namespace SampleTest.EntityFrameworkCore;
 // 所有型を試してみる
 // 参考
 // https://docs.microsoft.com/ja-jp/ef/core/modeling/owned-entities
+[Collection(CollectionNames.EfCoreMail)]
 public class OwnedEntityTest : IDisposable {
 	// メールアドレス
 	private record MailAddress(string Address, string Name) {
