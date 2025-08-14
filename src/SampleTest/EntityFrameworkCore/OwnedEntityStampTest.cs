@@ -6,9 +6,9 @@ namespace SampleTest.EntityFrameworkCore;
 
 [Collection(CollectionNames.EfCoreBlog)]
 public class OwnedEntityStampTest : IDisposable {
-	public record Stamp(long By = 0L, DateTime At = new DateTime());
+	private record Stamp(long By = 0L, DateTime At = new DateTime());
 
-	public class Post {
+	private class Post {
 		public long Id { get; set; }
 		public string Title { get; set; } = "";
 		public string Content { get; set; } = "";
@@ -17,7 +17,7 @@ public class OwnedEntityStampTest : IDisposable {
 		public Stamp? Deleted { get; set; }
 	}
 
-	public class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
+	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
 		private readonly ITestOutputHelper _output = output;
 
 		public DbSet<Post> Posts { get; set; }
