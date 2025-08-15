@@ -73,8 +73,8 @@ public class OwnedEntityStampTest : IDisposable {
 create table dbo.Post(
 	Id bigint not null,
 	-- TitleとContentの長さは適当
-	Title nvarchar(10) not null,
-	Content nvarchar(10) not null,
+	Title nvarchar(50) not null,
+	Content nvarchar(50) not null,
 	CreatedBy bigint not null,
 	CreatedAt datetime not null,
 	UpdatedBy bigint not null,
@@ -121,7 +121,7 @@ drop table if exists dbo.Post;";
 	}
 
 	[Fact]
-	public async Task Add_FirstAsync_エンティティを追加して取得できる() {
+	public async Task Add_エンティティを追加する() {
 		// Arrange
 		var now = DateTime.Today.AddHours(1);
 
@@ -148,5 +148,35 @@ drop table if exists dbo.Post;";
 		Assert.Equal(2L, added.Updated.By);
 		Assert.Equal(now, added.Updated.At);
 		Assert.Null(added.Deleted);
+	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_エンティティを更新する() {
+		// Arrange
+		var now = DateTime.Today.AddHours(1);
+
+		// Act
+		var changes = await _context.Posts
+			.Where(p => p.Id == 1L)
+			.ExecuteUpdateAsync(
+				calls => calls
+					.SetProperty(post => post.Title, "title1-updated")
+					.SetProperty(post => post.Content, "content1-updated")
+					.SetProperty(post => post.Updated.By, 2L)
+					.SetProperty(post => post.Updated.At, now));
+
+		var updated = await _context.Posts.FirstAsync(post => post.Id == 1L);
+
+		// Assert
+		Assert.Equal(1, changes);
+
+		Assert.Equal(1L, updated.Id);
+		Assert.Equal("title1-updated", updated.Title);
+		Assert.Equal("content1-updated", updated.Content);
+		Assert.Equal(1L, updated.Created.By);
+		Assert.False(updated.Created.At == updated.Updated.At);
+		Assert.Equal(2L, updated.Updated.By);
+		Assert.Equal(now, updated.Updated.At);
+		Assert.Null(updated.Deleted);
 	}
 }
