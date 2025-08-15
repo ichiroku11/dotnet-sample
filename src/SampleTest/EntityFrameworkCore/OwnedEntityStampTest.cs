@@ -144,7 +144,7 @@ drop table if exists dbo.Post;";
 		Assert.Equal("title2", added.Title);
 		Assert.Equal("content2", added.Content);
 		Assert.Equal(2L, added.Created.By);
-		Assert.Equal(now, added.Updated.At);
+		Assert.Equal(now, added.Created.At);
 		Assert.Equal(2L, added.Updated.By);
 		Assert.Equal(now, added.Updated.At);
 		Assert.Null(added.Deleted);
