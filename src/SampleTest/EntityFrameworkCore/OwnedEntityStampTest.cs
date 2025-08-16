@@ -107,7 +107,7 @@ drop table if exists dbo.Post;";
 	}
 
 	[Fact]
-	public async Task First_正しくエンティティを取得できる() {
+	public async Task FirstAsync_正しくエンティティを取得できる() {
 		// Arrange
 		// Act
 		var post = await _context.Posts.FirstAsync();

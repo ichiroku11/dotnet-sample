@@ -84,7 +84,7 @@ drop table if exists dbo.Mail;";
 	}
 
 	[Fact]
-	public async Task FirstOrDefault_所有型を取得できる() {
+	public async Task FirstOrDefaultAsync_所有型を取得できる() {
 		// Arrange
 		var expected = new Mail {
 			Id = 1,
