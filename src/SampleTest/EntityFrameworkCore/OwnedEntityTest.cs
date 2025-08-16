@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace SampleTest.EntityFrameworkCore;
 
@@ -27,23 +28,17 @@ public class OwnedEntityTest : IDisposable {
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Mail>().ToTable(nameof(Mail))
 				.OwnsOne(mail => mail.From, ownedBuilder => {
-					// カラム名を指定
-					ownedBuilder
-						.Property(address => address.Address)
-						.HasColumnName($"{nameof(Mail.From)}{nameof(MailAddress.Address)}");
-					ownedBuilder
-						.Property(address => address.Name)
-						.HasColumnName($"{nameof(Mail.From)}{nameof(MailAddress.Name)}");
+					setColumnName(ownedBuilder, nameof(Mail.From));
 				})
 				.OwnsOne(mail => mail.To, ownedBuilder => {
-					// カラム名を指定
-					ownedBuilder
-						.Property(address => address.Address)
-						.HasColumnName($"{nameof(Mail.To)}{nameof(MailAddress.Address)}");
-					ownedBuilder
-						.Property(address => address.Name)
-						.HasColumnName($"{nameof(Mail.To)}{nameof(MailAddress.Name)}");
+					setColumnName(ownedBuilder, nameof(Mail.To));
 				});
+
+			// カラム名を指定
+			static void setColumnName(OwnedNavigationBuilder<Mail, MailAddress> builder, string prefix) {
+				builder.Property(mail => mail.Address).HasColumnName($"{prefix}{nameof(MailAddress.Address)}");
+				builder.Property(mail => mail.Name).HasColumnName($"{prefix}{nameof(MailAddress.Name)}");
+			}
 		}
 	}
 
