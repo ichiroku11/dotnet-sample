@@ -6,14 +6,16 @@ namespace SampleTest.EntityFrameworkCore;
 
 [Collection(CollectionNames.EfCoreBlog)]
 public class OwnedEntityStampTest : IDisposable {
-	private record Stamp(long By = 0L, DateTime At = new DateTime());
+	private record Stamp(long By = 0L, DateTime At = new DateTime()) {
+		public static readonly Stamp Default = new();
+	}
 
 	private class Post {
 		public long Id { get; set; }
 		public string Title { get; set; } = "";
 		public string Content { get; set; } = "";
-		public Stamp Created { get; set; } = new Stamp();
-		public Stamp Updated { get; set; } = new Stamp();
+		public Stamp Created { get; set; } = Stamp.Default;
+		public Stamp Updated { get; set; } = Stamp.Default;
 		public Stamp? Deleted { get; set; }
 	}
 
