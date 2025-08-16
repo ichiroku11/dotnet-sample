@@ -179,4 +179,34 @@ drop table if exists dbo.Post;";
 		Assert.Equal(now, updated.Updated.At);
 		Assert.Null(updated.Deleted);
 	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_エンティティを論理削除する() {
+		// Arrange
+		var now = DateTime.Today.AddHours(1);
+
+		// Act
+		var changes = await _context.Posts
+			.Where(p => p.Id == 1L)
+			.ExecuteUpdateAsync(
+				calls => calls
+					// 警告対策で抑制するしかないのか
+					.SetProperty(post => post.Deleted!.By, 2L)
+					.SetProperty(post => post.Deleted!.At, now));
+
+		var updated = await _context.Posts.FirstAsync(post => post.Id == 1L);
+
+		// Assert
+		Assert.Equal(1, changes);
+
+		Assert.Equal(1L, updated.Id);
+		Assert.Equal("title1", updated.Title);
+		Assert.Equal("content1", updated.Content);
+		Assert.Equal(1L, updated.Created.By);
+		Assert.True(updated.Created.At == updated.Updated.At);
+		Assert.Equal(1L, updated.Updated.By);
+		Assert.NotNull(updated.Deleted);
+		Assert.Equal(2L, updated.Deleted.By);
+		Assert.Equal(now, updated.Deleted.At);
+	}
 }
