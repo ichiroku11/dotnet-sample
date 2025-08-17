@@ -123,6 +123,22 @@ drop table if exists dbo.Post;";
 	}
 
 	[Fact]
+	public async Task FirstAsync_作成者IDでエンティティを取得できる() {
+		// Arrange
+		// Act
+		var post = await _context.Posts.FirstAsync(post => post.Created.By == 1L);
+
+		// Assert
+		Assert.Equal(1L, post.Id);
+		Assert.Equal("title1", post.Title);
+		Assert.Equal("content1", post.Content);
+		Assert.Equal(1L, post.Created.By);
+		Assert.Equal(1L, post.Updated.By);
+		Assert.True(post.Created.At == post.Updated.At);
+		Assert.Null(post.Deleted);
+	}
+
+	[Fact]
 	public async Task Add_エンティティを追加する() {
 		// Arrange
 		var now = DateTime.Today.AddHours(1);
