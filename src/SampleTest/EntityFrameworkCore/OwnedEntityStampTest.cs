@@ -127,6 +127,11 @@ drop table if exists dbo.Post;";
 		// Arrange
 		// Act
 		var post = await _context.Posts.FirstAsync(post => post.Created.By == 1L);
+		/*
+		SELECT TOP(1) [p].[Id], [p].[Content], [p].[Title], [p].[CreatedAt], [p].[CreatedBy], [p].[DeletedAt], [p].[DeletedBy], [p].[UpdatedAt], [p].[UpdatedBy]
+		FROM [Post] AS [p]
+		WHERE [p].[CreatedBy] = CAST(1 AS bigint)
+		*/
 
 		// Assert
 		Assert.Equal(1L, post.Id);
@@ -182,6 +187,15 @@ drop table if exists dbo.Post;";
 					.SetProperty(post => post.Content, "content1-updated")
 					.SetProperty(post => post.Updated.By, 2L)
 					.SetProperty(post => post.Updated.At, now));
+		/*
+		UPDATE [p]
+		SET [p].[UpdatedAt] = @__now_0,
+			[p].[UpdatedBy] = CAST(2 AS bigint),
+			[p].[Content] = N'content1-updated',
+			[p].[Title] = N'title1-updated'
+		FROM [Post] AS [p]
+		WHERE [p].[Id] = CAST(1 AS bigint)
+		*/
 
 		var updated = await _context.Posts.FirstAsync(post => post.Id == 1L);
 
@@ -211,6 +225,13 @@ drop table if exists dbo.Post;";
 					// 警告対策で抑制するしかないのか
 					.SetProperty(post => post.Deleted!.By, 2L)
 					.SetProperty(post => post.Deleted!.At, now));
+		/*
+		UPDATE [p]
+		SET [p].[DeletedAt] = @__now_0,
+			[p].[DeletedBy] = CAST(2 AS bigint)
+		FROM [Post] AS [p]
+		WHERE [p].[Id] = CAST(1 AS bigint)
+		*/
 
 		var updated = await _context.Posts.FirstAsync(post => post.Id == 1L);
 
