@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleTest.EntityFrameworkCore;
 
+// 文字列カラムにJSON配列のJSON文字列を格納するサンプル
 [Collection(CollectionNames.EfCoreTodoItem)]
 public class JsonColumnArrayTest : IDisposable {
 	private class TodoItem {
@@ -33,13 +34,10 @@ public class JsonColumnArrayTest : IDisposable {
 		}
 	}
 
-	private readonly ITestOutputHelper _output;
 	private readonly SampleDbContext _context;
 
 	public JsonColumnArrayTest(ITestOutputHelper output) {
-		_output = output;
-
-		_context = new(_output);
+		_context = new(output);
 
 		DropTable();
 		InitTable();
@@ -164,8 +162,9 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
-	public async Task JSON配列にシリアライズされてInsertされる() {
+	public async Task Add_JSON文字列にシリアライズされてInsertされる() {
 		// Arrange
+		// Act
 		_context.TodoItems.Add(new TodoItem {
 			Id = 3,
 			Title = "todo-3",
@@ -173,9 +172,8 @@ drop table if exists dbo.TodoItem;";
 		});
 		await _context.SaveChangesAsync();
 
-		// Act
+		// 文字列として取得
 		var tags = await _context.Database
-			// 文字列として取得
 			.SqlQuery<string>($"select Tags as Value from dbo.TodoItem where Id = 3")
 			.FirstAsync();
 
