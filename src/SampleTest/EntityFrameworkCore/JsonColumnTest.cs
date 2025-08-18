@@ -3,8 +3,10 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleTest.EntityFrameworkCore;
 
+// 文字列カラムにJSONオブジェクトのJSON文字列を格納するサンプル
 [Collection(CollectionNames.EfCoreTodoItem)]
 public class JsonColumnTest : IDisposable {
+	// JSONオブジェクトとして扱う
 	private class TodoItemDetail {
 		public string Note { get; set; } = "";
 		public string[] Urls { get; set; } = [];
@@ -67,8 +69,15 @@ create table dbo.TodoItem(
 	Title nvarchar(10) not null,
 	Detail nvarchar(max) not null,
 	constraint PK_TodoItem primary key(Id)
-);";
-		// todo: insertがうまくいかない
+);
+insert into dbo.TodoItem(Id, Title, Detail)
+output inserted.*
+values
+	(1, N'todo-1', N'{{""Note"":""note-a"",""Urls"":[""url-a""]}}');
+";
+		// ↑JSON文字列を格納するには、"{"ではなく"{{"とする必要があるみたい
+		// ↓はエラーになる
+		// (1, N'todo-1', N'{""Note"":""note-a"",""Urls"":[""url-a""]}');
 
 		_context.Database.ExecuteSqlRaw(sql);
 	}
@@ -77,6 +86,21 @@ create table dbo.TodoItem(
 		var sql = @"
 drop table if exists dbo.TodoItem;";
 		_context.Database.ExecuteSqlRaw(sql);
+	}
+
+	[Fact]
+	public async Task JSONオブジェクトをクラスのインスタンスとして取得できる() {
+		// Arrange
+		// Act
+		var todoItem = await _context.TodoItems
+			.OrderBy(item => item.Id)
+			.FirstAsync();
+
+		// Assert
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal("note-a", todoItem.Detail.Note);
+		Assert.Equal(["url-a"], todoItem.Detail.Urls);
 	}
 
 	[Fact]
