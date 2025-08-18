@@ -5,7 +5,7 @@ namespace SampleTest.EntityFrameworkCore;
 
 // 文字列カラムにJSONオブジェクトのJSON文字列を格納するサンプル
 [Collection(CollectionNames.EfCoreTodoItem)]
-public class JsonColumnTest : IDisposable {
+public class JsonColumnObjectTest : IDisposable {
 	// JSONオブジェクトとして扱う
 	private class TodoItemDetail {
 		public string Note { get; set; } = "";
@@ -47,7 +47,7 @@ public class JsonColumnTest : IDisposable {
 
 	private readonly SampleDbContext _context;
 
-	public JsonColumnTest(ITestOutputHelper output) {
+	public JsonColumnObjectTest(ITestOutputHelper output) {
 		_context = new(output);
 
 		DropTable();
