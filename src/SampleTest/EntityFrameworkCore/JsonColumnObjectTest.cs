@@ -55,7 +55,7 @@ public class JsonColumnObjectTest : IDisposable {
 	}
 
 	public void Dispose() {
-		//DropTable();
+		DropTable();
 
 		_context.Dispose();
 
@@ -63,7 +63,7 @@ public class JsonColumnObjectTest : IDisposable {
 	}
 
 	private void InitTable() {
-		var sql = @"
+		FormattableString sql = $@"
 create table dbo.TodoItem(
 	Id int not null,
 	Title nvarchar(10) not null,
@@ -75,17 +75,13 @@ output inserted.*
 values
 	(1, N'todo-1', N'{{""Note"":""note-a"",""Urls"":[""url-a""]}}');
 ";
-		// ↑JSON文字列を格納するには、"{"ではなく"{{"とする必要があるみたい
-		// ↓はエラーになる
-		// (1, N'todo-1', N'{""Note"":""note-a"",""Urls"":[""url-a""]}');
-
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	private void DropTable() {
-		var sql = @"
+		FormattableString sql = $@"
 drop table if exists dbo.TodoItem;";
-		_context.Database.ExecuteSqlRaw(sql);
+		_context.Database.ExecuteSql(sql);
 	}
 
 	[Fact]
