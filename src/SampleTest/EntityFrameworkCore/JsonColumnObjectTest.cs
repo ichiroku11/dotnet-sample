@@ -73,7 +73,7 @@ create table dbo.TodoItem(
 insert into dbo.TodoItem(Id, Title, Detail)
 output inserted.*
 values
-	(1, N'todo-1', N'{{""Note"":""note-a"",""Urls"":[""url-a""]}}');
+	(1, N'todo-1', N'{{""Note"":""note-a"",""Urls"":[""url-a"",""url-b""]}}');
 ";
 		_context.Database.ExecuteSql(sql);
 	}
@@ -96,7 +96,34 @@ drop table if exists dbo.TodoItem;";
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
 		Assert.Equal("note-a", todoItem.Detail.Note);
-		Assert.Equal(["url-a"], todoItem.Detail.Urls);
+		Assert.Equal(["url-a", "url-b"], todoItem.Detail.Urls);
+	}
+
+	[Fact]
+	public async Task JSONオブジェクトのプロパティを取得できる() {
+		// Arrange
+		// Act
+		var todoItem = await _context.TodoItems
+			.Where(item => item.Id == 1)
+			.Select(item => new {
+				item.Id,
+				item.Title,
+				// URLの1つ目を取得
+				Url0 = item.Detail.Urls[0],
+			})
+			.FirstAsync();
+		// 実行されるクエリ
+		// SELECT句において、JSON_VALUE関数が使われている
+		/*
+		SELECT TOP(1) [t].[Id], [t].[Title], JSON_VALUE([t].[Detail], '$.Urls[0]') AS [Url0]
+		FROM [TodoItem] AS [t]
+		WHERE [t].[Id] = 1
+		*/
+
+		// Assert
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal("url-a", todoItem.Url0);
 	}
 
 	[Fact]
