@@ -127,6 +127,53 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
+	public async Task JSONオブジェクトのプロパティを条件に取得できる() {
+		// Arrange
+		// Act
+		var todoItems = await _context.TodoItems
+			.Where(item => item.Detail.Note.StartsWith("note-"))
+			.ToListAsync();
+		// 実行されるクエリ
+		/*
+		SELECT [t].[Id], [t].[Title], [t].[Detail]
+		FROM [TodoItem] AS [t]
+		WHERE JSON_VALUE([t].[Detail], '$.Note') LIKE N'note-%'
+		*/
+
+		// Assert
+		var todoItem = Assert.Single(todoItems);
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal("note-a", todoItem.Detail.Note);
+		Assert.Equal(["url-a", "url-b"], todoItem.Detail.Urls);
+	}
+
+	[Fact]
+	public async Task JSONオブジェクトのプロパティがある値を含んでいることを条件に取得できる() {
+		// Arrange
+		// Act
+		var todoItems = await _context.TodoItems
+			.Where(item => item.Detail.Urls.Contains("url-a"))
+			.ToListAsync();
+		// 実行されるクエリ
+		/*
+		SELECT [t].[Id], [t].[Title], [t].[Detail]
+		FROM [TodoItem] AS [t]
+		WHERE N'url-a' IN (
+			SELECT [u].[value]
+			FROM OPENJSON(JSON_QUERY([t].[Detail], '$.Urls')) WITH ([value] nvarchar(max) '$') AS [u]
+		)
+		*/
+
+		// Assert
+		var todoItem = Assert.Single(todoItems);
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal("note-a", todoItem.Detail.Note);
+		Assert.Equal(["url-a", "url-b"], todoItem.Detail.Urls);
+	}
+
+	[Fact]
 	public async Task Add_JSON文字列にシリアライズされてInsertされる() {
 		// Arrange
 		// Act
