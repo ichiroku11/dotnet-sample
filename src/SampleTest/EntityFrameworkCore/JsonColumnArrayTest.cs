@@ -138,7 +138,7 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
-	public async Task JSON配列の要素を含んでいることを条件に取得できる() {
+	public async Task JSON配列がある要素を含んでいることを条件に取得できる() {
 		// Arrange
 		// Act
 		var todoItems = await _context.TodoItems
