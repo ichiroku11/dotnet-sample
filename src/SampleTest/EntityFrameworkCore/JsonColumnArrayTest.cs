@@ -85,7 +85,7 @@ drop table if exists dbo.TodoItem;";
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(new[] { "tag-a", "tag-b" }, todoItem.Tags);
+		Assert.Equal(["tag-a", "tag-b"], todoItem.Tags);
 	}
 
 	[Fact]
@@ -134,7 +134,7 @@ drop table if exists dbo.TodoItem;";
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(new[] { "tag-a", "tag-b" }, todoItem.Tags);
+		Assert.Equal(["tag-a", "tag-b"], todoItem.Tags);
 	}
 
 	[Fact]
@@ -158,7 +158,7 @@ drop table if exists dbo.TodoItem;";
 		var todoItem = Assert.Single(todoItems);
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(new[] { "tag-a", "tag-b" }, todoItem.Tags);
+		Assert.Equal(["tag-a", "tag-b"], todoItem.Tags);
 	}
 
 	[Fact]
