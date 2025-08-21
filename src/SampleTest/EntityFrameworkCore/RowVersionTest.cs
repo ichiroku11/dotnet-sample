@@ -83,6 +83,7 @@ drop table if exists dbo.[Sample];";
 	public async Task Add_ExecuteUpdateAsync_rowversion列をulongのプロパティに割り当てできることを確認する() {
 		// Arrange
 		// Act
+		// 追加
 		_context.Samples.Add(new Sample { Id = 1, Name = "abc" });
 		await _context.SaveChangesAsync();
 		// Versionプロパティがlongだと例外が発生するが
@@ -92,6 +93,7 @@ drop table if exists dbo.[Sample];";
 		var added = await _context.Samples.FirstAsync(sample => sample.Id == 1);
 		_output.WriteLine($"added: {added.Version}");
 
+		// 更新
 		await _context.Samples
 			.Where(sample => sample.Id == 1)
 			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, "efg"));
