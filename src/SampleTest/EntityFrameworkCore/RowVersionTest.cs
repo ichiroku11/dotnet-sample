@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SampleTest.EntityFrameworkCore;
 
-// うまくいかない
 [Collection(CollectionNames.EfCoreSample)]
 public class RowVersionTest : IDisposable {
 	private class Sample {
@@ -12,9 +11,9 @@ public class RowVersionTest : IDisposable {
 
 		public string Name { get; init; } = "";
 
-		// rowversion列をlongのプロパティにマッピングしてみる
+		// rowversion列をulongのプロパティにマッピングしてみる
 		[Timestamp]
-		public long Version { get; init; } = 0;
+		public ulong Version { get; init; } = 0UL;
 	}
 
 	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
@@ -80,19 +79,19 @@ drop table if exists dbo.[Sample];";
 
 	// https://learn.microsoft.com/ja-jp/ef/core/what-is-new/ef-core-8.0/whatsnew#numeric-rowversions-for-sql-azuresql-server
 	// In EF8, it is easy to instead map rowversion columns to long or ulong properties.
-	// とあるけど例外が発生する
-	/*
 	[Fact]
-	public async Task rowversion列をlongのプロパティに割り当てできることを確認する() {
+	public async Task Add_ExecuteUpdateAsync_rowversion列をulongのプロパティに割り当てできることを確認する() {
 		// Arrange
 		// Act
 		_context.Samples.Add(new Sample { Id = 1, Name = "abc" });
 		await _context.SaveChangesAsync();
-		// この時点で例外
+		// Versionプロパティがlongだと例外が発生するが
 		// System.InvalidCastException : Unable to cast object of type 'System.Byte[]' to type 'System.Int64'.
+		// Versionプロパティがulongだと例外は発生しない
 
 		var added = await _context.Samples.FirstAsync(sample => sample.Id == 1);
 		_output.WriteLine($"added: {added.Version}");
+
 		await _context.Samples
 			.Where(sample => sample.Id == 1)
 			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, "efg"));
@@ -104,5 +103,4 @@ drop table if exists dbo.[Sample];";
 		Assert.Equal("efg", updated.Name);
 		Assert.False(added.Version == updated.Version);
 	}
-	*/
 }
