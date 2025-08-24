@@ -60,7 +60,7 @@ public class RowVersionTest : IDisposable {
 
 	private void CreateTable() {
 		FormattableString sql = $@"
-create table dbo.[Sample](
+create table dbo.Sample(
 	Id int not null,
 	Name nvarchar(10) not null,
 	Version rowversion not null,
@@ -72,7 +72,7 @@ create table dbo.[Sample](
 
 	private void DropTable() {
 		FormattableString sql = $@"
-drop table if exists dbo.[Sample];";
+drop table if exists dbo.Sample;";
 
 		_context.Database.ExecuteSql(sql);
 	}
@@ -94,15 +94,37 @@ drop table if exists dbo.[Sample];";
 		_output.WriteLine($"added: {added.Version}");
 
 		// 更新
-		await _context.Samples
-			.Where(sample => sample.Id == 1)
+		var rows = await _context.Samples
+			.Where(sample => sample.Id == 1 && sample.Version == added.Version)
 			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, "efg"));
 
 		var updated = await _context.Samples.FirstAsync(sample => sample.Id == 1);
 		_output.WriteLine($"updated: {updated.Version}");
 
 		// Assert
+		Assert.Equal(1, rows);
 		Assert.Equal("efg", updated.Name);
-		Assert.False(added.Version == updated.Version);
+		Assert.NotEqual(added.Version, updated.Version);
+	}
+
+	[Fact]
+	public async Task ExecuteUpdateAsync_rowversion列を使って楽観的同時実行制御の動きを確認する() {
+		// Arrange
+		_context.Samples.Add(new Sample { Id = 1, Name = "abc" });
+		await _context.SaveChangesAsync();
+
+		var first = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Act
+		var rows = await _context.Samples
+			.Where(sample => sample.Id == 1 && sample.Version == first.Version + 1UL)
+			.ExecuteUpdateAsync(calls => calls.SetProperty(sample => sample.Name, "efg"));
+
+		var second = await _context.Samples.FirstAsync(sample => sample.Id == 1);
+
+		// Assert
+		Assert.Equal(0, rows);
+		Assert.Equal(first.Name, second.Name);
+		Assert.Equal(first.Version, second.Version);
 	}
 }
