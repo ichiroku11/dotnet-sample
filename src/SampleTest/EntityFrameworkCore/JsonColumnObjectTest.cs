@@ -3,17 +3,24 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleTest.EntityFrameworkCore;
 
-// 文字列カラムにJSON配列のJSON文字列を格納するサンプル
+// 文字列カラムにJSONオブジェクトのJSON文字列を格納するサンプル
 [Collection(CollectionNames.EfCoreTodoItem)]
-public class JsonColumnArrayTest : IDisposable {
+public class JsonColumnObjectTest : IDisposable {
+	// JSONオブジェクトとして扱う
+	private class TodoItemDetail {
+		public string Note { get; set; } = "";
+		public string[] Urls { get; set; } = [];
+	}
+
 	private class TodoItem {
 		public int Id { get; set; }
 		public string Title { get; set; } = "";
-		// JSON配列としてシリアライズされる
-		public string[] Tags { get; set; } = [];
+
+		// JSONオブジェクトとしてシリアライズしたい
+		public TodoItemDetail Detail { get; set; } = new();
 	}
 
-	// https://learn.microsoft.com/ja-jp/ef/core/what-is-new/ef-core-8.0/whatsnew#enhancements-to-json-column-mapping
+	// https://learn.microsoft.com/ja-jp/ef/core/what-is-new/ef-core-7.0/whatsnew#json-columns
 	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
 		private readonly ITestOutputHelper _output = output;
 
@@ -30,13 +37,17 @@ public class JsonColumnArrayTest : IDisposable {
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<TodoItem>()
+				.OwnsOne(todoItem => todoItem.Detail, ownedNavigationBuilder => {
+					// todo:
+					ownedNavigationBuilder.ToJson();
+				})
 				.ToTable(nameof(TodoItem));
 		}
 	}
 
 	private readonly SampleDbContext _context;
 
-	public JsonColumnArrayTest(ITestOutputHelper output) {
+	public JsonColumnObjectTest(ITestOutputHelper output) {
 		_context = new(output);
 
 		DropTable();
@@ -56,14 +67,13 @@ public class JsonColumnArrayTest : IDisposable {
 create table dbo.TodoItem(
 	Id int not null,
 	Title nvarchar(10) not null,
-	Tags nvarchar(max) not null,
+	Detail nvarchar(max) not null,
 	constraint PK_TodoItem primary key(Id)
 );
-insert into dbo.TodoItem(Id, Title, Tags)
+insert into dbo.TodoItem(Id, Title, Detail)
 output inserted.*
 values
-	(1, N'todo-1', N'[""tag-a"",""tag-b""]'),
-	(2, N'todo-2', N'[""tag-b""]');
+	(1, N'todo-1', N'{{""Note"":""note-a"",""Urls"":[""url-a"",""url-b""]}}');
 ";
 		_context.Database.ExecuteSql(sql);
 	}
@@ -75,7 +85,7 @@ drop table if exists dbo.TodoItem;";
 	}
 
 	[Fact]
-	public async Task JSON配列を文字列のコレクションとして取得できる() {
+	public async Task JSONオブジェクトをクラスのインスタンスとして取得できる() {
 		// Arrange
 		// Act
 		var todoItem = await _context.TodoItems
@@ -85,11 +95,12 @@ drop table if exists dbo.TodoItem;";
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(["tag-a", "tag-b"], todoItem.Tags);
+		Assert.Equal("note-a", todoItem.Detail.Note);
+		Assert.Equal(["url-a", "url-b"], todoItem.Detail.Urls);
 	}
 
 	[Fact]
-	public async Task JSON配列の要素を取得できる() {
+	public async Task JSONオブジェクトのプロパティを取得できる() {
 		// Arrange
 		// Act
 		var todoItem = await _context.TodoItems
@@ -97,14 +108,14 @@ drop table if exists dbo.TodoItem;";
 			.Select(item => new {
 				item.Id,
 				item.Title,
-				// タグの1つ目を取得
-				Tag0 = item.Tags[0],
+				// URLの1つ目を取得
+				Url0 = item.Detail.Urls[0],
 			})
 			.FirstAsync();
 		// 実行されるクエリ
 		// SELECT句において、JSON_VALUE関数が使われている
 		/*
-		SELECT TOP(1) [t].[Id], [t].[Title], JSON_VALUE([t].[Tags], '$[0]') AS [Tag0]
+		SELECT TOP(1) [t].[Id], [t].[Title], JSON_VALUE([t].[Detail], '$.Urls[0]') AS [Url0]
 		FROM [TodoItem] AS [t]
 		WHERE [t].[Id] = 1
 		*/
@@ -112,45 +123,45 @@ drop table if exists dbo.TodoItem;";
 		// Assert
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal("tag-a", todoItem.Tag0);
+		Assert.Equal("url-a", todoItem.Url0);
 	}
 
 	[Fact]
-	public async Task JSON配列の要素を条件に取得できる() {
-		// Arrange
-		// Act
-		// あまり実用的ではないが、Tagsの1つ目と比較する
-		var todoItem = await _context.TodoItems
-			.Where(item => item.Tags[0] == "tag-a")
-			.FirstAsync();
-		// 実行されるクエリ
-		// WHERE句においてJSON_VALUE関数が使われている
-		/*
-		SELECT TOP(1) [t].[Id], [t].[Tags], [t].[Title]
-		FROM [TodoItem] AS [t]
-		WHERE JSON_VALUE([t].[Tags], '$[0]') = N'tag-a'
-		*/
-
-		// Assert
-		Assert.Equal(1, todoItem.Id);
-		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(["tag-a", "tag-b"], todoItem.Tags);
-	}
-
-	[Fact]
-	public async Task JSON配列がある要素を含んでいることを条件に取得できる() {
+	public async Task JSONオブジェクトのプロパティを条件に取得できる() {
 		// Arrange
 		// Act
 		var todoItems = await _context.TodoItems
-			.Where(item => item.Tags.Contains("tag-a"))
+			.Where(item => item.Detail.Note.StartsWith("note-"))
 			.ToListAsync();
 		// 実行されるクエリ
 		/*
-		SELECT [t].[Id], [t].[Tags], [t].[Title]
+		SELECT [t].[Id], [t].[Title], [t].[Detail]
 		FROM [TodoItem] AS [t]
-		WHERE N'tag-a' IN (
-			SELECT [t0].[value]
-			FROM OPENJSON([t].[Tags]) WITH ([value] nvarchar(max) '$') AS [t0]
+		WHERE JSON_VALUE([t].[Detail], '$.Note') LIKE N'note-%'
+		*/
+
+		// Assert
+		var todoItem = Assert.Single(todoItems);
+		Assert.Equal(1, todoItem.Id);
+		Assert.Equal("todo-1", todoItem.Title);
+		Assert.Equal("note-a", todoItem.Detail.Note);
+		Assert.Equal(["url-a", "url-b"], todoItem.Detail.Urls);
+	}
+
+	[Fact]
+	public async Task JSONオブジェクトのプロパティがある値を含んでいることを条件に取得できる() {
+		// Arrange
+		// Act
+		var todoItems = await _context.TodoItems
+			.Where(item => item.Detail.Urls.Contains("url-a"))
+			.ToListAsync();
+		// 実行されるクエリ
+		/*
+		SELECT [t].[Id], [t].[Title], [t].[Detail]
+		FROM [TodoItem] AS [t]
+		WHERE N'url-a' IN (
+			SELECT [u].[value]
+			FROM OPENJSON(JSON_QUERY([t].[Detail], '$.Urls')) WITH ([value] nvarchar(max) '$') AS [u]
 		)
 		*/
 
@@ -158,7 +169,8 @@ drop table if exists dbo.TodoItem;";
 		var todoItem = Assert.Single(todoItems);
 		Assert.Equal(1, todoItem.Id);
 		Assert.Equal("todo-1", todoItem.Title);
-		Assert.Equal(["tag-a", "tag-b"], todoItem.Tags);
+		Assert.Equal("note-a", todoItem.Detail.Note);
+		Assert.Equal(["url-a", "url-b"], todoItem.Detail.Urls);
 	}
 
 	[Fact]
@@ -168,17 +180,20 @@ drop table if exists dbo.TodoItem;";
 		_context.TodoItems.Add(new TodoItem {
 			Id = 3,
 			Title = "todo-3",
-			Tags = ["tag-a", "tag-c"],
+			Detail = new TodoItemDetail {
+				Note = "note-c",
+				Urls = ["url-c"]
+			},
 		});
 		await _context.SaveChangesAsync();
 
 		// 文字列として取得
-		var tags = await _context.Database
-			.SqlQuery<string>($"select Tags as Value from dbo.TodoItem where Id = 3")
+		var detail = await _context.Database
+			.SqlQuery<string>($"select Detail as Value from dbo.TodoItem where Id = 3")
 			.FirstAsync();
 
 		// Assert
-		// JSON配列の文字列としてシリアライズされていることを確認
-		Assert.Equal(@"[""tag-a"",""tag-c""]", tags);
+		// JSONオブジェクトの文字列としてシリアライズされていることを確認
+		Assert.Equal(@"{""Note"":""note-c"",""Urls"":[""url-c""]}", detail);
 	}
 }

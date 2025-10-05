@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace SampleTest.EntityFrameworkCore;
 
 // 所有型を試してみる
 // 参考
 // https://docs.microsoft.com/ja-jp/ef/core/modeling/owned-entities
+[Collection(CollectionNames.EfCoreMail)]
 public class OwnedEntityTest : IDisposable {
 	// メールアドレス
 	private record MailAddress(string Address, string Name) {
@@ -26,19 +28,17 @@ public class OwnedEntityTest : IDisposable {
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Mail>().ToTable(nameof(Mail))
 				.OwnsOne(mail => mail.From, ownedBuilder => {
-						// カラム名を指定
-						ownedBuilder.Property(address => address.Address)
-						.HasColumnName($"{nameof(Mail.From)}{nameof(MailAddress.Address)}");
-					ownedBuilder.Property(address => address.Name)
-						.HasColumnName($"{nameof(Mail.From)}{nameof(MailAddress.Name)}");
+					setColumnName(ownedBuilder, nameof(Mail.From));
 				})
 				.OwnsOne(mail => mail.To, ownedBuilder => {
-						// カラム名を指定
-						ownedBuilder.Property(address => address.Address)
-						.HasColumnName($"{nameof(Mail.To)}{nameof(MailAddress.Address)}");
-					ownedBuilder.Property(address => address.Name)
-						.HasColumnName($"{nameof(Mail.To)}{nameof(MailAddress.Name)}");
+					setColumnName(ownedBuilder, nameof(Mail.To));
 				});
+
+			// カラム名を指定
+			static void setColumnName(OwnedNavigationBuilder<Mail, MailAddress> builder, string prefix) {
+				builder.Property(mail => mail.Address).HasColumnName($"{prefix}{nameof(MailAddress.Address)}");
+				builder.Property(mail => mail.Name).HasColumnName($"{prefix}{nameof(MailAddress.Name)}");
+			}
 		}
 	}
 
@@ -84,7 +84,7 @@ drop table if exists dbo.Mail;";
 	}
 
 	[Fact]
-	public async Task FirstOrDefault_所有型を取得できる() {
+	public async Task FirstOrDefaultAsync_所有型を取得できる() {
 		// Arrange
 		var expected = new Mail {
 			Id = 1,

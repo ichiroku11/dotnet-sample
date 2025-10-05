@@ -10,6 +10,11 @@ public static class CollectionNames {
 	public const string EfCoreBlog = "EFCore_dbo.Blog";
 
 	/// <summary>
+	/// dbo.Mailテーブルを使用するコレクション名
+	/// </summary>
+	public const string EfCoreMail = "EFCore_dbo.Mail";
+
+	/// <summary>
 	/// dbo.Sampleテーブルを使用するコレクション名
 	/// </summary>
 	public const string EfCoreSample = "EFCore_dbo.Sample";

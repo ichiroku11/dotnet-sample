@@ -1,6 +1,17 @@
 namespace SampleTest;
 
 public class DateTimeTest {
+	[Fact]
+	public void Constructor_引数なしで生成した場合の各プロパティを確認する() {
+		// Arrange
+
+		// Act
+		var dateTime = new DateTime();
+
+		// Assert
+		Assert.Equal(0L, dateTime.Ticks);
+	}
+
 	public static TheoryData<DateTime, DateTimeKind> GetTheoryData_Kind() {
 		return new() {
 			// 現地時刻
