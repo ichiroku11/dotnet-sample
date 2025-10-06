@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.6.0" />
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.6.0" />
+    <PackageReference Include="Microsoft.FeatureManagement" Version="4.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NCrontab.Signed" Version="3.3.3" />
