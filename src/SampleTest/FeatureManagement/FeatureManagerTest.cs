@@ -17,6 +17,27 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 			=> throw new NotImplementedException(message: MessageOfGet);
 	}
 
+	// テスト用
+	private class FeatureDefinitionProvider : IFeatureDefinitionProvider {
+		private static readonly Dictionary<string, FeatureDefinition> _definitions = [];
+
+		public FeatureDefinitionProvider(params IEnumerable<string> featureNames) {
+			foreach (var featureName in featureNames) {
+				_definitions[featureName] = new FeatureDefinition { Name = featureName };
+			}
+		}
+
+		public async IAsyncEnumerable<FeatureDefinition> GetAllFeatureDefinitionsAsync() {
+			foreach (var definition in _definitions.Values) {
+				yield return definition;
+				await Task.Yield();
+			}
+		}
+
+		public Task<FeatureDefinition> GetFeatureDefinitionAsync(string featureName)
+			=> Task.FromResult(_definitions[featureName]);
+	}
+
 	[Fact]
 	public async Task GetFeatureNamesAsync_FeatureDefinitionProviderのGetAllFeatureDefinitionsAsyncが呼ばれることを確認する() {
 		// Arrange
