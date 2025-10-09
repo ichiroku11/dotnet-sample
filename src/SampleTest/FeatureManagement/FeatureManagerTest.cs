@@ -56,6 +56,23 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 	}
 
+	[Fact]
+	public async Task GetFeatureNamesAsync_機能名を取得できる() {
+		// Arrange
+		var expected = new List<string> { "feature1", "feature2" };
+		var featureDefinitionProvider = new FeatureDefinitionProvider(expected);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var actual = new List<string>();
+		await foreach (var name in featureManager.GetFeatureNamesAsync()) {
+			actual.Add(name);
+		}
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	[Theory]
 	[InlineData(null)]
 	[InlineData("")]
