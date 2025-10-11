@@ -1,6 +1,8 @@
 namespace SampleTest.Collections;
 
-public class DictionaryTest {
+public class DictionaryTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Fact]
 	public void Add_同じキーを追加すると例外がスローされる() {
 		// Arrange
@@ -10,10 +12,13 @@ public class DictionaryTest {
 			};
 
 		// Act
-		// Assert
-		Assert.Throws<ArgumentException>(() => {
+		var exception = Record.Exception(() => {
 			new Dictionary<string, string>(source).Add("a", "X");
 		});
+
+		// Assert
+		Assert.IsType<ArgumentException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 
 	[Fact]
@@ -25,11 +30,14 @@ public class DictionaryTest {
 			};
 
 		// Act
-		// Assert
-		Assert.Throws<ArgumentException>(() => {
-			new Dictionary<string, string>(source) {
-					{ "a", "X" }
-				};
+		var exception = Record.Exception(() => {
+			var _ = new Dictionary<string, string>(source) {
+				{ "a", "X" }
+			};
 		});
+
+		// Assert
+		Assert.IsType<ArgumentException>(exception);
+		_output.WriteLine(exception.Message);
 	}
 }
