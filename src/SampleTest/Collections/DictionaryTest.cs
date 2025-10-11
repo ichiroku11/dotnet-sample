@@ -7,9 +7,9 @@ public class DictionaryTest(ITestOutputHelper output) {
 	public void Add_同じキーを追加すると例外がスローされる() {
 		// Arrange
 		var source = new Dictionary<string, string>() {
-				{ "a", "A" },
-				{ "b", "B" },
-			};
+			{ "a", "A" },
+			{ "b", "B" },
+		};
 
 		// Act
 		var exception = Record.Exception(() => {
@@ -22,12 +22,28 @@ public class DictionaryTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Indexer_存在しないキーを使ってアクセスするとKeyNotFoundExceptionが発生する() {
+		// Arrange
+		var dictionary = new Dictionary<string, string>() {
+		};
+
+		// Act
+		var exception = Record.Exception(() => {
+			var _ = dictionary["notfound"];
+		});
+
+		// Assert
+		Assert.IsType<KeyNotFoundException>(exception);
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
 	public void CollectionInitializer_コレクション初期化子で同じキーを追加しても例外がスローされる() {
 		// Arrange
 		var source = new Dictionary<string, string>() {
-				{ "a", "A" },
-				{ "b", "B" },
-			};
+			{ "a", "A" },
+			{ "b", "B" },
+		};
 
 		// Act
 		var exception = Record.Exception(() => {
