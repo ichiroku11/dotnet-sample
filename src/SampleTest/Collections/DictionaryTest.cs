@@ -38,6 +38,22 @@ public class DictionaryTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
+	public void Indexer_キーにnullを使ってアクセスするとArgumentNullExceptionが発生する() {
+		// Arrange
+		var dictionary = new Dictionary<string, string>() {
+		};
+
+		// Act
+		var exception = Record.Exception(() => {
+			var _ = dictionary[null!];
+		});
+
+		// Assert
+		Assert.IsType<ArgumentNullException>(exception);
+		_output.WriteLine(exception.Message);
+	}
+
+	[Fact]
 	public void CollectionInitializer_コレクション初期化子で同じキーを追加しても例外がスローされる() {
 		// Arrange
 		var source = new Dictionary<string, string>() {
