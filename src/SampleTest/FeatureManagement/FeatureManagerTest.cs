@@ -92,4 +92,19 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		Assert.Equal(NotImplementedFeatureDefinitionProvider.MessageOfGet, exception.Message);
 		_output.WriteLine(exception.Message);
 	}
+
+	[Theory]
+	[InlineData("feature1", false)]
+	public async Task IsEnabledAsync_名前だけを設定したFeatureDefinitionではfalseになる(string? featureName, bool expected) {
+		// Arrange
+		var featureNames = new List<string> { "feature1" };
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureNames);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var actual = await featureManager.IsEnabledAsync(featureName);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
