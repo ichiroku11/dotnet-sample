@@ -21,10 +21,14 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	private class FeatureDefinitionProvider : IFeatureDefinitionProvider {
 		private static readonly Dictionary<string, FeatureDefinition> _definitions = [];
 
-		public FeatureDefinitionProvider(params IEnumerable<string> featureNames) {
-			foreach (var featureName in featureNames) {
-				_definitions[featureName] = new FeatureDefinition { Name = featureName };
+		public FeatureDefinitionProvider(params IEnumerable<FeatureDefinition> definitions) {
+			foreach (var definition in definitions) {
+				_definitions[definition.Name] = definition;
 			}
+		}
+
+		public FeatureDefinitionProvider(params IEnumerable<string> names)
+			: this(names.Select(name => new FeatureDefinition { Name = name })) {
 		}
 
 		public async IAsyncEnumerable<FeatureDefinition> GetAllFeatureDefinitionsAsync() {
@@ -93,18 +97,51 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 	}
 
-	[Theory]
-	[InlineData("feature1", false)]
-	public async Task IsEnabledAsync_名前だけを設定したFeatureDefinitionではfalseになる(string? featureName, bool expected) {
+	[Fact]
+	public async Task IsEnabledAsync_名前だけを設定したFeatureDefinitionではfalseになる() {
 		// Arrange
-		var featureNames = new List<string> { "feature1" };
+		var featureNames = new List<string> { "feature" };
 		var featureDefinitionProvider = new FeatureDefinitionProvider(featureNames);
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync(featureName);
+		var actual = await featureManager.IsEnabledAsync("feature");
 
 		// Assert
-		Assert.Equal(expected, actual);
+		Assert.False(actual);
+	}
+
+	[Fact]
+	public async Task IsEnabledAsync_EnableForがnullのFeatureDefinitionではfalseになる() {
+		// Arrange
+		var featureDefinition = new FeatureDefinition {
+			Name = "feature",
+			EnabledFor = null,
+		};
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var actual = await featureManager.IsEnabledAsync("feature");
+
+		// Assert
+		Assert.False(actual);
+	}
+
+	[Fact]
+	public async Task IsEnabledAsync_EnableForが空のFeatureDefinitionではfalseになる() {
+		// Arrange
+		var featureDefinition = new FeatureDefinition {
+			Name = "feature",
+			EnabledFor = [],
+		};
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var actual = await featureManager.IsEnabledAsync("feature");
+
+		// Assert
+		Assert.False(actual);
 	}
 }
