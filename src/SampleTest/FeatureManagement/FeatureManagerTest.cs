@@ -144,4 +144,23 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		// Assert
 		Assert.False(actual);
 	}
+
+	[Fact]
+	public async Task IsEnabledAsync_FeatureStatusがDisabledのFeatureDefinitionではfalseになる() {
+		// Arrange
+		var featureDefinition = new FeatureDefinition {
+			Name = "feature",
+			// EnabledForがnullでも空でもない
+			EnabledFor = [new FeatureFilterConfiguration()],
+			Status = FeatureStatus.Disabled,
+		};
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var actual = await featureManager.IsEnabledAsync("feature");
+
+		// Assert
+		Assert.False(actual);
+	}
 }
