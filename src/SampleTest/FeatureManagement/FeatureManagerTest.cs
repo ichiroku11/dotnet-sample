@@ -163,4 +163,27 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		// Assert
 		Assert.False(actual);
 	}
+
+	[Fact]
+	public async Task IsEnabledAsync_該当するフィルターが存在しないとFeatureManagementExceptionが発生する() {
+		// Arrange
+		var featureDefinition = new FeatureDefinition {
+			Name = "feature",
+			EnabledFor = [new FeatureFilterConfiguration()],
+			// デフォルト
+			//Status = FeatureStatus.Conditional,
+		};
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var exception = await Record.ExceptionAsync(async () => {
+			await featureManager.IsEnabledAsync("feature");
+		});
+
+		// Assert
+		Assert.IsType<FeatureManagementException>(exception);
+		_output.WriteLine(exception.Message);
+		// The feature filter '' specified for feature 'feature' was not found.
+	}
 }
