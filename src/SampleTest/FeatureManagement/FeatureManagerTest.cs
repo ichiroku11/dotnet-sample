@@ -188,4 +188,23 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		Assert.IsType<FeatureManagementException>(exception);
 		_output.WriteLine(exception.Message);
 	}
+
+	[Theory]
+	[InlineData("AlwaysOn")]
+	[InlineData("On")]
+	public async Task IsEnabledAsync_特殊なフィルター構成名だと有効になる(string featureFilter) {
+		// Arrange
+		var featureDefinition = new FeatureDefinition {
+			Name = "feature",
+			EnabledFor = [new FeatureFilterConfiguration { Name = featureFilter }],
+		};
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
+		var featureManager = new FeatureManager(featureDefinitionProvider);
+
+		// Act
+		var actual = await featureManager.IsEnabledAsync("feature");
+
+		// Assert
+		Assert.True(actual);
+	}
 }
