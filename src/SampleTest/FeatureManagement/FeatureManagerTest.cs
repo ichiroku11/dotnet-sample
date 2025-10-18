@@ -190,9 +190,33 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	}
 
 	[Theory]
+	[InlineData(null)]
+	[InlineData("")]
+	[InlineData("feature")]
+	public async Task IsEnabledAsync_該当するフィルター構成が存在しなくても例外が発生しないようにすると機能は無効と判定される(string? featureFilter) {
+		// Arrange
+		var featureDefinition = new FeatureDefinition {
+			Name = "feature",
+			EnabledFor = [new FeatureFilterConfiguration { Name = featureFilter }],
+		};
+		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
+		var featureManagementOptions = new FeatureManagementOptions {
+			// フィルター構成が存在しない場合に例外を発生しない
+			IgnoreMissingFeatureFilters = true,
+		};
+		var featureManager = new FeatureManager(featureDefinitionProvider, featureManagementOptions);
+
+		// Act
+		var actual = await featureManager.IsEnabledAsync("feature");
+
+		// Assert
+		Assert.False(actual);
+	}
+
+	[Theory]
 	[InlineData("AlwaysOn")]
 	[InlineData("On")]
-	public async Task IsEnabledAsync_特殊なフィルター構成名だと有効になる(string featureFilter) {
+	public async Task IsEnabledAsync_特殊なフィルター構成名だと機能は有効と判定される(string featureFilter) {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
 			Name = "feature",
