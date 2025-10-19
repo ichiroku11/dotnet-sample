@@ -19,7 +19,7 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 
 	// テスト用
 	private class FeatureDefinitionProvider : IFeatureDefinitionProvider {
-		private static readonly Dictionary<string, FeatureDefinition> _definitions = [];
+		private readonly Dictionary<string, FeatureDefinition> _definitions = [];
 
 		public FeatureDefinitionProvider(params IEnumerable<FeatureDefinition> definitions) {
 			foreach (var definition in definitions) {
@@ -63,7 +63,7 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	[Fact]
 	public async Task GetFeatureNamesAsync_機能名を取得できる() {
 		// Arrange
-		var expected = new List<string> { "feature1", "feature2" };
+		var expected = new List<string> { "test1", "test2" };
 		var featureDefinitionProvider = new FeatureDefinitionProvider(expected);
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
@@ -100,12 +100,12 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	[Fact]
 	public async Task IsEnabledAsync_名前だけを設定したFeatureDefinitionではfalseになる() {
 		// Arrange
-		var featureNames = new List<string> { "feature" };
+		var featureNames = new List<string> { "test" };
 		var featureDefinitionProvider = new FeatureDefinitionProvider(featureNames);
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync("feature");
+		var actual = await featureManager.IsEnabledAsync("test");
 
 		// Assert
 		Assert.False(actual);
@@ -115,14 +115,14 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	public async Task IsEnabledAsync_EnableForがnullのFeatureDefinitionではfalseになる() {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
-			Name = "feature",
+			Name = "test",
 			EnabledFor = null,
 		};
 		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync("feature");
+		var actual = await featureManager.IsEnabledAsync("test");
 
 		// Assert
 		Assert.False(actual);
@@ -132,14 +132,14 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	public async Task IsEnabledAsync_EnableForが空のFeatureDefinitionではfalseになる() {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
-			Name = "feature",
+			Name = "test",
 			EnabledFor = [],
 		};
 		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync("feature");
+		var actual = await featureManager.IsEnabledAsync("test");
 
 		// Assert
 		Assert.False(actual);
@@ -149,7 +149,7 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	public async Task IsEnabledAsync_FeatureStatusがDisabledのFeatureDefinitionではfalseになる() {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
-			Name = "feature",
+			Name = "test",
 			// EnabledForがnullでも空でもない
 			EnabledFor = [new FeatureFilterConfiguration()],
 			Status = FeatureStatus.Disabled,
@@ -158,7 +158,7 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync("feature");
+		var actual = await featureManager.IsEnabledAsync("test");
 
 		// Assert
 		Assert.False(actual);
@@ -167,11 +167,11 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	[Theory]
 	[InlineData(null)]
 	[InlineData("")]
-	[InlineData("feature")]
+	[InlineData("test")]
 	public async Task IsEnabledAsync_該当するフィルター構成が存在しないとFeatureManagementExceptionが発生する(string? featureFilter) {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
-			Name = "feature",
+			Name = "test",
 			EnabledFor = [new FeatureFilterConfiguration { Name = featureFilter }],
 			// デフォルト
 			//Status = FeatureStatus.Conditional,
@@ -181,7 +181,7 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 
 		// Act
 		var exception = await Record.ExceptionAsync(async () => {
-			await featureManager.IsEnabledAsync("feature");
+			await featureManager.IsEnabledAsync("test");
 		});
 
 		// Assert
@@ -192,11 +192,11 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	[Theory]
 	[InlineData(null)]
 	[InlineData("")]
-	[InlineData("feature")]
+	[InlineData("test")]
 	public async Task IsEnabledAsync_該当するフィルター構成が存在しなくても例外が発生しないようにすると機能は無効と判定される(string? featureFilter) {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
-			Name = "feature",
+			Name = "test",
 			EnabledFor = [new FeatureFilterConfiguration { Name = featureFilter }],
 		};
 		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
@@ -207,7 +207,7 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 		var featureManager = new FeatureManager(featureDefinitionProvider, featureManagementOptions);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync("feature");
+		var actual = await featureManager.IsEnabledAsync("test");
 
 		// Assert
 		Assert.False(actual);
@@ -219,14 +219,14 @@ public class FeatureManagerTest(ITestOutputHelper output) {
 	public async Task IsEnabledAsync_特殊なフィルター構成名だと機能は有効と判定される(string featureFilter) {
 		// Arrange
 		var featureDefinition = new FeatureDefinition {
-			Name = "feature",
+			Name = "test",
 			EnabledFor = [new FeatureFilterConfiguration { Name = featureFilter }],
 		};
 		var featureDefinitionProvider = new FeatureDefinitionProvider(featureDefinition);
 		var featureManager = new FeatureManager(featureDefinitionProvider);
 
 		// Act
-		var actual = await featureManager.IsEnabledAsync("feature");
+		var actual = await featureManager.IsEnabledAsync("test");
 
 		// Assert
 		Assert.True(actual);
