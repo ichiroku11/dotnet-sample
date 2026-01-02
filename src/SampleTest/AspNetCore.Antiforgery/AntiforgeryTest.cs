@@ -108,11 +108,11 @@ public class AntiforgeryTest(ITestOutputHelper output) {
 		_output.WriteLine(headerValue.ToString());
 
 		// AntiforgeryOptionsのクッキー設定が反映されている
-		Assert.Equal(options.Cookie.Name, headerValue.Name);
+		Assert.Equal(options.Cookie.Name, headerValue.Name.Value);
 		Assert.Equal(options.Cookie.HttpOnly, headerValue.HttpOnly);
-		Assert.Equal(options.Cookie.Domain, headerValue.Domain);
+		Assert.Equal(options.Cookie.Domain, headerValue.Domain.Value);
 
-		Assert.Equal("/", headerValue.Path);
+		Assert.Equal("/", headerValue.Path.Value);
 
 		// 名前空間が異なるため数値で比較する
 		// https://learn.microsoft.com/ja-jp/dotnet/api/microsoft.aspnetcore.http.samesitemode?view=aspnetcore-9.0
