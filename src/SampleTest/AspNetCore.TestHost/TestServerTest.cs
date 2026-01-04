@@ -22,25 +22,8 @@ public class TestServerTest(ITestOutputHelper output) {
 			});
 		}
 	}
-
 	[Fact]
-	public void Properties_WebHostBuilderを使う場合() {
-		// Arrange
-		var builder = new WebHostBuilder().UseStartup<Startup>();
-		using var server = new TestServer(builder);
-
-		// Act
-		// Assert
-		Assert.False(server.AllowSynchronousIO);
-		Assert.NotNull(server.Features);
-		Assert.NotNull(server.Host);
-		Assert.Equal("http://localhost/", server.BaseAddress.AbsoluteUri);
-		Assert.False(server.PreserveExecutionContext);
-		Assert.NotNull(server.Services);
-	}
-
-	[Fact]
-	public void Properties_WebHostBuilderを使わない場合() {
+	public void Properties_インスタンスのプロパティを確認する() {
 		// Arrange
 		var services = new ServiceCollection().BuildServiceProvider();
 		using var server = new TestServer(services);
@@ -49,36 +32,25 @@ public class TestServerTest(ITestOutputHelper output) {
 		// Assert
 		Assert.False(server.AllowSynchronousIO);
 		Assert.NotNull(server.Features);
-		// 例外が発生
-		//Assert.NotNull(server.Host);
 		Assert.Equal("http://localhost/", server.BaseAddress.AbsoluteUri);
 		Assert.False(server.PreserveExecutionContext);
 		Assert.Same(services, server.Services);
 	}
 
 	[Fact]
-	public void Host_WebHostBuilderを使わない場合は例外が発生する() {
+	public async Task CreateClient_例外が発生する() {
 		// Arrange
 		var services = new ServiceCollection().BuildServiceProvider();
 		using var server = new TestServer(services);
 
 		// Act
-		var exception = Record.Exception(() => server.Host);
+		var exception = Record.Exception(() => {
+			_ = server.CreateClient();
+		});
 
 		// Assert
 		Assert.IsType<InvalidOperationException>(exception);
-	}
-
-	[Fact]
-	public async Task WebHostBuilderを使ってインスタンスを生成して使ってみる() {
-		// Arrange
-		using var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-		using var client = server.CreateClient();
-
-		// Act
-		var response = await client.GetAsync("/");
-
-		// Assert
-		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+		_output.WriteLine(exception.Message);
+		// The server has not been started or no web application was configured.
 	}
 }
