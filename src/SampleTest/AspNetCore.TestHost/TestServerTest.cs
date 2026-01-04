@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System.Net;
 
 namespace SampleTest.AspNetCore.TestHost;
@@ -22,6 +25,7 @@ public class TestServerTest(ITestOutputHelper output) {
 			});
 		}
 	}
+
 	[Fact]
 	public void Properties_インスタンスのプロパティを確認する() {
 		// Arrange
@@ -31,9 +35,29 @@ public class TestServerTest(ITestOutputHelper output) {
 		// Act
 		// Assert
 		Assert.False(server.AllowSynchronousIO);
-		Assert.NotNull(server.Features);
 		Assert.Equal("http://localhost/", server.BaseAddress.AbsoluteUri);
+		Assert.NotNull(server.Features);
 		Assert.False(server.PreserveExecutionContext);
+		Assert.Same(services, server.Services);
+	}
+
+	[Fact]
+	public void Properties_オプションを使って生成したインスタンスのプロパティを確認する() {
+		// Arrange
+		var services = new ServiceCollection().BuildServiceProvider();
+		var options = new TestServerOptions {
+			AllowSynchronousIO = true,
+			BaseAddress = new Uri("https://localhost/"),
+			PreserveExecutionContext = true,
+		};
+		using var server = new TestServer(services, Options.Create(options));
+
+		// Act
+		// Assert
+		Assert.Equal(options.AllowSynchronousIO, server.AllowSynchronousIO);
+		Assert.Equal(options.BaseAddress.AbsoluteUri, server.BaseAddress.AbsoluteUri);
+		Assert.NotNull(server.Features);
+		Assert.Equal(options.PreserveExecutionContext, server.PreserveExecutionContext);
 		Assert.Same(services, server.Services);
 	}
 
