@@ -77,4 +77,24 @@ public class TestServerTest(ITestOutputHelper output) {
 		_output.WriteLine(exception.Message);
 		// The server has not been started or no web application was configured.
 	}
+
+	[Fact]
+	public async Task CreateClient_HostBuilderを使って生成したServerでは正しく動く() {
+		// Arrange
+		using var host = await new HostBuilder()
+			.ConfigureWebHost(builder => {
+				builder
+					.UseTestServer()
+					.UseStartup<Startup>();
+			})
+			.StartAsync();
+		using var server = host.GetTestServer();
+
+		// Act
+		using var client = server.CreateClient();
+		var response = await client.GetAsync("/");
+
+		// Assert
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+	}
 }
