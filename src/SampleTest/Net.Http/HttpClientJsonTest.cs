@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -73,19 +74,25 @@ public class HttpClientJsonTest : IDisposable {
 		}
 	}
 
-	private readonly TestServer _server;
+	private readonly IHost _host;
 	private readonly HttpClient _client;
-	private readonly ITestOutputHelper _output;
 
-	public HttpClientJsonTest(ITestOutputHelper output) {
-		_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-		_client = _server.CreateClient();
-		_output = output;
+	public HttpClientJsonTest() {
+		_host = new HostBuilder()
+			.ConfigureWebHost(builder => {
+				builder
+					.UseTestServer()
+					.UseStartup<Startup>();
+			})
+			.Start();
+		_client = _host.GetTestClient();
 	}
 
 	public void Dispose() {
 		_client.Dispose();
-		_server.Dispose();
+		_host.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	[Fact]
