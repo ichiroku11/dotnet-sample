@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 
 namespace SampleTest.AspNetCore.Mvc.Testing;
 
-// https://learn.microsoft.com/ja-jp/aspnet/core/test/integration-tests?view=aspnetcore-8.0
+// https://learn.microsoft.com/ja-jp/aspnet/core/test/integration-tests?view=aspnetcore-10.0&pivots=xunit
 public class WebApplicationFactoryTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
@@ -25,22 +26,18 @@ public class WebApplicationFactoryTest(ITestOutputHelper output) {
 	}
 
 	private class WebApplicationProgram {
-		// コンパイルエラー
-		/*
-		public static void Main(string[] args) {
-			CreateWebHostBuilder(args).Build().Run();
-		}
-		*/
-
 		// このシグネチャのメソッドが存在すればよいかと思ったが
 		// エントリポイントが必要みたい
-		public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
-			return new WebHostBuilder();
+		public static IHostBuilder CreateHostBuilder(string[] args) {
+			return new HostBuilder()
+				.ConfigureWebHost(builder => {
+					builder.UseTestServer();
+			});
 		}
 	}
 
 	[Fact]
-	public void CreateClient_TEntryPointにCreateWebHostBuilderメソッドを持つクラスを指定しても例外が発生する() {
+	public void CreateClient_TEntryPointにCreateHostBuilderメソッドを持つクラスを指定しても例外が発生する() {
 		// Arrange
 		using var factory = new WebApplicationFactory<WebApplicationProgram>();
 
