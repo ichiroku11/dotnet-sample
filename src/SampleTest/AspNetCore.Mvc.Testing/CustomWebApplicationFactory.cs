@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Hosting;
 
 namespace SampleTest.AspNetCore.Mvc.Testing;
 
@@ -9,8 +9,8 @@ public class CustomWebApplicationFactory<TEntryPoint>
 	: WebApplicationFactory<TEntryPoint>
 	where TEntryPoint : class {
 
-	protected override IWebHostBuilder CreateWebHostBuilder() {
-		//return base.CreateWebHostBuilder();
-		return new WebHostBuilder();
+	protected override IHostBuilder? CreateHostBuilder() {
+		//return base.CreateHostBuilder();
+		return new HostBuilder();
 	}
 }
