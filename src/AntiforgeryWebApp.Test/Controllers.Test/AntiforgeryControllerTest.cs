@@ -96,7 +96,7 @@ public class AntiforgeryControllerTest(ITestOutputHelper output, WebApplicationF
 		Assert.Contains(AntiforgeryOptions.DefaultCookiePrefix, setCookieHeaderValue.Name);
 		// SetCookieヘッダーの値
 		// レスポンスに含まれるクッキートークンと一致する
-		Assert.Equal(tokenSet.CookieToken, setCookieHeaderValue.Value);
+		Assert.Equal(tokenSet.CookieToken, setCookieHeaderValue.Value.Value);
 	}
 
 	[Fact]
