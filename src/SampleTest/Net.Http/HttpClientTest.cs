@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace SampleTest.Net.Http;
 
@@ -37,17 +38,23 @@ public class HttpClientTest : IDisposable {
 		}
 	}
 
-	private readonly TestServer _server;
+	private readonly IHost _host;
 	private readonly HttpClient _client;
 
 	public HttpClientTest() {
-		_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-		_client = _server.CreateClient();
+		_host = new HostBuilder()
+			.ConfigureWebHost(builder => {
+				builder
+					.UseTestServer()
+					.UseStartup<Startup>();
+			})
+			.Start();
+		_client = _host.GetTestClient();
 	}
 
 	public void Dispose() {
 		_client.Dispose();
-		_server.Dispose();
+		_host.Dispose();
 
 		GC.SuppressFinalize(this);
 	}

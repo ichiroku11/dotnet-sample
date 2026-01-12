@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Net;
 
 namespace SampleTest.Net.Http;
@@ -39,10 +40,17 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 		}
 	}
 
-	private static TestServer CreateServer(string baseUri)
-		=> new(new WebHostBuilder().UseStartup<Startup>()) {
-			BaseAddress = new Uri(baseUri)
-		};
+	private static async Task<IHost> CreateHostAsync(string baseUri) {
+		return await new HostBuilder()
+			.ConfigureWebHost(builder => {
+				builder
+					.UseTestServer(options => {
+						options.BaseAddress = new Uri(baseUri);
+					})
+					.UseStartup<Startup>();
+			})
+			.StartAsync();
+	}
 
 	[Theory]
 	// ドメイン直下に配置する場合は最後のスラッシュができる
@@ -51,12 +59,13 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 	// パスに配置する場合は最後のスラッシュがそのままになる
 	[InlineData("http://example.jp/app", "http://example.jp/app")]
 	[InlineData("http://example.jp/app/", "http://example.jp/app/")]
-	public void BaseAddress_TestServerとHttpClientのBaseAddressを確認する(
+	public async Task BaseAddress_TestServerとHttpClientのBaseAddressを確認する(
 		string serverBaseUri, string expectedClientBaseUri) {
 		// Arrange
+		using var host = await CreateHostAsync(serverBaseUri);
+
 		// Act
-		using var server = CreateServer(serverBaseUri);
-		using var client = server.CreateClient();
+		using var client = host.GetTestClient();
 
 		// Assert
 		Assert.Equal(expectedClientBaseUri, client.BaseAddress?.AbsoluteUri);
@@ -80,10 +89,11 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 	public async Task BaseAddress_ドメイン直下に配置したWebアプリに対して相対パスでリクエストする(
 		string baseUri, string requestUri, string expectedUri, string expectedContent) {
 		// Arrange
-		// サーバの配置URLの「/」はどっちでも良さげ
-		using var server = CreateServer("http://example.jp");
-		//using var server = CreateServer("http://example.jp/");
-		using var client = server.CreateClient();
+		// TestServerの基準アドレス（ホスト）の「/」はどっちでも良さげ
+		using var host = await CreateHostAsync("http://example.jp");
+		//using var host = await CreateHostAsync("http://example.jp/");
+
+		using var client = host.GetTestClient();
 		client.BaseAddress = new Uri(baseUri);
 
 		// Act
@@ -124,10 +134,11 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 	public async Task BaseAddress_パス以下に配置したWebアプリに対して相対パスでリクエストする(
 		string baseUri, string requestUri, string expectedUri, string expectedContent) {
 		// Arrange
-		// サーバの配置URLの「/」はどっちでも良さげ
-		//using var server = CreateServer("http://example.jp/app");
-		using var server = CreateServer("http://example.jp/app/");
-		using var client = server.CreateClient();
+		// TestServerの基準アドレス（ホスト）の「/」はどっちでも良さげ
+		//using var host = await CreateHostAsync("http://example.jp/app");
+		using var host = await CreateHostAsync("http://example.jp/app/");
+
+		using var client = host.GetTestClient();
 		client.BaseAddress = new Uri(baseUri);
 
 		// Act

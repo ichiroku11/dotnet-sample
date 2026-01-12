@@ -15,8 +15,7 @@ public class CustomWebApplicationFactoryTest(ITestOutputHelper output) {
 		var exception = Record.Exception(() => factory.CreateClient());
 
 		// Assert
-		Assert.IsType<ArgumentException>(exception);
-		// The content root '{パス}' does not exist. (Parameter 'contentRootPath')
+		Assert.IsType<DirectoryNotFoundException>(exception);
 		_output.WriteLine(exception.Message);
 	}
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing.Handlers;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System.Net;
 
@@ -46,14 +47,25 @@ public class HttpClientCookieTest : IDisposable {
 		}
 	}
 
+	private readonly IHost _host;
 	private readonly TestServer _server;
 
 	public HttpClientCookieTest() {
-		_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+		_host = new HostBuilder()
+			.ConfigureWebHost(builder => {
+				builder
+					.UseTestServer()
+					.UseStartup<Startup>();
+			})
+			.Start();
+		_server = _host.GetTestServer();
 	}
 
 	public void Dispose() {
 		_server.Dispose();
+		_host.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 
 	[Fact]
