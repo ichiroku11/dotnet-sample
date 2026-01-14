@@ -2,7 +2,7 @@ namespace SampleTest.Linq;
 
 public class EnumerableRangeTest {
 	[Fact]
-	public void Range_引数を確認する() {
+	public void Range_指定した範囲内の整数のシーケンスを生成する() {
 		// Arrange
 		// Act
 		// 2つ目の引数countは個数を指定する
