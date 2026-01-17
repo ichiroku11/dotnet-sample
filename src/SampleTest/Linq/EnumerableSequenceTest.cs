@@ -8,6 +8,9 @@ public class EnumerableSequenceTest {
 	// 3つ目の引数stepによってはendInclusiveを含まない場合もある
 	[InlineData(1, 5, 3, new int[] { 1, 4 })]
 	[InlineData(1, 5, 5, new int[] { 1 })]
+	// startとendInclusiveに同じ値を指定しても生成可能
+	[InlineData(2, 2, 2, new int[] { 2 })]
+	// todo: stepがマイナスもOK
 	public void Sequence_指定した引数からシーケンスを生成する(int start, int endInclusive, int step, int[] expected) {
 		// Arrange
 		// Act
