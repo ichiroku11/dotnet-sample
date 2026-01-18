@@ -9,7 +9,9 @@ public class EnumerableSequenceTest {
 	[InlineData(1, 5, 3, new int[] { 1, 4 })]
 	[InlineData(1, 5, 5, new int[] { 1 })]
 	// startとendInclusiveに同じ値を指定しても生成可能
-	[InlineData(2, 2, 2, new int[] { 2 })]
+	[InlineData(1, 1, 1, new int[] { 1 })]
+	// startとendInclusiveに同じ値を指定した場合、stepが0でもOK
+	[InlineData(1, 1, 0, new int[] { 1 })]
 	// stepがマイナスでもOK
 	[InlineData(5, 1, -1, new int[] { 5, 4, 3, 2, 1 })]
 	public void Sequence_指定した引数からシーケンスを生成する(int start, int endInclusive, int step, int[] expected) {
