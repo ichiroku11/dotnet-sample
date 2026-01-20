@@ -81,6 +81,8 @@ drop table if exists dbo.[Inner];";
 		_context.Database.ExecuteSql(sql);
 	}
 
+	// EF Core 10からLeftJoinがサポートされたのでLeftJoinTestを参照
+	// https://learn.microsoft.com/ja-jp/ef/core/what-is-new/ef-core-10.0/whatsnew#support-for-the-net-10-leftjoin-and-rightjoin-operators
 	[Fact]
 	public async Task GroupJoin_外部結合を行う() {
 		// Arrange
