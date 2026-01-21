@@ -2,11 +2,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SampleTest.EntityFrameworkCore;
 
+[Collection(CollectionNames.EfCoreOuterInner)]
 public class LeftJoinTest : IDisposable {
-	public record Outer(int Id, string Value);
-	public record Inner(int Id, string Value);
+	private record Outer(int Id, string Value);
+	private record Inner(int Id, string Value);
 
-	public class OuterInnerDbContext : SqlServerDbContext {
+	private class OuterInnerDbContext : SqlServerDbContext {
 		public DbSet<Outer> Outers => Set<Outer>();
 		public DbSet<Inner> Inners => Set<Inner>();
 

@@ -15,6 +15,11 @@ public static class CollectionNames {
 	public const string EfCoreMail = "EFCore_dbo.Mail";
 
 	/// <summary>
+	/// dbo.Outer、dbo.Innerテーブルを使用するコレクション名
+	/// </summary>
+	public const string EfCoreOuterInner = "EFCore_dbo.Outer_dbo.Inner";
+
+	/// <summary>
 	/// dbo.Sampleテーブルを使用するコレクション名
 	/// </summary>
 	public const string EfCoreSample = "EFCore_dbo.Sample";
