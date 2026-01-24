@@ -81,9 +81,24 @@ drop table if exists dbo.Sample;";
 		var schemas = await _context.Schemas.ToListAsync();
 
 		// Assert
-		Assert.Contains(schemas, s => s.Name == "dbo");
+		Assert.Contains(schemas, schema => schema.Name == "dbo");
 	}
 
-	// todo: tables
+	[Fact]
+	public async Task テーブルの情報を取得する() {
+		// Arrange
+
+		// Act
+		var tables = await _context.Tables
+			.Join(_context.Schemas,
+				table => table.SchemaId,
+				schema => schema.Id,
+				(table, schema) => new { table.Name, Schema = new { schema.Name } })
+			.ToListAsync();
+
+		// Assert
+		Assert.Contains(tables, table => table.Name == "Sample" && table.Schema.Name == "dbo");
+	}
+
 	// todo: partitionsで行数
 }
