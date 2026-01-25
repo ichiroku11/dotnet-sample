@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SampleTest.EntityFrameworkCore;
@@ -28,15 +29,47 @@ public class SystemCatalogViewTest : IDisposable {
 		public int SchemaId { get; set; }
 	}
 
-	private class SampleDbContext : SqlServerDbContext {
+	[Keyless]
+	[Table("partitions", Schema = "sys")]
+	public class SystemPartition {
+		[Column("partition_id")]
+		public long Id { get; set; }
+
+		[Column("object_id")]
+		public int ObjectId { get; set; }
+
+		[Column("partition_number")]
+		public int PartitionNumber { get; set; }
+
+		[Column("rows")]
+		public long Rows { get; set; }
+	}
+
+	private class SampleDbContext(ITestOutputHelper output) : SqlServerDbContext {
+		private readonly ITestOutputHelper _output = output;
+
 		public DbSet<SystemSchema> Schemas => Set<SystemSchema>();
 
 		public DbSet<SystemTable> Tables => Set<SystemTable>();
+
+		public DbSet<SystemPartition> Partitions => Set<SystemPartition>();
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+			base.OnConfiguring(optionsBuilder);
+
+			optionsBuilder.LogTo(
+				action: message => _output.WriteLine(message),
+				categories: [DbLoggerCategory.Database.Command.Name],
+				minimumLevel: LogLevel.Information);
+		}
+
 	}
 
-	private readonly SampleDbContext _context = new();
+	private readonly SampleDbContext _context;
 
-	public SystemCatalogViewTest() {
+	public SystemCatalogViewTest(ITestOutputHelper output) {
+		_context = new(output);
+
 		DropTable();
 		InitTable();
 	}
@@ -100,5 +133,27 @@ drop table if exists dbo.Sample;";
 		Assert.Contains(tables, table => table.Name == "Sample" && table.Schema.Name == "dbo");
 	}
 
-	// todo: partitionsで行数
+	[Fact]
+	public async Task テーブルの行数を取得する() {
+		// Arrange
+
+		// Act
+		var items = await _context.Schemas
+			.Join(_context.Tables,
+				schema => schema.Id,
+				table => table.SchemaId,
+				(schema, table) => new { Schema = schema, Table = table })
+			.Join(_context.Partitions,
+				schemaTable => schemaTable.Table.Id,
+				partition => partition.ObjectId,
+				(schemaTable, partition) => new { schemaTable.Schema, schemaTable.Table, Partition = partition })
+			.ToListAsync();
+
+		var actual = items
+			.Where(item => item.Table.Name == "Sample" && item.Schema.Name == "dbo")
+			.Sum(item => item.Partition.Rows);
+
+		// Assert
+		Assert.Equal(2, actual);
+	}
 }
