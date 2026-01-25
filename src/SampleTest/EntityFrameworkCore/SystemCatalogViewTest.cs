@@ -133,6 +133,7 @@ drop table if exists dbo.Sample;";
 		Assert.Contains(tables, table => table.Name == "Sample" && table.Schema.Name == "dbo");
 	}
 
+	// SQLでJOINだけを行う場合
 	[Fact]
 	public async Task テーブルの行数を取得する() {
 		// Arrange
@@ -152,6 +153,37 @@ drop table if exists dbo.Sample;";
 		var actual = items
 			.Where(item => item.Table.Name == "Sample" && item.Schema.Name == "dbo")
 			.Sum(item => item.Partition.Rows);
+
+		// Assert
+		Assert.Equal(2, actual);
+	}
+
+	// SQLで集計までする場合
+	[Fact]
+	public async Task テーブルの行数を取得する別解() {
+		// Arrange
+
+		// Act
+		var items = await _context.Schemas
+			.Join(_context.Tables,
+				schema => schema.Id,
+				table => table.SchemaId,
+				(schema, table) => new { Schema = schema, Table = table })
+			.Join(_context.Partitions,
+				schemaTable => schemaTable.Table.Id,
+				partition => partition.ObjectId,
+				(schemaTable, partition) => new { schemaTable.Schema, schemaTable.Table, Partition = partition })
+			.GroupBy(item => new { SchemaName = item.Schema.Name, TableName = item.Table.Name })
+			.Select(grouping => new {
+				grouping.Key.SchemaName,
+				grouping.Key.TableName,
+				Rows = grouping.Sum(item => item.Partition.Rows)
+			})
+			.ToListAsync();
+
+		var actual = items
+			.First(item => item.TableName == "Sample" && item.SchemaName == "dbo")
+			.Rows;
 
 		// Assert
 		Assert.Equal(2, actual);
