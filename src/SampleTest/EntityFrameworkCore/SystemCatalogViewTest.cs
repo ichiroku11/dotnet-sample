@@ -38,6 +38,15 @@ public class SystemCatalogViewTest : IDisposable {
 		[Column("object_id")]
 		public int ObjectId { get; set; }
 
+		// テーブルの行数を取得するには
+		// インデックスのIDからヒープとクラスター化インデックスを対象にするとよいみたい
+		// https://learn.microsoft.com/ja-jp/sql/relational-databases/system-catalog-views/sys-partitions-transact-sql?view=sql-server-ver17
+		// 0 = ヒープ
+		// 1 = クラスター化インデックス
+		// 2 以上 = 非クラスター化インデックス
+		[Column("index_id")]
+		public int IndexId { get; set; }
+
 		[Column("partition_number")]
 		public int PartitionNumber { get; set; }
 
@@ -144,7 +153,8 @@ drop table if exists dbo.Sample;";
 				schema => schema.Id,
 				table => table.SchemaId,
 				(schema, table) => new { Schema = schema, Table = table })
-			.Join(_context.Partitions,
+			// ヒープとクラスター化インデックスが対象
+			.Join(_context.Partitions.Where(partition => partition.IndexId == 0 || partition.IndexId == 1),
 				schemaTable => schemaTable.Table.Id,
 				partition => partition.ObjectId,
 				(schemaTable, partition) => new { schemaTable.Schema, schemaTable.Table, Partition = partition })
@@ -169,7 +179,8 @@ drop table if exists dbo.Sample;";
 				schema => schema.Id,
 				table => table.SchemaId,
 				(schema, table) => new { Schema = schema, Table = table })
-			.Join(_context.Partitions,
+			// ヒープとクラスター化インデックスが対象
+			.Join(_context.Partitions.Where(partition => partition.IndexId == 0 || partition.IndexId == 1),
 				schemaTable => schemaTable.Table.Id,
 				partition => partition.ObjectId,
 				(schemaTable, partition) => new { schemaTable.Schema, schemaTable.Table, Partition = partition })
