@@ -1,0 +1,66 @@
+<Solution>
+  <Folder Name="/Console/">
+    <Project Path="src/AzureAdB2cGraphConsoleApp/AzureAdB2cGraphConsoleApp.csproj" />
+    <Project Path="src/AzureAdB2cMsalConsoleApp/AzureAdB2cMsalConsoleApp.csproj" />
+    <Project Path="src/AzureCacheForRedisConsoleApp/AzureCacheForRedisConsoleApp.csproj" />
+    <Project Path="src/AzureCosmosDbConsoleApp/AzureCosmosDbConsoleApp.csproj" />
+    <Project Path="src/AzureStorageConsoleApp/AzureStorageConsoleApp.csproj" />
+    <Project Path="src/DigitalSignatureConsoleApp/DigitalSignatureConsoleApp.csproj" />
+    <Project Path="src/GenericHostConsoleApp/GenericHostConsoleApp.csproj" />
+    <Project Path="src/GenericHostOnceConsoleApp/GenericHostOnceConsoleApp.csproj" />
+    <Project Path="src/HybridCryptoConsoleApp/HybridCryptoConsoleApp.csproj" />
+    <Project Path="src/NamedPipeConsoleApp/NamedPipeConsoleApp.csproj" />
+    <Project Path="src/TcpConsoleApp/TcpConsoleApp.csproj" />
+    <Project Path="src/UdpConsoleApp/UdpConsoleApp.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="src/AntiforgeryWebApp.Test/AntiforgeryWebApp.Test.csproj" />
+    <Project Path="src/AntiforgeryWebApp/AntiforgeryWebApp.csproj" />
+    <Project Path="src/AsyncSuffixTrimmedWebApp/AsyncSuffixTrimmedWebApp.csproj" />
+    <Project Path="src/AzureAdB2cApiConnectorWebApp/AzureAdB2cApiConnectorWebApp.csproj" />
+    <Project Path="src/AzureAdB2cWebApi/AzureAdB2cWebApi.csproj" />
+    <Project Path="src/AzureAdB2cWebApp/AzureAdB2cWebApp.csproj" />
+    <Project Path="src/AzureAppInsightsWebApp/AzureAppInsightsWebApp.csproj" />
+    <Project Path="src/BasicAuthnWebApp.Test/BasicAuthnWebApp.Test.csproj" />
+    <Project Path="src/BasicAuthnWebApp/BasicAuthnWebApp.csproj" />
+    <Project Path="src/ControllerWebApp/ControllerWebApp.csproj" />
+    <Project Path="src/CookieAuthnWebApp.Test/CookieAuthnWebApp.Test.csproj" />
+    <Project Path="src/CookieAuthnWebApp/CookieAuthnWebApp.csproj" />
+    <Project Path="src/CustomFormatterWebApp.Test/CustomFormatterWebApp.Test.csproj" />
+    <Project Path="src/CustomFormatterWebApp/CustomFormatterWebApp.csproj" />
+    <Project Path="src/DistributedCacheWebApp/DistributedCacheWebApp.csproj" />
+    <Project Path="src/EndpointWebApp/EndpointWebApp.csproj" />
+    <Project Path="src/FallbackRouteWebApp/FallbackRouteWebApp.csproj" />
+    <Project Path="src/FeatureFlagWebApp/FeatureFlagWebApp.csproj" />
+    <Project Path="src/HealthCheckWebApp/HealthCheckWebApp.csproj" />
+    <Project Path="src/HostedServiceWebApp/HostedServiceWebApp.csproj" />
+    <Project Path="src/JwtBearerAuthnWebApp/JwtBearerAuthnWebApp.csproj" />
+    <Project Path="src/LinkWebApp.Test/LinkWebApp.Test.csproj" />
+    <Project Path="src/LinkWebApp/LinkWebApp.csproj" />
+    <Project Path="src/LocalizationWebApp/LocalizationWebApp.csproj" />
+    <Project Path="src/MiddlewareWebApp/MiddlewareWebApp.csproj" />
+    <Project Path="src/MinimalWebApi/MinimalWebApi.csproj" />
+    <Project Path="src/MiscWebApi.Test/MiscWebApi.Test.csproj" />
+    <Project Path="src/MiscWebApi/MiscWebApi.csproj" />
+    <Project Path="src/MiscWebApp.Test/MiscWebApp.Test.csproj" />
+    <Project Path="src/MiscWebApp/MiscWebApp.csproj" />
+    <Project Path="src/ModelBindingWebApp.Test/ModelBindingWebApp.Test.csproj" />
+    <Project Path="src/ModelBindingWebApp/ModelBindingWebApp.csproj" />
+    <Project Path="src/OpenApiWebApi/OpenApiWebApi.csproj" />
+    <Project Path="src/OpenIdConnectWebApp/OpenIdConnectWebApp.csproj" />
+    <Project Path="src/OptionPatternWebApp/OptionPatternWebApp.csproj" />
+    <Project Path="src/PolicyAuthzWebApp/PolicyAuthzWebApp.csproj" />
+    <Project Path="src/RazorPageWebApp/RazorPageWebApp.csproj" />
+    <Project Path="src/SessionWebApp/SessionWebApp.csproj" />
+    <Project Path="src/TagHelperWebApp/TagHelperWebApp.csproj" />
+    <Project Path="src/ViewComponentWebApp/ViewComponentWebApp.csproj" />
+    <Project Path="src/ViewWebApp/ViewWebApp.csproj" />
+  </Folder>
+  <Project Path="src/SampleLib.Test/SampleLib.Test.csproj" />
+  <Project Path="src/SampleLib/SampleLib.csproj" />
+  <Project Path="src/SampleTest/SampleTest.csproj" />
+</Solution>
