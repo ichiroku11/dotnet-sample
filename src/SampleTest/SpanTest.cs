@@ -2,6 +2,28 @@ namespace SampleTest;
 
 public class SpanTest {
 	[Fact]
+	public void Empty_空のSpanを取得できる() {
+		// Arrange
+
+		// Act
+		var span = Span<int>.Empty;
+
+		// Assert
+		Assert.True(span.IsEmpty);
+		Assert.Equal(0, span.Length);
+	}
+
+	[Fact]
+	public void Empty_配列を受け取る空のSpanと等しい() {
+		// Arrange
+
+		// Act
+
+		// Assert
+		Assert.Equal(new Span<int>([]), Span<int>.Empty);
+	}
+
+	[Fact]
 	public void Properties_プロパティを確認する_配列を受け取るコンストラクターで生成したインスタンス() {
 		// Arrange
 		var values = new[] { 1, 2, 3 };
@@ -39,7 +61,7 @@ public class SpanTest {
 		span[1] = 9;
 
 		// Assert
-		Assert.Equal(new[] { 1, 9, 3 }, values);
+		Assert.Equal([1, 9, 3], values);
 	}
 
 	[Fact]
@@ -52,6 +74,6 @@ public class SpanTest {
 		span[1] = 9;
 
 		// Assert
-		Assert.Equal(new[] { 1, 2, 9, 4, 5 }, values);
+		Assert.Equal([1, 2, 9, 4, 5], values);
 	}
 }
