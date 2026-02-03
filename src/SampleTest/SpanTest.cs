@@ -1,6 +1,28 @@
 namespace SampleTest;
 
 public class SpanTest {
+
+	[Fact]
+	public void Clear_デフォルト値が設定される() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+		var span = new Span<int>(values);
+
+		// Act
+		span.Clear();
+
+		// Assert
+		// デフォルト値が設定される
+		Assert.Equal([0, 0, 0], values);
+		Assert.Equal(0, span[0]);
+		Assert.Equal(0, span[1]);
+		Assert.Equal(0, span[2]);
+
+		// 「空になる」ことではない（最初勘違いした）
+		Assert.False(span.IsEmpty);
+		Assert.Equal(3, span.Length);
+	}
+
 	[Fact]
 	public void Empty_空のSpanを取得できる() {
 		// Arrange
