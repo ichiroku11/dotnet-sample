@@ -46,6 +46,22 @@ public class SpanTest {
 	}
 
 	[Fact]
+	public void Fill_指定した値で埋める() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+		var span = new Span<int>(values);
+
+		// Act
+		span.Fill(9);
+
+		// Assert
+		Assert.Equal([9, 9, 9], values);
+	}
+
+	// todo: Slice
+	// todo: AsSpan
+
+	[Fact]
 	public void Properties_プロパティを確認する_配列を受け取るコンストラクターで生成したインスタンス() {
 		// Arrange
 		var values = new[] { 1, 2, 3 };
