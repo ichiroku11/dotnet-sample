@@ -69,9 +69,19 @@ public class SpanTest {
 		Assert.Equal([9, 9, 9], values);
 	}
 
-	// todo: Slice
-	// todo: AsSpan
+	[Fact]
+	public void Slice_開始位置と長さを指定して部分的なSpanを取得する() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
 
+		// Act
+		var span = values.AsSpan().Slice(1, 3);
+
+		// Assert
+		Assert.Equal([2, 3, 4], span);
+	}
+
+	// todo: Constructor
 	[Fact]
 	public void Properties_プロパティを確認する_配列を受け取るコンストラクターで生成したインスタンス() {
 		// Arrange
