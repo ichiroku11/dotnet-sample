@@ -1,6 +1,17 @@
 namespace SampleTest;
 
 public class SpanTest {
+	[Fact]
+	public void AsSpan_配列からSpanを取得する() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var span = values.AsSpan();
+
+		// Assert
+		Assert.Equal(new Span<int>(values), span);
+	}
 
 	[Fact]
 	public void Clear_デフォルト値が設定される() {
