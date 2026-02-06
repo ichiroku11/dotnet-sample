@@ -2,6 +2,34 @@ namespace SampleTest;
 
 public class SpanTest {
 	[Fact]
+	public void Constructor_配列を指定し生成したインスタンスのプロパティを確認する() {
+		// Arrange
+		var values = new[] { 1, 2, 3 };
+
+		// Act
+		var span = new Span<int>(values);
+
+		// Assert
+		Assert.False(span.IsEmpty);
+		Assert.Equal(3, span.Length);
+		Assert.Equal([1, 2, 3], span);
+	}
+
+	[Fact]
+	public void Constructor_配列と開始位置と長さを指定し生成したインスタンスのプロパティを確認する() {
+		// Arrange
+		var values = new[] { 1, 2, 3, 4, 5 };
+
+		// Act
+		var span = new Span<int>(values, 1, 3);
+
+		// Assert
+		Assert.False(span.IsEmpty);
+		Assert.Equal(3, span.Length);
+		Assert.Equal([2, 3, 4], span);
+	}
+
+	[Fact]
 	public void AsSpan_配列からSpanを取得する() {
 		// Arrange
 		var values = new[] { 1, 2, 3 };
@@ -78,35 +106,6 @@ public class SpanTest {
 		var span = values.AsSpan().Slice(1, 3);
 
 		// Assert
-		Assert.Equal([2, 3, 4], span);
-	}
-
-	// todo: Constructor
-	[Fact]
-	public void Properties_プロパティを確認する_配列を受け取るコンストラクターで生成したインスタンス() {
-		// Arrange
-		var values = new[] { 1, 2, 3 };
-
-		// Act
-		var span = new Span<int>(values);
-
-		// Assert
-		Assert.False(span.IsEmpty);
-		Assert.Equal(3, span.Length);
-		Assert.Equal([1, 2, 3], span);
-	}
-
-	[Fact]
-	public void Properties_プロパティを確認する_配列と開始位置と長さを受け取るコンストラクターで生成したインスタンス() {
-		// Arrange
-		var values = new[] { 1, 2, 3, 4, 5 };
-
-		// Act
-		var span = new Span<int>(values, 1, 3);
-
-		// Assert
-		Assert.False(span.IsEmpty);
-		Assert.Equal(3, span.Length);
 		Assert.Equal([2, 3, 4], span);
 	}
 
