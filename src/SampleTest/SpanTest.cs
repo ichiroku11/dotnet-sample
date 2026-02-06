@@ -30,6 +30,20 @@ public class SpanTest {
 	}
 
 	[Fact]
+	public void Constructor_要素単体を参照で指定し生成したインスタンスのプロパティを確認する() {
+		// Arrange
+		var value = 1;
+
+		// Act
+		var span = new Span<int>(ref value);
+
+		// Assert
+		Assert.False(span.IsEmpty);
+		Assert.Equal(1, span.Length);
+		Assert.Equal([1], span);
+	}
+
+	[Fact]
 	public void AsSpan_配列からSpanを取得する() {
 		// Arrange
 		var values = new[] { 1, 2, 3 };
