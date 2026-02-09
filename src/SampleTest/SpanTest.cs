@@ -137,7 +137,7 @@ public class SpanTest {
 	[Fact]
 	public void Indexer_配列の要素が書き換わることを確認する_配列を指定するコンストラクターで生成したインスタンス() {
 		// Arrange
-		var values = new int[] { 1, 2, 3 };
+		var values = new[] { 1, 2, 3 };
 		var span = new Span<int>(values);
 
 		// Act
@@ -150,7 +150,7 @@ public class SpanTest {
 	[Fact]
 	public void Indexer_配列の要素が書き換わることを確認する_配列と開始位置と長さを受け取るコンストラクターで生成したインスタンス() {
 		// Arrange
-		var values = new int[] { 1, 2, 3, 4, 5 };
+		var values = new[] { 1, 2, 3, 4, 5 };
 		var span = new Span<int>(values, 1, 3);
 
 		// Act
