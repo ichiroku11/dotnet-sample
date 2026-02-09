@@ -56,6 +56,17 @@ public class SpanTest {
 	}
 
 	[Fact]
+	public void Implicit_配列を暗黙的にSpanに型変換できる() {
+		// Arrange
+
+		// Act
+		Span<int> span = [1, 2, 3];
+
+		// Assert
+		Assert.Equal(new Span<int>([1, 2, 3]), span);
+	}
+
+	[Fact]
 	public void Clear_デフォルト値が設定される() {
 		// Arrange
 		var values = new[] { 1, 2, 3 };
