@@ -42,4 +42,26 @@ public class ReadOnlySpanTest {
 		Assert.Equal(1, span.Length);
 		Assert.Equal([1], span);
 	}
+
+	[Fact]
+	public void Implicit_配列を暗黙的にReadOnlySpanに型変換できる() {
+		// Arrange
+
+		// Act
+		ReadOnlySpan<int> span = [1, 2, 3];
+
+		// Assert
+		Assert.Equal(new ReadOnlySpan<int>([1, 2, 3]), span);
+	}
+
+	[Fact]
+	public void Implicit_Spanを暗黙的にReadOnlySpanに型変換できる() {
+		// Arrange
+
+		// Act
+		ReadOnlySpan<int> span = new Span<int>([1, 2, 3]);
+
+		// Assert
+		Assert.Equal(new ReadOnlySpan<int>([1, 2, 3]), span);
+	}
 }
