@@ -44,6 +44,18 @@ public class ReadOnlySpanTest {
 	}
 
 	[Fact]
+	public void AsSpan_文字列からReadOnlySpanを取得する() {
+		// Arrange
+
+		// Act
+		// 文字列の場合は、Span<char>ではなくReadOnlySpan<char>に変換されるメソッドのみが提供されている様子
+		var span = "abc".AsSpan();
+
+		// Assert
+		Assert.Equal(new ReadOnlySpan<char>(['a', 'b', 'c']), span);
+	}
+
+	[Fact]
 	public void Implicit_配列を暗黙的にReadOnlySpanに型変換できる() {
 		// Arrange
 
