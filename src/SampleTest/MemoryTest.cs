@@ -26,6 +26,4 @@ public class MemoryTest {
 		// Assert
 		Assert.Equal(new Memory<int>(values), memory);
 	}
-
-	// todo: MemoryPool
 }
