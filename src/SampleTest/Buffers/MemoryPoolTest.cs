@@ -1,6 +1,6 @@
 using System.Buffers;
 
-namespace SampleTest;
+namespace SampleTest.Buffers;
 
 public class MemoryPoolTest {
 	[Fact]
