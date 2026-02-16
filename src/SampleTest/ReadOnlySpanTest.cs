@@ -55,6 +55,36 @@ public class ReadOnlySpanTest {
 		Assert.Equal(new ReadOnlySpan<char>(['a', 'b', 'c']), span);
 	}
 
+	[Theory]
+	[InlineData(1, true)]
+	[InlineData(4, false)]
+	public void Contains_指定した値が含まれているかどうか(int value, bool expected) {
+		// Arrange
+		ReadOnlySpan<int> span = [1, 2, 3];
+
+		// Act
+		var actual = span.Contains(value);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
+	[Theory]
+	[InlineData(1, 0, true)]
+	[InlineData(0, 1, true)]
+	[InlineData(1, 2, true)]
+	[InlineData(0, 4, false)]
+	public void ContainsAny_指定した値のどれかが含まれているかどうか(int value0, int value1, bool expected) {
+		// Arrange
+		ReadOnlySpan<int> span = [1, 2, 3];
+
+		// Act
+		var actual = span.ContainsAny(value0, value1);
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
+
 	[Fact]
 	public void Implicit_配列を暗黙的にReadOnlySpanに型変換できる() {
 		// Arrange
