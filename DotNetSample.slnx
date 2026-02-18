@@ -35,6 +35,7 @@
     <Project Path="src/CustomFormatterWebApp/CustomFormatterWebApp.csproj" />
     <Project Path="src/DistributedCacheWebApp/DistributedCacheWebApp.csproj" />
     <Project Path="src/EndpointWebApp/EndpointWebApp.csproj" />
+    <Project Path="src/EntraExternalIdWebApp/EntraExternalIdWebApp.csproj" Id="09c9108e-dac6-4ef4-a367-42dc119e1402" />
     <Project Path="src/FallbackRouteWebApp/FallbackRouteWebApp.csproj" />
     <Project Path="src/FeatureFlagWebApp/FeatureFlagWebApp.csproj" />
     <Project Path="src/HealthCheckWebApp/HealthCheckWebApp.csproj" />
