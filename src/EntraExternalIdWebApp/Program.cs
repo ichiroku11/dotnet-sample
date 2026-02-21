@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,18 @@ app.MapGet("/account/signin", static () => {
 	var authProps = new AuthenticationProperties {
 		RedirectUri = "/claim",
 	};
+
+	return TypedResults.Challenge(authProps, [OpenIdConnectDefaults.AuthenticationScheme]);
+});
+
+// サインアップへ
+app.MapGet("/account/signup", static () => {
+	var authProps = new AuthenticationProperties {
+		RedirectUri = "/claim",
+	};
+
+	// アカウント作成画面を表示
+	authProps.SetParameter(OpenIdConnectParameterNames.Prompt, OpenIdConnectPrompt.Create);
 
 	return TypedResults.Challenge(authProps, [OpenIdConnectDefaults.AuthenticationScheme]);
 });
