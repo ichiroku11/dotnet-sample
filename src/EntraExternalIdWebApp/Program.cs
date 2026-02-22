@@ -37,24 +37,23 @@ app.MapGet("/claim", static async (ClaimsPrincipal user) => {
 	.RequireAuthorization();
 
 // サインインへ
-app.MapGet("/account/signin", static () => {
+app.MapGet("/account/signin", static (string? prompt) => {
 	var authProps = new AuthenticationProperties {
 		RedirectUri = "/claim",
 	};
 
-	return TypedResults.Challenge(authProps, [OpenIdConnectDefaults.AuthenticationScheme]);
-});
-
-// サインアップへ
-app.MapGet("/account/signup", static () => {
-	var authProps = new AuthenticationProperties {
-		RedirectUri = "/claim",
-	};
-
-	// アカウント作成画面を表示
-	authProps.SetParameter(OpenIdConnectParameterNames.Prompt, OpenIdConnectPrompt.Create);
+	if (!string.IsNullOrWhiteSpace(prompt) && IsValidPrompt(prompt)) {
+		authProps.SetParameter(OpenIdConnectParameterNames.Prompt, OpenIdConnectPrompt.Create);
+	}
 
 	return TypedResults.Challenge(authProps, [OpenIdConnectDefaults.AuthenticationScheme]);
+
+	static bool IsValidPrompt(string prompt)
+		=> prompt is OpenIdConnectPrompt.Create
+			or OpenIdConnectPrompt.Consent
+			or OpenIdConnectPrompt.Login
+			or OpenIdConnectPrompt.None
+			or OpenIdConnectPrompt.SelectAccount;
 });
 
 app.MapGet("/", () => "Hello World!");
