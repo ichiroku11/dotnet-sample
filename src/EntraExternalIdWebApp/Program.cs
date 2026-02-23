@@ -17,6 +17,9 @@ services
 			//config.GetSection("AzureAd").Bind(options);
 			options.Authority = config.GetSection("AzureAd:Authority").Value;
 			options.ClientId = config.GetSection("AzureAd:ClientId").Value;
+
+			options.AccessDeniedPath = "/account/accessdenied";
+			options.ErrorPath = "/account/error";
 		},
 		configureCookieAuthenticationOptions: options => {
 
@@ -55,6 +58,10 @@ app.MapGet("/account/signin", static (string? prompt) => {
 			or OpenIdConnectPrompt.None
 			or OpenIdConnectPrompt.SelectAccount;
 });
+
+app.MapGet("/account/accessdenied", static () => "accessdenied");
+app.MapGet("/account/error", static () => "error");
+app.MapGet("/account/signedout", static () => "signedout");
 
 app.MapGet("/", () => "Hello World!");
 
