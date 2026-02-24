@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -39,7 +40,7 @@ app.MapGet("/claim", static async (ClaimsPrincipal user) => {
 })
 	.RequireAuthorization();
 
-// サインインへ
+// サインイン
 app.MapGet("/account/signin", static (string? prompt) => {
 	var authProps = new AuthenticationProperties {
 		RedirectUri = "/claim",
@@ -59,9 +60,20 @@ app.MapGet("/account/signin", static (string? prompt) => {
 			or OpenIdConnectPrompt.SelectAccount;
 });
 
+// サインアウト
+app.MapGet("/account/signout", static () => {
+	var authProps = new AuthenticationProperties {
+		RedirectUri = "/account/signedout",
+	};
+
+	return TypedResults.SignOut(
+		authProps,
+		[CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme]);
+});
+app.MapGet("/account/signedout", static () => "signedout");
+
 app.MapGet("/account/accessdenied", static () => "accessdenied");
 app.MapGet("/account/error", static () => "error");
-app.MapGet("/account/signedout", static () => "signedout");
 
 app.MapGet("/", () => "Hello World!");
 
