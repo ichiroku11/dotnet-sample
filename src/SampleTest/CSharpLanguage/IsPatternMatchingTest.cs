@@ -223,4 +223,18 @@ public class IsPatternMatchingTest {
 		// スライスパターンは1カ所だけっぽい（CS8980）
 		// values is [.., 2, ..]);
 	}
+
+	[Theory]
+	[InlineData("abc", true)]
+	[InlineData("Abc", false)]
+	public void Is_文字列の比較では大文字小文字は区別する(string value, bool expected) {
+		// Arrange
+
+		// Act
+		// isの右辺は文字列定数の必要がある
+		var actual = value is "abc";
+
+		// Assert
+		Assert.Equal(expected, actual);
+	}
 }
