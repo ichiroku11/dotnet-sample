@@ -21,9 +21,23 @@ services
 
 			options.AccessDeniedPath = "/account/accessdenied";
 			options.ErrorPath = "/account/error";
+
+			/*
+			// リダイレクト前に何か処理をしたい場合
+			var handler = options.Events.OnRedirectToIdentityProvider;
+			options.Events.OnRedirectToIdentityProvider = async context => {
+				await handler(context);
+			};
+			*/
 		},
 		configureCookieAuthenticationOptions: options => {
-
+			/*
+			// サインイン後に何か処理をしたい場合
+			var handler = options.Events.OnSignedIn;
+			options.Events.OnSignedIn = async context => {
+				await handler(context);
+			};
+			*/
 		},
 		subscribeToOpenIdConnectMiddlewareDiagnosticsEvents: true);
 services.AddAuthorization();
@@ -35,6 +49,8 @@ app.UseAuthorization();
 
 // 認証後にクレームを表示するエンドポイント
 app.MapGet("/claim", static async (ClaimsPrincipal user) => {
+	// todo: user.Identity.Name
+	// todo: user.Identity.AuthenticationType
 	var claims = user.Claims.Select(claim => new { claim.Type, claim.Value });
 	return TypedResults.Json(claims);
 })
