@@ -49,10 +49,12 @@ app.UseAuthorization();
 
 // 認証後にクレームを表示するエンドポイント
 app.MapGet("/claim", static async (ClaimsPrincipal user) => {
-	// todo: user.Identity.Name
-	// todo: user.Identity.AuthenticationType
 	var claims = user.Claims.Select(claim => new { claim.Type, claim.Value });
-	return TypedResults.Json(claims);
+	return TypedResults.Json(new {
+		name = user.Identity?.Name,
+		authType = user.Identity?.AuthenticationType,
+		claims
+	});
 })
 	.RequireAuthorization();
 
