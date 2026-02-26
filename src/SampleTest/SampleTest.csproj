@@ -15,6 +15,7 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="NCrontab.Signed" />
     <PackageReference Include="Polly" />
+    <PackageReference Include="System.CommandLine" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     <PackageReference Include="System.Reactive" />
     <PackageReference Include="xunit" />
