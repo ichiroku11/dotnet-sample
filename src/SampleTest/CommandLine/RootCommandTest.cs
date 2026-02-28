@@ -6,7 +6,7 @@ namespace SampleTest.CommandLine;
 
 public class RootCommandTest {
 	[Fact]
-	public void Constructor_生成したインスタンスのプロパティを確認する() {
+	public void Properties_生成したインスタンスのプロパティを確認する() {
 		// Arrange
 		// Act
 		var command = new RootCommand();
@@ -39,6 +39,22 @@ public class RootCommandTest {
 		Assert.Empty(result.Errors);
 		Assert.IsType<HelpAction>(result.Action);
 		Assert.Equal(["--help"], result.Tokens.Select(token => token.Value));
+		Assert.Empty(result.UnmatchedTokens);
+	}
+
+	[Fact]
+	public void Parse_バージョンコマンドを実行した結果を確認する() {
+		// Arrange
+		var command = new RootCommand();
+
+		// Act
+		var result = command.Parse(["--version"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		// アクションの型は公開されていない様子
+		Assert.NotNull(result.Action);
+		Assert.Equal(["--version"], result.Tokens.Select(token => token.Value));
 		Assert.Empty(result.UnmatchedTokens);
 	}
 }
