@@ -26,4 +26,19 @@ public class RootCommandTest {
 
 		Assert.Empty(command.Subcommands);
 	}
+
+	[Fact]
+	public void Parse_ヘルプコマンドを実行した結果を確認する() {
+		// Arrange
+		var command = new RootCommand();
+
+		// Act
+		var result = command.Parse(["--help"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.IsType<HelpAction>(result.Action);
+		Assert.Equal(["--help"], result.Tokens.Select(token => token.Value));
+		Assert.Empty(result.UnmatchedTokens);
+	}
 }
