@@ -40,8 +40,10 @@ public class RootCommandTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.Empty(result.Errors);
+
 		Assert.IsType<HelpAction>(result.Action);
-		var token = result.Tokens.Single();
+
+		var token = Assert.Single(result.Tokens);
 		Assert.Equal(TokenType.Option, token.Type);
 		Assert.Equal("--help", token.Value);
 		Assert.Empty(result.UnmatchedTokens);
@@ -57,9 +59,11 @@ public class RootCommandTest(ITestOutputHelper output) {
 
 		// Assert
 		Assert.Empty(result.Errors);
+
 		// アクションの型は公開されていない様子
 		Assert.NotNull(result.Action);
-		var token = result.Tokens.Single();
+
+		var token = Assert.Single(result.Tokens);
 		Assert.Equal(TokenType.Option, token.Type);
 		Assert.Equal("--version", token.Value);
 		Assert.Empty(result.UnmatchedTokens);
