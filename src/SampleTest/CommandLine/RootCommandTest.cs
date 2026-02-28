@@ -1,10 +1,12 @@
 using System.CommandLine;
 using System.CommandLine.Completions;
 using System.CommandLine.Help;
+using System.CommandLine.Parsing;
 
 namespace SampleTest.CommandLine;
 
 public class RootCommandTest {
+
 	[Fact]
 	public void Properties_生成したインスタンスのプロパティを確認する() {
 		// Arrange
@@ -28,7 +30,7 @@ public class RootCommandTest {
 	}
 
 	[Fact]
-	public void Parse_ヘルプコマンドを実行した結果を確認する() {
+	public void Parse_helpオプションを指定した結果を確認する() {
 		// Arrange
 		var command = new RootCommand();
 
@@ -38,12 +40,14 @@ public class RootCommandTest {
 		// Assert
 		Assert.Empty(result.Errors);
 		Assert.IsType<HelpAction>(result.Action);
-		Assert.Equal(["--help"], result.Tokens.Select(token => token.Value));
+		var token = result.Tokens.Single();
+		Assert.Equal(TokenType.Option, token.Type);
+		Assert.Equal("--help", token.Value);
 		Assert.Empty(result.UnmatchedTokens);
 	}
 
 	[Fact]
-	public void Parse_バージョンコマンドを実行した結果を確認する() {
+	public void Parse_versionオプションを指定した結果を確認する() {
 		// Arrange
 		var command = new RootCommand();
 
@@ -54,7 +58,9 @@ public class RootCommandTest {
 		Assert.Empty(result.Errors);
 		// アクションの型は公開されていない様子
 		Assert.NotNull(result.Action);
-		Assert.Equal(["--version"], result.Tokens.Select(token => token.Value));
+		var token = result.Tokens.Single();
+		Assert.Equal(TokenType.Option, token.Type);
+		Assert.Equal("--version", token.Value);
 		Assert.Empty(result.UnmatchedTokens);
 	}
 }
