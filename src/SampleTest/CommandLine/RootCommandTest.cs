@@ -5,7 +5,8 @@ using System.CommandLine.Parsing;
 
 namespace SampleTest.CommandLine;
 
-public class RootCommandTest {
+public class RootCommandTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
 
 	[Fact]
 	public void Properties_生成したインスタンスのプロパティを確認する() {
@@ -62,5 +63,27 @@ public class RootCommandTest {
 		Assert.Equal(TokenType.Option, token.Type);
 		Assert.Equal("--version", token.Value);
 		Assert.Empty(result.UnmatchedTokens);
+	}
+
+	[Fact]
+	public void Parse_空文字列の配列で呼び出した場合はエラーになる() {
+		// Arrange
+		var command = new RootCommand();
+
+		// Act
+		var result = command.Parse([""]);
+
+		// Assert
+		var error = Assert.Single(result.Errors);
+		Assert.NotEmpty(error.Message);
+		Assert.NotNull(error.SymbolResult);
+		_output.WriteLine(error.Message);
+
+		var token = Assert.Single(result.Tokens);
+		Assert.Equal(TokenType.Argument, token.Type);
+		Assert.Equal("", token.Value);
+
+		var unmatchedToken = Assert.Single(result.UnmatchedTokens);
+		Assert.Equal("", unmatchedToken);
 	}
 }
