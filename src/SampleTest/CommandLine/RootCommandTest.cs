@@ -30,13 +30,16 @@ public class RootCommandTest(ITestOutputHelper output) {
 		Assert.Empty(command.Subcommands);
 	}
 
-	[Fact]
-	public void Parse_helpオプションを指定した結果を確認する() {
+	[Theory]
+	[InlineData("--help")]
+	[InlineData("-h")]
+	[InlineData("-?")]
+	public void Parse_helpオプションを指定した結果を確認する(string arg) {
 		// Arrange
 		var command = new RootCommand();
 
 		// Act
-		var result = command.Parse(["--help"]);
+		var result = command.Parse([arg]);
 
 		// Assert
 		Assert.Empty(result.Errors);
@@ -45,7 +48,7 @@ public class RootCommandTest(ITestOutputHelper output) {
 
 		var token = Assert.Single(result.Tokens);
 		Assert.Equal(TokenType.Option, token.Type);
-		Assert.Equal("--help", token.Value);
+		Assert.Equal(arg, token.Value);
 		Assert.Empty(result.UnmatchedTokens);
 	}
 
@@ -55,6 +58,7 @@ public class RootCommandTest(ITestOutputHelper output) {
 		var command = new RootCommand();
 
 		// Act
+		// --versionのみ、-vなどのオプションはない様子
 		var result = command.Parse(["--version"]);
 
 		// Assert
