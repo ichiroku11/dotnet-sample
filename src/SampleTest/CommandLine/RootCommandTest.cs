@@ -1,6 +1,7 @@
 using System.CommandLine;
 using System.CommandLine.Completions;
 using System.CommandLine.Help;
+using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 
 namespace SampleTest.CommandLine;
@@ -15,6 +16,7 @@ public class RootCommandTest(ITestOutputHelper output) {
 		var command = new RootCommand();
 
 		// Assert
+		Assert.Null(command.Action);
 		Assert.Empty(command.Aliases);
 		Assert.Empty(command.Arguments);
 		Assert.NotNull(command.Description);
@@ -82,6 +84,8 @@ public class RootCommandTest(ITestOutputHelper output) {
 		var result = command.Parse([""]);
 
 		// Assert
+		Assert.IsType<ParseErrorAction>(result.Action);
+
 		var error = Assert.Single(result.Errors);
 		Assert.NotEmpty(error.Message);
 		Assert.NotNull(error.SymbolResult);
