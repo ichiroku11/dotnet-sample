@@ -98,4 +98,19 @@ public class RootCommandTest(ITestOutputHelper output) {
 		var unmatchedToken = Assert.Single(result.UnmatchedTokens);
 		Assert.Equal("", unmatchedToken);
 	}
+
+	[Fact]
+	public void Parse_空配列で呼び出した場合はエラーにならない() {
+		// Arrange
+		var command = new RootCommand();
+
+		// Act
+		var result = command.Parse([]);
+
+		// Assert
+		Assert.Null(result.Action);
+		Assert.Empty(result.Errors);
+		Assert.Empty(result.Tokens);
+		Assert.Empty(result.UnmatchedTokens);
+	}
 }
