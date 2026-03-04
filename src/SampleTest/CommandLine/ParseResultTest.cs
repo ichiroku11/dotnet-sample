@@ -54,4 +54,30 @@ public class ParseResultTest {
 		Assert.Null(result.Action);
 		Assert.Equal(0, code);
 	}
+
+	[Theory]
+	[InlineData(new string[] { }, false)]
+	[InlineData(new string[] { "--test" }, true)]
+	[InlineData(new string[] { "--test", "true" }, true)]
+	[InlineData(new string[] { "--test", "false" }, false)]
+	public void GetValue_bool型のオプションを取得できることを確認する(string[] args, bool expected) {
+		// Arrange
+		var option = new Option<bool>("--test");
+		var command = new Command("test") {
+			option,
+		};
+
+		var actual = false;
+
+		// Act
+		command.SetAction(result => {
+			// オプションの値を取得する
+			actual = result.GetValue(option);
+		});
+		var code = command.Parse(args).Invoke();
+
+		// Assert
+		Assert.Equal(expected, actual);
+		Assert.Equal(0, code);
+	}
 }
