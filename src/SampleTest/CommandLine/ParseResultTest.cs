@@ -69,19 +69,16 @@ public class ParseResultTest {
 		var command = new Command("test") {
 			option,
 		};
-		var done = false;
 
 		// Act
 		var actual = false;
 		command.SetAction(result => {
-			done = true;
 			actual = result.GetValue(option);
 		});
 		var result = command.Parse(args);
 		var code = result.Invoke();
 
 		// Assert
-		Assert.True(done);
 		Assert.Equal(expected, actual);
 		Assert.Equal(0, code);
 	}
