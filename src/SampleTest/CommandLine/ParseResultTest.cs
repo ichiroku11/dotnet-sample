@@ -24,11 +24,11 @@ public class ParseResultTest {
 	[Fact]
 	public void Invoke_コマンドに指定したアクションが呼び出される() {
 		// Arrange
-		var invoked = false;
+		var done = false;
 		var command = new Command("test");
 		// アクションを指定する
 		command.SetAction(result => {
-			invoked = true;
+			done = true;
 		});
 
 		var result = command.Parse([]);
@@ -37,7 +37,7 @@ public class ParseResultTest {
 		var code = result.Invoke();
 
 		// Assert
-		Assert.True(invoked);
+		Assert.True(done);
 		Assert.Equal(0, code);
 	}
 
@@ -56,8 +56,11 @@ public class ParseResultTest {
 	}
 
 	[Theory]
+	// オプションを指定しない
 	[InlineData(new string[] { }, false)]
+	// オプションを指定し、オプション引数を省略する
 	[InlineData(new string[] { "--test" }, true)]
+	// オプションとオプション引数を指定する
 	[InlineData(new string[] { "--test", "true" }, true)]
 	[InlineData(new string[] { "--test", "false" }, false)]
 	public void GetValue_bool型のオプションを取得できることを確認する(string[] args, bool expected) {
@@ -66,18 +69,22 @@ public class ParseResultTest {
 		var command = new Command("test") {
 			option,
 		};
-
-		var actual = false;
+		var done = false;
 
 		// Act
+		var actual = false;
 		command.SetAction(result => {
-			// オプションの値を取得する
+			done = true;
 			actual = result.GetValue(option);
 		});
-		var code = command.Parse(args).Invoke();
+		var result = command.Parse(args);
+		var code = result.Invoke();
 
 		// Assert
+		Assert.True(done);
 		Assert.Equal(expected, actual);
 		Assert.Equal(0, code);
 	}
+
+	// todo: int
 }
