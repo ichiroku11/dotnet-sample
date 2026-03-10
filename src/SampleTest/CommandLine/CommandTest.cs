@@ -2,10 +2,15 @@ using System.CommandLine;
 
 namespace SampleTest.CommandLine;
 
-public class CommandTest {
+public class CommandTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
+	// todo: bool
+
 	[Theory]
 	// オプションを指定しない
 	[InlineData([])]
+	// boolの場合だけ特殊？
 	// オプションを指定し、オプション引数を省略する
 	[InlineData(["--test"])]
 	// オプションとオプション引数を指定する
@@ -32,5 +37,46 @@ public class CommandTest {
 		Assert.False(result.Errors.Any());
 	}
 
-	// todo: int
+	[Theory]
+	// オプションを指定し、オプション引数を省略する
+	[InlineData(["--test"])]
+	// オプション引数が数字ではない場合
+	[InlineData(["--test", "a"])]
+	public void Parse_int型のオプションに対してエラーが発生するコマンドライン引数を確認する(params string[] args) {
+		// Arrange
+		var option = new Option<int>("--test");
+		var command = new Command("test") {
+			option,
+		};
+		command.Options.Add(option);
+
+		// Act
+		var result = command.Parse(args);
+
+		// Assert
+		Assert.True(result.Errors.Any());
+		foreach (var error in result.Errors) {
+			_output.WriteLine(error.Message);
+		}
+	}
+
+	[Theory]
+	// オプションを指定しない
+	[InlineData([])]
+	// オプションとオプション引数を指定する
+	[InlineData(["--test", "1"])]
+	public void Parse_int型のオプションに対してエラーが発生しないコマンドライン引数を確認する(params string[] args) {
+		// Arrange
+		var option = new Option<int>("--test");
+		var command = new Command("test") {
+			option,
+		};
+		command.Options.Add(option);
+
+		// Act
+		var result = command.Parse(args);
+
+		// Assert
+		Assert.False(result.Errors.Any());
+	}
 }
