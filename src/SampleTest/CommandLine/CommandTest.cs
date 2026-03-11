@@ -5,7 +5,26 @@ namespace SampleTest.CommandLine;
 public class CommandTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
-	// todo: bool
+	[Theory]
+	// オプション引数がboolではない場合
+	[InlineData(["--test", "1"])]
+	public void Parse_bool型のオプションに対してエラーが発生するコマンドライン引数を確認する(params string[] args) {
+		// Arrange
+		var option = new Option<bool>("--test");
+		var command = new Command("test") {
+			option,
+		};
+		command.Options.Add(option);
+
+		// Act
+		var result = command.Parse(args);
+
+		// Assert
+		Assert.True(result.Errors.Any());
+		foreach (var error in result.Errors) {
+			_output.WriteLine(error.Message);
+		}
+	}
 
 	[Theory]
 	// オプションを指定しない
