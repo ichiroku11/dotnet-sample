@@ -63,25 +63,45 @@ public class ParseResultTest {
 	// オプションとオプション引数を指定する
 	[InlineData(new string[] { "--test", "true" }, true)]
 	[InlineData(new string[] { "--test", "false" }, false)]
-	public void GetValue_bool型のオプションを取得できることを確認する(string[] args, bool expected) {
+	public void GetValue_bool型のオプションの値を確認する(string[] args, bool expected) {
 		// Arrange
 		var option = new Option<bool>("--test");
 		var command = new Command("test") {
 			option,
 		};
 
-		// Act
-		var actual = false;
-		command.SetAction(result => {
-			actual = result.GetValue(option);
-		});
 		var result = command.Parse(args);
 		var code = result.Invoke();
 
+		// Act
+		var actual = result.GetValue(option);
+
 		// Assert
-		Assert.Equal(expected, actual);
 		Assert.Equal(0, code);
+		Assert.Equal(expected, actual);
 	}
 
-	// todo: int
+	[Theory]
+	// オプションを指定しない => デフォルト値が取得できる？
+	[InlineData(new string[] { }, 0)]
+	// オプションとオプション引数を指定する
+	[InlineData(new string[] { "--test", "1" }, 1)]
+	public void GetValue_int型のオプションの値を確認する(string[] args, int expected) {
+		// Arrange
+		var option = new Option<int>("--test");
+		var command = new Command("test") {
+			option,
+		};
+		command.Options.Add(option);
+
+		var result = command.Parse(args);
+		var code = result.Invoke();
+
+		// Act
+		var actual = result.GetValue(option);
+
+		// Assert
+		Assert.Equal(0, code);
+		Assert.Equal(expected, actual);
+	}
 }
