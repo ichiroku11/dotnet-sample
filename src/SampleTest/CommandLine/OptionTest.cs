@@ -1,0 +1,46 @@
+using System.CommandLine;
+
+namespace SampleTest.CommandLine;
+
+public class OptionTest {
+	[Fact]
+	public void Properties_bool型のインスタンスのプロパティを確認する() {
+		// Arrange
+		var option = new Option<bool>("test") {
+		};
+
+		// Act
+		// Assert
+		Assert.Equal("test", option.Name);
+		// boolの場合はデフォルト値がある
+		Assert.True(option.HasDefaultValue);
+		// boolの場合は非null
+		Assert.NotNull(option.DefaultValueFactory);
+	}
+
+	[Fact]
+	public void Properties_int型のインスタンスのプロパティを確認する() {
+		// Arrange
+		var option = new Option<int>("test") {
+		};
+
+		// Act
+		// Assert
+		Assert.Equal("test", option.Name);
+		Assert.False(option.HasDefaultValue);
+		Assert.Null(option.DefaultValueFactory);
+	}
+
+	[Fact]
+	public void Properties_string型のインスタンスのプロパティを確認する() {
+		// Arrange
+		var option = new Option<string>("test") {
+		};
+
+		// Act
+		// Assert
+		Assert.Equal("test", option.Name);
+		Assert.False(option.HasDefaultValue);
+		Assert.Null(option.DefaultValueFactory);
+	}
+}
