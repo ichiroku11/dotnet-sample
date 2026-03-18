@@ -12,6 +12,8 @@ public class OptionTest {
 		// Act
 		// Assert
 		Assert.Equal("test", option.Name);
+		// boolの場合は0または1
+		Assert.Equal(ArgumentArity.ZeroOrOne, option.Arity);
 		// boolの場合はデフォルト値がある
 		Assert.True(option.HasDefaultValue);
 		// boolの場合は非null
@@ -27,6 +29,7 @@ public class OptionTest {
 		// Act
 		// Assert
 		Assert.Equal("test", option.Name);
+		Assert.Equal(ArgumentArity.ExactlyOne, option.Arity);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
 	}
@@ -40,6 +43,7 @@ public class OptionTest {
 		// Act
 		// Assert
 		Assert.Equal("test", option.Name);
+		Assert.Equal(ArgumentArity.ExactlyOne, option.Arity);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
 	}
