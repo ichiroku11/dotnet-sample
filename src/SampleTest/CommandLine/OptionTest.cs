@@ -18,6 +18,9 @@ public class OptionTest {
 		Assert.True(option.HasDefaultValue);
 		// boolの場合は非null
 		Assert.NotNull(option.DefaultValueFactory);
+
+		Assert.False(option.Recursive);
+		Assert.False(option.Required);
 	}
 
 	[Fact]
@@ -32,6 +35,9 @@ public class OptionTest {
 		Assert.Equal(ArgumentArity.ExactlyOne, option.Arity);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
+		Assert.False(option.Recursive);
+		Assert.False(option.Required);
+
 	}
 
 	[Fact]
@@ -46,5 +52,7 @@ public class OptionTest {
 		Assert.Equal(ArgumentArity.ExactlyOne, option.Arity);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
+		Assert.False(option.Recursive);
+		Assert.False(option.Required);
 	}
 }
