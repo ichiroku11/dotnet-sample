@@ -1,3 +1,4 @@
+using System.CommandLine;
 using System.CommandLine.Help;
 
 namespace SampleTest.CommandLine;
@@ -13,6 +14,8 @@ public class HelpOptionTest {
 		Assert.IsType<HelpAction>(option.Action);
 		Assert.Equal(["-h", "/h", "-?", "/?"], option.Aliases);
 		Assert.Equal("--help", option.Name);
+		Assert.Equal(ArgumentArity.Zero, option.Arity);
+		Assert.False(option.HasDefaultValue);
 		Assert.True(option.Recursive);
 		Assert.False(option.Required);
 	}
