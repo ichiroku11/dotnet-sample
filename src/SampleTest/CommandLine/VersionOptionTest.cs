@@ -12,8 +12,10 @@ public class VersionOptionTest {
 		// Assert
 		// アクションの型は公開されていない様子
 		Assert.NotNull(option.Action);
-		Assert.Equal("--version", option.Name);
 		Assert.Empty(option.Aliases);
+		Assert.Equal("--version", option.Name);
+		Assert.Equal(ArgumentArity.Zero, option.Arity);
+		Assert.False(option.HasDefaultValue);
 		Assert.False(option.Recursive);
 		Assert.False(option.Required);
 	}
