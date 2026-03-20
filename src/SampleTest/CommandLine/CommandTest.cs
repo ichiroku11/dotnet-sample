@@ -5,6 +5,23 @@ namespace SampleTest.CommandLine;
 public class CommandTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
+	[Fact]
+	public void Parse_サブコマンドが存在する場合はサブコマンドを指定しないとエラーになる() {
+		// Arrange
+		var command = new Command("main") {
+			new Command("sub")
+		};
+
+		// Act
+		var result = command.Parse(["main"]);
+
+		// Assert
+		Assert.NotEmpty(result.Errors);
+		foreach (var error in result.Errors) {
+			_output.WriteLine(error.Message);
+		}
+	}
+
 	[Theory]
 	// オプション引数がboolではない場合
 	[InlineData(["--test", "1"])]
