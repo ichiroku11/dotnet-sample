@@ -52,6 +52,36 @@ public class ParseResultTest {
 	}
 
 	[Fact]
+	public void RootCommandResult_Parseを呼び出したコマンドになることを確認する() {
+		// Arrange
+		var command = new Command("main") {
+		};
+
+		// Act
+		var result = command.Parse(["main"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Same(command, result.RootCommandResult.Command);
+	}
+
+	[Fact]
+	public void RootCommandResult_サブコマンドが存在してもParseを呼び出したコマンドになることを確認する() {
+		// Arrange
+		var subCommand = new Command("sub");
+		var mainCommand = new Command("main") {
+			subCommand
+		};
+
+		// Act
+		var result = mainCommand.Parse(["main", "sub"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Same(mainCommand, result.RootCommandResult.Command);
+	}
+
+	[Fact]
 	public void Invoke_コマンドに指定したアクションが呼び出される() {
 		// Arrange
 		var done = false;
