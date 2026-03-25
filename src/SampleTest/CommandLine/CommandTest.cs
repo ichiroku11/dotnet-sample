@@ -115,4 +115,28 @@ public class CommandTest(ITestOutputHelper output) {
 		// Assert
 		Assert.False(result.Errors.Any());
 	}
+
+	[Theory]
+	[InlineData("yyyy-MM-dd")]
+	[InlineData("yyyy/MM/dd")]
+	[InlineData("yyyy.MM.dd")]
+	public void Parse_DateOnly型のオプションに対して日付文字列を指定できる(string format) {
+		// Arrange
+		var option = new Option<DateOnly>("--date");
+		var command = new Command("test") {
+			option
+		};
+
+		var expected = DateOnly.FromDateTime(DateTime.Today);
+
+		var arg = expected.ToString(format);
+		_output.WriteLine(arg);
+
+		// Act
+		var result = command.Parse(["test", "--date", arg]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Equal(expected, result.GetValue(option));
+	}
 }
