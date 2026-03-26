@@ -139,4 +139,23 @@ public class CommandTest(ITestOutputHelper output) {
 		Assert.Empty(result.Errors);
 		Assert.Equal(expected, result.GetValue(option));
 	}
+
+	[Theory]
+	[InlineData("1", DayOfWeek.Monday)]
+	[InlineData("monday", DayOfWeek.Monday)]
+	[InlineData("Monday", DayOfWeek.Monday)]
+	public void Parse_enumのDayOfWeek型のオプションに対して文字列を指定できる(string arg, DayOfWeek expected) {
+		// Arrange
+		var option = new Option<DayOfWeek>("--dayofweek");
+		var command = new Command("test") {
+			option
+		};
+
+		// Act
+		var result = command.Parse(["test", "--dayofweek", arg]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Equal(expected, result.GetValue(option));
+	}
 }
