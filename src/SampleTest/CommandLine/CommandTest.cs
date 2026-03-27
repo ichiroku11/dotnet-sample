@@ -158,4 +158,20 @@ public class CommandTest(ITestOutputHelper output) {
 		Assert.Empty(result.Errors);
 		Assert.Equal(expected, result.GetValue(option));
 	}
+
+	[Fact]
+	public void Parse_エイリアスでオプションを取得できる() {
+		// Arrange
+		var option = new Option<string>("--value", "-v");
+		var command = new Command("test") {
+			option
+		};
+
+		// Act
+		var result = command.Parse(["test", "-v", "hello"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Equal("hello", result.GetValue(option));
+	}
 }
