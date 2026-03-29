@@ -159,16 +159,18 @@ public class CommandTest(ITestOutputHelper output) {
 		Assert.Equal(expected, result.GetValue(option));
 	}
 
-	[Fact]
-	public void Parse_エイリアスでオプションを取得できる() {
+	[Theory]
+	[InlineData("-v")]
+	[InlineData("/v")]
+	public void Parse_エイリアスを指定してオプションを取得できる(string alias) {
 		// Arrange
-		var option = new Option<string>("--value", "-v");
+		var option = new Option<string>("--value", "-v", "/v");
 		var command = new Command("test") {
 			option
 		};
 
 		// Act
-		var result = command.Parse(["test", "-v", "hello"]);
+		var result = command.Parse(["test", alias, "hello"]);
 
 		// Assert
 		Assert.Empty(result.Errors);
