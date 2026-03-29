@@ -176,4 +176,20 @@ public class CommandTest(ITestOutputHelper output) {
 		Assert.Empty(result.Errors);
 		Assert.Equal("hello", result.GetValue(option));
 	}
+
+	[Fact]
+	public void Parse_コマンド名は大文字小文字を区別する() {
+		// Arrange
+		var command = new Command("test") {
+		};
+
+		// Act
+		// Command名が大文字で始まっている
+		var result = command.Parse(["Test"]);
+
+		// Assert
+		var error = Assert.Single(result.Errors);
+		_output.WriteLine(error.Message);
+		// Unrecognized command or argument 'Test'.
+	}
 }
