@@ -178,18 +178,35 @@ public class CommandTest(ITestOutputHelper output) {
 	}
 
 	[Fact]
-	public void Parse_コマンド名は大文字小文字を区別する() {
+	public void Parse_コマンド名は大文字小文字を区別するため一致しない場合はエラーが発生する() {
 		// Arrange
 		var command = new Command("test") {
 		};
 
 		// Act
-		// Command名が大文字で始まっている
+		// 指定するCommand名が大文字で始まっている
 		var result = command.Parse(["Test"]);
 
 		// Assert
 		var error = Assert.Single(result.Errors);
 		_output.WriteLine(error.Message);
 		// Unrecognized command or argument 'Test'.
+	}
+
+	[Fact]
+	public void Parse_オプション名は大文字小文字を区別するため一致しない場合はエラーが発生する() {
+		// Arrange
+		var command = new Command("test") {
+			new Option<string>("--value")
+		};
+
+		// Act
+		// 指定するOption名が大文字で始まっている
+		var result = command.Parse(["test", "--Value"]);
+
+		// Assert
+		var error = Assert.Single(result.Errors);
+		_output.WriteLine(error.Message);
+		// Unrecognized command or argument '--Value'.
 	}
 }
