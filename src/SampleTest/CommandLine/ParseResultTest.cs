@@ -115,6 +115,21 @@ public class ParseResultTest {
 		Assert.Equal(0, code);
 	}
 
+	[Fact]
+	public void GetValue_引数の値を取得できることを確認する() {
+		// Arrange
+		var arugment = new Argument<string>("arg");
+		var command = new Command("test") {
+			arugment
+		};
+
+		// Act
+		var result = command.Parse(["test", "hello"]);
+
+		// Assert
+		Assert.Equal("hello", result.GetValue(arugment));
+	}
+
 	[Theory]
 	// オプションを指定しない
 	[InlineData(new string[] { }, false)]
@@ -131,6 +146,7 @@ public class ParseResultTest {
 		};
 
 		var result = command.Parse(args);
+		// todo: invoke不要
 		var code = result.Invoke();
 
 		// Act
