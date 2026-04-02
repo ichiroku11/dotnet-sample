@@ -130,6 +130,24 @@ public class ParseResultTest {
 		Assert.Equal("hello", result.GetValue(arugment));
 	}
 
+	[Fact]
+	public void GetValue_引数2つの値を取得できることを確認する() {
+		// Arrange
+		var arg1 = new Argument<string>("arg1");
+		var arg2 = new Argument<int>("arg2");
+		var command = new Command("test") {
+			arg1,
+			arg2
+		};
+
+		// Act
+		var result = command.Parse(["test", "hello", "123"]);
+
+		// Assert
+		Assert.Equal("hello", result.GetValue(arg1));
+		Assert.Equal(123, result.GetValue(arg2));
+	}
+
 	[Theory]
 	// オプションを指定しない
 	[InlineData(new string[] { }, false)]
@@ -146,14 +164,11 @@ public class ParseResultTest {
 		};
 
 		var result = command.Parse(args);
-		// todo: invoke不要
-		var code = result.Invoke();
 
 		// Act
 		var actual = result.GetValue(option);
 
 		// Assert
-		Assert.Equal(0, code);
 		Assert.Equal(expected, actual);
 	}
 
@@ -171,13 +186,11 @@ public class ParseResultTest {
 		command.Options.Add(option);
 
 		var result = command.Parse(args);
-		var code = result.Invoke();
 
 		// Act
 		var actual = result.GetValue(option);
 
 		// Assert
-		Assert.Equal(0, code);
 		Assert.Equal(expected, actual);
 	}
 }
