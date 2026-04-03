@@ -113,4 +113,27 @@ public class RootCommandTest(ITestOutputHelper output) {
 		Assert.Empty(result.Tokens);
 		Assert.Empty(result.UnmatchedTokens);
 	}
+
+	[Fact]
+	public void Invoke_SuggestDirectiveを指定した結果を確認する() {
+		// Arrange
+		var command = new RootCommand("test") {
+			new Command("sub1"),
+			new Command("sub2"),
+			new Command("x")
+		};
+
+		// 結果をキャプチャする
+		using var output = new StringWriter();
+		var config = new InvocationConfiguration {
+			Output = output,
+		};
+
+		// Act
+		var code = command.Parse(["[suggest]", "sub"]).Invoke(config);
+
+		// Assert
+		Assert.Equal(0, code);
+		Assert.Equal("sub1\r\nsub2\r\n", output.ToString());
+	}
 }
