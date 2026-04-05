@@ -112,6 +112,23 @@ public class CommandTest(ITestOutputHelper output) {
 		Assert.False(result.Errors.Any());
 	}
 
+	[Fact]
+	public void Parse_int配列型のオプションに対してオプション名を複数指定しない場合はエラーが発生する() {
+		// Arrange
+		var option = new Option<int[]>("--value");
+		var command = new Command("test") {
+			option,
+		};
+
+		// Act
+		var result = command.Parse(["test", "--value", "2", "1"]);
+
+		// Assert
+		var error = Assert.Single(result.Errors);
+		_output.WriteLine(error.Message);
+		// Unrecognized command or argument '1'.
+	}
+
 	[Theory]
 	[InlineData("yyyy-MM-dd")]
 	[InlineData("yyyy/MM/dd")]
