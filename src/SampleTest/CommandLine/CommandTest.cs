@@ -31,7 +31,6 @@ public class CommandTest(ITestOutputHelper output) {
 		var command = new Command("test") {
 			option,
 		};
-		command.Options.Add(option);
 
 		// Act
 		var result = command.Parse(args);
@@ -64,7 +63,6 @@ public class CommandTest(ITestOutputHelper output) {
 		var command = new Command("test") {
 			option,
 		};
-		command.Options.Add(option);
 
 		// Act
 		var result = command.Parse(args);
@@ -84,7 +82,6 @@ public class CommandTest(ITestOutputHelper output) {
 		var command = new Command("test") {
 			option,
 		};
-		command.Options.Add(option);
 
 		// Act
 		var result = command.Parse(args);
@@ -107,7 +104,6 @@ public class CommandTest(ITestOutputHelper output) {
 		var command = new Command("test") {
 			option,
 		};
-		command.Options.Add(option);
 
 		// Act
 		var result = command.Parse(args);
