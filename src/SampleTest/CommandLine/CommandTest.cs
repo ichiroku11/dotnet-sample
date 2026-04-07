@@ -148,6 +148,27 @@ public class CommandTest(ITestOutputHelper output) {
 		Assert.Equal([2, 1], actual);
 	}
 
+	[Fact]
+	public void Parse_int配列型のオプションに対してAllowMultipleArgumentsPerTokenを使って複数の引数を指定する() {
+		// Arrange
+		var option = new Option<int[]>("--value") {
+			AllowMultipleArgumentsPerToken = true,
+		};
+		var command = new Command("test") {
+			option,
+		};
+
+		// Act
+		var result = command.Parse(["test", "--value", "2", "1"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+
+		var actual = result.GetValue(option);
+		Assert.NotNull(actual);
+		Assert.Equal([2, 1], actual);
+	}
+
 	[Theory]
 	[InlineData("yyyy-MM-dd")]
 	[InlineData("yyyy/MM/dd")]
