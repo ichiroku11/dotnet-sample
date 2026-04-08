@@ -60,6 +60,24 @@ public class OptionTest {
 	}
 
 	[Fact]
+	public void Properties_int型配列のインスタンスのプロパティを確認する() {
+		// Arrange
+		var option = new Option<int[]>("test") {
+		};
+
+		// Act
+		// Assert
+		Assert.Equal("test", option.Name);
+		Assert.False(option.AllowMultipleArgumentsPerToken);
+		// 1以上
+		Assert.Equal(ArgumentArity.OneOrMore, option.Arity);
+		Assert.False(option.HasDefaultValue);
+		Assert.Null(option.DefaultValueFactory);
+		Assert.False(option.Recursive);
+		Assert.False(option.Required);
+	}
+
+	[Fact]
 	public void DefaultValueFactory_オプションを指定しない場合はParseのタイミングで呼び出される() {
 		// Arrange
 		var called = false;
