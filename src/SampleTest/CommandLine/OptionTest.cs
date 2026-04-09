@@ -15,6 +15,7 @@ public class OptionTest {
 		Assert.False(option.AllowMultipleArgumentsPerToken);
 		// boolの場合は0または1
 		Assert.Equal(ArgumentArity.ZeroOrOne, option.Arity);
+		Assert.Null(option.CustomParser);
 		// boolの場合はデフォルト値がある
 		Assert.True(option.HasDefaultValue);
 		// boolの場合は非null
@@ -35,6 +36,7 @@ public class OptionTest {
 		Assert.Equal("test", option.Name);
 		Assert.False(option.AllowMultipleArgumentsPerToken);
 		Assert.Equal(ArgumentArity.ExactlyOne, option.Arity);
+		Assert.Null(option.CustomParser);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
 		Assert.False(option.Recursive);
@@ -53,6 +55,7 @@ public class OptionTest {
 		Assert.Equal("test", option.Name);
 		Assert.False(option.AllowMultipleArgumentsPerToken);
 		Assert.Equal(ArgumentArity.ExactlyOne, option.Arity);
+		Assert.Null(option.CustomParser);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
 		Assert.False(option.Recursive);
@@ -71,6 +74,7 @@ public class OptionTest {
 		Assert.False(option.AllowMultipleArgumentsPerToken);
 		// 1以上
 		Assert.Equal(ArgumentArity.OneOrMore, option.Arity);
+		Assert.Null(option.CustomParser);
 		Assert.False(option.HasDefaultValue);
 		Assert.Null(option.DefaultValueFactory);
 		Assert.False(option.Recursive);
