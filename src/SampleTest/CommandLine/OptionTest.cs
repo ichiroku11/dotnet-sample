@@ -81,6 +81,55 @@ public class OptionTest {
 		Assert.False(option.Required);
 	}
 
+	private record struct Vector(int X, int Y) {
+		public static readonly Vector Empty = new();
+	}
+
+	[Fact]
+	public void CustomParser_2つの引数から独自の型を受け取るオプションを作ってみる() {
+		// Arrange
+		var option = new Option<Vector>("--vector") {
+			// 複数の引数を受け取る
+			AllowMultipleArgumentsPerToken = true,
+			// ちょうど2つの引数を受け取る
+			Arity = new ArgumentArity(2, 2),
+			// 独自の型に変換する
+			CustomParser = result => {
+				// エラー処理は省略
+				/*
+				if (result.Tokens.Count != 2) {
+					result.AddError("--vector requires two args");
+					return Vector.Empty;
+				}
+
+				if (!int.TryParse(result.Tokens[0].Value, out var x)) {
+					result.AddError("--vector fisrt args requires int32");
+					return Vector.Empty;
+				}
+
+				if (!int.TryParse(result.Tokens[^1].Value, out var y)) {
+					result.AddError("--vector second args requires int32");
+					return Vector.Empty;
+				}
+				*/
+				var x = int.Parse(result.Tokens[0].Value);
+				var y = int.Parse(result.Tokens[^1].Value);
+
+				return new Vector(x, y);
+			},
+		};
+		var command = new Command("test") {
+			option
+		};
+
+		// Act
+		var result = command.Parse(["test", "--vector", "1", "2"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Equal(new Vector(1, 2), result.GetValue(option));
+	}
+
 	[Fact]
 	public void DefaultValueFactory_オプションを指定しない場合はParseのタイミングで呼び出される() {
 		// Arrange
