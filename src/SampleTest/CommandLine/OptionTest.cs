@@ -96,22 +96,7 @@ public class OptionTest {
 			// 独自の型に変換する
 			CustomParser = result => {
 				// エラー処理は省略
-				/*
-				if (result.Tokens.Count != 2) {
-					result.AddError("--vector requires two args");
-					return Vector.Empty;
-				}
 
-				if (!int.TryParse(result.Tokens[0].Value, out var x)) {
-					result.AddError("--vector fisrt args requires int32");
-					return Vector.Empty;
-				}
-
-				if (!int.TryParse(result.Tokens[^1].Value, out var y)) {
-					result.AddError("--vector second args requires int32");
-					return Vector.Empty;
-				}
-				*/
 				var x = int.Parse(result.Tokens[0].Value);
 				var y = int.Parse(result.Tokens[^1].Value);
 
@@ -128,6 +113,27 @@ public class OptionTest {
 		// Assert
 		Assert.Empty(result.Errors);
 		Assert.Equal(new Vector(1, 2), result.GetValue(option));
+	}
+
+	[Fact]
+	public void CustomParser_エラーが発生する場合の動きを確認する() {
+		// Arrange
+		var option = new Option<Vector>("--test") {
+			CustomParser = result => {
+				result.AddError("--test error");
+				return Vector.Empty;
+			},
+		};
+		var command = new Command("test") {
+			option
+		};
+
+		// Act
+		var result = command.Parse(["test", "--test", "1"]);
+
+		// Assert
+		var error = Assert.Single(result.Errors);
+		Assert.Equal("--test error", error.Message);
 	}
 
 	[Fact]
