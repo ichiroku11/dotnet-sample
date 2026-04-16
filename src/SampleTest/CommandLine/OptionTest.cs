@@ -2,7 +2,9 @@ using System.CommandLine;
 
 namespace SampleTest.CommandLine;
 
-public class OptionTest {
+public class OptionTest(ITestOutputHelper output) {
+	private readonly ITestOutputHelper _output = output;
+
 	[Fact]
 	public void Properties_bool型のインスタンスのプロパティを確認する() {
 		// Arrange
@@ -191,5 +193,24 @@ public class OptionTest {
 
 		// コマンドライン引数に指定した値が取得できる
 		Assert.Equal(100, result.GetValue(option));
+	}
+
+	[Fact]
+	public void Required_必須オプションを指定しない場合はエラーになる() {
+		// Arrange
+		var option = new Option<string>("--test") {
+			Required = true
+		};
+		var command = new Command("test") {
+			option
+		};
+
+		// Act
+		var result = command.Parse(["test"]);
+
+		// Assert
+		var error = Assert.Single(result.Errors);
+		_output.WriteLine(error.Message);
+		// Option '--test' is required.
 	}
 }
