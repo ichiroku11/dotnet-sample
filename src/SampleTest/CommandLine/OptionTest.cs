@@ -195,6 +195,30 @@ public class OptionTest(ITestOutputHelper output) {
 		Assert.Equal(100, result.GetValue(option));
 	}
 
+	[Theory]
+	[InlineData("sub1")]
+	[InlineData("sub2")]
+	public void Recursive_Recursiveオプションは複数のサブコマンドで利用できる(string sub) {
+		// Arrange
+		var option = new Option<string>("--test") {
+			Recursive = true,
+		};
+		var command = new Command("main") {
+			// すべてのコマンドで使用できるオプション
+			option,
+			// サブコマンド
+			new Command("sub1"),
+			new Command("sub2")
+		};
+		// Act
+		var result = command.Parse(["main", sub, "--test", "value"]);
+
+		// Assert
+		Assert.Empty(result.Errors);
+		Assert.Equal(sub, result.CommandResult.Command.Name);
+		Assert.Equal("value", result.GetValue(option));
+	}
+
 	[Fact]
 	public void Required_必須オプションを指定しない場合はエラーになる() {
 		// Arrange
