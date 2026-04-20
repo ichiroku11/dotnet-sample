@@ -60,4 +60,36 @@ drop table if exists dbo.Sample;";
 
 		_context.Database.ExecuteSql(sql);
 	}
+
+	[Fact]
+	public async Task 最大値の行を取得する() {
+		// Arrange
+
+		// Act
+		var actual = await _context.Samples
+			// 最大値を取得するためにサブクエリを使用
+			.Where(sample => sample.Value == _context.Samples.Max(sample => sample.Value))
+			.OrderBy(sample => sample.Id)
+			.ToListAsync();
+		// 実行されるクエリ
+		/*
+		SELECT [s].[Id], [s].[Name], [s].[Value]
+		FROM [Sample] AS [s]
+		WHERE [s].[Value] = (
+			SELECT MAX([s0].[Value])
+			FROM [Sample] AS [s0])
+		ORDER BY [s].[Id]
+		*/
+
+		// Assert
+		Assert.Collection(actual,
+			sample => {
+				Assert.Equal(2, sample.Id);
+				Assert.Equal("b", sample.Name);
+			},
+			sample => {
+				Assert.Equal(4, sample.Id);
+				Assert.Equal("d", sample.Name);
+			});
+	}
 }
