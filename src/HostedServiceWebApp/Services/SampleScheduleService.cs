@@ -15,6 +15,11 @@ public class SampleScheduleService(IConfiguration config, ILogger<SampleSchedule
 
 		// 毎時5分
 		var expression = _config["Schedule:Sample"];
+		if (string.IsNullOrWhiteSpace(expression)) {
+			_logger.LogError($"{nameof(ExecuteAsync)} Error");
+			return;
+		}
+
 		var schedule = CrontabSchedule.Parse(expression);
 
 		while (!stoppingToken.IsCancellationRequested) {
