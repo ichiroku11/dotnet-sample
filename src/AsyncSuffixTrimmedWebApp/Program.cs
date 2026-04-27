@@ -1,13 +1,24 @@
-namespace AsyncSuffixTrimmedWebApp;
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var env = builder.Environment;
 
-public class Program {
-	public static void Main(string[] args) {
-		CreateHostBuilder(args).Build().Run();
-	}
+services.AddControllersWithViews();
 
-	public static IHostBuilder CreateHostBuilder(string[] args) =>
-		Host.CreateDefaultBuilder(args)
-			.ConfigureWebHostDefaults(webBuilder => {
-				webBuilder.UseStartup<Startup>();
-			});
+services.Configure<RouteOptions>(options => {
+	options.LowercaseQueryStrings = true;
+	options.LowercaseUrls = true;
+});
+
+var app = builder.Build();
+
+if (env.IsDevelopment()) {
+	app.UseDeveloperExceptionPage();
 }
+
+app.UseRouting();
+
+app.MapControllerRoute(
+	name: "default",
+pattern: "{controller=Default}/{action=Index}/{id?}");
+
+app.Run();
