@@ -70,7 +70,3 @@ public class TestCredentialsValidator : ICredentialsValidator {
 		return Task.FromResult<ClaimsPrincipal?>(principal);
 	}
 }
-
-// ユニットテストのため
-public partial class Program {
-}

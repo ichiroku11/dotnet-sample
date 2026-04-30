@@ -129,7 +129,3 @@ app.MapGet("/", async context => {
 });
 
 app.Run();
-
-// MiscWebApp.Testのため
-public partial class Program {
-}

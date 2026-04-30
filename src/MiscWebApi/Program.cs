@@ -30,7 +30,3 @@ app.MapControllerRoute(
 	"{controller=Default}/{action=Index}/{id?}");
 
 app.Run();
-
-// MiscWebApi.Testのため
-public partial class Program {
-}
