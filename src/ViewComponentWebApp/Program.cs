@@ -1,13 +1,23 @@
-namespace ViewComponentWebApp;
+using ViewComponentWebApp.Models;
 
-public class Program {
-	public static void Main(string[] args) {
-		CreateHostBuilder(args).Build().Run();
-	}
+var builder = WebApplication.CreateBuilder(args);
+var env = builder.Environment;
+var services = builder.Services;
 
-	public static IHostBuilder CreateHostBuilder(string[] args) =>
-		Host.CreateDefaultBuilder(args)
-			.ConfigureWebHostDefaults(webBuilder => {
-				webBuilder.UseStartup<Startup>();
-			});
+services.AddControllersWithViews();
+
+services.AddScoped<TodoRepository>();
+
+var app = builder.Build();
+
+if (env.IsDevelopment()) {
+	app.UseDeveloperExceptionPage();
 }
+
+app.UseRouting();
+
+app.MapControllerRoute(
+	name: "default",
+	pattern: "{controller=Default}/{action=Index}/{id?}");
+
+app.Run();

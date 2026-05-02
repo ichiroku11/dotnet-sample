@@ -44,7 +44,3 @@ app.MapControllerRoute(
 	pattern: "{controller=Default}/{action=Index}/{id?}");
 
 app.Run();
-
-// 統合テストのため
-public partial class Program {
-}

@@ -113,13 +113,7 @@ app.MapGet("/tlshandshake", async context => {
 	var feature = context.Features.GetRequiredFeature<ITlsHandshakeFeature>();
 
 	var tlsHandshake = new {
-		feature.CipherAlgorithm,
-		feature.CipherStrength,
-		feature.HashAlgorithm,
-		feature.HashStrength,
 		feature.HostName,
-		feature.KeyExchangeAlgorithm,
-		feature.KeyExchangeStrength,
 		feature.NegotiatedCipherSuite,
 		// SslProtocolsにはFlags属性が設定されているが
 		// ITlsHandshakeFeature経由で取得できるのは1つなのかも
@@ -135,7 +129,3 @@ app.MapGet("/", async context => {
 });
 
 app.Run();
-
-// MiscWebApp.Testのため
-public partial class Program {
-}
