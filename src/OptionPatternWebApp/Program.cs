@@ -1,13 +1,28 @@
-namespace OptionPatternWebApp;
+using OptionPatternWebApp;
 
-public class Program {
-	public static void Main(string[] args) {
-		CreateHostBuilder(args).Build().Run();
-	}
+var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
+var env = builder.Environment;
+var services = builder.Services;
 
-	public static IHostBuilder CreateHostBuilder(string[] args) =>
-		Host.CreateDefaultBuilder(args)
-			.ConfigureWebHostDefaults(webBuilder => {
-				webBuilder.UseStartup<Startup>();
-			});
+// 設定をクラスにバインドできるようにする
+services.Configure<SampleOptions>(config.GetSection("App:Sample"));
+// 別の方法
+//services.Configure<SampleOptions>(_config.GetSection("App").GetSection("Sample"));
+services.Configure<SampleOptionsMonitor>(config.GetSection("App:SampleMonitor"));
+
+services.AddControllers();
+
+var app = builder.Build();
+
+if (env.IsDevelopment()) {
+	app.UseDeveloperExceptionPage();
 }
+
+app.UseRouting();
+
+app.MapControllerRoute(
+	name: "default",
+	pattern: "{controller=Default}/{action=Index}/{id?}");
+
+app.Run();
