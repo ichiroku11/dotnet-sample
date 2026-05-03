@@ -3,7 +3,6 @@ using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Text.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace CookieAuthnWebApp;
 
