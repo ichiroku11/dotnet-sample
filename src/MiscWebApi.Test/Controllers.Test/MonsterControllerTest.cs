@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using MiscWebApi.Models;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace MiscWebApi.Controllers.Test;
 

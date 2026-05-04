@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace SampleTest.Xunit;
 
 public class XunitSerializableTest {

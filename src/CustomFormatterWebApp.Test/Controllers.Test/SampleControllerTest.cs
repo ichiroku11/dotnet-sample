@@ -1,9 +1,7 @@
 using CustomFormatterWebApp.Helpers;
 using CustomFormatterWebApp.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net.Http.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace CustomFormatterWebApp.Controllers.Test {
 	// https://docs.microsoft.com/ja-jp/aspnet/core/test/integration-tests?view=aspnetcore-6.0#basic-tests-with-the-default-webapplicationfactory

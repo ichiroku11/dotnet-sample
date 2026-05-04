@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace ModelBindingWebApp.Controllers.Test;
 

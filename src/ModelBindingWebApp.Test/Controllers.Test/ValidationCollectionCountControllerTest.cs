@@ -3,7 +3,6 @@ using ModelBindingWebApp.Controllers.Test;
 using System.Net.Http.Json;
 using System.Net;
 using Xunit;
-using Xunit.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ModelBindingWebApp.Controllers;

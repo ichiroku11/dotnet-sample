@@ -81,3 +81,7 @@ csharp_style_namespace_declarations = file_scoped:suggestion
 # コード分析
 # CS9124: Parameter is captured into the state of the enclosing type and its value is also used to initialize a field, property, or event.
 dotnet_diagnostic.CS9124.severity = error
+
+# Fix Allに対応されるまで抑制する
+# https://github.com/xunit/xunit/issues/3470
+dotnet_diagnostic.xUnit1051.severity = none

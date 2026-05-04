@@ -4,7 +4,6 @@ using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Xunit.Abstractions;
 
 namespace AntiforgeryWebApp.Controllers.Test;
 
