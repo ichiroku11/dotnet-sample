@@ -46,4 +46,16 @@ public class ActivityTest {
 		// Assert
 		Assert.Null(Activity.Current);
 	}
+
+	[Fact]
+	public void Start_戻り値はメソッドを呼び出したインスタンス自身() {
+		// Arrange
+		using var activity = new Activity("test");
+
+		// Act
+		var started = activity.Start();
+
+		// Assert
+		Assert.Same(activity, started);
+	}
 }
