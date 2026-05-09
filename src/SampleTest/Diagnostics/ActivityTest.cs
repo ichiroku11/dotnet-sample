@@ -25,4 +25,23 @@ public class ActivityTest {
 		Assert.Equal(ActivityStatusCode.Unset, activity.Status);
 		Assert.Equal(ActivityTraceFlags.None, activity.ActivityTraceFlags);
 	}
+
+	[Fact]
+	public void Current_取得できる値はnull() {
+		// Arrange
+
+		// Act
+		// Assert
+		Assert.Null(Activity.Current);
+	}
+
+	[Fact]
+	public void Current_インスタンスを生成しても取得できる値はnull() {
+		// Arrange
+		using var activity = new Activity("test");
+
+		// Act
+		// Assert
+		Assert.Null(Activity.Current);
+	}
 }
