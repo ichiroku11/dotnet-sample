@@ -18,8 +18,10 @@ public class ActivityTest {
 
 		Assert.Equal(TimeSpan.Zero, activity.Duration);
 
-		Assert.Empty(activity.Tags);
+		Assert.Empty(activity.Baggage);
 		Assert.Empty(activity.Events);
+		Assert.Empty(activity.Links);
+		Assert.Empty(activity.Tags);
 
 		Assert.Equal(ActivityKind.Internal, activity.Kind);
 		Assert.Equal(ActivityStatusCode.Unset, activity.Status);
