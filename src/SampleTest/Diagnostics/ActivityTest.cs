@@ -48,6 +48,16 @@ public class ActivityTest {
 	}
 
 	[Fact]
+	public void Current_インスタンス生成しStartするとそのインスタンスの値を取得できる() {
+		// Arrange
+		using var activity = new Activity("test").Start();
+
+		// Act
+		// Assert
+		Assert.Same(activity, Activity.Current);
+	}
+
+	[Fact]
 	public void Start_戻り値はメソッドを呼び出したインスタンス自身() {
 		// Arrange
 		using var activity = new Activity("test");
