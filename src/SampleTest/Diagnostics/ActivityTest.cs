@@ -58,10 +58,21 @@ public class ActivityTest {
 	}
 
 	[Fact]
-	public void Current_インスタンスをStopするとnullを取得できる() {
+	public void Current_インスタンスをStopするとnullになる() {
 		// Arrange
 		using var activity = new Activity("test").Start();
 		activity.Stop();
+
+		// Act
+		// Assert
+		Assert.Null(Activity.Current);
+	}
+
+	[Fact]
+	public void Current_インスタンスをDisposeするとnullになる() {
+		// Arrange
+		using var activity = new Activity("test").Start();
+		activity.Dispose();
 
 		// Act
 		// Assert
