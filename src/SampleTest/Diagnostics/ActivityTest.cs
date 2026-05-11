@@ -48,13 +48,24 @@ public class ActivityTest {
 	}
 
 	[Fact]
-	public void Current_インスタンス生成しStartするとそのインスタンスの値を取得できる() {
+	public void Current_インスタンスを生成しStartするとそのインスタンスの値を取得できる() {
 		// Arrange
 		using var activity = new Activity("test").Start();
 
 		// Act
 		// Assert
 		Assert.Same(activity, Activity.Current);
+	}
+
+	[Fact]
+	public void Current_インスタンスをStopするとnullを取得できる() {
+		// Arrange
+		using var activity = new Activity("test").Start();
+		activity.Stop();
+
+		// Act
+		// Assert
+		Assert.Null(Activity.Current);
 	}
 
 	[Fact]
