@@ -82,6 +82,7 @@ public class ActivityTest {
 		Assert.Null(Activity.Current);
 	}
 
+	// 厳密に言うとStartする前からFalse
 	[Fact]
 	public void IsStopped_Startするとfalse() {
 		// Arrange
