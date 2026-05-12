@@ -26,6 +26,8 @@ public class ActivityTest {
 		Assert.Equal(ActivityKind.Internal, activity.Kind);
 		Assert.Equal(ActivityStatusCode.Unset, activity.Status);
 		Assert.Equal(ActivityTraceFlags.None, activity.ActivityTraceFlags);
+
+		Assert.False(activity.IsStopped);
 	}
 
 	[Fact]
@@ -77,6 +79,37 @@ public class ActivityTest {
 		// Act
 		// Assert
 		Assert.Null(Activity.Current);
+	}
+
+	[Fact]
+	public void IsStopped_Startしなくてもfalse() {
+		// Arrange
+		using var activity = new Activity("test");
+
+		// Act
+		// Assert
+		Assert.False(activity.IsStopped);
+	}
+
+	[Fact]
+	public void IsStopped_Startするとfalse() {
+		// Arrange
+		using var activity = new Activity("test").Start();
+
+		// Act
+		// Assert
+		Assert.False(activity.IsStopped);
+	}
+
+	[Fact]
+	public void IsStopped_StartしてもStopするとtrue() {
+		// Arrange
+		using var activity = new Activity("test").Start();
+		activity.Stop();
+
+		// Act
+		// Assert
+		Assert.True(activity.IsStopped);
 	}
 
 	[Fact]
