@@ -27,6 +27,7 @@ public class ActivityTest {
 		Assert.Equal(ActivityStatusCode.Unset, activity.Status);
 		Assert.Equal(ActivityTraceFlags.None, activity.ActivityTraceFlags);
 
+		// インスタンス生成後は、Startしていないけどfalseになる
 		Assert.False(activity.IsStopped);
 	}
 
@@ -79,16 +80,6 @@ public class ActivityTest {
 		// Act
 		// Assert
 		Assert.Null(Activity.Current);
-	}
-
-	[Fact]
-	public void IsStopped_Startしなくてもfalse() {
-		// Arrange
-		using var activity = new Activity("test");
-
-		// Act
-		// Assert
-		Assert.False(activity.IsStopped);
 	}
 
 	[Fact]
