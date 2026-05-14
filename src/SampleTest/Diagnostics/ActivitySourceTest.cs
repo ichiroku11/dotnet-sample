@@ -16,4 +16,20 @@ public class ActivitySourceTest {
 		Assert.Null(source.TelemetrySchemaUrl);
 		Assert.False(source.HasListeners());
 	}
+
+	[Fact]
+	public void Properties_Activityインスタンスを生成した場合のSourceを確認する() {
+		// Arrange
+		using var activity = new Activity("test");
+		var source = activity.Source;
+
+		// Act
+		// Assert
+		Assert.NotNull(source);
+		Assert.Equal("", source.Name);
+		Assert.Equal("", source.Version);
+		Assert.Null(source.Tags);
+		Assert.Null(source.TelemetrySchemaUrl);
+		Assert.False(source.HasListeners());
+	}
 }
