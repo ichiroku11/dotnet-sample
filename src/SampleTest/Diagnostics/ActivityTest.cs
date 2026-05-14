@@ -115,4 +115,15 @@ public class ActivityTest {
 		// Assert
 		Assert.Same(activity, started);
 	}
+
+	[Fact]
+	public void Source_インスタンスを複数生成した場合のSourceは同じインスタンス() {
+		// Arrange
+		using var activity1 = new Activity("test1");
+		using var activity2 = new Activity("test2");
+
+		// Act
+		// Assert
+		Assert.Same(activity1.Source, activity2.Source);
+	}
 }
