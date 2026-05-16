@@ -32,4 +32,16 @@ public class ActivitySourceTest {
 		Assert.Null(source.TelemetrySchemaUrl);
 		Assert.False(source.HasListeners());
 	}
+
+	[Fact]
+	public void StartActivity_戻り値はnull() {
+		// Arrange
+		using var source = new ActivitySource("test");
+
+		// Act
+		using var activity = source.StartActivity();
+
+		// Assert
+		Assert.Null(activity);
+	}
 }
