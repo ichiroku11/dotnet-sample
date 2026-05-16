@@ -33,6 +33,24 @@ public class ActivitySourceTest {
 		Assert.False(source.HasListeners());
 	}
 
+	[Theory]
+	// ListenするActivityListenerが存在するとtrueを返す
+	[InlineData(true, true)]
+	// ListenしないActivityListenerが存在してもfalseを返す
+	[InlineData(false, false)]
+	public void HasListeners_ListenするActivityListenerが存在するとtrueを返す(bool listen, bool expected) {
+		// Arrange
+		using var source = new ActivitySource("test");
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => listen,
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		// Act
+		// Assert
+		Assert.Equal(expected, source.HasListeners());
+	}
+
 	[Fact]
 	public void StartActivity_戻り値はnull() {
 		// Arrange
