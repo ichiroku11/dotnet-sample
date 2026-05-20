@@ -23,12 +23,15 @@ public class ActivityTest {
 		Assert.Empty(activity.Links);
 		Assert.Empty(activity.Tags);
 
+		Assert.Equal(ActivityTraceFlags.None, activity.ActivityTraceFlags);
+		Assert.Equal(ActivityIdFormat.Unknown, activity.IdFormat);
 		Assert.Equal(ActivityKind.Internal, activity.Kind);
 		Assert.Equal(ActivityStatusCode.Unset, activity.Status);
-		Assert.Equal(ActivityTraceFlags.None, activity.ActivityTraceFlags);
 
 		// インスタンス生成後は、Startしていないけどfalseになる
 		Assert.False(activity.IsStopped);
+
+		Assert.Null(activity.Parent);
 	}
 
 	[Fact]
@@ -102,6 +105,16 @@ public class ActivityTest {
 		// Act
 		// Assert
 		Assert.True(activity.IsStopped);
+	}
+
+	[Fact]
+	public void Parent_Startしても取得できる値はnull() {
+		// Arrange
+		using var activity = new Activity("test").Start();
+
+		// Act
+		// Assert
+		Assert.Null(activity.Parent);
 	}
 
 	[Fact]
