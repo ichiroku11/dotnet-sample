@@ -118,6 +118,17 @@ public class ActivityTest {
 	}
 
 	[Fact]
+	public void Parent_入れ子にしてStartすると親のインスタンスを取得できる() {
+		// Arrange
+		using var parent = new Activity("parent").Start();
+		using var child = new Activity("child").Start();
+
+		// Act
+		// Assert
+		Assert.Same(parent, child.Parent);
+	}
+
+	[Fact]
 	public void Start_戻り値はメソッドを呼び出したインスタンス自身() {
 		// Arrange
 		using var activity = new Activity("test");
