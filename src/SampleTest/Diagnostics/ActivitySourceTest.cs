@@ -82,4 +82,22 @@ public class ActivitySourceTest {
 		// Assert
 		Assert.Null(activity);
 	}
+
+	[Fact]
+	public void StartActivity_ListenするctivityListenerが存在しても戻り値はnull() {
+		// Arrange
+		using var source = new ActivitySource("test");
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		Assert.True(source.HasListeners());
+
+		// Act
+		using var activity = source.StartActivity();
+
+		// Assert
+		Assert.Null(activity);
+	}
 }
