@@ -100,4 +100,24 @@ public class ActivitySourceTest {
 		// Assert
 		Assert.Null(activity);
 	}
+
+	[Fact]
+	public void StartActivity_有効なActivityListenerが存在する場合はインスタンスを返す() {
+		// Arrange
+		using var source = new ActivitySource("test");
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			// todo: 他の値も試す
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		Assert.True(source.HasListeners());
+
+		// Act
+		using var activity = source.StartActivity();
+
+		// Assert
+		Assert.NotNull(activity);
+	}
 }
