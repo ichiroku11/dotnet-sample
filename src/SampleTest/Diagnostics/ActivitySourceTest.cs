@@ -83,13 +83,20 @@ public class ActivitySourceTest {
 		Assert.Null(activity);
 	}
 
-	[Fact]
-	public void StartActivity_ListenするctivityListenerが存在しても戻り値はnull() {
+	[Theory]
+	[InlineData(false)]
+	[InlineData(true)]
+	public void StartActivity_ListenするActivityListenerが存在しても戻り値はnull(bool samplingResultNone) {
 		// Arrange
 		using var source = new ActivitySource("test");
 		using var listener = new ActivityListener {
 			ShouldListenTo = _ => true,
 		};
+
+		if (samplingResultNone) {
+			listener.Sample = (ref _) => ActivitySamplingResult.None;
+		}
+
 		ActivitySource.AddActivityListener(listener);
 
 		Assert.True(source.HasListeners());
@@ -101,14 +108,16 @@ public class ActivitySourceTest {
 		Assert.Null(activity);
 	}
 
-	[Fact]
-	public void StartActivity_有効なActivityListenerが存在する場合はインスタンスを返す() {
+	[Theory]
+	[InlineData(ActivitySamplingResult.PropagationData)]
+	[InlineData(ActivitySamplingResult.AllData)]
+	[InlineData(ActivitySamplingResult.AllDataAndRecorded)]
+	public void StartActivity_有効なActivityListenerが存在する場合はインスタンスを返す(ActivitySamplingResult samplingResult) {
 		// Arrange
 		using var source = new ActivitySource("test");
 		using var listener = new ActivityListener {
 			ShouldListenTo = _ => true,
-			// todo: 他の値も試す
-			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+			Sample = (ref _) => samplingResult,
 		};
 		ActivitySource.AddActivityListener(listener);
 
