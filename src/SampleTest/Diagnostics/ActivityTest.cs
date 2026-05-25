@@ -117,6 +117,27 @@ public class ActivityTest {
 		Assert.Null(activity.Parent);
 	}
 
+	[Theory]
+	[InlineData(false, false)]
+	[InlineData(true, false)]
+	[InlineData(false, true)]
+	public void Parent_親Activityと子ActivityのどちらかがStartしていない場合はnullを返す(bool startParent, bool startChild) {
+		// Arrange
+		using var parent = new Activity("parent");
+		using var child = new Activity("child");
+
+		if (startParent) {
+			parent.Start();
+		}
+		if (startChild) {
+			child.Start();
+		}
+
+		// Act
+		// Assert
+		Assert.Null(child.Parent);
+	}
+
 	[Fact]
 	public void Parent_入れ子にしてStartすると親のインスタンスを取得できる() {
 		// Arrange
