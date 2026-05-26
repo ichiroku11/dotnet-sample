@@ -85,6 +85,23 @@ public class ActivityTest {
 		Assert.Null(Activity.Current);
 	}
 
+	[Fact]
+	public void Baggage_親Activityから子Activityに伝播する() {
+		// Arrange
+		using var parent = new Activity("parent").Start();
+		parent.AddBaggage("key", "value");
+
+		// 開始する必要がある
+		using var child = new Activity("child").Start();
+
+		// Act
+		var actual = child.Baggage.Single();
+
+		// Assert
+		Assert.Equal("key", actual.Key);
+		Assert.Equal("value", actual.Value);
+	}
+
 	// 厳密に言うとStartする前からFalse
 	[Fact]
 	public void IsStopped_Startするとfalse() {
