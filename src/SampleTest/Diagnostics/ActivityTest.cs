@@ -102,6 +102,20 @@ public class ActivityTest {
 		Assert.Equal("value", actual.Value);
 	}
 
+	[Fact]
+	public void Baggage_子ActivityをStartしないと親から子に伝播しない() {
+		// Arrange
+		using var parent = new Activity("parent").Start();
+		parent.AddBaggage("key", "value");
+
+		// StartしないとParentが設定されないためか
+		using var child = new Activity("child");
+
+		// Act
+		// Assert
+		Assert.Empty(child.Baggage);
+	}
+
 	// 厳密に言うとStartする前からFalse
 	[Fact]
 	public void IsStopped_Startするとfalse() {
