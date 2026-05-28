@@ -116,6 +116,22 @@ public class ActivityTest {
 		Assert.Empty(child.Baggage);
 	}
 
+	[Fact]
+	public void Events_AddExceptionで追加した例外はEventとして追加される() {
+		// Arrange
+		using var activity = new Activity("test");
+		activity.AddException(new Exception("test-exception-message"));
+
+		// Act
+		var actual = activity.Events.Single();
+
+		// Assert
+		Assert.Equal("exception", actual.Name);
+		Assert.Equal("test-exception-message", actual.Tags.First(tag => tag.Key == "exception.message").Value);
+		Assert.Contains(actual.Tags, tag => tag.Key == "exception.stacktrace");
+		Assert.Contains(actual.Tags, tag => tag.Key == "exception.type");
+	}
+
 	// 厳密に言うとStartする前からFalse
 	[Fact]
 	public void IsStopped_Startするとfalse() {
