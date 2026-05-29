@@ -132,6 +132,24 @@ public class ActivityTest {
 		Assert.Contains(actual.Tags, tag => tag.Key == "exception.type");
 	}
 
+	[Fact]
+	public void Events_Links_Tags_親Activityから子Activityに伝播しない() {
+		// Arrange
+		using var parent = new Activity("parent").Start();
+		parent.AddEvent(new ActivityEvent("event"));
+		parent.AddLink(new ActivityLink());
+		parent.AddTag("key", "value");
+
+		// 開始する必要がある
+		using var child = new Activity("child").Start();
+
+		// Act
+		// Assert
+		Assert.Empty(child.Events);
+		Assert.Empty(child.Links);
+		Assert.Empty(child.Tags);
+	}
+
 	// 厳密に言うとStartする前からFalse
 	[Fact]
 	public void IsStopped_Startするとfalse() {
