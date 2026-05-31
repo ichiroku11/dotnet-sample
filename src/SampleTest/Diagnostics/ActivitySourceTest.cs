@@ -87,6 +87,18 @@ public class ActivitySourceTest {
 	}
 
 	[Fact]
+	public void CreateActivity_戻り値はnull() {
+		// Arrange
+		using var source = new ActivitySource("test");
+
+		// Act
+		using var activity = source.CreateActivity("test", ActivityKind.Internal);
+
+		// Assert
+		Assert.Null(activity);
+	}
+
+	[Fact]
 	public void StartActivity_戻り値はnull() {
 		// Arrange
 		using var source = new ActivitySource("test");
