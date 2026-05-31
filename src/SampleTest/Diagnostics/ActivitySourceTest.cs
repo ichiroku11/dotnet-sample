@@ -40,13 +40,13 @@ public class ActivitySourceTest {
 	[InlineData(false, false)]
 	public void HasListeners_ListenするActivityListenerが存在するとtrueを返す(bool listen, bool expected) {
 		// Arrange
-		using var source = new ActivitySource("test");
-
 		// 有効なListenerとするには、ShouldListenToでtrueを返す必要がある
 		using var listener = new ActivityListener {
 			ShouldListenTo = _ => listen,
 		};
 		ActivitySource.AddActivityListener(listener);
+
+		using var source = new ActivitySource("test");
 
 		// Act
 		// Assert
@@ -54,7 +54,7 @@ public class ActivitySourceTest {
 	}
 
 	[Fact]
-	public void HasListeners_ListenするActivityListenerを破棄するとfalseを返す() {
+	public void HasListeners_ActivityListenerの登録前に生成したActivitySourceでもtrueを返す() {
 		// Arrange
 		using var source = new ActivitySource("test");
 
@@ -62,6 +62,21 @@ public class ActivitySourceTest {
 			ShouldListenTo = _ => true,
 		};
 		ActivitySource.AddActivityListener(listener);
+
+		// Act
+		// Assert
+		Assert.True(source.HasListeners());
+	}
+
+	[Fact]
+	public void HasListeners_ListenするActivityListenerを破棄するとfalseを返す() {
+		// Arrange
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		using var source = new ActivitySource("test");
 
 		// 破棄する
 		listener.Dispose();
