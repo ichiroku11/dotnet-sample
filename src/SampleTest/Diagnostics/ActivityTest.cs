@@ -35,6 +35,45 @@ public class ActivityTest {
 	}
 
 	[Fact]
+	public void Properties_ActivitySourceで生成したインスタンスのプロパティを確認する() {
+		// Arrange
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		using var source = new ActivitySource("");
+
+		// Act
+		using var activity = source.CreateActivity("test", ActivityKind.Internal);
+
+		// Assert
+		Assert.NotNull(activity);
+		Assert.Equal("test", activity.OperationName);
+
+		Assert.Null(activity.Id);
+		Assert.Null(activity.ParentId);
+		Assert.Null(activity.RootId);
+
+		Assert.Equal(TimeSpan.Zero, activity.Duration);
+
+		Assert.Empty(activity.Baggage);
+		Assert.Empty(activity.Events);
+		Assert.Empty(activity.Links);
+		Assert.Empty(activity.Tags);
+
+		Assert.Equal(ActivityTraceFlags.None, activity.ActivityTraceFlags);
+		Assert.Equal(ActivityIdFormat.W3C, activity.IdFormat);
+		Assert.Equal(ActivityKind.Internal, activity.Kind);
+		Assert.Equal(ActivityStatusCode.Unset, activity.Status);
+
+		Assert.False(activity.IsStopped);
+
+		Assert.Null(activity.Parent);
+	}
+
+	[Fact]
 	public void Current_取得できる値はnull() {
 		// Arrange
 
