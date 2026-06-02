@@ -32,6 +32,8 @@ public class ActivityTest {
 		Assert.False(activity.IsStopped);
 
 		Assert.Null(activity.Parent);
+
+		Assert.NotNull(activity.Source);
 	}
 
 	[Fact]
@@ -71,6 +73,8 @@ public class ActivityTest {
 		Assert.False(activity.IsStopped);
 
 		Assert.Null(activity.Parent);
+
+		Assert.Same(source, activity.Source);
 	}
 
 	[Fact]
