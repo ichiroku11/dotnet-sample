@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 namespace SampleTest.Diagnostics;
 
+[Collection(CollectionNames.DotNetActivity)]
 public class ActivitySourceTest {
 	[Fact]
 	public void Properties_生成したインスタンスのプロパティを確認する() {
@@ -142,6 +143,7 @@ public class ActivitySourceTest {
 	public void StartActivity_有効なActivityListenerが存在する場合はインスタンスを返す(ActivitySamplingResult samplingResult) {
 		// Arrange
 		using var source = new ActivitySource("test");
+
 		using var listener = new ActivityListener {
 			ShouldListenTo = _ => true,
 			Sample = (ref _) => samplingResult,

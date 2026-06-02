@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 namespace SampleTest.Diagnostics;
 
+[Collection(CollectionNames.DotNetActivity)]
 public class ActivityTest {
 	[Fact]
 	public void Properties_生成したインスタンスのプロパティを確認する() {
@@ -254,6 +255,27 @@ public class ActivityTest {
 
 		// Act
 		// Assert
+		Assert.Same(parent, child.Parent);
+	}
+
+	[Fact]
+	public void Parent_ActivitySourceで生成したインスタンスを入れ子にすると親インスタンスを取得できる() {
+		// Arrange
+		using var source = new ActivitySource("test");
+
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		// Act
+		using var parent = source.StartActivity();
+		using var child = source.StartActivity();
+
+		// Assert
+		Assert.NotNull(parent);
+		Assert.NotNull(child);
 		Assert.Same(parent, child.Parent);
 	}
 
