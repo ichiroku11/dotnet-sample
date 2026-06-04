@@ -17,7 +17,7 @@ public class ActivityListenerTest {
 		using var listener = new ActivityListener {
 			ShouldListenTo = _ => true,
 			Sample = (ref options) => {
-				// 呼び出しは1回だけのはず
+				// 2回は呼ばれない
 				Assert.False(sampled);
 
 				sampled = true;
@@ -39,8 +39,38 @@ public class ActivityListenerTest {
 		Assert.Null(activity);
 	}
 
+	[Fact]
+	public void ActivityStarted_Activityを開始したときに呼び出される() {
+		// Arrange
+		var started = false;
+		var startedActivity = default(Activity);
+
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+			ActivityStarted = activity => {
+				// 2回は呼ばれない
+				Assert.False(started);
+
+				started = true;
+				startedActivity = activity;
+			},
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		using var source = new ActivitySource("");
+
+		// Act
+		// Assert
+		Assert.False(started);
+
+		using var activity = source.StartActivity();
+		Assert.True(started);
+
+		Assert.Same(activity, startedActivity);
+	}
+
 	// todo:
-	// ActivityStarted
 	// ActivityStopped
 	// ExceptionRecorder
 }
