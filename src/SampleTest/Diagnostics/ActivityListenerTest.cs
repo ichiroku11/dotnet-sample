@@ -17,7 +17,7 @@ public class ActivityListenerTest {
 		using var listener = new ActivityListener {
 			ShouldListenTo = _ => true,
 			Sample = (ref options) => {
-				// 2回は呼ばれない
+				// このテストでは2回呼ばれない
 				Assert.False(sampled);
 
 				sampled = true;
@@ -49,7 +49,7 @@ public class ActivityListenerTest {
 			ShouldListenTo = _ => true,
 			Sample = (ref _) => ActivitySamplingResult.PropagationData,
 			ActivityStarted = activity => {
-				// 2回は呼ばれない
+				// このテストでは2回呼ばれない
 				Assert.False(started);
 
 				started = true;
@@ -80,7 +80,7 @@ public class ActivityListenerTest {
 			ShouldListenTo = _ => true,
 			Sample = (ref _) => ActivitySamplingResult.PropagationData,
 			ActivityStarted = activity => {
-				// 2回は呼ばれない
+				// このテストでは2回呼ばれない
 				Assert.False(started);
 
 				started = true;
