@@ -40,7 +40,7 @@ public class ActivityListenerTest {
 	}
 
 	[Fact]
-	public void ActivityStarted_Activityを開始したときに呼び出される() {
+	public void ActivityStarted_ActivitySourceのStartActivityで開始したときに呼び出される() {
 		// Arrange
 		var started = false;
 		var startedActivity = default(Activity);
@@ -71,7 +71,7 @@ public class ActivityListenerTest {
 	}
 
 	[Fact]
-	public void ActivityStarted_ActivitySourceを使わずに開始したときでも呼び出される() {
+	public void ActivityStarted_ActivityをStartしたときに呼び出される() {
 		// Arrange
 		var started = false;
 		var startedActivity = default(Activity);
