@@ -70,6 +70,38 @@ public class ActivityListenerTest {
 		Assert.Same(activity, startedActivity);
 	}
 
+	[Fact]
+	public void ActivityStarted_ActivitySourceを使わずに開始したときでも呼び出される() {
+		// Arrange
+		var started = false;
+		var startedActivity = default(Activity);
+
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+			ActivityStarted = activity => {
+				// 2回は呼ばれない
+				Assert.False(started);
+
+				started = true;
+				startedActivity = activity;
+			},
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		// Act
+		// Assert
+		Assert.False(started);
+
+		using var activity = new Activity("test");
+		Assert.False(started);
+
+		activity.Start();
+		Assert.True(started);
+
+		Assert.Same(activity, startedActivity);
+	}
+
 	// todo:
 	// ActivityStopped
 	// ExceptionRecorder
