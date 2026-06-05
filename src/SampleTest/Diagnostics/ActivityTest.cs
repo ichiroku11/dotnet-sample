@@ -130,6 +130,14 @@ public class ActivityTest {
 	}
 
 	[Fact]
+	public void DefaultIdFormat() {
+		// Arrange
+		// Act
+		// Assert
+		Assert.Equal(ActivityIdFormat.W3C, Activity.DefaultIdFormat);
+	}
+
+	[Fact]
 	public void Baggage_親Activityから子Activityに伝播する() {
 		// Arrange
 		using var parent = new Activity("parent").Start();
