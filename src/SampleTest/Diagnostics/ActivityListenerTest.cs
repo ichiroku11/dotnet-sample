@@ -102,7 +102,68 @@ public class ActivityListenerTest {
 		Assert.Same(activity, startedActivity);
 	}
 
+	[Fact]
+	public void ActivityStopped_ActivityをStopしたときに呼び出される() {
+		// Arrange
+		var stopped = false;
+		var stoppedActivity = default(Activity);
+
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+			ActivityStopped = activity => {
+				// このテストでは2回呼ばれない
+				Assert.False(stopped);
+
+				stopped = true;
+				stoppedActivity = activity;
+			},
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		using var activity = new Activity("test").Start();
+
+		// Act
+		// Assert
+		Assert.False(stopped);
+
+		activity.Stop();
+		Assert.True(stopped);
+
+		Assert.Same(activity, stoppedActivity);
+	}
+
+	[Fact]
+	public void ActivityStopped_ActivityをDisposeしたときに呼び出される() {
+		// Arrange
+		var stopped = false;
+		var stoppedActivity = default(Activity);
+
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+			ActivityStopped = activity => {
+				// このテストでは2回呼ばれない
+				Assert.False(stopped);
+
+				stopped = true;
+				stoppedActivity = activity;
+			},
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		using var activity = new Activity("test").Start();
+
+		// Act
+		// Assert
+		Assert.False(stopped);
+
+		activity.Dispose();
+		Assert.True(stopped);
+
+		Assert.Same(activity, stoppedActivity);
+	}
+
 	// todo:
-	// ActivityStopped
 	// ExceptionRecorder
 }
