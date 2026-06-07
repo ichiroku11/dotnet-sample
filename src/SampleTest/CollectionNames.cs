@@ -5,6 +5,11 @@ namespace SampleTest;
 /// </summary>
 public static class CollectionNames {
 	/// <summary>
+	/// .NETのActivity関連のテストで使用するコレクション名
+	/// </summary>
+	public const string DotNetActivity = "DotNet_Activity";
+
+	/// <summary>
 	/// dbo.Blogテーブルを使用するコレクション名
 	/// </summary>
 	public const string EfCoreBlog = "EFCore_dbo.Blog";
