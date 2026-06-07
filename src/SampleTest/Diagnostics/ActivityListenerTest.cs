@@ -164,6 +164,39 @@ public class ActivityListenerTest {
 		Assert.Same(activity, stoppedActivity);
 	}
 
-	// todo:
-	// ExceptionRecorder
+	[Fact]
+	public void ExceptionRecorder_ActivityにAddExceptionしたときに呼び出される() {
+		// Arrange
+		var recorded = false;
+		var recordedActivity = default(Activity);
+		var recordedException = default(Exception);
+
+		using var listener = new ActivityListener {
+			ShouldListenTo = _ => true,
+			Sample = (ref _) => ActivitySamplingResult.PropagationData,
+			ExceptionRecorder = (activity, exception, ref _) => {
+				// このテストでは2回呼ばれない
+				Assert.False(recorded);
+
+				recorded = true;
+				recordedActivity = activity;
+				recordedException = exception;
+			},
+		};
+		ActivitySource.AddActivityListener(listener);
+
+		using var activity = new Activity("test").Start();
+
+		var exception = new Exception("test");
+
+		// Act
+		// Assert
+		Assert.False(recorded);
+
+		activity.AddException(exception);
+		Assert.True(recorded);
+
+		Assert.Same(activity, recordedActivity);
+		Assert.Same(exception, recordedException);
+	}
 }
