@@ -111,7 +111,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
 
 		// Assert
-		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		Assert.IsType<OpenIdConnectProtocolException>(actual, exactMatch: false);
 		_output.WriteLine(actual.Message);
 	}
 
@@ -175,7 +175,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
 
 		// Assert
-		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		Assert.IsType<OpenIdConnectProtocolException>(actual, exactMatch: false);
 		_output.WriteLine(actual.Message);
 	}
 
@@ -228,7 +228,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateAuthenticationResponse(context));
 
 		// Assert
-		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		Assert.IsType<OpenIdConnectProtocolException>(actual, exactMatch: false);
 		_output.WriteLine(actual.Message);
 	}
 
@@ -314,7 +314,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateTokenResponse(context));
 
 		// Assert
-		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		Assert.IsType<OpenIdConnectProtocolException>(actual);
 		_output.WriteLine(actual.Message);
 	}
 
@@ -389,7 +389,7 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 		var actual = Record.Exception(() => validator.ValidateUserInfoResponse(context));
 
 		// Assert
-		Assert.IsAssignableFrom<OpenIdConnectProtocolException>(actual);
+		Assert.IsType<OpenIdConnectProtocolException>(actual);
 		_output.WriteLine(actual.Message);
 	}
 

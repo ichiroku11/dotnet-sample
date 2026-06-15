@@ -287,9 +287,9 @@ public class JwtSecurityTokenHandlerValidateTokenSigningTest(ITestOutputHelper o
 			Assert.Equal("test", key);
 
 			// valueはIList<object>
-			Assert.IsAssignableFrom<IList<object>>(value);
+			Assert.IsType<IList<object>>(value, exactMatch: false);
 			_output.WriteLine(key);
-			_output.WriteLine(value.ToString());
+			_output.WriteLine(value?.ToString() ?? "");
 
 			var values = value as IList<object>;
 			Assert.NotNull(values);
