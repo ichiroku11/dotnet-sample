@@ -19,7 +19,7 @@ public class ServiceCollectionTryAddEnumerableTest(ITestOutputHelper output) {
 
 	private void WriteServices(ServiceCollection services) {
 		foreach (var service in services) {
-			_output.WriteLine(service.ImplementationType?.Name);
+			_output.WriteLine(service.ImplementationType?.Name ?? "");
 		}
 	}
 
