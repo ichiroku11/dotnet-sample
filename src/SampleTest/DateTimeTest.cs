@@ -30,7 +30,9 @@ public class DateTimeTest {
 		};
 	}
 
-	[Theory, MemberData(nameof(GetTheoryData_Kind))]
+	// テストデータが不安定なので（DateTime.Nowなどをテストしたいので）
+	// Test Explorerで列挙されないようにする
+	[Theory, MemberData(nameof(GetTheoryData_Kind), DisableDiscoveryEnumeration = true)]
 	public void Kind_インスタンスの作り方によって値が変わることを確認する(DateTime target, DateTimeKind expected) {
 		// Arrange
 		// Act
