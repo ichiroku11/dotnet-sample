@@ -34,26 +34,23 @@ public class FakeTimeProviderTest {
 		Assert.Equal(TimeSpan.TicksPerSecond, provider.TimestampFrequency);
 	}
 
-	public static TheoryData<DateTimeOffset?, DateTimeOffset> GetTheoryData_GetUtcNow() {
-		var today = new DateTimeOffset(DateTime.UtcNow.Date);
+	[Fact]
+	public void GetUtcNow_メソッドの戻り値はデフォルト日時になる() {
+		// Arrange
+		var timeProvider = new FakeTimeProvider();
 
-		return new() {
-			// 引数なしのコンストラクターで生成したインスタンスでGetUtcNowを呼び出した場合
-			// 戻り値はデフォルト日時
-			{ null, _default },
-			// 日時を指定したコンストラクターで生成したインスタンスでGetUtcNowを呼び出した場合
-			// 戻り値は指定した日時
-			{ today, today }
-		};
+		// Act
+		var actual = timeProvider.GetUtcNow();
+
+		// Assert
+		Assert.Equal(_default, actual);
 	}
 
-	[Theory]
-	[MemberData(nameof(GetTheoryData_GetUtcNow))]
-	public void GetUtcNow_メソッドの戻り値を確認する(DateTimeOffset? start, DateTimeOffset expected) {
+	[Fact]
+	public void GetUtcNow_メソッドの戻り値はコンストラクターで指定した日時になる() {
 		// Arrange
-		var timeProvider = start is null
-			? new FakeTimeProvider()
-			: new FakeTimeProvider(start.Value);
+		var expected = new DateTimeOffset(DateTime.UtcNow);
+		var timeProvider = new FakeTimeProvider(expected);
 
 		// Act
 		var actual = timeProvider.GetUtcNow();
