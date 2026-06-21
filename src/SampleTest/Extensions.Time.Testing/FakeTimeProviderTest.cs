@@ -90,26 +90,25 @@ public class FakeTimeProviderTest {
 		Assert.Equal(expected, actual);
 	}
 
-	public static TheoryData<DateTimeOffset?, long> GetTheoryData_GetTimestamp() {
-		var today = new DateTimeOffset(DateTime.UtcNow.Date);
+	[Fact]
+	public void GetTimestamp_メソッドの戻り値はデフォルト日時のTicksになる() {
+		// Arrange
+		var timeProvider = new FakeTimeProvider();
+		var expected = _default.Ticks;
 
-		return new() {
-			// 引数なしのコンストラクターで生成したインスタンスでGetTimestampを呼び出した場合
-			// 戻り値はデフォルト日時のTicks
-			{ null, _default.Ticks },
-			// 日時を指定したコンストラクターで生成したインスタンスでGetTimestampを呼び出した場合
-			// 戻り値は指定した日時のTicks
-			{ today, today.Ticks }
-		};
+		// Act
+		var actual = timeProvider.GetTimestamp();
+
+		// Assert
+		Assert.Equal(expected, actual);
 	}
 
-	[Theory]
-	[MemberData(nameof(GetTheoryData_GetTimestamp))]
-	public void GetTimestamp_メソッドの戻り値を確認する(DateTimeOffset? start, long expected) {
+	[Fact]
+	public void GetTimestamp_メソッドの戻り値はコンストラクターで指定した日時のTicksになる() {
 		// Arrange
-		var timeProvider = start is null
-			? new FakeTimeProvider()
-			: new FakeTimeProvider(start.Value);
+		var start = new DateTimeOffset(DateTime.UtcNow);
+		var timeProvider = new FakeTimeProvider(start);
+		var expected = start.Ticks;
 
 		// Act
 		var actual = timeProvider.GetTimestamp();
