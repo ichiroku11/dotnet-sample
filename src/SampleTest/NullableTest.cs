@@ -15,10 +15,11 @@ public class NullableTest(ITestOutputHelper output) {
 		// Act
 		// Returns the underlying type argument of the specified nullable type.
 		var actual = Nullable.GetUnderlyingType(type);
-		_output.WriteLine(actual?.Name);
 
 		// Assert
-		Assert.Equal(expectedName, actual?.Name);
+		Assert.NotNull(actual);
+		Assert.Equal(expectedName, actual.Name);
+		_output.WriteLine(actual.Name);
 	}
 
 	[Theory]

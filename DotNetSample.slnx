@@ -64,5 +64,7 @@
   </Folder>
   <Project Path="src/SampleLib.Test/SampleLib.Test.csproj" />
   <Project Path="src/SampleLib/SampleLib.csproj" />
+  <Project Path="src/SampleTest.AspNetCore/SampleTest.AspNetCore.csproj" />
+  <Project Path="src/SampleTest.EntityFrameworkCore/SampleTest.EntityFrameworkCore.csproj" Id="2d28e173-9063-4fd7-a477-d1d32158f1b3" />
   <Project Path="src/SampleTest/SampleTest.csproj" />
 </Solution>

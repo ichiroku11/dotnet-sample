@@ -45,8 +45,8 @@ public class ECDsaTest(ITestOutputHelper output) {
 
 		// Act
 		var actual = ecdsa.ExportParameters(false).Curve;
-		_output.WriteLine(actual.Oid.Value);
-		_output.WriteLine(actual.Oid.FriendlyName);
+		_output.WriteLine(actual.Oid.Value ?? "");
+		_output.WriteLine(actual.Oid.FriendlyName ?? "");
 
 		// Assert
 		Assert.Equal(ECCurve.ECCurveType.Named, actual.CurveType);
@@ -72,8 +72,8 @@ public class ECDsaTest(ITestOutputHelper output) {
 
 		// Act
 		var actual = ecdsa.ExportParameters(false).Curve;
-		_output.WriteLine(actual.Oid.Value);
-		_output.WriteLine(actual.Oid.FriendlyName);
+		_output.WriteLine(actual.Oid.Value ?? "");
+		_output.WriteLine(actual.Oid.FriendlyName ?? "");
 
 		// Assert
 		Assert.Equal(ECCurve.ECCurveType.Named, actual.CurveType);
@@ -96,7 +96,7 @@ public class ECDsaTest(ITestOutputHelper output) {
 			ecdsa.SignData(data, hashAlgorithm);
 		});
 
-		_output.WriteLine(exception.GetType().FullName);
+		_output.WriteLine(exception.GetType().FullName ?? "");
 		_output.WriteLine(exception.Message);
 	}
 

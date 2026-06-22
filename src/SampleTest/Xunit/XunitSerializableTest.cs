@@ -52,11 +52,11 @@ public class XunitSerializableTest {
 	// シリアライズできないテストデータ（TheoryDataの型引数）はIXunitSerializableを実装する
 	// IXunitSerializableを実装するには、パラメーターが存在しないパブリックコンストラクターが必要
 	// https://xunit.net/xunit.analyzers/rules/xUnit3001
-	public class SampleSerializable() : IXunitSerializable {
+	public class SampleSerializable : IXunitSerializable {
 		public string Value { get; set; } = "";
 
 		public void Deserialize(IXunitSerializationInfo info) {
-			Value = info.GetValue<string>(nameof(Value));
+			Value = info.GetValue<string>(nameof(Value)) ?? "";
 		}
 
 		public void Serialize(IXunitSerializationInfo info) {

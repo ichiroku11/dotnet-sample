@@ -5,9 +5,7 @@ namespace SampleTest;
 public class CultureInfoTest(ITestOutputHelper output) {
 	private readonly ITestOutputHelper _output = output;
 
-	public static TheoryData<string, string, bool, DateTime> GetTheoryData_DateTime_TryParse() {
-		var today = DateTime.Today;
-
+	public static TheoryData<string, string> GetTheoryData_DateTime_TryParse() {
 		var cultures = new {
 			Invariant = "",
 			Japanese = "ja-JP",
@@ -15,44 +13,48 @@ public class CultureInfoTest(ITestOutputHelper output) {
 
 		return new() {
 			// "ja-JP"では想定通りだが、InvariantCultureではちょっと不思議
-			{ today.ToString("yyyy/MM/dd"), cultures.Japanese, true, today },
-			{ today.ToString("yyyy/MM/dd"), cultures.Invariant, true, today },
+			{ "yyyy/MM/dd", cultures.Japanese },
+			{ "yyyy/MM/dd", cultures.Invariant },
 
 			// どちらも想定通り
-			{ today.ToString("yyyy-MM-dd"), cultures.Japanese, true, today },
-			{ today.ToString("yyyy-MM-dd"), cultures.Invariant, true, today },
+			{ "yyyy-MM-dd", cultures.Japanese },
+			{ "yyyy-MM-dd", cultures.Invariant },
 
 			// "ja-JP"ではちょっと不思議だが、InvariantCultureでは想定通り
-			{ today.ToString("MM/dd/yyyy"), cultures.Japanese, true, today },
-			{ today.ToString("MM/dd/yyyy"), cultures.Invariant, true, today },
+			{ "MM/dd/yyyy", cultures.Japanese },
+			{ "MM/dd/yyyy", cultures.Invariant },
 
 			// どちらも不思議といえば不思議
-			{ today.ToString("yyyy.MM.dd"), cultures.Japanese, true, today },
-			{ today.ToString("yyyy.MM.dd"), cultures.Invariant, true, today },
+			{ "yyyy.MM.dd", cultures.Japanese },
+			{ "yyyy.MM.dd", cultures.Invariant },
 
 			// InvariantCultureでもパースできるのか
-			{ today.ToString("yyyy年M月d日"), cultures.Japanese, true, today },
-			{ today.ToString("yyyy年M月d日"), cultures.Invariant, true, today },
-			{ today.ToString("yyyy年MM月dd日"), cultures.Japanese, true, today },
-			{ today.ToString("yyyy年MM月dd日"), cultures.Invariant, true, today },
+			{ "yyyy年M月d日", cultures.Japanese },
+			{ "yyyy年M月d日", cultures.Invariant },
+			{ "yyyy年MM月dd日", cultures.Japanese },
+			{ "yyyy年MM月dd日", cultures.Invariant },
 		};
 	}
 
 	[Theory, MemberData(nameof(GetTheoryData_DateTime_TryParse))]
-	public void DateTime_TryParse_文字列を日付に変換できる(string text, string cultureName, bool expectedParsed, DateTime expectedResult) {
+	public void DateTime_TryParse_文字列を日付に変換できる(string format, string cultureName) {
 		// Arrange
+		var expcted = DateTime.Today;
+
+		var text = expcted.ToString(format);
+
 		var culture = string.IsNullOrWhiteSpace(cultureName)
 			? CultureInfo.InvariantCulture
 			: new CultureInfo(cultureName);
 		_output.WriteLine(culture.Name);
 
 		// Act
-		var actualParsed = DateTime.TryParse(text, culture, out var actualResult);
-		_output.WriteLine(actualParsed.ToString());
+		var parsed = DateTime.TryParse(text, culture, out var actual);
+		_output.WriteLine(parsed.ToString());
 
 		// Assert
-		Assert.Equal(expectedParsed, actualParsed);
-		Assert.Equal(expectedResult, actualResult);
+		Assert.True(parsed);
+		Assert.Equal(expcted, actual);
 	}
 
 	public static TheoryData<string, string> GetTheoryData_Convert_ToString() {
@@ -65,20 +67,20 @@ public class CultureInfoTest(ITestOutputHelper output) {
 	}
 
 	[Theory, MemberData(nameof(GetTheoryData_Convert_ToString))]
-	public void Convert_ToString_日付から変換した文字列を確認する(string cultureName, string expectedFormat) {
+	public void Convert_ToString_日付から変換した文字列を確認する(string cultureName, string format) {
 		// Arrange
+		var today = DateTime.Today;
+		var expected = today.ToString(format);
+
 		var culture = string.IsNullOrWhiteSpace(cultureName)
 			? CultureInfo.InvariantCulture
 			: new CultureInfo(cultureName);
 		_output.WriteLine(culture.Name);
 
-		var today = DateTime.Today;
-
 		// Act
 		var actual = Convert.ToString(today, culture);
 
 		// Assert
-		var expected = today.ToString(expectedFormat);
 		Assert.Equal(expected, actual);
 	}
 }

@@ -10,11 +10,12 @@ public class DateTimeExtensionsTest {
 
 		var data = new TheoryData<DateTime, DateTime>();
 
-		var now = DateTime.Now;
+		var @base = new DateTime(2026, 6, 1, 1, 0, 0);
+
 		// tickが異なる日時で試す
 		// これがベストなテストなのかどうか・・・
 		foreach (var ticks in new[] { 0, -1, 1 }) {
-			var source = now.AddTicks(ticks);
+			var source = @base.AddTicks(ticks);
 			data.Add(source, truncate(source));
 		}
 		return data;

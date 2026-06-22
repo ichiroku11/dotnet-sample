@@ -102,7 +102,9 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 		var actualContent = await response.Content.ReadAsStringAsync();
 
 		// Assert
+		Assert.NotNull(actualUri);
 		_output.WriteLine(actualUri);
+
 		Assert.Equal(expectedUri, actualUri);
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Equal(expectedContent, actualContent);
@@ -147,7 +149,9 @@ public class HttpClientBaseAddressTest(ITestOutputHelper output) {
 		var actualContent = await response.Content.ReadAsStringAsync();
 
 		// Assert
+		Assert.NotNull(actualUri);
 		_output.WriteLine(actualUri);
+
 		Assert.Equal(expectedUri, actualUri);
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		Assert.Equal(expectedContent, actualContent);
