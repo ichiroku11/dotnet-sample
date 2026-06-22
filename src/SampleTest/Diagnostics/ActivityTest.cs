@@ -130,7 +130,7 @@ public class ActivityTest {
 	}
 
 	[Fact]
-	public void DefaultIdFormat() {
+	public void DefaultIdFormat_W3Cフォーマットを返す() {
 		// Arrange
 		// Act
 		// Assert
