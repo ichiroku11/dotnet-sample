@@ -193,10 +193,6 @@ public class OpenIdConnectProtocolValidatorTest(ITestOutputHelper output) {
 
 			// IDX21324: The 'nonce' has expired: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. Time from 'nonce' (UTC): '01/01/0001 00:00:00', Current Time (UTC): '04/01/2024 21:08:49'. NonceLifetime is: '01:00:00'.
 			"1.",
-
-			// エポックタイムではない？
-			// IDX21324: The 'nonce' has expired: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'. Time from 'nonce' (UTC): '01/01/0001 00:02:51', Current Time (UTC): '04/04/2024 23:01:07'. NonceLifetime is: '01:00:00'.
-			$"{EpochTime.GetIntDate(DateTime.UtcNow.AddMinutes(60))}.",
 		];
 	}
 
