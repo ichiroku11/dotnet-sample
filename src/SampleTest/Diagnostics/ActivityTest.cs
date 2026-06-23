@@ -130,6 +130,24 @@ public class ActivityTest {
 	}
 
 	[Fact]
+	public void Current_入れ子にすることで取得できる値が変化する() {
+		// Arrange
+		// Act
+		// Assert
+		using var parent = new Activity("parent").Start();
+		Assert.Same(parent, Activity.Current);
+
+		using var child = new Activity("child").Start();
+		Assert.Same(child, Activity.Current);
+
+		child.Dispose();
+		Assert.Same(parent, Activity.Current);
+
+		parent.Dispose();
+		Assert.Null(Activity.Current);
+	}
+
+	[Fact]
 	public void DefaultIdFormat_W3Cフォーマットを返す() {
 		// Arrange
 		// Act
