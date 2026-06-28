@@ -32,7 +32,7 @@ public class ActivityContextTest {
 		// Assert
 		// TraceId：1つ目のハイフンから2つ目のハイフンまで
 		// SpanId：2つ目のハイフンから3つ目のハイフンまで
-		// TraceFlags：3つ目のハイフンから最後までが
+		// TraceFlags：3つ目のハイフンから最後まで
 		Assert.Equal("0123456789abcdef0123456789abcdef", actual.TraceId.ToHexString());
 		Assert.Equal("0123456789abcdef", actual.SpanId.ToHexString());
 		Assert.Equal(ActivityTraceFlags.Recorded, actual.TraceFlags);
