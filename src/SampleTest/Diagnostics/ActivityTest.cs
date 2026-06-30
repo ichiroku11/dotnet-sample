@@ -285,6 +285,17 @@ public class ActivityTest {
 	}
 
 	[Fact]
+	public void ParentSpanId_入れ子にすると親のスパンIDを取得できる() {
+		// Arrange
+		using var parent = new Activity("parent").Start();
+		using var child = new Activity("child").Start();
+
+		// Act
+		// Assert
+		Assert.Equal(parent.SpanId, child.ParentSpanId);
+	}
+
+	[Fact]
 	public void Parent_ActivitySourceで生成したインスタンスを入れ子にすると親インスタンスを取得できる() {
 		// Arrange
 		using var source = new ActivitySource("test");
