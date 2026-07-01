@@ -6,12 +6,15 @@ using System.Net.Http.Json;
 
 namespace SampleTest.Diagnostics;
 
+[Collection(CollectionNames.DotNetActivity)]
 public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable {
 	private readonly ITestOutputHelper _output = output;
 	private readonly WebApplication _app = CreateAndStartWebApp(_url);
 
 	private class TraceResponse {
+		public string Baggage { get; init; } = "";
 		public string TraceParent { get; init; } = "";
+		public string TraceState { get; init; } = "";
 	}
 
 	// todo: localhostのポート番号を固定？
@@ -26,7 +29,9 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 			var headers = context.Request.Headers;
 
 			var response = new TraceResponse {
+				Baggage = headers.Baggage.ToString(),
 				TraceParent = headers.TraceParent.ToString(),
+				TraceState = headers.TraceState.ToString(),
 			};
 
 			await context.Response.WriteAsJsonAsync(response);
@@ -45,7 +50,7 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 	}
 
 	[Fact]
-	public async Task HttpClient_TraceParentヘッダが付与されることを確認する() {
+	public async Task HttpClient_TraceParentヘッダーが付与されることを確認する() {
 		// Arrange
 		using var client = new HttpClient();
 
@@ -54,12 +59,41 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 		_output.WriteLine(activity.Id ?? "");
 
 		var response = await client.GetFromJsonAsync<TraceResponse>(_url);
-		Assert.NotNull(response);
-
-		var activityContext = ActivityContext.Parse(response.TraceParent, null);
-		_output.WriteLine(response.TraceParent);
 
 		// Assert
+		Assert.NotNull(response);
+		Assert.Empty(response.Baggage);
+		Assert.NotEmpty(response.TraceParent);
+		Assert.Empty(response.TraceState);
+
+		_output.WriteLine(response.TraceParent);
+
+		var activityContext = ActivityContext.Parse(response.TraceParent, null);
 		Assert.Equal(activity.TraceId, activityContext.TraceId);
+	}
+
+	[Fact]
+	public async Task HttpClient_Baggageヘッダーが付与されることを確認する() {
+		// Arrange
+		using var client = new HttpClient();
+
+		// Act
+		using var activity = new Activity("test").Start();
+		_output.WriteLine(activity.Id ?? "");
+		activity.AddBaggage("key1", "value1");
+		activity.AddBaggage("key2", "value2");
+
+		var response = await client.GetFromJsonAsync<TraceResponse>(_url);
+
+		// Assert
+		Assert.NotNull(response);
+		Assert.NotEmpty(response.Baggage);
+		Assert.NotEmpty(response.TraceParent);
+		Assert.Empty(response.TraceState);
+
+		// key/valueの順番は保証されない様子？
+		_output.WriteLine(response.Baggage);
+		Assert.Contains("key1 = value1", response.Baggage);
+		Assert.Contains("key2 = value2", response.Baggage);
 	}
 }
