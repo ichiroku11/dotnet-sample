@@ -73,6 +73,28 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 	}
 
 	[Fact]
+	public async Task HttpClient_TraceStateヘッダーが付与されることを確認する() {
+		// Arrange
+		using var client = new HttpClient();
+
+		// Act
+		using var activity = new Activity("test").Start();
+		_output.WriteLine(activity.Id ?? "");
+		activity.TraceStateString = "test=1";
+
+		var response = await client.GetFromJsonAsync<TraceResponse>(_url);
+
+		// Assert
+		Assert.NotNull(response);
+		Assert.Empty(response.Baggage);
+		Assert.NotEmpty(response.TraceParent);
+		Assert.NotEmpty(response.TraceState);
+
+		_output.WriteLine(response.TraceState);
+		Assert.Equal("test=1", response.TraceState);
+	}
+
+	[Fact]
 	public async Task HttpClient_Baggageヘッダーが付与されることを確認する() {
 		// Arrange
 		using var client = new HttpClient();
