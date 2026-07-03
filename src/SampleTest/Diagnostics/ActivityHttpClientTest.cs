@@ -17,7 +17,7 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 		public string TraceState { get; init; } = "";
 	}
 
-	// todo: localhostのポート番号を固定？
+	// localhostのポート番号を固定すると良くない気がするが、エラーになってから考える
 	private const string _url = "http://localhost:5000";
 
 	private static WebApplication CreateAndStartWebApp(string url) {
@@ -37,7 +37,6 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 			await context.Response.WriteAsJsonAsync(response);
 		});
 
-		// todo: ポート番号
 		app.Urls.Add(url);
 
 		app.Start();
@@ -47,6 +46,8 @@ public class ActivityHttpClientTest(ITestOutputHelper output) : IAsyncDisposable
 
 	public async ValueTask DisposeAsync() {
 		await _app.StopAsync();
+
+		GC.SuppressFinalize(this);
 	}
 
 	[Fact]
