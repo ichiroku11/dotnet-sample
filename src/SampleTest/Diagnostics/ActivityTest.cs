@@ -130,7 +130,25 @@ public class ActivityTest {
 	}
 
 	[Fact]
-	public void DefaultIdFormat() {
+	public void Current_入れ子にすることで取得できる値が変化する() {
+		// Arrange
+		// Act
+		// Assert
+		using var parent = new Activity("parent").Start();
+		Assert.Same(parent, Activity.Current);
+
+		using var child = new Activity("child").Start();
+		Assert.Same(child, Activity.Current);
+
+		child.Dispose();
+		Assert.Same(parent, Activity.Current);
+
+		parent.Dispose();
+		Assert.Null(Activity.Current);
+	}
+
+	[Fact]
+	public void DefaultIdFormat_W3Cフォーマットを返す() {
 		// Arrange
 		// Act
 		// Assert
@@ -264,6 +282,17 @@ public class ActivityTest {
 		// Act
 		// Assert
 		Assert.Same(parent, child.Parent);
+	}
+
+	[Fact]
+	public void ParentSpanId_入れ子にすると親のスパンIDを取得できる() {
+		// Arrange
+		using var parent = new Activity("parent").Start();
+		using var child = new Activity("child").Start();
+
+		// Act
+		// Assert
+		Assert.Equal(parent.SpanId, child.ParentSpanId);
 	}
 
 	[Fact]
